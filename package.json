@@ -9,7 +9,7 @@
     "lint": "next lint"
   },
   "dependencies": {
-    "@dynamic-labs/sdk-react": "^0.18.7",
+    "@dynamic-labs/sdk-react": "^0.18.18",
     "@dynamic-labs/wagmi-connector": "^0.18.7",
     "@types/node": "20.5.4",
     "@types/react": "18.2.21",
