@@ -11,7 +11,7 @@
   "dependencies": {
     "@dynamic-labs/sdk-react": "^0.18.18",
     "@dynamic-labs/wagmi-connector": "^0.18.7",
-    "@types/node": "20.5.4",
+    "@types/node": "20.8.7",
     "@types/react": "18.2.21",
     "@types/react-dom": "18.2.7",
     "autoprefixer": "10.4.15",
