@@ -19,7 +19,7 @@ export default function RootLayout({
     <html lang="en">
       <DynamicContextProvider
         settings={{
-          environmentId: "4e598b41-f388-489b-a0b3-d24064b1d1ed",
+          environmentId: "f0b977d0-b712-49f1-af89-2a24c47674da",
         }}
       >
         <DynamicWagmiConnector>
