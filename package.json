@@ -1,5 +1,5 @@
 {
-  "name": "next-ethers-wagmi",
+  "name": "@dynamic-labs/next-ethers-wagmi",
   "version": "0.1.0",
   "private": true,
   "scripts": {
