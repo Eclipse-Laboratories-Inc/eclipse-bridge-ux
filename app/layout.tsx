@@ -6,7 +6,9 @@ import {
   EthereumWalletConnectors,
   DynamicWagmiConnector,
   EthersExtension,
-} from "../lib/dynamic";
+} from "@/lib/dynamic";
+
+import { Providers } from "@/app/providers";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -29,9 +31,11 @@ export default function RootLayout({
           walletConnectorExtensions: [EthersExtension],
         }}
       >
-        <DynamicWagmiConnector>
-          <body className={inter.className}>{children}</body>
-        </DynamicWagmiConnector>
+        <Providers>
+          <DynamicWagmiConnector>
+            <body className={inter.className}>{children}</body>
+          </DynamicWagmiConnector>
+        </Providers>
       </DynamicContextProvider>
     </html>
   );
