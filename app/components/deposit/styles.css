@@ -1,0 +1,265 @@
+.deposit-container {
+  display: flex;
+  width: 100%;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  background-color: #000000; /* Black background */
+}
+
+.deposit-card {
+  background-color: rgba(255, 255, 255, 0.03);
+  border-radius: 15px;
+  padding: 20px;
+  width: 400px;
+  box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.2);
+  color: #ffffff;
+  text-align: center;
+}
+
+
+.header-tabs {
+  display: flex;
+  justify-content: center;
+  background-color: rgba(255, 255, 255, 0.03);
+
+  border-radius: 12px;
+  margin-bottom: 20px;
+  padding: 3px; /* Small padding around the tabs for the green glow */
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.header-tabs span {
+  font-weight: 600;
+  font-size: large;
+  margin: 0;
+  flex: 1;
+  padding: 12px 0;
+  text-align: center;
+  cursor: pointer;
+  border-radius: 8px;
+  transition: background-color 0.3s, color 0.3s;
+}
+
+.header-tabs span.active {
+  color: #a3ffa5; /* Light green color for active tab text */
+  background-color: rgba(161, 254, 160, 0.05);
+
+}
+
+.header-tabs span.inactive {
+  background-color: transparent;
+  color: #666666; /* Dark gray color for inactive tab text */
+}
+.arrow-container {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 1;
+}
+
+.network-section {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: relative;
+  width: 100%;
+
+}
+
+.network-box {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: rgba(255, 255, 255, 0.03);
+  border-radius: 8px;
+  padding: 10px;
+  margin-bottom: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  width: 100%;
+}
+
+.network-info {
+  display: flex;
+  align-items: center;
+}
+
+.input-inner-container {
+  display: flex;
+  flex-direction: column;
+  align-items: start;
+}
+
+.network-info img {
+  width: 41px;
+  margin-right: 10px;
+}
+
+.network-info span {
+  font-size: 14px;
+  color: #ffffff;
+}
+.network-info .direction {
+  color: rgba(255, 255, 255, 0.3);
+
+}
+
+.network-info small {
+  display: block;
+  color: #a3ffa5; /* Light green for address */
+  font-size: 12px;
+}
+
+.disconnect-button {
+  background: none;
+  border: none;
+  color: #ff4b4b; /* Red for disconnect */
+  cursor: pointer;
+}
+
+.arrow-divider {
+  color: #5a5a5a;
+  margin: 10px 0;
+}
+
+.amount-input {
+  width: 100%;
+}
+.amount-input input {
+  width: 100%;
+  padding: 10px;
+  background-color: #292929;
+  border: none;
+  border-radius: 8px;
+  color: #ffffff;
+  font-size: 18px;
+  margin-bottom: 10px;
+}
+
+.balance-info {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 14px;
+  color: #5a5a5a;
+}
+
+.amount-options button {
+  background-color: #1b1b1b;
+  border: none;
+  color: #a3ffa5;
+  padding: 5px 10px;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.amount-options button:hover {
+  background-color: #292929;
+}
+
+.submit-button {
+  width: 100%;
+  padding: 12px;
+  background-color: #a3ffa5;
+  color: #000000;
+  border: none;
+  border-radius: 8px;
+  font-size: 16px;
+  cursor: pointer;
+  margin-top: 20px;
+}
+
+.submit-button:hover {
+  background-color: #82e085;
+}
+
+.estimated-time {
+  color: #a3ffa5;
+  margin-top: 10px;
+}
+
+.amount-input-container {
+  background-color: #1b1b1b;
+  border-radius: 8px;
+  padding: 15px;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
+
+.amount-input-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.amount-input-field {
+  background-color: #0d0d0d;
+  border: none;
+  border-radius: 8px;
+  padding: 10px;
+  color: #ffffff;
+  font-size: 24px;
+  flex: 1;
+  margin-right: 10px;
+}
+
+.amount-input-field::placeholder {
+  color: #555555;
+}
+
+.currency-info {
+  display: flex;
+  align-items: center;
+  background-color: #292929;
+  border-radius: 8px;
+  padding: 10px;
+}
+
+.currency-info img {
+  width: 20px;
+  height: 20px;
+  margin-right: 5px;
+}
+
+.currency-info span {
+  color: #ffffff;
+  font-size: 16px;
+}
+
+.amount-input-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.balance-label {
+  color: #555555;
+  font-size: 14px;
+}
+
+.balance-value {
+  color: #a3ffa5;
+  font-weight: bold;
+}
+
+.percentage-buttons {
+  display: flex;
+}
+
+.percentage-button {
+  background-color: #292929;
+  border: none;
+  color: #555555;
+  padding: 5px 10px;
+  border-radius: 5px;
+  margin-left: 5px;
+  cursor: pointer;
+  font-size: 12px;
+}
+
+.percentage-button:hover {
+  color: #ffffff;
+}
+
