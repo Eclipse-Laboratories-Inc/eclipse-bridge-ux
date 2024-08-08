@@ -26,3 +26,19 @@ body {
     )
     rgb(var(--background-start-rgb));
 }
+
+/* Hide the step arrows in input[type=number] for Chrome, Safari, Edge, Opera */
+input[type=number]::-webkit-outer-spin-button,
+input[type=number]::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/* Hide the step arrows in input[type=number] for Firefox */
+input[type=number] {
+  -moz-appearance: textfield;
+}
+input:focus {
+  outline: none;
+  box-shadow: none;
+}
