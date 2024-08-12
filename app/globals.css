@@ -53,3 +53,7 @@ input:focus {
   height: 46px;
 
 }
+
+img[data-testid='iconic-solana'] {
+  content: url('/eclipse.png');
+}

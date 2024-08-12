@@ -12,6 +12,11 @@ const ibmPlexSans = IBM_Plex_Sans({
   weight: ['400', '500', '700'],
 });
 
+const cssOverrides = `
+  img[data-testid='iconic-solana'] {
+    content: url('/eclipse.png');
+  }
+`
 
 
 export default function RootLayout({
@@ -26,6 +31,7 @@ export default function RootLayout({
           environmentId: "81a3762f-e656-40a7-b739-c177be6712df",
           walletConnectors: [EthereumWalletConnectors, SolanaWalletConnectors],
           initialAuthenticationMode: 'connect-only',
+          cssOverrides,
           bridgeChains: [
             {
               chain: "EVM",
