@@ -2,6 +2,7 @@
 import { useEffect, useRef, useState } from "react";
 import Deposit from "./components/deposit";
 import {
+  DynamicConnectButton,
   useUserWallets,
   Wallet
 } from "@dynamic-labs/sdk-react-core";
@@ -19,10 +20,18 @@ function ProfileAvatar() {
 
   const content = () => {
     if (!solWallet && !evmWallet) {
-      return "Connect Wallets";
+      return  (
+        <DynamicConnectButton>
+        Connect Wallets
+        </DynamicConnectButton>
+      )
     }
     if (!solWallet || !evmWallet) {
-      return "Connect Wallet";
+      return  (
+        <DynamicConnectButton>
+          Connect Wallet
+        </DynamicConnectButton>
+      )
     }
 
     return truncateWalletAddress(solWallet?.address || '') 
@@ -35,7 +44,9 @@ function ProfileAvatar() {
 
   const openModal = (e: any) => {
     e.stopPropagation();
-    setShowModal(true);
+    if (evmWallet && solWallet) {
+      setShowModal(true);
+    }
   };
 
   const handleClickOutside = (e: any) => {
