@@ -1,6 +1,6 @@
 "use client";
 import React, { useEffect, useState } from 'react';
-import { ethers, utils } from 'ethers';
+import {  utils } from 'ethers';
 import { PublicKey, PublicKeyInitData } from '@solana/web3.js';
 import './styles.css';
 import TransferArrow from './transferArrow';
@@ -13,7 +13,7 @@ import {
 import Cross from '../cross';
 import { createPublicClient, createWalletClient, custom, formatEther, http, parseEther } from 'viem'
 import { mainnet } from 'viem/chains'
-import { getBalance, setBalance } from 'viem/actions';
+import { getBalance } from 'viem/actions';
 import { truncateWalletAddress } from '@/lib/stringUtils';
 
 const client = createPublicClient({
@@ -32,13 +32,16 @@ const client = createPublicClient({
     }
   };
   
-  const walletClient = createWalletClient({
-    chain: mainnet,
-    transport: custom(window.ethereum!),
-  })
+  let walletClient: any;
+  if (typeof window !== 'undefined') {
+    walletClient = createWalletClient({
+      chain: mainnet,
+      transport: custom(window.ethereum!),
+    })
+  }
 
 const Deposit = () => {
-  const [amountEther, setAmountEther] = useState(null as number | null);
+  const [amountEther, setAmountEther] = useState(undefined as number | string | undefined );
   const [balanceEther, setAmountBalanceEther] = useState(0);
   const userWallets: Wallet[] = useUserWallets() as Wallet[];
   const solWallet = userWallets.find(w => w.chain == "SOL");
@@ -90,7 +93,7 @@ const Deposit = () => {
 
     const destinationBytes32 = solanaToBytes32(solWallet?.address || '');
     const [account] = await walletClient.getAddresses()
-    const weiValue = parseEther(amountEther.toString());
+    const weiValue = parseEther(amountEther?.toString() || '');
 
     try {
       const { request } = await client.simulateContract({

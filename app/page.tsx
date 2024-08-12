@@ -27,19 +27,19 @@ function ProfileAvatar() {
 
     return truncateWalletAddress(solWallet?.address || '') 
   };
-  const closeModal = (e) => {
-    console.log("close modal");
-    e.stopPropagation(); // Prevents the event from bubbling up
+  //TODO: fix any usage here
+  const closeModal = (e: any) => {
+    e.stopPropagation();
     setShowModal(false);
   };
 
-  const openModal = (e) => {
-    e.stopPropagation(); // Prevents the event from bubbling up
+  const openModal = (e: any) => {
+    e.stopPropagation();
     setShowModal(true);
   };
 
-  const handleClickOutside = (event) => {
-    if (modalRef.current && !modalRef.current.contains(event.target)) {
+  const handleClickOutside = (e: any) => {
+    if (modalRef.current && (modalRef.current as HTMLElement).contains(e.target as Node)) {
       setShowModal(false);
     }
   };

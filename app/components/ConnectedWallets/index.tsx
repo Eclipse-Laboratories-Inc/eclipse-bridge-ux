@@ -14,7 +14,7 @@ const client = createPublicClient({
 })
 
 interface ConnectedWalletsProps {
-  close: () => void;
+  close: (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => void;
   ref: React.RefObject<HTMLDivElement>;
 }
 
@@ -69,7 +69,7 @@ const ConnectedWallets = ({ close, ref }: ConnectedWalletsProps ) => {
     <div  ref={ref} className="connected-wallets-modal">
       <div className="connected-wallets-header">
         <div>Connected Wallets</div>
-        <div onClick={close}> <Cross crossClassName='wallets-cross' /> </div>
+        <div onClick={(e) => close(e)}> <Cross crossClassName='wallets-cross' /> </div>
       </div>
       <ul className="wallet-list">
         <li className="wallet-item">
