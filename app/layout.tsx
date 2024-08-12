@@ -1,16 +1,17 @@
 'use client';
 import "./globals.css";
-import { Inter } from "next/font/google";
 import {
   DynamicContextProvider,
-  DynamicWidget,
   EthereumWalletConnectors,
   SolanaWalletConnectors,
 } from "@/lib/dynamic";
 import { Providers } from "@/app/providers";
+import { IBM_Plex_Sans } from 'next/font/google';
+const ibmPlexSans = IBM_Plex_Sans({
+  subsets: ['latin'],
+  weight: ['400', '500', '700'],
+});
 
-
-const inter = Inter({ subsets: ["latin"] });
 
 
 export default function RootLayout({
@@ -36,7 +37,7 @@ export default function RootLayout({
         }}
       >
         <Providers>
-            <body className={inter.className}>{children}</body>
+            <body className={ibmPlexSans.className}>{children}</body>
         </Providers>
       </DynamicContextProvider>
     </html>

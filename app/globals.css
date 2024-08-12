@@ -17,6 +17,7 @@
 }
 
 body {
+  font-family: 'IBM Plex Sans', sans-serif;
   min-height: 100vh;
   color: rgb(var(--foreground-rgb));
   background: linear-gradient(
@@ -41,4 +42,14 @@ input[type=number] {
 input:focus {
   outline: none;
   box-shadow: none;
+}
+
+.header .connect-wallet {
+  display: flex;
+  align-items: center;
+  background-color: rgba(161, 254, 160, 0.05);
+  padding: 20px;
+  border-radius: 40px;
+  height: 46px;
+
 }

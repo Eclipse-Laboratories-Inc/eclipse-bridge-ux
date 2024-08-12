@@ -90,11 +90,11 @@
   align-items: center;
 }
 
-.cross {
+.deposit-cross {
   content: 'x';
   display: inline-block;
-  margin-right: 5px; /* Adjust spacing between the X and the text */
-  font-size: inherit; /* Ensure the X is the same size as the text */
+  margin-right: 5px;
+  font-size: inherit;
 }
 
 .network-info-right-section {
@@ -162,9 +162,6 @@
   border: 1px solid rgba(255, 255, 255, 0.1);
   width: 100%;
 }
-  input::placeholder {
-    color: #5a5a5a;
-  }
 .amount-input input {
   display: flex;
   justify-content: space-between;
@@ -172,10 +169,13 @@
   border-radius: 8px;
   margin-bottom: 10px;
   background-color: #0e0e0e;
-  color: #5a5a5a;
+  color: #ffffff;
   width: 100%;
   font-size: 34px;
 
+}
+input::placeholder {
+  color: #5a5a5a;
 }
 
 .balance-info {
