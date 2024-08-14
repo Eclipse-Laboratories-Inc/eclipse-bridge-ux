@@ -15,6 +15,7 @@ import { createPublicClient, createWalletClient, custom, formatEther, http, pars
 import { mainnet } from 'viem/chains'
 import { getBalance } from 'viem/actions';
 import { truncateWalletAddress } from '@/lib/stringUtils';
+import { parse } from 'path';
 
 const client = createPublicClient({
   chain: mainnet,
@@ -110,6 +111,35 @@ const Deposit = () => {
     }
 
   };
+  function determineButtonClass(): string {
+    if (!amountEther) {
+      return 'submit-button disabled'
+    }  
+    if (parseFloat(amountEther as string) < 0.002) {
+      return 'submit-button disabled'
+    }
+
+    if (parseFloat(amountEther as string) > balanceEther) {
+      return 'submit-button alarm'
+    }
+    
+    return 'submit-button'
+  }
+
+  function determineButtonText(): string {
+    if (!amountEther) {
+      return 'Deposit'
+    }  
+    if (parseFloat(amountEther as string) < 0.002) {
+      return 'Min amount 0.002 ETH'
+    }
+
+    if (parseFloat(amountEther as string) > balanceEther) {
+      return 'Insufficient Funds'
+    }
+    
+    return 'Deposit'
+  }
 
   return (
     <div className="deposit-container">
@@ -194,8 +224,8 @@ const Deposit = () => {
           <DynamicConnectButton buttonContainerClassName="submit-button">
             <span style={{ width: '100%' }}>Connect Wallets</span>
           </DynamicConnectButton>
-        : <button className={!amountEther ? 'submit-button disabled' : 'submit-button'} onClick={submitDeposit}>
-            Deposit
+        : <button className={determineButtonClass()} onClick={submitDeposit}>
+            {determineButtonText()}
           </button>
         }
           <div className="estimated-time">

@@ -204,6 +204,12 @@ input::placeholder {
   font-size: 16px;
   pointer-events: none;
 }
+
+.submit-button.alarm {
+  background: rgba(235, 77, 77, 0.1);
+  color: #EB4D4D;
+
+}
 .submit-button {
   width: 100%;
   padding: 12px;
