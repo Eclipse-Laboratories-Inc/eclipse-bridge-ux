@@ -1,5 +1,6 @@
 'use client';
 import { useEffect, useRef, useState } from "react";
+import Link from "next/link";
 import Deposit from "./components/deposit";
 import {
   DynamicConnectButton,
@@ -7,8 +8,12 @@ import {
   Wallet
 } from "@dynamic-labs/sdk-react-core";
 import { truncateWalletAddress } from "@/lib/stringUtils";
-import Chevron from "./components/deposit/chevron-right-small";
+import Chevron from "./components/icons/chevron-right-small";
 import ConnectedWallets from "./components/ConnectedWallets/index";
+import Gas from "./components/icons/gas";
+import Eth from "./components/icons/eth";
+import Block from "./components/icons/block";
+import useEthereumData from "@/lib/ethUtils";
 
 function ProfileAvatar() {
   const userWallets: Wallet[] = useUserWallets() as Wallet[];
@@ -79,10 +84,25 @@ function ProfileAvatar() {
 }
 
 export default function Main() {
+  const { blockNumber, gasPrice, ethPrice, error } = useEthereumData()
+  console.log({ ethPrice })
   return (
-    <div className="min-h-screen bg-gradient-to-b from-gray-900 to-black flex flex-col items-center justify-center text-white">
+    <div className="flex items-center text-white h-full flex flex-col justify-between">
       <Header />
       <Deposit /> 
+      <footer>
+        <div className="flex flex-row">
+          <Link href="https://www.eclipse.xyz/terms"> Terms & Conditions </Link>
+          <Link href="https://www.eclipse.xyz/privacy-policy"> Privacy Policy </Link>
+          <Link href="https://docs.eclipse.xyz">  Docs </Link>
+
+        </div>
+        <div className="flex flex-row">
+          <div className="ml-[28px] flex flex-row"><Gas gasClassName="gas" /> &nbsp; Gas <span style={{color: "rgba(161, 254, 160, 0.5)"}}> &nbsp; ${gasPrice}</span></div>
+          <div className="ml-[28px] flex flex-row"><Eth ethClassName="eth" /> &nbsp; Eth <span style={{color: "rgba(161, 254, 160, 0.5)"}}> &nbsp; ${ethPrice}</span> </div>
+          <div className="ml-[28px] flex flex-row"><Block blockClassName="block" /> &nbsp; Block <span style={{color: "rgba(161, 254, 160, 0.5)"}}> &nbsp; {blockNumber}</span> </div>
+        </div>
+      </footer>
     </div>
   );
 }

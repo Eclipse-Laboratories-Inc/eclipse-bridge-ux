@@ -3,14 +3,14 @@ import React, { useEffect, useState } from 'react';
 import {  utils } from 'ethers';
 import { PublicKey, PublicKeyInitData } from '@solana/web3.js';
 import './styles.css';
-import TransferArrow from './transferArrow';
+import TransferArrow from '../icons/transferArrow';
 import {
   DynamicConnectButton,
   useUserWallets,
   useDynamicContext,
   Wallet,
 } from "@dynamic-labs/sdk-react-core";
-import Cross from '../cross';
+import Cross from '../icons/cross';
 import { createPublicClient, createWalletClient, custom, formatEther, http, parseEther } from 'viem'
 import { mainnet } from 'viem/chains'
 import { getBalance } from 'viem/actions';

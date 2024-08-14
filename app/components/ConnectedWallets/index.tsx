@@ -4,7 +4,7 @@ import { createPublicClient, formatEther, http } from 'viem';
 import { getBalance } from 'viem/actions';
 import { mainnet } from 'viem/chains';
 import './styles.css';
-import Cross from '../cross';
+import Cross from '../icons/cross';
 import { truncateWalletAddress } from '@/lib/stringUtils';
 import { getWalletBalance } from '@/lib/solanaUtils';
 

@@ -16,9 +16,9 @@
   }
 }
 
-body {
+body, html {
   font-family: 'IBM Plex Sans', sans-serif;
-  min-height: 100vh;
+  height: 100%;
   color: rgb(var(--foreground-rgb));
   background: linear-gradient(
       to bottom,
@@ -56,4 +56,20 @@ input:focus {
 
 img[data-testid='iconic-solana'] {
   content: url('/eclipse.png');
+}
+
+footer {
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  padding: 10px;
+  text-align: center;
+  height: 50px;
+  width: 100%;
+  color: rgba(255, 255, 255, 0.3);
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  a {
+    margin-right: 20px;
+  }
+
 }
