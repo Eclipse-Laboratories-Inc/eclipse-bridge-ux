@@ -41,7 +41,7 @@ const client = createPublicClient({
   }
 
 const Deposit = () => {
-  const [amountEther, setAmountEther] = useState(undefined as number | string | undefined );
+  const [amountEther, setAmountEther] = useState<number | string | undefined>(undefined);
   const [balanceEther, setAmountBalanceEther] = useState(0);
   const userWallets: Wallet[] = useUserWallets() as Wallet[];
   const solWallet = userWallets.find(w => w.chain == "SOL");
@@ -194,7 +194,7 @@ const Deposit = () => {
           <DynamicConnectButton buttonContainerClassName="submit-button">
             <span style={{ width: '100%' }}>Connect Wallets</span>
           </DynamicConnectButton>
-        : <button className="submit-button" onClick={submitDeposit}>
+        : <button className={!amountEther ? 'submit-button disabled' : 'submit-button'} onClick={submitDeposit}>
             Deposit
           </button>
         }

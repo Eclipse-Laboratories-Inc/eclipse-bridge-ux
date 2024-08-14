@@ -197,6 +197,13 @@ input::placeholder {
   background-color: #292929;
 }
 
+.submit-button.disabled {
+  background-color: #0e0e0e;
+  cursor: not-allowed;
+  color: #5a5a5a;
+  font-size: 16px;
+  pointer-events: none;
+}
 .submit-button {
   width: 100%;
   padding: 12px;
