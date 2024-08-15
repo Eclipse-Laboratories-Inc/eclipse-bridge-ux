@@ -127,6 +127,15 @@ const Deposit = () => {
   }
 
   function determineButtonText(): string {
+    if (!evmWallet && solWallet) {
+      return "Connect Ethereum Wallet"
+    }
+    if (evmWallet && !solWallet) {
+      return "Connect Eclipse Wallet"
+    }
+    if (!evmWallet && !solWallet) {
+      return "Connect Wallets"
+    }
     if (!amountEther) {
       return 'Deposit'
     }  
@@ -194,6 +203,7 @@ const Deposit = () => {
         <div className="amount-input">
           <div className="amount-input-left">
             <input
+              disabled={!evmWallet || !solWallet}
               type="number"
               step="0.01"
               placeholder="0 ETH"
@@ -212,7 +222,7 @@ const Deposit = () => {
               </div>
               <div className="token-name">ETH</div>
             </div>
-            <div className="percentage-buttons">
+            <div className={evmWallet ? "percentage-buttons" : "invisible"}>
               <button onClick={() => setAmountEther(balanceEther * 0.25)} className="percentage-button">25%</button>
               <button onClick={() => setAmountEther(balanceEther * 0.50)} className="percentage-button">50%</button>
               <button onClick={() => setAmountEther(balanceEther)} className="percentage-button">Max</button>
@@ -222,7 +232,7 @@ const Deposit = () => {
         { (!evmWallet || !solWallet) 
         ?
           <DynamicConnectButton buttonContainerClassName="submit-button">
-            <span style={{ width: '100%' }}>Connect Wallets</span>
+            <span style={{ width: '100%' }}>{determineButtonText()}</span>
           </DynamicConnectButton>
         : <button className={determineButtonClass()} onClick={submitDeposit}>
             {determineButtonText()}

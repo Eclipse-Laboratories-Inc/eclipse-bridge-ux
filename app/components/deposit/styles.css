@@ -8,12 +8,13 @@
 
 .deposit-card {
   background-color: rgba(255, 255, 255, 0.03);
-  border-radius: 15px;
+  border-radius: 30px;
   padding: 20px;
   width: 520px;
   box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.2);
   color: #ffffff;
   text-align: center;
+  border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 
@@ -22,9 +23,9 @@
   justify-content: center;
   background-color: rgba(255, 255, 255, 0.03);
 
-  border-radius: 12px;
+  border-radius: 10px;
   margin-bottom: 20px;
-  padding: 3px; /* Small padding around the tabs for the green glow */
+  padding: 5px;
   border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
@@ -63,6 +64,7 @@
   align-items: center;
   position: relative;
   width: 100%;
+  margin-bottom: 20px;
 
 }
 
@@ -71,9 +73,9 @@
   justify-content: space-between;
   align-items: center;
   background-color: rgba(255, 255, 255, 0.03);
-  border-radius: 8px;
-  padding: 10px;
-  margin-bottom: 10px;
+  border-radius: 10px;
+  padding: 16px;
+  margin-bottom: 8px;
   border: 1px solid rgba(255, 255, 255, 0.1);
   width: 100%;
 }
@@ -87,6 +89,7 @@
   font-size: 14px;
   display: flex;
   align-items: center;
+  margin-bottom: 2px;
 }
 
 .deposit-cross {
@@ -125,7 +128,7 @@
 
 .network-info img {
   width: 41px;
-  margin-right: 10px;
+  margin-right: 9px;
 }
 
 .network-info span {
@@ -133,6 +136,7 @@
   color: #ffffff;
 }
 .network-info .direction {
+  margin-bottom: 2px;
   color: rgba(255, 255, 255, 0.3);
 
 }
@@ -154,10 +158,9 @@
   justify-content: space-between;
   align-items: center;
   background-color: #0e0e0e;
-  border-radius: 8px;
+  border-radius: 10px;
   padding: 10px;
   color: #5a5a5a;
-  margin-bottom: 10px;
   border: 1px solid rgba(255, 255, 255, 0.1);
   width: 100%;
 }
@@ -194,7 +197,7 @@ input::placeholder {
 }
 
 .amount-options button:hover {
-  background-color: #292929;
+  background-color: #a3ffa5;
 }
 
 .submit-button.disabled {
@@ -212,12 +215,12 @@ input::placeholder {
 }
 .submit-button {
   width: 100%;
-  padding: 12px;
+  padding: 16px;
   background-color: #a3ffa5;
   color: #000000;
   border: none;
-  border-radius: 8px;
-  font-size: 16px;
+  border-radius: 10px;
+  font-size: 20px;
   cursor: pointer;
   margin-top: 20px;
 }
@@ -302,7 +305,7 @@ input::placeholder {
 }
 
 .percentage-button:hover {
-  color: #ffffff;
+  color:  #a3ffa5;
 }
 
 
