@@ -1,6 +1,5 @@
 "use client";
 import React, { useEffect, useState } from 'react';
-import {  utils } from 'ethers';
 import { PublicKey, PublicKeyInitData } from '@solana/web3.js';
 import './styles.css';
 import TransferArrow from '../icons/transferArrow';
@@ -10,12 +9,12 @@ import {
   useDynamicContext,
   Wallet,
 } from "@dynamic-labs/sdk-react-core";
+
 import Cross from '../icons/cross';
-import { createPublicClient, createWalletClient, custom, formatEther, http, parseEther } from 'viem'
+import { createPublicClient, createWalletClient, custom, formatEther, http, parseEther, toHex } from 'viem'
 import { mainnet } from 'viem/chains'
 import { getBalance } from 'viem/actions';
 import { truncateWalletAddress } from '@/lib/stringUtils';
-import { parse } from 'path';
 
 const client = createPublicClient({
   chain: mainnet,
@@ -26,7 +25,7 @@ const client = createPublicClient({
   const solanaToBytes32 = (solanaAddress: PublicKeyInitData) => {
     try {
       const publicKey = new PublicKey(solanaAddress);
-      return utils.hexlify(publicKey.toBytes().slice(0, 32));
+      return toHex(publicKey.toBytes().slice(0, 32));
     } catch (error) {
       console.error('Invalid Solana address', error);
       throw new Error('Invalid Solana address');
@@ -48,9 +47,8 @@ const Deposit = () => {
   const solWallet = userWallets.find(w => w.chain == "SOL");
   const evmWallet = userWallets.find(w => w.chain == "EVM");
   const { handleUnlinkWallet, rpcProviders } = useDynamicContext();
-  const provider = rpcProviders.evmDefaultProvider
-
-
+  
+  const provider = rpcProviders.evmDefaultProvider;
 
   useEffect(() => {
     userWallets.forEach(async (wallet) => {

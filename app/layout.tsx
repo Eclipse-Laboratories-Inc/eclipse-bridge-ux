@@ -31,6 +31,13 @@ export default function RootLayout({
           environmentId: "32962fd3-4365-4b90-807c-ad2176a3df99",
           walletConnectors: [EthereumWalletConnectors, SolanaWalletConnectors],
           initialAuthenticationMode: 'connect-only',
+          overrides: {
+            chainDisplayValues: {
+              solana: {
+                 displayName: 'Eclipse'
+              }
+           }
+          },
           cssOverrides,
           bridgeChains: [
             {

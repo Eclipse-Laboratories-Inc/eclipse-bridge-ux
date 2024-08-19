@@ -9,10 +9,11 @@
     "lint": "next lint"
   },
   "dependencies": {
-    "@dynamic-labs/ethereum": "*",
-    "@dynamic-labs/ethers-v5": "*",
-    "@dynamic-labs/sdk-react-core": "*",
-    "@dynamic-labs/solana": "*",
+    "@dynamic-labs/ethereum": "^2.0.0",
+    "@dynamic-labs/ethers-v5": "2.4.0",
+    "@dynamic-labs/rpc-provider-ethereum": "^2.0.0",
+    "@dynamic-labs/sdk-react-core": "^2.0.0",
+    "@dynamic-labs/solana": "2.4.0",
     "@solana/web3.js": "^1.95.2",
     "@tanstack/react-query": "^5.51.21",
     "@types/node": "20.8.7",
