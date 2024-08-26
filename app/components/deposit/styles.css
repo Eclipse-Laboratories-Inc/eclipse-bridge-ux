@@ -18,6 +18,7 @@
 }
 
 
+
 .header-tabs {
   display: flex;
   justify-content: center;
@@ -223,10 +224,15 @@ input::placeholder {
   font-size: 20px;
   cursor: pointer;
   margin-top: 20px;
+  transition: transform 0.1s ease;
 }
 
 .submit-button:hover {
   background-color: #82e085;
+}
+
+.submit-button:active {
+  transform: scale(0.95);
 }
 
 .estimated-time {
@@ -307,7 +313,6 @@ input::placeholder {
 .percentage-button:hover {
   color:  #a3ffa5;
 }
-
 
 .amount-input-right {
   display: flex;
