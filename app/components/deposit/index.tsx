@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { PublicKey, PublicKeyInitData } from '@solana/web3.js';
 import './styles.css';
 import TransferArrow from '../icons/transferArrow';
@@ -49,8 +49,14 @@ const Deposit = () => {
   const { handleUnlinkWallet, rpcProviders } = useDynamicContext();
   
   const provider = rpcProviders.evmDefaultProvider;
+  const inputRef = useRef<HTMLInputElement | null>(null);
 
   useEffect(() => {
+    const handleWheel = (event: WheelEvent) => {
+	event.preventDefault();
+    } 
+    const input = inputRef.current;
+    if (input) input.addEventListener('wheel', handleWheel);
     userWallets.forEach(async (wallet) => {
       if (!wallet) return;
 
@@ -206,6 +212,7 @@ const Deposit = () => {
               step="0.01"
               placeholder="0 ETH"
               value={amountEther}
+	      ref={inputRef}
               onChange={(e) => setAmountEther(e.target.value)}
             />
             {evmWallet &&
