@@ -212,6 +212,7 @@ const Deposit = () => {
               type="number"
               step="0.01"
               placeholder="0 ETH"
+              style={{fontWeight: "600"}}
               value={amountEther}
 	      ref={inputRef}
               onChange={(e) => setAmountEther(e.target.value)}
