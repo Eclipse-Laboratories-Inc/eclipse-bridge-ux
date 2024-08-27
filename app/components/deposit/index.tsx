@@ -238,11 +238,9 @@ const Deposit = () => {
         </div>
         { (!evmWallet || !solWallet) 
         ?
-          <div>
             <DynamicConnectButton buttonClassName="wallet-connect-button w-full" buttonContainerClassName="submit-button">
               <span style={{ width: '100%' }}>{determineButtonText()}</span>
             </DynamicConnectButton>
-          </div>
         : <button className={determineButtonClass()} onClick={submitDeposit}>
             {determineButtonText()}
           </button>
