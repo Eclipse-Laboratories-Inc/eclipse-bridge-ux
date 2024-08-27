@@ -216,7 +216,7 @@ input::placeholder {
   background-color: #0e0e0e;
   cursor: not-allowed;
   color: #5a5a5a;
-  font-size: 16px;
+  font-size: 20px;
   pointer-events: none;
 }
 
