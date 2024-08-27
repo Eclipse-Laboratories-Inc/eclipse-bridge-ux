@@ -173,7 +173,7 @@ const Deposit = () => {
           <div className="network-box">
             <div className="network-info">
               <div className='network-info-left-section'>
-                <img src="eth.png" alt="Ethereum" />
+                <img src="eth.png" alt="Ethereum" style={{ objectFit: "cover", height: "44px", width: "44px"}} />
                 <div className="input-inner-container">
                   <span className="direction">From</span>
                   <span className="name">Ethereum Mainnet</span>
@@ -193,7 +193,7 @@ const Deposit = () => {
           <div className="network-box">
             <div className="network-info">
               <div className='network-info-left-section'>
-                <img src="eclipse.png" alt="Eclipse" />
+                <img src="eclipse.png" alt="Eclipse" style={{ objectFit: "cover", height: "44px", width: "44px"}} />
                 <div className="input-inner-container">
                   <span className="direction">To</span>
                   <span className="name">Eclipse Mainnet</span>
