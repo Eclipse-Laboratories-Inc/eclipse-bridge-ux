@@ -211,7 +211,6 @@ input::placeholder {
   font-size: 20px;
   cursor: pointer;
   margin-top: 20px;
-  transition: transform 0.1s ease;
 }
 
 .submit-button.disabled {
@@ -237,12 +236,18 @@ input::placeholder {
 
 .submit-button:active {
   transform: scale(0.95);
+  transition: transform 0.1s ease;
 }
 
 .wallet-connect-button:active {
   transform: scale(1.0526);
   transform-origin: center center;
+  font-size: 95%;
+}
 
+.deposit-button:active{ 
+  transform: scale(1.052631);
+  transform-origin: center center;
   font-size: 95%;
 }
 

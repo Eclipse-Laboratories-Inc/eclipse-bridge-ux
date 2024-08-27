@@ -97,7 +97,6 @@ const Deposit = () => {
 
 
   const submitDeposit = async () => {
-
     const destinationBytes32 = solanaToBytes32(solWallet?.address || '');
     const [account] = await walletClient.getAddresses()
     const weiValue = parseEther(amountEther?.toString() || '');
@@ -129,7 +128,7 @@ const Deposit = () => {
       return 'submit-button alarm'
     }
     
-    return 'submit-button'
+    return 'submit-button' 
   }
 
   function determineButtonText(): string {
@@ -241,9 +240,12 @@ const Deposit = () => {
             <DynamicConnectButton buttonClassName="wallet-connect-button w-full" buttonContainerClassName="submit-button">
               <span style={{ width: '100%' }}>{determineButtonText()}</span>
             </DynamicConnectButton>
-        : <button className={determineButtonClass()} onClick={submitDeposit}>
-            {determineButtonText()}
-          </button>
+        : 
+          <div className={determineButtonClass()}> 
+            <button className="w-full deposit-button p-4" onClick={submitDeposit}>
+              {determineButtonText()}
+            </button>
+          </div>
         }
           <div className="estimated-time">
             <span>Estimated time ~ 5 mins</span>
