@@ -199,9 +199,12 @@ input::placeholder {
   background-color: #a3ffa5;
 }
 
+.wallet-connect-button {
+  padding: 16px;
+}
+
 .submit-button {
   width: 100%;
-  padding: 16px;
   background-color: #a3ffa5;
   color: #000000;
   border: none;
@@ -229,13 +232,16 @@ input::placeholder {
   background: rgba(235, 77, 77, 0.15);
 }
 
-
 .submit-button:hover {
   background-color: #82e085;
 }
 
 .submit-button:active {
   transform: scale(0.95);
+}
+
+.wallet-connect-button:active {
+  transform: scale(1.06);
 }
 
 .estimated-time {

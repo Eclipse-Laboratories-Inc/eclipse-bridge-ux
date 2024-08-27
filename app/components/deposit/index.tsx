@@ -22,6 +22,7 @@ const client = createPublicClient({
 })
 
 
+  // TODO: move this to the lib
   const solanaToBytes32 = (solanaAddress: PublicKeyInitData) => {
     try {
       const publicKey = new PublicKey(solanaAddress);
@@ -50,18 +51,14 @@ const Deposit = () => {
   
   const provider = rpcProviders.evmDefaultProvider;
   const inputRef = useRef<HTMLInputElement | null>(null);
-  const handleConnectButton = () => {
-    const elem = document.getElementsByClassName("wallet-connect-button")[0];
-    // @ts-ignore: Property 'click' does not exist on type 'Element'
-    console.log(elem.click())
-  }
 
   useEffect(() => {
     const handleWheel = (event: WheelEvent) => {
-	event.preventDefault();
+	    event.preventDefault();
     } 
     const input = inputRef.current;
     if (input) input.addEventListener('wheel', handleWheel);
+
     userWallets.forEach(async (wallet) => {
       if (!wallet) return;
 
@@ -241,8 +238,8 @@ const Deposit = () => {
         </div>
         { (!evmWallet || !solWallet) 
         ?
-          <div onClick={handleConnectButton}>
-            <DynamicConnectButton buttonClassName="wallet-connect-button" buttonContainerClassName="submit-button">
+          <div>
+            <DynamicConnectButton buttonClassName="wallet-connect-button w-full" buttonContainerClassName="submit-button">
               <span style={{ width: '100%' }}>{determineButtonText()}</span>
             </DynamicConnectButton>
           </div>
