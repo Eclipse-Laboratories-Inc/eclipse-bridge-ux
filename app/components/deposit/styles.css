@@ -91,6 +91,14 @@
   margin-bottom: 2px;
 }
 
+.disconnect:hover svg path,
+.disconnect:hover {
+  stroke: #EB4D4D;
+  color: #EB4D4D;
+  stroke-opacity: 1;
+
+}
+
 .deposit-cross {
   content: 'x';
   display: inline-block;
@@ -162,6 +170,7 @@
   border: 1px solid rgba(255, 255, 255, 0.1);
   width: 100%;
 }
+
 .amount-input input {
   display: flex;
   justify-content: space-between;

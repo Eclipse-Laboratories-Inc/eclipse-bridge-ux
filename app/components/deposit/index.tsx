@@ -214,7 +214,7 @@ const Deposit = () => {
               placeholder="0 ETH"
               style={{fontWeight: "600"}}
               value={amountEther}
-	      ref={inputRef}
+	            ref={inputRef}
               onChange={(e) => setAmountEther(e.target.value)}
             />
             {evmWallet &&
