@@ -237,6 +237,11 @@ input::placeholder {
 .submit-button:active {
   transform: scale(0.95);
   transition: transform 0.1s ease;
+  height: 66px;
+}
+
+.connect-btn:active {
+  height: 62px;
 }
 
 .wallet-connect-button:active {
