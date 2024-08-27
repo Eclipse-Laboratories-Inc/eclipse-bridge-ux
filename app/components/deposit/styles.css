@@ -104,7 +104,6 @@
   align-items: flex-end;
 }
 
-
 .wallet-addresss {
   font-size: 16px;
   text-overflow: ellipsis;
@@ -241,7 +240,10 @@ input::placeholder {
 }
 
 .wallet-connect-button:active {
-  transform: scale(1.06);
+  transform: scale(1.0526);
+  transform-origin: center center;
+
+  font-size: 95%;
 }
 
 .estimated-time {
