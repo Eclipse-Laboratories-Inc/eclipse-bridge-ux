@@ -201,19 +201,6 @@ input::placeholder {
   background-color: #a3ffa5;
 }
 
-.submit-button.disabled {
-  background-color: #0e0e0e;
-  cursor: not-allowed;
-  color: #5a5a5a;
-  font-size: 16px;
-  pointer-events: none;
-}
-
-.submit-button.alarm {
-  background: rgba(235, 77, 77, 0.1);
-  color: #EB4D4D;
-
-}
 .submit-button {
   width: 100%;
   padding: 16px;
@@ -226,6 +213,24 @@ input::placeholder {
   margin-top: 20px;
   transition: transform 0.1s ease;
 }
+
+.submit-button.disabled {
+  background-color: #0e0e0e;
+  cursor: not-allowed;
+  color: #5a5a5a;
+  font-size: 16px;
+  pointer-events: none;
+}
+
+.submit-button.alarm {
+  background: rgba(235, 77, 77, 0.1);
+  color: #EB4D4D;
+}
+
+.submit-button.alarm:hover {
+  background: rgba(235, 77, 77, 0.15);
+}
+
 
 .submit-button:hover {
   background-color: #82e085;
