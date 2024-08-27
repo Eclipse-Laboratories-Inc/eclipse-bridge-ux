@@ -50,6 +50,11 @@ const Deposit = () => {
   
   const provider = rpcProviders.evmDefaultProvider;
   const inputRef = useRef<HTMLInputElement | null>(null);
+  const handleConnectButton = () => {
+    const elem = document.getElementsByClassName("wallet-connect-button")[0];
+    // @ts-ignore: Property 'click' does not exist on type 'Element'
+    console.log(elem.click())
+  }
 
   useEffect(() => {
     const handleWheel = (event: WheelEvent) => {
@@ -236,9 +241,11 @@ const Deposit = () => {
         </div>
         { (!evmWallet || !solWallet) 
         ?
-          <DynamicConnectButton buttonContainerClassName="submit-button">
-            <span style={{ width: '100%' }}>{determineButtonText()}</span>
-          </DynamicConnectButton>
+          <div onClick={handleConnectButton}>
+            <DynamicConnectButton buttonClassName="wallet-connect-button" buttonContainerClassName="submit-button">
+              <span style={{ width: '100%' }}>{determineButtonText()}</span>
+            </DynamicConnectButton>
+          </div>
         : <button className={determineButtonClass()} onClick={submitDeposit}>
             {determineButtonText()}
           </button>
