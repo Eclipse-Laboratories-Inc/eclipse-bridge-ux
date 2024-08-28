@@ -129,6 +129,8 @@ const Deposit = () => {
     if (parseFloat(amountEther as string) > balanceEther) {
       return 'alarm'
     }
+
+    if (!evmWallet) return "disabled";
     return ""
 
   }
