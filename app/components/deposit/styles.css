@@ -141,10 +141,10 @@
   font-size: 14px;
   color: #ffffff;
 }
+
 .network-info .direction {
   margin-bottom: 2px;
   color: rgba(255, 255, 255, 0.3);
-
 }
 
 .network-info small {
@@ -180,11 +180,6 @@
   color: #ffffff;
   width: 100%;
   font-size: 34px;
-
-}
-
-.input-loader {
-
 }
 
 input::placeholder {
