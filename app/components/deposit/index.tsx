@@ -205,8 +205,8 @@ const Deposit = () => {
             </div>
           </div>
         </div>
-        <div className="amount-input">
-          <div className="amount-input-left">
+        <div className="amount-input flex flex-col">
+          <div className="amount-input-top flex justify-between">
             <input
               disabled={!evmWallet || !solWallet}
               type="number"
@@ -217,19 +217,19 @@ const Deposit = () => {
 	            ref={inputRef}
               onChange={(e) => setAmountEther(e.target.value)}
             />
-            {evmWallet &&
-              <div className="balance-info">
-                Bal  &nbsp;  <span style={{ color: '#fff' }}>{balanceEther + " "} </span> &nbsp; ETH
-              </div>}
-          </div>
-          <div className="amount-input-right">
-            <div className="token-display">
+            <div className="token-display" style={{width: "45%"}}>
               <div className="token-icon">
                 <img src="eth.png" alt="ETH Icon" />
               </div>
               <div className="token-name">ETH</div>
             </div>
-            <div className={evmWallet ? "percentage-buttons" : "invisible"}>
+          </div>
+          <div className={`${evmWallet ? '' : 'hidden'} amount-input-bottom flex flex-row justify-between w-full`} style={{marginTop: "10px"}}>
+            {evmWallet &&
+              <div className="balance-info">
+                Bal &nbsp; <span style={{ color: '#fff' }}>{balanceEther + " "} </span> &nbsp; ETH
+              </div>}
+            <div className={evmWallet ? "percentage-buttons" : "invisible"} style={{width: "30%", marginTop: "8px"}}>
               <button onClick={() => setAmountEther(balanceEther * 0.25)} className="percentage-button">25%</button>
               <button onClick={() => setAmountEther(balanceEther * 0.50)} className="percentage-button">50%</button>
               <button onClick={() => setAmountEther(balanceEther)} className="percentage-button">Max</button>

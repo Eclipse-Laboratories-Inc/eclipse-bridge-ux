@@ -176,7 +176,6 @@
   justify-content: space-between;
   align-items: center;
   border-radius: 8px;
-  margin-bottom: 10px;
   background-color: #0e0e0e;
   color: #ffffff;
   width: 100%;
@@ -338,18 +337,17 @@ input::placeholder {
 
 .percentage-buttons {
   display: flex;
+  justify-content: flex-end;
 }
 
 .percentage-button:hover {
   color:  #a3ffa5;
 }
 
-.amount-input-right {
+.amount-input-bottom {
   display: flex;
-  flex-direction: column;
   align-items: end;
   border-radius: 10px;
-  max-width: 200px;
 }
 
 .token-display {
@@ -359,7 +357,6 @@ input::placeholder {
   background-color: #1c1c1c;
   padding: 5px;
   border-radius: 8px;
-  margin-bottom: 20px;
   width: 100%;
 }
 
@@ -387,4 +384,8 @@ input::placeholder {
   border: none;
   cursor: pointer;
   margin: 0 10px;
+}
+
+.hidden {
+  display: none;
 }
