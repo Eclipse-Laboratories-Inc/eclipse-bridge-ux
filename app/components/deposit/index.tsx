@@ -130,7 +130,7 @@ const Deposit = () => {
       return 'alarm'
     }
 
-    if (!evmWallet) return "disabled";
+    if (!evmWallet) return 'disabled';
     return ""
 
   }
@@ -225,7 +225,7 @@ const Deposit = () => {
           </div>
         </div>
         <div className={ `amount-input flex flex-col ${determineInputClass()}` }>
-          <div className="amount-input-top flex justify-between w-full">
+          <div className="amount-input-top flex justify-between w-full items-center">
           <div className="input-wrapper"> 
           { (!evmWallet || evmWallet && balanceEther)
             ? <input
@@ -256,7 +256,7 @@ const Deposit = () => {
               <div className="token-name">ETH</div>
             </div>
           </div>
-          <div className={`${evmWallet ? '' : 'hidden'} amount-input-bottom flex flex-row justify-between w-full items-center`} style={{marginTop: "10px"}}>
+          <div className={`${evmWallet ? '' : 'hidden'} amount-input-bottom flex flex-row justify-between w-full items-center`}>
             {evmWallet && 
               <div className="balance-info w-full">
                 <span>Bal</span> 
