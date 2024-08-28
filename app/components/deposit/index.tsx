@@ -46,6 +46,7 @@ const client = createPublicClient({
 const Deposit = () => {
   const [amountEther, setAmountEther] = useState<number | string | undefined>(undefined);
   const [balanceEther, setAmountBalanceEther] = useState(0);
+  const [inputState, setInputState] = useState("");
   const userWallets: Wallet[] = useUserWallets() as Wallet[];
   const solWallet = userWallets.find(w => w.chain == "SOL");
   const evmWallet = userWallets.find(w => w.chain == "EVM");
@@ -118,6 +119,15 @@ const Deposit = () => {
     }
 
   };
+
+  function determineInputClass(): string {
+    if (parseFloat(amountEther as string) > balanceEther) {
+      return 'alarm'
+    }
+    return ""
+
+  }
+
   function determineButtonClass(): string {
     if (!amountEther) {
       return 'submit-button disabled'
@@ -207,7 +217,7 @@ const Deposit = () => {
             </div>
           </div>
         </div>
-        <div className="amount-input flex flex-col">
+        <div className={ `amount-input flex flex-col ${determineInputClass()}` }>
           <div className="amount-input-top flex justify-between w-full">
           <div className="input-wrapper"> 
           { (!evmWallet || evmWallet && balanceEther)
@@ -252,7 +262,7 @@ const Deposit = () => {
 
               </div>
             }
-            <div className={evmWallet ? "percentage-buttons" : "invisible"} style={{width: "30%", marginTop: "8px"}}>
+            <div className={evmWallet ? "percentage-buttons" : "invisible"}>
               <button onClick={() => setAmountEther(balanceEther * 0.25)} className="percentage-button">25%</button>
               <button onClick={() => setAmountEther(balanceEther * 0.50)} className="percentage-button">50%</button>
               <button onClick={() => setAmountEther(balanceEther)} className="percentage-button">Max</button>

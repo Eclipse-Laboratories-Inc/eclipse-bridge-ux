@@ -160,6 +160,7 @@
 
 .amount-input {
   width: 100%;
+  position: relative;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -171,12 +172,52 @@
   width: 100%;
 }
 
+.amount-input::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(255, 255, 255, 0.05); 
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  opacity: 0; 
+  pointer-events: none; 
+  transition: opacity 0.3s ease;
+  border-radius: 10px;
+}
+
+.amount-input:hover::before {
+  opacity: 1; 
+}
+
+.amount-input:focus-within {
+  background-color: rgba(255, 255, 255, 0.03); 
+  transition: background-color 0.2s ease;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  transition: border 0.2s ease;
+}
+
+.amount-input.alarm {
+  background-color: rgba(235, 77, 77, 0.03);
+  border: 1px solid rgba(235, 77, 77, 0.5);
+}
+
+/* no hover for alarm state */
+.amount-input.alarm::before, .amount-input.alarm:focus-within::before {
+  background-color: rgba(235, 77, 77, 0);
+}
+
+.amount-input:focus-within::before {
+  background-color: rgba(255, 255, 255, 0.03); 
+}
+
 .amount-input .input-wrapper, .amount-input input {
   display: flex;
   justify-content: space-between;
   align-items: center;
   border-radius: 8px;
-  background-color: #0e0e0e;
+  background-color: inherit;
   color: #ffffff;
   width: 100%;
   font-size: 34px;
@@ -366,7 +407,8 @@ input::placeholder {
 .percentage-buttons {
   display: flex;
   justify-content: flex-end;
-  width: 100%;
+  width: 30%;
+  margin-top: 8px;
   margin-right: -5px;
 }
 
