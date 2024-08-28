@@ -5,6 +5,8 @@ import { getBalance } from 'viem/actions';
 import { mainnet } from 'viem/chains';
 import './styles.css';
 import Cross from '../icons/cross';
+import Copy from '../icons/copy'
+import Disconnect from '../icons/disconnect';
 import { truncateWalletAddress } from '@/lib/stringUtils';
 import { getWalletBalance } from '@/lib/solanaUtils';
 
@@ -75,13 +77,22 @@ const ConnectedWallets = ({ close, ref }: ConnectedWalletsProps ) => {
         <li className="wallet-item">
           <div className="wallet-title"> Eclipse Wallet </div>
           <div className="wallet-details">
-            <div className="wallet-details-top">
-              <img
-                src={eclipseWallet.icon}
-                alt="Eclipse Icon"
-                className="wallet-icon"
-              />
-              <div> {truncateWalletAddress(solWallet?.address || '')}</div>
+            <div className="wallet-details-top flex justify-between items-center">
+            <div className="flex flex-row">
+
+                <img
+                  src={eclipseWallet.icon}
+                  alt="Eclipse Icon"
+                  className="wallet-icon"
+                />
+                <div> {truncateWalletAddress(solWallet?.address || '')}</div>
+            </div>
+            <div className="flex" style={{gap: "8px"}}>
+                <div onClick={() => navigator.clipboard.writeText(solWallet?.address || '')}>
+                  <Copy copyClassName="modal-copy" />
+                </div>
+                <Disconnect disconnectClassName="modal-disconnect" />
+            </div>
             </div>
             <div className="wallet-details-bottom">
 

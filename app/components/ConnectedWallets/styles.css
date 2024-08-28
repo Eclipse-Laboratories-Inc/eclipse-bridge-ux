@@ -78,3 +78,19 @@
 .wallet-details-balance {
   color: rgba(255, 255, 255, 0.3);
 }
+
+.modal-copy, .modal-disconnect {
+  cursor: pointer;
+  fill: black;
+  transition: fill 0.9s ease; 
+}
+
+.modal-copy:hover path, .modal-disconnect:hover path {
+  fill: #a3ffa5;
+  pointer-events: all;
+  fill-opacity: 1;
+}
+
+.modal-disconnect:hover path {
+  fill: #EB4D4D;
+}
