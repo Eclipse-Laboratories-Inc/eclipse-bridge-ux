@@ -208,8 +208,14 @@
   background-color: rgba(235, 77, 77, 0);
 }
 
+
+.amount-input:focus-within:hover::before, .amount-input:focus-within:hover  {
+  background-color:  rgba(255, 255, 255, 0.02);
+}
+
+
 .amount-input:focus-within::before {
-  background-color: rgba(255, 255, 255, 0.03); 
+  background-color:  rgba(255, 255, 255, 0.03); 
 }
 
 .amount-input .input-wrapper, .amount-input input {
