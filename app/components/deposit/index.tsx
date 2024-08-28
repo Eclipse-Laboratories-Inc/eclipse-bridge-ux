@@ -15,6 +15,8 @@ import { createPublicClient, createWalletClient, custom, formatEther, http, pars
 import { mainnet } from 'viem/chains'
 import { getBalance } from 'viem/actions';
 import { truncateWalletAddress } from '@/lib/stringUtils';
+import Skeleton, { SkeletonTheme } from 'react-loading-skeleton'
+import 'react-loading-skeleton/dist/skeleton.css'
 
 const client = createPublicClient({
   chain: mainnet,
@@ -206,8 +208,10 @@ const Deposit = () => {
           </div>
         </div>
         <div className="amount-input flex flex-col">
-          <div className="amount-input-top flex justify-between">
-            <input
+          <div className="amount-input-top flex justify-between w-full">
+          <div className="input-wrapper"> 
+          { (!evmWallet || evmWallet && balanceEther)
+            ? <input
               disabled={!evmWallet || !solWallet}
               type="number"
               step="0.01"
@@ -217,6 +221,18 @@ const Deposit = () => {
 	            ref={inputRef}
               onChange={(e) => setAmountEther(e.target.value)}
             />
+
+            : <SkeletonTheme baseColor="#313131" highlightColor="#525252">
+              <Skeleton height={40} width={160} />
+            </SkeletonTheme>
+          }
+          </div> 
+            
+          {/*
+                <SkeletonTheme baseColor="#313131" highlightColor="#525252">
+                    <Skeleton height={40}/>
+                  </SkeletonTheme>
+          */}
             <div className="token-display" style={{width: "45%"}}>
               <div className="token-icon">
                 <img src="eth.png" alt="ETH Icon" />
@@ -224,11 +240,19 @@ const Deposit = () => {
               <div className="token-name">ETH</div>
             </div>
           </div>
-          <div className={`${evmWallet ? '' : 'hidden'} amount-input-bottom flex flex-row justify-between w-full`} style={{marginTop: "10px"}}>
-            {evmWallet &&
-              <div className="balance-info">
-                Bal &nbsp; <span style={{ color: '#fff' }}>{balanceEther + " "} </span> &nbsp; ETH
-              </div>}
+          <div className={`${evmWallet ? '' : 'hidden'} amount-input-bottom flex flex-row justify-between w-full items-center`} style={{marginTop: "10px"}}>
+            {evmWallet && 
+              <div className="balance-info w-full">
+                <span>Bal</span> 
+                {(balanceEther)
+                ?  <><span style={{ color: '#fff' }}>{balanceEther + " "} </span> <>ETH</></> 
+                : <SkeletonTheme baseColor="#313131" highlightColor="#525252">
+                    <span style={{width: "20%"}}><Skeleton inline={true}/></span>
+                  </SkeletonTheme>
+                }
+
+              </div>
+            }
             <div className={evmWallet ? "percentage-buttons" : "invisible"} style={{width: "30%", marginTop: "8px"}}>
               <button onClick={() => setAmountEther(balanceEther * 0.25)} className="percentage-button">25%</button>
               <button onClick={() => setAmountEther(balanceEther * 0.50)} className="percentage-button">50%</button>
@@ -253,6 +277,7 @@ const Deposit = () => {
           </div>
         </div>
       </div>
+
       );
 };
 
