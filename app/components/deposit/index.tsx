@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect, useState, useRef } from 'react';
+import React, { useEffect, useState, useRef, useCallback } from 'react';
 import { PublicKey, PublicKeyInitData } from '@solana/web3.js';
 import './styles.css';
 import TransferArrow from '../icons/transferArrow';
@@ -46,22 +46,27 @@ const client = createPublicClient({
 const Deposit = () => {
   const [amountEther, setAmountEther] = useState<number | string | undefined>(undefined);
   const [balanceEther, setAmountBalanceEther] = useState(0);
-  const [inputState, setInputState] = useState("");
   const userWallets: Wallet[] = useUserWallets() as Wallet[];
   const solWallet = userWallets.find(w => w.chain == "SOL");
   const evmWallet = userWallets.find(w => w.chain == "EVM");
   const { handleUnlinkWallet, rpcProviders } = useDynamicContext();
   
   const provider = rpcProviders.evmDefaultProvider;
-  const inputRef = useRef<HTMLInputElement | null>(null);
+  const setInputRef = useCallback((node: HTMLInputElement) => {
+    if (node) {
+      const handleWheel = (event: WheelEvent) => {
+        event.preventDefault();
+      };
+
+      node.addEventListener('wheel', handleWheel);
+
+      return () => {
+        node.removeEventListener('wheel', handleWheel);
+      };
+    }
+  }, []);
 
   useEffect(() => {
-    const handleWheel = (event: WheelEvent) => {
-	    event.preventDefault();
-    } 
-    const input = inputRef.current;
-    if (input) input.addEventListener('wheel', handleWheel);
-
     userWallets.forEach(async (wallet) => {
       if (!wallet) return;
 
@@ -228,7 +233,7 @@ const Deposit = () => {
               placeholder="0 ETH"
               style={{fontWeight: "600"}}
               value={amountEther}
-	            ref={inputRef}
+	            ref={setInputRef}
               onChange={(e) => setAmountEther(e.target.value)}
             />
             : <SkeletonTheme baseColor="#313131" highlightColor="#525252">
