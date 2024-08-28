@@ -221,7 +221,6 @@ const Deposit = () => {
 	            ref={inputRef}
               onChange={(e) => setAmountEther(e.target.value)}
             />
-
             : <SkeletonTheme baseColor="#313131" highlightColor="#525252">
               <Skeleton height={40} width={160} />
             </SkeletonTheme>

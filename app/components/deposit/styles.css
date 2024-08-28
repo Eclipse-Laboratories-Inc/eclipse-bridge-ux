@@ -341,15 +341,6 @@ input::placeholder {
   font-weight: bold;
 }
 
-.percentage-buttons {
-  display: flex;
-  justify-content: flex-end;
-}
-
-.percentage-button:hover {
-  color:  #a3ffa5;
-}
-
 .amount-input-bottom {
   display: flex;
   align-items: end;
@@ -379,8 +370,13 @@ input::placeholder {
 
 .percentage-buttons {
   display: flex;
-  justify-content: space-between;
+  justify-content: flex-end;
   width: 100%;
+  margin-right: -5px;
+}
+
+.percentage-button:hover {
+  color:  #a3ffa5;
 }
 
 .percentage-button {
