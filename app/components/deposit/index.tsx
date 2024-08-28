@@ -22,6 +22,7 @@ const client = createPublicClient({
 })
 
 
+  // TODO: move this to the lib
   const solanaToBytes32 = (solanaAddress: PublicKeyInitData) => {
     try {
       const publicKey = new PublicKey(solanaAddress);
@@ -53,10 +54,11 @@ const Deposit = () => {
 
   useEffect(() => {
     const handleWheel = (event: WheelEvent) => {
-	event.preventDefault();
+	    event.preventDefault();
     } 
     const input = inputRef.current;
     if (input) input.addEventListener('wheel', handleWheel);
+
     userWallets.forEach(async (wallet) => {
       if (!wallet) return;
 
@@ -95,7 +97,6 @@ const Deposit = () => {
 
 
   const submitDeposit = async () => {
-
     const destinationBytes32 = solanaToBytes32(solWallet?.address || '');
     const [account] = await walletClient.getAddresses()
     const weiValue = parseEther(amountEther?.toString() || '');
@@ -127,7 +128,7 @@ const Deposit = () => {
       return 'submit-button alarm'
     }
     
-    return 'submit-button'
+    return 'submit-button' 
   }
 
   function determineButtonText(): string {
@@ -168,7 +169,7 @@ const Deposit = () => {
           <div className="network-box">
             <div className="network-info">
               <div className='network-info-left-section'>
-                <img src="eth.png" alt="Ethereum" />
+                <img src="eth.png" alt="Ethereum" style={{ objectFit: "cover", height: "44px", width: "44px"}} />
                 <div className="input-inner-container">
                   <span className="direction">From</span>
                   <span className="name">Ethereum Mainnet</span>
@@ -188,7 +189,7 @@ const Deposit = () => {
           <div className="network-box">
             <div className="network-info">
               <div className='network-info-left-section'>
-                <img src="eclipse.png" alt="Eclipse" />
+                <img src="eclipse.png" alt="Eclipse" style={{ objectFit: "cover", height: "44px", width: "44px"}} />
                 <div className="input-inner-container">
                   <span className="direction">To</span>
                   <span className="name">Eclipse Mainnet</span>
@@ -211,8 +212,9 @@ const Deposit = () => {
               type="number"
               step="0.01"
               placeholder="0 ETH"
+              style={{fontWeight: "600"}}
               value={amountEther}
-	      ref={inputRef}
+	            ref={inputRef}
               onChange={(e) => setAmountEther(e.target.value)}
             />
             {evmWallet &&
@@ -236,12 +238,15 @@ const Deposit = () => {
         </div>
         { (!evmWallet || !solWallet) 
         ?
-          <DynamicConnectButton buttonContainerClassName="submit-button">
-            <span style={{ width: '100%' }}>{determineButtonText()}</span>
-          </DynamicConnectButton>
-        : <button className={determineButtonClass()} onClick={submitDeposit}>
-            {determineButtonText()}
-          </button>
+            <DynamicConnectButton buttonClassName="wallet-connect-button w-full" buttonContainerClassName="submit-button connect-btn">
+              <span style={{ width: '100%' }}>{determineButtonText()}</span>
+            </DynamicConnectButton>
+        : 
+          <div className={determineButtonClass()}> 
+            <button className="w-full deposit-button p-4" onClick={submitDeposit}>
+              {determineButtonText()}
+            </button>
+          </div>
         }
           <div className="estimated-time">
             <span>Estimated time ~ 5 mins</span>

@@ -17,7 +17,6 @@
   border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
-
 .header-tabs {
   display: flex;
   justify-content: center;
@@ -30,7 +29,7 @@
 }
 
 .header-tabs span {
-  font-weight: 600;
+  font-weight: 500;
   font-size: large;
   margin: 0;
   flex: 1;
@@ -92,6 +91,14 @@
   margin-bottom: 2px;
 }
 
+.disconnect:hover svg path,
+.disconnect:hover {
+  stroke: #EB4D4D;
+  color: #EB4D4D;
+  stroke-opacity: 1;
+
+}
+
 .deposit-cross {
   content: 'x';
   display: inline-block;
@@ -104,7 +111,6 @@
   flex-direction: column;
   align-items: flex-end;
 }
-
 
 .wallet-addresss {
   font-size: 16px;
@@ -164,6 +170,7 @@
   border: 1px solid rgba(255, 255, 255, 0.1);
   width: 100%;
 }
+
 .amount-input input {
   display: flex;
   justify-content: space-between;
@@ -200,22 +207,12 @@ input::placeholder {
   background-color: #a3ffa5;
 }
 
-.submit-button.disabled {
-  background-color: #0e0e0e;
-  cursor: not-allowed;
-  color: #5a5a5a;
-  font-size: 16px;
-  pointer-events: none;
+.wallet-connect-button {
+  padding: 16px;
 }
 
-.submit-button.alarm {
-  background: rgba(235, 77, 77, 0.1);
-  color: #EB4D4D;
-
-}
 .submit-button {
   width: 100%;
-  padding: 16px;
   background-color: #a3ffa5;
   color: #000000;
   border: none;
@@ -225,8 +222,47 @@ input::placeholder {
   margin-top: 20px;
 }
 
+.submit-button.disabled {
+  background-color: #0e0e0e;
+  cursor: not-allowed;
+  color: #5a5a5a;
+  font-size: 20px;
+  pointer-events: none;
+}
+
+.submit-button.alarm {
+  background: rgba(235, 77, 77, 0.1);
+  color: #EB4D4D;
+}
+
+.submit-button.alarm:hover {
+  background: rgba(235, 77, 77, 0.15);
+}
+
 .submit-button:hover {
   background-color: #82e085;
+}
+
+.submit-button:active {
+  transform: scale(0.95);
+  transition: transform 0.1s ease;
+  height: 66px;
+}
+
+.connect-btn:active {
+  height: 62px;
+}
+
+.wallet-connect-button:active {
+  transform: scale(1.0526);
+  transform-origin: center center;
+  font-size: 95%;
+}
+
+.deposit-button:active{ 
+  transform: scale(1.052631);
+  transform-origin: center center;
+  font-size: 95%;
 }
 
 .estimated-time {
@@ -307,7 +343,6 @@ input::placeholder {
 .percentage-button:hover {
   color:  #a3ffa5;
 }
-
 
 .amount-input-right {
   display: flex;
