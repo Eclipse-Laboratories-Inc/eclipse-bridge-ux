@@ -1,5 +1,6 @@
 "use client";
-import React, { useEffect, useState, useRef } from 'react';
+import React, { useEffect, useState, useRef, useCallback } from 'react';
+import dynamic from 'next/dynamic';
 import { PublicKey, PublicKeyInitData } from '@solana/web3.js';
 import './styles.css';
 import TransferArrow from '../icons/transferArrow';
@@ -15,6 +16,8 @@ import { createPublicClient, createWalletClient, custom, formatEther, http, pars
 import { mainnet } from 'viem/chains'
 import { getBalance } from 'viem/actions';
 import { truncateWalletAddress } from '@/lib/stringUtils';
+import Skeleton, { SkeletonTheme } from 'react-loading-skeleton'
+import 'react-loading-skeleton/dist/skeleton.css'
 
 const client = createPublicClient({
   chain: mainnet,
@@ -34,7 +37,7 @@ const client = createPublicClient({
   };
   
   let walletClient: any;
-  if (typeof window !== 'undefined') {
+  if (typeof window !== 'undefined' && window.ethereum) {
     walletClient = createWalletClient({
       chain: mainnet,
       transport: custom(window.ethereum!),
@@ -43,28 +46,34 @@ const client = createPublicClient({
 
 const Deposit = () => {
   const [amountEther, setAmountEther] = useState<number | string | undefined>(undefined);
-  const [balanceEther, setAmountBalanceEther] = useState(0);
+  const [balanceEther, setAmountBalanceEther] = useState<number>(-1);
   const userWallets: Wallet[] = useUserWallets() as Wallet[];
   const solWallet = userWallets.find(w => w.chain == "SOL");
   const evmWallet = userWallets.find(w => w.chain == "EVM");
+
   const { handleUnlinkWallet, rpcProviders } = useDynamicContext();
   
   const provider = rpcProviders.evmDefaultProvider;
-  const inputRef = useRef<HTMLInputElement | null>(null);
+  const setInputRef = useCallback((node: HTMLInputElement) => {
+    if (node) {
+      const handleWheel = (event: WheelEvent) => {
+        event.preventDefault();
+      };
+
+      node.addEventListener('wheel', handleWheel);
+
+      return () => {
+        node.removeEventListener('wheel', handleWheel);
+      };
+    }
+  }, []);
 
   useEffect(() => {
-    const handleWheel = (event: WheelEvent) => {
-	    event.preventDefault();
-    } 
-    const input = inputRef.current;
-    if (input) input.addEventListener('wheel', handleWheel);
-
     userWallets.forEach(async (wallet) => {
       if (!wallet) return;
 
 
       if (!provider || !(wallet.chain == "EVM")) return;
-
       const balance = await getBalance(client, {
         //@ts-ignore
         address: wallet.address,
@@ -75,10 +84,8 @@ const Deposit = () => {
       const formattedEtherBalance = balanceAsEther.includes('.') ? balanceAsEther.slice(0, balanceAsEther.indexOf('.') + 5) : balanceAsEther
       const balanceEther = parseFloat(formattedEtherBalance);
       setAmountBalanceEther(balanceEther);
-
     });
   }, [userWallets]);
-
 
   const contractAddress = '0x83cB71D80078bf670b3EfeC6AD9E5E6407cD0fd1';
   const abi = [
@@ -116,6 +123,17 @@ const Deposit = () => {
     }
 
   };
+
+  function determineInputClass(): string {
+    if (parseFloat(amountEther as string) > balanceEther) {
+      return 'alarm'
+    }
+
+    if (!evmWallet) return 'disabled';
+    return ""
+
+  }
+
   function determineButtonClass(): string {
     if (!amountEther) {
       return 'submit-button disabled'
@@ -205,30 +223,51 @@ const Deposit = () => {
             </div>
           </div>
         </div>
-        <div className="amount-input">
-          <div className="amount-input-left">
-            <input
+        <div className={ `amount-input flex flex-col ${determineInputClass()}` }>
+          <div className="amount-input-top flex justify-between w-full items-center">
+          <div className="input-wrapper"> 
+          { (!evmWallet || evmWallet && (balanceEther >= 0))
+            ? <input
               disabled={!evmWallet || !solWallet}
               type="number"
               step="0.01"
               placeholder="0 ETH"
               style={{fontWeight: "600"}}
               value={amountEther}
-	            ref={inputRef}
+	            ref={setInputRef}
               onChange={(e) => setAmountEther(e.target.value)}
             />
-            {evmWallet &&
-              <div className="balance-info">
-                Bal  &nbsp;  <span style={{ color: '#fff' }}>{balanceEther + " "} </span> &nbsp; ETH
-              </div>}
-          </div>
-          <div className="amount-input-right">
-            <div className="token-display">
+            : <SkeletonTheme baseColor="#313131" highlightColor="#525252">
+              <Skeleton height={40} width={160} />
+            </SkeletonTheme>
+          }
+          </div> 
+            
+          {/*
+                <SkeletonTheme baseColor="#313131" highlightColor="#525252">
+                    <Skeleton height={40}/>
+                  </SkeletonTheme>
+          */}
+            <div className="token-display" style={{width: "45%"}}>
               <div className="token-icon">
                 <img src="eth.png" alt="ETH Icon" />
               </div>
               <div className="token-name">ETH</div>
             </div>
+          </div>
+          <div className={`${evmWallet ? '' : 'hidden'} amount-input-bottom flex flex-row justify-between w-full items-center`}>
+            {evmWallet && 
+              <div className="balance-info w-full">
+                <span>Bal</span> 
+                {(balanceEther >= 0)
+                ?  <><span style={{ color: '#fff' }}>{balanceEther + " "} </span> <>ETH</></> 
+                : <SkeletonTheme baseColor="#313131" highlightColor="#525252">
+                    <span style={{width: "20%"}}><Skeleton inline={true}/></span>
+                  </SkeletonTheme>
+                }
+
+              </div>
+            }
             <div className={evmWallet ? "percentage-buttons" : "invisible"}>
               <button onClick={() => setAmountEther(balanceEther * 0.25)} className="percentage-button">25%</button>
               <button onClick={() => setAmountEther(balanceEther * 0.50)} className="percentage-button">50%</button>
@@ -253,6 +292,7 @@ const Deposit = () => {
           </div>
         </div>
       </div>
+
       );
 };
 

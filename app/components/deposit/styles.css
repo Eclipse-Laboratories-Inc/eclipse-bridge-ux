@@ -141,10 +141,10 @@
   font-size: 14px;
   color: #ffffff;
 }
+
 .network-info .direction {
   margin-bottom: 2px;
   color: rgba(255, 255, 255, 0.3);
-
 }
 
 .network-info small {
@@ -160,6 +160,7 @@
 
 .amount-input {
   width: 100%;
+  position: relative;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -171,18 +172,94 @@
   width: 100%;
 }
 
-.amount-input input {
+.amount-input.disabled { 
+  cursor: not-allowed;
+  pointer-events: none; 
+  color: rgba(255, 255, 255, 0.3);
+}
+
+.amount-input.disabled:hover::before { 
+  opacity: 0;
+  pointer-events: none; 
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.amount-input.disabled::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+
+  pointer-events: none; 
+  transition: opacity 0.1s ease-out;
+  border-radius: 10px;
+  background: rgba(34,34,34, 0.5);
+  opacity: 1;
+  z-index: 1;
+}
+
+.amount-input::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(255, 255, 255, 0.05); 
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  opacity: 0; 
+  pointer-events: none; 
+  transition: opacity 0.1s ease-out;
+  border-radius: 10px;
+}
+
+.amount-input:hover::before {
+  opacity: 1; 
+}
+
+.amount-input:focus-within {
+  background-color: rgba(255, 255, 255, 0.03); 
+  transition: background-color 0.1s ease-out;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  transition: border 0.2s ease;
+}
+
+.amount-input.alarm {
+  background-color: rgba(235, 77, 77, 0.03);
+  border: 1px solid rgba(235, 77, 77, 0.5);
+}
+
+/* no hover for alarm state */
+.amount-input.alarm::before, .amount-input.alarm:focus-within::before {
+  background-color: rgba(235, 77, 77, 0);
+}
+
+.amount-input:focus-within::before {
+  background-color:  rgba(255, 255, 255, 0.03); 
+}
+
+/* no hover for input focus */
+.amount-input:focus-within:hover::before {
+  opacity: 0; 
+}
+
+.amount-input .input-wrapper, .amount-input input {
   display: flex;
   justify-content: space-between;
   align-items: center;
   border-radius: 8px;
-  margin-bottom: 10px;
-  background-color: #0e0e0e;
+  background-color: inherit;
   color: #ffffff;
   width: 100%;
   font-size: 34px;
-
 }
+
+.amount-input input {
+  margin-left: 4px;
+}
+
 input::placeholder {
   color: #5a5a5a;
 }
@@ -190,8 +267,10 @@ input::placeholder {
 .balance-info {
   display: flex;
   align-items: center;
+  margin-left: 4px;
   font-size: 16px;
   color: #5a5a5a;
+  gap: 2%;
 }
 
 .amount-options button {
@@ -336,20 +415,12 @@ input::placeholder {
   font-weight: bold;
 }
 
-.percentage-buttons {
+.amount-input-bottom {
   display: flex;
-}
-
-.percentage-button:hover {
-  color:  #a3ffa5;
-}
-
-.amount-input-right {
-  display: flex;
-  flex-direction: column;
   align-items: end;
   border-radius: 10px;
-  max-width: 200px;
+  margin-top: 10px;
+  margin-bottom: 4px;
 }
 
 .token-display {
@@ -359,7 +430,7 @@ input::placeholder {
   background-color: #1c1c1c;
   padding: 5px;
   border-radius: 8px;
-  margin-bottom: 20px;
+  height: 46px;
   width: 100%;
 }
 
@@ -376,8 +447,14 @@ input::placeholder {
 
 .percentage-buttons {
   display: flex;
-  justify-content: space-between;
-  width: 100%;
+  justify-content: flex-end;
+  width: 30%;
+  margin-top: 8px;
+  margin-right: -5px;
+}
+
+.percentage-button:hover {
+  color:  #a3ffa5;
 }
 
 .percentage-button {
@@ -387,4 +464,8 @@ input::placeholder {
   border: none;
   cursor: pointer;
   margin: 0 10px;
+}
+
+.hidden {
+  display: none;
 }
