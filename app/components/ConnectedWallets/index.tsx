@@ -6,6 +6,7 @@ import { mainnet } from 'viem/chains';
 import './styles.css';
 import Cross from '../icons/cross';
 import Copy from '../icons/copy'
+import CircleCheck from '../icons/circle-check'
 import Disconnect from '../icons/disconnect';
 import { truncateWalletAddress } from '@/lib/stringUtils';
 import { getWalletBalance } from '@/lib/solanaUtils';
@@ -24,8 +25,16 @@ const ConnectedWallets = ({ close, ref }: ConnectedWalletsProps ) => {
   const userWallets: Wallet[] = useUserWallets() as Wallet[];
   const solWallet = userWallets.find(w => w.chain == "SOL");
   const evmWallet = userWallets.find(w => w.chain == "EVM");
+  const [copiedEclipse, setCopiedEclipse] = useState(false);
+  const [copiedEth, setCopiedEth] = useState(false);
   const [balanceEther, setAmountBalanceEther] = useState(0);
   const [balanceEclipse, setAmountBalanceEclipse] = useState(0);
+  
+  const handleCopy = (address: string = "", sett: (state: boolean) => void) => {
+    sett(true);
+    navigator.clipboard.writeText(address);
+    setTimeout(() => sett(false), 1000);
+  }
   
   useEffect(() => {
     userWallets.forEach(async (wallet) => {
@@ -87,11 +96,16 @@ const ConnectedWallets = ({ close, ref }: ConnectedWalletsProps ) => {
                 />
                 <div> {truncateWalletAddress(solWallet?.address || '')}</div>
             </div>
-            <div className="flex" style={{gap: "8px"}}>
-                <div onClick={() => navigator.clipboard.writeText(solWallet?.address || '')}>
+            <div className="flex items-center" style={{gap: "8px"}}>
+                <div className={copiedEclipse ? "hidden" : ""} onClick={() => handleCopy(solWallet?.address, setCopiedEclipse)}>
                   <Copy copyClassName="modal-copy" />
                 </div>
-                <Disconnect disconnectClassName="modal-disconnect" />
+                <div className={copiedEclipse ? "visible" : "hidden"}>
+                  <CircleCheck circleClassName="modal-circle" />
+                </div>
+                <div>
+                  <Disconnect disconnectClassName="modal-disconnect" />
+                </div>
             </div>
             </div>
             <div className="wallet-details-bottom">
@@ -108,14 +122,28 @@ const ConnectedWallets = ({ close, ref }: ConnectedWalletsProps ) => {
         <li className="wallet-item">
           <div className="wallet-title"> Ethereum Wallet </div>
           <div className="wallet-details">
-            <div className="wallet-details-top">
+            <div className="wallet-details-top flex justify-between items-center">
+            <div className="flex flex-row">
               <img
                 src={ethereumWallet.icon}
                 alt="Ethereum Icon"
                 className="wallet-icon"
               />
               <div> {truncateWalletAddress(evmWallet?.address || '')}</div>
+            </div>
 
+
+            <div className="flex items-center" style={{gap: "8px"}}>
+                <div className={copiedEth ? "hidden" : ""} onClick={() => handleCopy(evmWallet?.address, setCopiedEth)}>
+                  <Copy copyClassName="modal-copy" />
+                </div>
+                <div className={copiedEth ? "visible" : "hidden"}>
+                  <CircleCheck circleClassName="modal-circle" />
+                </div>
+                <div>
+                  <Disconnect disconnectClassName="modal-disconnect" />
+                </div>
+            </div>
             </div>
             <div className="wallet-details-bottom">
               <div className="wallet-details-balance">

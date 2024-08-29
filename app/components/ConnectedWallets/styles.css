@@ -81,16 +81,16 @@
 
 .modal-copy, .modal-disconnect {
   cursor: pointer;
-  fill: black;
   transition: fill 0.9s ease; 
 }
 
-.modal-copy:hover path, .modal-disconnect:hover path {
+.modal-copy:hover path {
   fill: #a3ffa5;
   pointer-events: all;
   fill-opacity: 1;
 }
 
 .modal-disconnect:hover path {
-  fill: #EB4D4D;
+  stroke: #EB4D4D;
+  stroke-opacity: 1;
 }

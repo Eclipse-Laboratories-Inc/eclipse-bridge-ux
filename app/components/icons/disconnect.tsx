@@ -3,9 +3,10 @@ import React from 'react';
 
 const Disconnect = ({ disconnectClassName }: { disconnectClassName: string}) => {
   return (
-  <svg className={disconnectClassName} width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-    <path fill-rule="evenodd" clip-rule="evenodd" d="M9.99935 2.5C10.9198 2.5 11.666 3.24619 11.666 4.16667C11.666 5.08714 10.9198 5.83333 9.99935 5.83333C9.07887 5.83333 8.33268 5.08714 8.33268 4.16667C8.33268 3.24619 9.07887 2.5 9.99935 2.5ZM9.99935 8.33333C10.9198 8.33333 11.666 9.07953 11.666 10C11.666 10.9205 10.9198 11.6667 9.99935 11.6667C9.07887 11.6667 8.33268 10.9205 8.33268 10C8.33268 9.07953 9.07887 8.33333 9.99935 8.33333ZM9.99935 14.1667C10.9198 14.1667 11.666 14.9129 11.666 15.8333C11.666 16.7538 10.9198 17.5 9.99935 17.5C9.07887 17.5 8.33268 16.7538 8.33268 15.8333C8.33268 14.9129 9.07887 14.1667 9.99935 14.1667Z" fill="white" fill-opacity="0.3"/>
+  <svg className={disconnectClassName} width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M7.37565 14.6668H3.83398C2.45328 14.6668 1.33398 13.5476 1.33398 12.1668V3.8335C1.33398 2.45279 2.45328 1.3335 3.83398 1.3335H7.37565M14.6673 8.00016H5.29232M14.6673 8.00016L10.9173 11.7502M14.6673 8.00016L10.9173 4.25016" stroke="white" stroke-opacity="0.3" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
   </svg>
+
   );
 }
 
