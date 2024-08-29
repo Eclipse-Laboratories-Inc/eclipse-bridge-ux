@@ -26,9 +26,8 @@ export default function RootLayout({
   return (
     <html lang="en">
       <DynamicContextProvider
-        
         settings={{
-          walletsFilter: (wallets) => wallets.filter((w) => w.walletConnector.supportedChains.includes("EVM") || w.key === "backpacksol"),
+          walletsFilter: (wallets) => wallets.filter((w) => w.walletConnector.supportedChains.includes("EVM") || w.key === "phantom"),
           environmentId: "32962fd3-4365-4b90-807c-ad2176a3df99", 
           walletConnectors: [EthereumWalletConnectors, SolanaWalletConnectors],
           initialAuthenticationMode: 'connect-only',

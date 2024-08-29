@@ -1,5 +1,6 @@
 "use client";
 import React, { useEffect, useState, useRef, useCallback } from 'react';
+import dynamic from 'next/dynamic';
 import { PublicKey, PublicKeyInitData } from '@solana/web3.js';
 import './styles.css';
 import TransferArrow from '../icons/transferArrow';
@@ -36,7 +37,7 @@ const client = createPublicClient({
   };
   
   let walletClient: any;
-  if (typeof window !== 'undefined') {
+  if (typeof window !== 'undefined' && window.ethereum) {
     walletClient = createWalletClient({
       chain: mainnet,
       transport: custom(window.ethereum!),
@@ -45,10 +46,11 @@ const client = createPublicClient({
 
 const Deposit = () => {
   const [amountEther, setAmountEther] = useState<number | string | undefined>(undefined);
-  const [balanceEther, setAmountBalanceEther] = useState(0);
+  const [balanceEther, setAmountBalanceEther] = useState<number>(-1);
   const userWallets: Wallet[] = useUserWallets() as Wallet[];
   const solWallet = userWallets.find(w => w.chain == "SOL");
   const evmWallet = userWallets.find(w => w.chain == "EVM");
+
   const { handleUnlinkWallet, rpcProviders } = useDynamicContext();
   
   const provider = rpcProviders.evmDefaultProvider;
@@ -72,7 +74,6 @@ const Deposit = () => {
 
 
       if (!provider || !(wallet.chain == "EVM")) return;
-
       const balance = await getBalance(client, {
         //@ts-ignore
         address: wallet.address,
@@ -83,10 +84,8 @@ const Deposit = () => {
       const formattedEtherBalance = balanceAsEther.includes('.') ? balanceAsEther.slice(0, balanceAsEther.indexOf('.') + 5) : balanceAsEther
       const balanceEther = parseFloat(formattedEtherBalance);
       setAmountBalanceEther(balanceEther);
-
     });
   }, [userWallets]);
-
 
   const contractAddress = '0x83cB71D80078bf670b3EfeC6AD9E5E6407cD0fd1';
   const abi = [
@@ -227,7 +226,7 @@ const Deposit = () => {
         <div className={ `amount-input flex flex-col ${determineInputClass()}` }>
           <div className="amount-input-top flex justify-between w-full items-center">
           <div className="input-wrapper"> 
-          { (!evmWallet || evmWallet && balanceEther)
+          { (!evmWallet || evmWallet && (balanceEther >= 0))
             ? <input
               disabled={!evmWallet || !solWallet}
               type="number"
@@ -260,7 +259,7 @@ const Deposit = () => {
             {evmWallet && 
               <div className="balance-info w-full">
                 <span>Bal</span> 
-                {(balanceEther)
+                {(balanceEther >= 0)
                 ?  <><span style={{ color: '#fff' }}>{balanceEther + " "} </span> <>ETH</></> 
                 : <SkeletonTheme baseColor="#313131" highlightColor="#525252">
                     <span style={{width: "20%"}}><Skeleton inline={true}/></span>
