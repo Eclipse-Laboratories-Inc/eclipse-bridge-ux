@@ -45,12 +45,20 @@ function ProfileAvatar() {
   const closeModal = (e: any) => {
     e.stopPropagation();
     setShowModal(false);
+
+    // remove blur effect
+    const element = document.querySelector(".deposit-container") as HTMLElement;
+    element.style.filter = ""
   };
 
   const openModal = (e: any) => {
     e.stopPropagation();
     if (evmWallet && solWallet) {
       setShowModal(true);
+      // add blur 
+      const element = document.querySelector(".deposit-container") as HTMLElement;
+      element.style.filter = "blur(5px)"
+
     }
   };
 
