@@ -77,6 +77,7 @@
 
 .wallet-details-balance {
   color: rgba(255, 255, 255, 0.3);
+  font-size:14px;
 }
 
 .modal-copy, .modal-disconnect {
@@ -93,4 +94,40 @@
 .modal-disconnect:hover path {
   stroke: #EB4D4D;
   stroke-opacity: 1;
+}
+
+.disconnected {
+  height: 48px;
+}
+
+.disconnected div {
+  border-bottom: none;
+} 
+
+.hidden {
+  visibility: hidden;
+}
+
+.modal-connect-wallet {
+  color: rgba(255, 255, 255, 0.3);
+  font-size: 14px;
+}
+
+.balance-eth {
+  font-weight: 600;
+  font-size: 15px;
+}
+
+.modal-connect div {
+  transition: color 0.2s ease-out;
+}
+
+.modal-connect path {
+  transition: stroke-opacity 0.1s ease-out;
+}
+
+.modal-connect:hover path, .modal-connect:hover div {
+  stroke: #a3ffa5;
+  stroke-opacity: 1;
+  color: #a3ffa5;
 }
