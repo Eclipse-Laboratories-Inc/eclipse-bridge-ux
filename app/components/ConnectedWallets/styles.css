@@ -1,6 +1,6 @@
 .connected-wallets-modal {
   right: 20px;
-  top: 100px;
+  top: 0px;
   position: absolute;
   z-index: 2;
   display: flex;
@@ -11,6 +11,17 @@
   border-radius: 30px;
   width: 375px;
   padding: 24px;
+
+  opacity: 0;
+  transform: translateY(-100%);
+  transition: transform 0.3s cubic-bezier(.25, .46, .45, .94), opacity 0.3s cubic-bezier(.25, .46, .45, .94);
+
+}
+
+.modal-active {
+  top: 100px;
+  opacity: 1;
+  transform: translateY(0);
 }
 
 .connected-wallets-header {

@@ -19,8 +19,10 @@ function ProfileAvatar() {
   const userWallets: Wallet[] = useUserWallets() as Wallet[];
   const solWallet = userWallets.find(w => w.chain == "SOL");
   const evmWallet = userWallets.find(w => w.chain == "EVM");
-  const [showModal, setShowModal] = useState(false);
-  const modalRef = useRef(null);
+  const [showModal, setShowModal] = useState(true);
+
+  const modalRef   = useRef<HTMLDivElement>(null);
+  const depositRef = useRef<HTMLDivElement>(null);
 
 
   const content = () => {
@@ -41,11 +43,12 @@ function ProfileAvatar() {
 
     return truncateWalletAddress(solWallet?.address || '') 
   };
+
   //TODO: fix any usage here
   const closeModal = (e: any) => {
-    e.stopPropagation();
-    setShowModal(false);
-
+    if (e) e.stopPropagation();
+    if (modalRef.current) modalRef.current.className = "connected-wallets-modal"
+    
     // remove blur effect
     const element = document.querySelector(".deposit-container") as HTMLElement;
     element.style.filter = ""
@@ -54,19 +57,19 @@ function ProfileAvatar() {
   const openModal = (e: any) => {
     e.stopPropagation();
     if (evmWallet && solWallet) {
-      setShowModal(true);
+      if (modalRef.current) modalRef.current.className = "connected-wallets-modal modal-active"
       // add blur 
       const element = document.querySelector(".deposit-container") as HTMLElement;
       element.style.filter = "blur(5px)"
-
     }
   };
 
   const handleClickOutside = (e: any) => {
-    if (modalRef.current && (modalRef.current as HTMLElement).contains(e.target as Node)) {
-      setShowModal(false);
+    if (!(modalRef.current && (modalRef.current as HTMLElement).contains(e.target as Node))) {
+      closeModal(null)
     }
   };
+
   useEffect(() => {
     if (showModal) {
       document.addEventListener('mousedown', handleClickOutside);

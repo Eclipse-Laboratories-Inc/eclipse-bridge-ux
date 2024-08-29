@@ -1,5 +1,5 @@
 import { useUserWallets, Wallet } from '@dynamic-labs/sdk-react-core';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, forwardRef } from 'react';
 import { createPublicClient, formatEther, http } from 'viem';
 import { useDynamicContext, DynamicConnectButton } from "@dynamic-labs/sdk-react-core";
 import { getBalance } from 'viem/actions';
@@ -20,10 +20,11 @@ const client = createPublicClient({
 
 interface ConnectedWalletsProps {
   close: (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => void;
-  ref: React.RefObject<HTMLDivElement>;
+//ref: React.RefObject<HTMLDivElement>;
 }
 
-const ConnectedWallets = ({ close, ref }: ConnectedWalletsProps ) => {
+// const ConnectedWallets = ({ close, ref }: ConnectedWalletsProps ) => {
+const ConnectedWallets = forwardRef<HTMLDivElement, ConnectedWalletsProps>(({ close }, ref) => {
   const userWallets: Wallet[] = useUserWallets() as Wallet[];
   const solWallet = userWallets.find(w => w.chain == "SOL");
   const evmWallet = userWallets.find(w => w.chain == "EVM");
@@ -80,7 +81,7 @@ const ConnectedWallets = ({ close, ref }: ConnectedWalletsProps ) => {
   };
 
   return (
-    <div  ref={ref} className="connected-wallets-modal">
+    <div  ref={ref} className="connected-wallets-modal" id="modal">
       <div className="connected-wallets-header">
         <div>Connected Wallets</div>
         <div onClick={(e) => close(e)}> <Cross crossClassName='wallets-cross' /> </div>
@@ -183,6 +184,6 @@ const ConnectedWallets = ({ close, ref }: ConnectedWalletsProps ) => {
       </ul>
     </div>
   );
-};
+});
 
 export default ConnectedWallets;
