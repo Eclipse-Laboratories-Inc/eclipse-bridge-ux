@@ -186,4 +186,5 @@ const ConnectedWallets = forwardRef<HTMLDivElement, ConnectedWalletsProps>(({ cl
   );
 });
 
+ConnectedWallets.displayName = "ConnectedWallets";
 export default ConnectedWallets;
