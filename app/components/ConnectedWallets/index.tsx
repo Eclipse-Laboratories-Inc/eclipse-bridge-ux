@@ -34,10 +34,10 @@ const ConnectedWallets = forwardRef<HTMLDivElement, ConnectedWalletsProps>(({ cl
   const [balanceEclipse, setAmountBalanceEclipse] = useState(0);
   const { handleUnlinkWallet, rpcProviders } = useDynamicContext();
   
-  const handleCopy = (address: string = "", sett: (state: boolean) => void) => {
-    sett(true);
+  const handleCopy = (address: string = "", stateSetter: (state: boolean) => void) => {
+    stateSetter(true);
     navigator.clipboard.writeText(address);
-    setTimeout(() => sett(false), 1000);
+    setTimeout(() => stateSetter(false), 1000);
   }
   
   useEffect(() => {
@@ -81,7 +81,7 @@ const ConnectedWallets = forwardRef<HTMLDivElement, ConnectedWalletsProps>(({ cl
   };
 
   return (
-    <div  ref={ref} className="connected-wallets-modal" id="modal">
+    <div ref={ref} className="connected-wallets-modal">
       <div className="connected-wallets-header">
         <div>Connected Wallets</div>
         <div onClick={(e) => close(e)}> <Cross crossClassName='wallets-cross' /> </div>
