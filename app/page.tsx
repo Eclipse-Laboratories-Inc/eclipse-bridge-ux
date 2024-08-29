@@ -98,7 +98,7 @@ export default function Main() {
   const { blockNumber, gasPrice, ethPrice, error } = useEthereumData()
   console.log({ ethPrice })
   return (
-    <div className="flex items-center text-white h-full flex flex-col justify-between">
+    <div className="flex items-center text-white h-full flex flex-col justify-between" style={{background: "black"}}>
       <Header />
       <Deposit /> 
       <footer>

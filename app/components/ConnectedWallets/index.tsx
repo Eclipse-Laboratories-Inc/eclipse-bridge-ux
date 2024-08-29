@@ -113,7 +113,7 @@ const ConnectedWallets = forwardRef<HTMLDivElement, ConnectedWalletsProps>(({ cl
                 </div>
               </div>
            : <DynamicConnectButton buttonClassName="" buttonContainerClassName="">
-                <div className="flex items-center gap-1">
+                <div className="flex items-center gap-1 modal-connect">
                   <div>
                     <ConnectIcon connectClassName="modal-connect"/>
                   </div>
