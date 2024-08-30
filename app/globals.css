@@ -1,0 +1,75 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --foreground-rgb: 0, 0, 0;
+  --background-start-rgb: 214, 219, 220;
+  --background-end-rgb: 255, 255, 255;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --foreground-rgb: 255, 255, 255;
+    --background-start-rgb: 0, 0, 0;
+    --background-end-rgb: 0, 0, 0;
+  }
+}
+
+body, html {
+  font-family: 'IBM Plex Sans', sans-serif;
+  height: 100%;
+  color: rgb(var(--foreground-rgb));
+  background: linear-gradient(
+      to bottom,
+      transparent,
+      rgb(var(--background-end-rgb))
+    )
+    rgb(var(--background-start-rgb));
+}
+
+/* Hide the step arrows in input[type=number] for Chrome, Safari, Edge, Opera */
+input[type=number]::-webkit-outer-spin-button,
+input[type=number]::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/* Hide the step arrows in input[type=number] for Firefox */
+input[type=number] {
+  -moz-appearance: textfield;
+}
+input:focus {
+  outline: none;
+  box-shadow: none;
+}
+
+.header .connect-wallet {
+  display: flex;
+  align-items: center;
+  background-color: rgba(161, 254, 160, 0.05);
+  padding: 20px;
+  border-radius: 40px;
+  height: 46px;
+
+}
+
+img[data-testid='iconic-solana'] {
+  content: url('/eclipse.png');
+}
+
+footer {
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  padding: 10px;
+  text-align: center;
+  height: 50px;
+  width: 100%;
+  color: rgba(255, 255, 255, 0.3);
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  a {
+    margin-right: 20px;
+  }
+
+}

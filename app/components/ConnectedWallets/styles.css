@@ -1,0 +1,144 @@
+.connected-wallets-modal {
+  right: 20px;
+  top: 0px;
+  position: absolute;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  background: #050505;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 30px;
+  width: 375px;
+  padding: 24px;
+
+  opacity: 0;
+  transform: translateY(-100%);
+  transition: transform 0.3s cubic-bezier(.25, .46, .45, .94), opacity 0.3s cubic-bezier(.25, .46, .45, .94);
+
+}
+
+.modal-active {
+  top: 100px;
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.connected-wallets-header {
+  font-size: 18px;
+  display: flex;
+  flex-direction: row;
+  color: #fff;
+  width: 100%;
+  margin-bottom: 24px;
+  justify-content: space-between;
+}
+
+.wallets-cross {
+  cursor: pointer;
+  width: 24px;
+  height: 24px;
+
+}
+.wallet-list {
+  color: rgba(255, 255, 255, 0.3);
+  width: 100%;
+
+}
+
+.wallet-details {
+  background-color: #1c1c1c;
+  border-radius: 15px;
+  display: flex;
+  flex-direction: column;
+  color: #fff;
+  height: 96px;
+  width: 100%;
+}
+.wallet-title {
+  margin-bottom: 12px;
+}
+
+.wallet-icon {
+  width: 28px;
+  height: 28px;
+  margin-right: 8px;
+}
+
+.wallet-details-top {
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);  
+  height: 52px;
+  padding: 12px;
+}
+
+.wallet-details-bottom {
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  padding: 12px;
+}
+
+.wallet-item {
+  margin-bottom: 24px;
+}
+
+.wallet-details-balance {
+  color: rgba(255, 255, 255, 0.3);
+  font-size:14px;
+}
+
+.modal-copy, .modal-disconnect {
+  cursor: pointer;
+  transition: fill 0.9s ease; 
+}
+
+.modal-copy:hover path {
+  fill: #a3ffa5;
+  pointer-events: all;
+  fill-opacity: 1;
+}
+
+.modal-disconnect:hover path {
+  stroke: #EB4D4D;
+  stroke-opacity: 1;
+}
+
+.disconnected {
+  height: 48px;
+}
+
+.disconnected div {
+  border-bottom: none;
+} 
+
+.hidden {
+  visibility: hidden;
+}
+
+.modal-connect-wallet {
+  color: rgba(255, 255, 255, 0.3);
+  font-size: 14px;
+}
+
+.balance-eth {
+  font-weight: 600;
+  font-size: 15px;
+}
+
+.modal-connect div {
+  transition: color 0.2s ease-out;
+}
+
+.modal-connect path {
+  transition: stroke-opacity 0.1s ease-out;
+}
+
+.modal-connect:hover path, .modal-connect:hover div {
+  stroke: #a3ffa5;
+  stroke-opacity: 1;
+  color: #a3ffa5;
+}
