@@ -1,7 +1,4 @@
 /** @type {import('next').NextConfig} */
-const nextConfig = {
-  NEXT_PUBLIC_ENVIRONMENT_ID: process.env.NEXT_PUBLIC_ENVIRONMENT_ID,
-}
+const nextConfig = {};
 
-module.exports = nextConfig
- 
+module.exports = nextConfig;
