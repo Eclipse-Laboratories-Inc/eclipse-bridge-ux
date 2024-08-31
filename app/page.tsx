@@ -28,14 +28,14 @@ function ProfileAvatar() {
   const content = () => {
     if (!solWallet && !evmWallet) {
       return  (
-          <DynamicConnectButton buttonClassName="connect-button">
+          <DynamicConnectButton buttonClassName="connect-button-header">
             Connect Wallets
           </DynamicConnectButton>
       )
     }
     if (!solWallet || !evmWallet) {
       return  (
-        <DynamicConnectButton buttonClassName="connect-button">
+        <DynamicConnectButton buttonClassName="connect-button-header">
           Connect Wallet
         </DynamicConnectButton>
       )

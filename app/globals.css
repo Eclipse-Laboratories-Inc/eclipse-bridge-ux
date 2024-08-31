@@ -51,7 +51,12 @@ input:focus {
   padding: 20px;
   border-radius: 40px;
   height: 46px;
+  transition: background-color 0.3s ease-out;
+  cursor: pointer;
+}
 
+.connect-wallet:hover {
+  background: rgba(161, 254, 160, 0.1);
 }
 
 img[data-testid='iconic-solana'] {

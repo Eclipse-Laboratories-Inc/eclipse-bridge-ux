@@ -300,6 +300,7 @@ input::placeholder {
   font-size: 20px;
   cursor: pointer;
   margin-top: 20px;
+  transition: background-color 0.2s ease-out;
 }
 
 .submit-button.disabled {
@@ -471,12 +472,12 @@ input::placeholder {
   display: none;
 }
 
-.connect-button {
+.connect-button-header {
   position: relative;
   display: inline-block;
 }
 
-.connect-button::before {
+.connect-button-header::before {
   content: '';
   position: absolute;
   top: -8px; 
