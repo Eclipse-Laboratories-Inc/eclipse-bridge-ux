@@ -17,10 +17,6 @@ const cssOverrides = `
     content: url('/eclipse.png');
   }
   
-  :root {
-    --dynamic-base-1: red!important;
-  }
-  
   .bridge-welcome-layout, .wallet-progress-stepper, .accordion-item {
     border: 1px solid rgba(255, 255, 255, 0.1);
     border-radius: 30px;
@@ -28,7 +24,6 @@ const cssOverrides = `
   }
   
   .wallet-progress-stepper {border-radius: 20px;} 
-  
   .wallet-list-item__tile {
     background: rgba(255, 255, 255, 0.03);
   }
