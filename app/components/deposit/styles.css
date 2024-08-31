@@ -470,3 +470,20 @@ input::placeholder {
 .hidden {
   display: none;
 }
+
+.connect-button {
+  position: relative;
+  display: inline-block;
+}
+
+.connect-button::before {
+  content: '';
+  position: absolute;
+  top: -8px; 
+  bottom: -10px; 
+  left: -18px; 
+  right: -45px;
+  z-index: 5;
+  background-color: transparent; 
+  pointer-events: auto; 
+}

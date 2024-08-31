@@ -32,7 +32,7 @@ const ConnectedWallets = forwardRef<HTMLDivElement, ConnectedWalletsProps>(({ cl
   const [copiedEth, setCopiedEth] = useState(false);
   const [balanceEther, setAmountBalanceEther] = useState(0);
   const [balanceEclipse, setAmountBalanceEclipse] = useState(0);
-  const { handleUnlinkWallet, rpcProviders } = useDynamicContext();
+  const { handleUnlinkWallet } = useDynamicContext();
   
   const handleCopy = (address: string = "", stateSetter: (state: boolean) => void) => {
     stateSetter(true);
@@ -154,7 +154,7 @@ const ConnectedWallets = forwardRef<HTMLDivElement, ConnectedWalletsProps>(({ cl
                 <div className={copiedEth ? "visible" : "hidden"}>
                   <CircleCheck circleClassName="modal-circle" />
                 </div>
-                <div onClick={() => evmWallet && handleUnlinkWallet(evmWallet.id)}>
+                <div onClick={() => evmWallet && handleUnlinkWallet(evmWallet.id) }>
                   <Disconnect disconnectClassName="modal-disconnect" />
                 </div>
             </div>

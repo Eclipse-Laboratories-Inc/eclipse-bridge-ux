@@ -28,14 +28,14 @@ function ProfileAvatar() {
   const content = () => {
     if (!solWallet && !evmWallet) {
       return  (
-        <DynamicConnectButton>
-        Connect Wallets
-        </DynamicConnectButton>
+          <DynamicConnectButton buttonClassName="connect-button">
+            Connect Wallets
+          </DynamicConnectButton>
       )
     }
     if (!solWallet || !evmWallet) {
       return  (
-        <DynamicConnectButton>
+        <DynamicConnectButton buttonClassName="connect-button">
           Connect Wallet
         </DynamicConnectButton>
       )
@@ -55,7 +55,7 @@ function ProfileAvatar() {
   };
 
   const openModal = (e: any) => {
-    e.stopPropagation();
+    if (e) e.stopPropagation();
     if (evmWallet && solWallet) {
       if (modalRef.current) modalRef.current.className = "connected-wallets-modal modal-active"
       // add blur 

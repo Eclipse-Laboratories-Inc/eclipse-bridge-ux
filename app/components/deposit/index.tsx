@@ -231,6 +231,7 @@ const Deposit = () => {
               disabled={!evmWallet || !solWallet}
               type="number"
               step="0.01"
+              min="0"
               placeholder="0 ETH"
               style={{fontWeight: "600"}}
               value={amountEther}
