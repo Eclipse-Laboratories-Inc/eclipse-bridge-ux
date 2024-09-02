@@ -53,7 +53,7 @@ function ProfileAvatar() {
     if (modalRef.current) modalRef.current.className = "connected-wallets-modal"
     
     // remove blur effect
-    const element = document.querySelector(".deposit-container") as HTMLElement;
+    const element = document.querySelector(".main-content") as HTMLElement;
     element.style.filter = ""
   };
 
@@ -62,7 +62,7 @@ function ProfileAvatar() {
     if (evmWallet && solWallet) {
       if (modalRef.current) modalRef.current.className = "connected-wallets-modal modal-active"
       // add blur 
-      const element = document.querySelector(".deposit-container") as HTMLElement;
+      const element = document.querySelector(".main-content") as HTMLElement;
       element.style.filter = "blur(5px)"
     }
   };
@@ -106,9 +106,11 @@ export default function Main() {
     <EthereumDataContext.Provider value={[gasPrice, ethPrice]}>
     <div className="flex items-center text-white h-full flex flex-col justify-between" style={{background: "black"}}>
         <Header />
-        <Deposit amountEther={amountEther} setAmountEther={setAmountEther} />
-
-        <ExtendedDetails amountEther={amountEther} />
+        <div className="main-content">
+          <Deposit amountEther={amountEther} setAmountEther={setAmountEther} />
+          <br></br>
+          <ExtendedDetails amountEther={amountEther} />
+        </div>
       <footer>
         <div className="flex flex-row">
           <Link href="https://www.eclipse.xyz/terms"> Terms & Conditions </Link>
