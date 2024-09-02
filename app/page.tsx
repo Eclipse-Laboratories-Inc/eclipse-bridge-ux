@@ -13,6 +13,7 @@ import ConnectedWallets from "./components/ConnectedWallets/index";
 import Gas from "./components/icons/gas";
 import Eth from "./components/icons/eth";
 import Block from "./components/icons/block";
+import Connect from "./components/icons/connect"
 import useEthereumData from "@/lib/ethUtils";
 
 function ProfileAvatar() {
@@ -85,7 +86,7 @@ function ProfileAvatar() {
   return (
     <div className="flex items-center space-x-2">
       <div onClick={(e) => openModal(e)} className="connect-wallet"> 
-        {content()}
+        <Connect connectClassName="connect-wallet-icon" /> {content()}
         <Chevron />
        { showModal && <ConnectedWallets ref={modalRef} close={(e) => closeModal(e)} />}
       </div>

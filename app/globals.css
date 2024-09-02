@@ -74,6 +74,24 @@ input:focus {
   height: 46px;
   transition: background-color 0.1s var(--ease-out-quad);
   cursor: pointer;
+  color: rgba(161, 254, 160, 1);
+  border: 1px solid rgba(161, 254, 160, 0.2)
+}
+
+.connect-wallet-icon {
+  width: 16px;
+  height: 16px;
+  margin-right: 10px;
+}
+
+.connect-wallet-icon path:first-of-type {
+  stroke: rgba(161, 254, 160, 1);
+  stroke-opacity: 1;
+}
+
+.connect-wallet-icon path:nth-of-type(2) {
+  fill: rgba(161, 254, 160, 1);
+  fill-opacity: 1;
 }
 
 .connect-wallet:hover {
