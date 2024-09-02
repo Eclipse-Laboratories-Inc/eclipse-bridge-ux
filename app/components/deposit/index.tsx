@@ -125,13 +125,11 @@ const Deposit = () => {
   };
 
   function determineInputClass(): string {
+    if (!evmWallet || !solWallet) return 'disabled';
     if (parseFloat(amountEther as string) > balanceEther) {
       return 'alarm'
     }
-
-    if (!evmWallet) return 'disabled';
     return ""
-
   }
 
   function determineButtonClass(): string {

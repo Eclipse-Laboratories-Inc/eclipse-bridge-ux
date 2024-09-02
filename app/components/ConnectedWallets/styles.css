@@ -14,7 +14,7 @@
 
   opacity: 0;
   transform: translateY(-100%);
-  transition: transform 0.3s cubic-bezier(.25, .46, .45, .94), opacity 0.3s cubic-bezier(.25, .46, .45, .94);
+  transition: transform 0.3s var(--ease-out-quad), opacity 0.3s var(--ease-out-quad);
 }
 
 .modal-active {
@@ -129,11 +129,11 @@
 }
 
 .modal-connect div {
-  transition: color 0.2s ease-out;
+  transition: color 0.1s var(--ease-out-quad);
 }
 
 .modal-connect path {
-  transition: stroke-opacity 0.1s ease-out;
+  transition: stroke-opacity 0.1s var(--ease-out-quad);
 }
 
 .modal-connect:hover path, .modal-connect:hover div {
