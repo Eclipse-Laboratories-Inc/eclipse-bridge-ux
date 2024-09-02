@@ -298,6 +298,13 @@ input::placeholder {
   transition: background-color 0.1s var(--ease-out-quad);
 }
 
+.submit-button.waiting {
+  background: rgba(255, 255, 255, 0.05);
+  color: rgba(255, 255, 255, 0.3);
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
 .submit-button.disabled {
   background-color: #0e0e0e;
   cursor: not-allowed;
@@ -333,6 +340,13 @@ input::placeholder {
   transform: scale(1.0526);
   transform-origin: center center;
   font-size: 95%;
+}
+
+.deposit-button {
+ display: flex;
+ flex-direction: row;
+ justify-content: center;
+ gap: 1rem;
 }
 
 .deposit-button:active{ 

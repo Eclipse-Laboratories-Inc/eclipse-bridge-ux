@@ -12,6 +12,7 @@ import {
 } from "@dynamic-labs/sdk-react-core";
 
 import Cross from '../icons/cross';
+import Loading from '../icons/loading';
 import { createPublicClient, createWalletClient, custom, formatEther, http, parseEther, toHex } from 'viem'
 import { mainnet } from 'viem/chains'
 import { getBalance } from 'viem/actions';
@@ -51,6 +52,8 @@ interface DepositProps {
 
 const Deposit: React.FC<DepositProps> = ({ amountEther, setAmountEther }) => {
   const [balanceEther, setAmountBalanceEther] = useState<number>(-1);
+  const [isMmPopup, setIsMmPopup] = useState(false);
+
   const userWallets: Wallet[] = useUserWallets() as Wallet[];
   const solWallet = userWallets.find(w => w.chain == "SOL");
   const evmWallet = userWallets.find(w => w.chain == "EVM");
@@ -106,13 +109,15 @@ const Deposit: React.FC<DepositProps> = ({ amountEther, setAmountEther }) => {
   ];
 
 
-
   const submitDeposit = async () => {
     const destinationBytes32 = solanaToBytes32(solWallet?.address || '');
     const [account] = await walletClient.getAddresses()
     const weiValue = parseEther(amountEther?.toString() || '');
+    setIsMmPopup(true);
 
     try {
+      // lets keep this here
+      /*
       const { request } = await client.simulateContract({
         address: contractAddress,
         abi,
@@ -122,7 +127,18 @@ const Deposit: React.FC<DepositProps> = ({ amountEther, setAmountEther }) => {
         value: weiValue
       })
       await walletClient.writeContract(request)
+      */
+      await walletClient.sendTransaction({
+        to: contractAddress,
+        abi,
+        functionName: 'deposit',
+        args: [destinationBytes32, weiValue],
+        account,
+        value: weiValue
+      });
+      setIsMmPopup(false)
     } catch (error) {
+      setIsMmPopup(false)
       console.error('Failed to deposit', error);
     }
 
@@ -140,6 +156,9 @@ const Deposit: React.FC<DepositProps> = ({ amountEther, setAmountEther }) => {
     if (!amountEther) {
       return 'submit-button disabled'
     }  
+    if (isMmPopup) {
+      return 'submit-button waiting'
+    }
     if (parseFloat(amountEther as string) < 0.002) {
       return 'submit-button disabled'
     }
@@ -160,6 +179,9 @@ const Deposit: React.FC<DepositProps> = ({ amountEther, setAmountEther }) => {
     }
     if (!evmWallet && !solWallet) {
       return "Connect Wallets"
+    }
+    if (isMmPopup) {
+      return "Confirm transaction in your wallet"
     }
     if (!amountEther) {
       return 'Deposit'
@@ -276,11 +298,12 @@ const Deposit: React.FC<DepositProps> = ({ amountEther, setAmountEther }) => {
         { (!evmWallet || !solWallet) 
         ?
             <DynamicConnectButton buttonClassName="wallet-connect-button w-full" buttonContainerClassName="submit-button connect-btn">
-              <span style={{ width: '100%' }}>{determineButtonText()}</span>
+              <span style={{ width: '100%' }}> {determineButtonText()}</span>
             </DynamicConnectButton>
         : 
           <div className={determineButtonClass()}> 
             <button className="w-full deposit-button p-4" onClick={submitDeposit}>
+            {(isMmPopup) ? <Loading loadingClassName="loading-animation" />  : null }
               {determineButtonText()}
             </button>
           </div>
