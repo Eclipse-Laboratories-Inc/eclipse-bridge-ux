@@ -341,11 +341,6 @@ input::placeholder {
   font-size: 95%;
 }
 
-.estimated-time {
-  color: #a3ffa5;
-  margin-top: 10px;
-}
-
 .amount-input-container {
   background-color: #1b1b1b;
   border-radius: 8px;

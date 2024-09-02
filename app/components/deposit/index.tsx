@@ -285,9 +285,6 @@ const Deposit: React.FC<DepositProps> = ({ amountEther, setAmountEther }) => {
             </button>
           </div>
         }
-          <div className="estimated-time">
-            <span>Estimated time ~ 5 mins</span>
-          </div>
         </div>
       </div>
 
