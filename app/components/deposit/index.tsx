@@ -1,6 +1,6 @@
 "use client";
-import React, { useEffect, useState, useRef, useCallback } from 'react';
-import dynamic from 'next/dynamic';
+import React, { useEffect, useState, useCallback } from 'react';
+import ExtendedDetails from "../ExtendedDetails";
 import { PublicKey, PublicKeyInitData } from '@solana/web3.js';
 import './styles.css';
 import TransferArrow from '../icons/transferArrow';
@@ -44,8 +44,12 @@ const client = createPublicClient({
     })
   }
 
-const Deposit = () => {
-  const [amountEther, setAmountEther] = useState<number | string | undefined>(undefined);
+interface DepositProps {
+  amountEther: number | string | undefined;
+  setAmountEther: React.Dispatch<React.SetStateAction<number | undefined | string>>;
+}
+
+const Deposit: React.FC<DepositProps> = ({ amountEther, setAmountEther }) => {
   const [balanceEther, setAmountBalanceEther] = useState<number>(-1);
   const userWallets: Wallet[] = useUserWallets() as Wallet[];
   const solWallet = userWallets.find(w => w.chain == "SOL");
@@ -242,11 +246,6 @@ const Deposit = () => {
           }
           </div> 
             
-          {/*
-                <SkeletonTheme baseColor="#313131" highlightColor="#525252">
-                    <Skeleton height={40}/>
-                  </SkeletonTheme>
-          */}
             <div className="token-display" style={{width: "45%"}}>
               <div className="token-icon">
                 <img src="eth.png" alt="ETH Icon" />
@@ -295,4 +294,4 @@ const Deposit = () => {
       );
 };
 
-      export default Deposit;
+export default Deposit;

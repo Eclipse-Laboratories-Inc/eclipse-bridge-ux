@@ -2,6 +2,7 @@
 import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import Deposit from "./components/deposit";
+import ExtendedDetails from './components/ExtendedDetails'
 import {
   DynamicConnectButton,
   useUserWallets,
@@ -15,6 +16,7 @@ import Eth from "./components/icons/eth";
 import Block from "./components/icons/block";
 import Connect from "./components/icons/connect"
 import useEthereumData from "@/lib/ethUtils";
+import { EthereumDataContext } from "./context"
 
 function ProfileAvatar() {
   const userWallets: Wallet[] = useUserWallets() as Wallet[];
@@ -96,12 +98,17 @@ function ProfileAvatar() {
 }
 
 export default function Main() {
-  const { blockNumber, gasPrice, ethPrice, error } = useEthereumData()
-  console.log({ ethPrice })
+  const { blockNumber, gasPrice, ethPrice, error } = useEthereumData();
+  const [amountEther, setAmountEther] = useState<number | string | undefined>(undefined);
+
   return (
+
+    <EthereumDataContext.Provider value={[gasPrice, ethPrice]}>
     <div className="flex items-center text-white h-full flex flex-col justify-between" style={{background: "black"}}>
-      <Header />
-      <Deposit /> 
+        <Header />
+        <Deposit amountEther={amountEther} setAmountEther={setAmountEther} />
+
+        <ExtendedDetails amountEther={amountEther} />
       <footer>
         <div className="flex flex-row">
           <Link href="https://www.eclipse.xyz/terms"> Terms & Conditions </Link>
@@ -116,6 +123,7 @@ export default function Main() {
         </div>
       </footer>
     </div>
+    </ EthereumDataContext.Provider>
   );
 }
 

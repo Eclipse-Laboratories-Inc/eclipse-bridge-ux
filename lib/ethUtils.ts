@@ -6,6 +6,7 @@ interface Icache  {
     ethPrice: number | null,
     timestamp: number | null,
 };
+
 const cache: Icache = {
     blockNumber: null,
     gasPrice: null,
