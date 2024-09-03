@@ -22,9 +22,10 @@ function ProfileAvatar() {
   const userWallets: Wallet[] = useUserWallets() as Wallet[];
   const solWallet = userWallets.find(w => w.chain == "SOL");
   const evmWallet = userWallets.find(w => w.chain == "EVM");
-  const [showModal, setShowModal] = useState(true);
+  const [showModal, setShowModal] = useState(false);
 
   const modalRef   = useRef<HTMLDivElement>(null);
+  const openModalRef   = useRef<HTMLDivElement>(null);
   const depositRef = useRef<HTMLDivElement>(null);
 
 
@@ -52,6 +53,8 @@ function ProfileAvatar() {
   const closeModal = (e: any) => {
     if (e) e.stopPropagation();
     if (modalRef.current) modalRef.current.className = "connected-wallets-modal"
+    setShowModal(!showModal);
+    console.log(showModal)
     
     // remove blur effect
     const element = document.querySelector(".main-content") as HTMLElement;
@@ -62,6 +65,8 @@ function ProfileAvatar() {
     if (e) e.stopPropagation();
     if (evmWallet && solWallet) {
       if (modalRef.current) modalRef.current.className = "connected-wallets-modal modal-active"
+      setShowModal(!showModal);
+      console.log(showModal)
       // add blur 
       const element = document.querySelector(".main-content") as HTMLElement;
       element.style.filter = "blur(5px)"
@@ -69,8 +74,14 @@ function ProfileAvatar() {
   };
 
   const handleClickOutside = (e: any) => {
-    if (!(modalRef.current && (modalRef.current as HTMLElement).contains(e.target as Node))) {
-      closeModal(null)
+    const modalElement = modalRef.current as HTMLElement;
+    const openButtonElement = openModalRef.current as HTMLElement;
+  
+    const clickedOutsideModal = modalElement && !modalElement.contains(e.target as Node);
+    const clickedOutsideButton = openButtonElement && !openButtonElement.contains(e.target as Node);
+
+    if (clickedOutsideModal && clickedOutsideButton) {
+      closeModal(null);
     }
   };
 
@@ -88,11 +99,11 @@ function ProfileAvatar() {
 
   return (
     <div className="flex items-center space-x-2">
-      <div onClick={(e) => openModal(e) } className="connect-wallet"> 
+      <div onClick={(e) => {(!showModal) ? openModal(e) : closeModal(e)}} ref={openModalRef} className="connect-wallet"> 
         <Connect connectClassName="connect-wallet-icon" /> {content()}
         { (solWallet && evmWallet) && <Chevron /> }
       </div>
-        { showModal && <ConnectedWallets ref={modalRef} close={(e) => closeModal(e)} />}
+        { <ConnectedWallets ref={modalRef} close={(e) => closeModal(e)} />}
     </div>
   );
 
@@ -103,7 +114,6 @@ export default function Main() {
   const [amountEther, setAmountEther] = useState<number | string | undefined>(undefined);
 
   return (
-
     <EthereumDataContext.Provider value={[gasPrice, ethPrice]}>
     <div className="flex items-center text-white h-full flex flex-col justify-between" style={{background: "black"}}>
         <Header />
