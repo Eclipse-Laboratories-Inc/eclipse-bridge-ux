@@ -35,11 +35,10 @@
   gap: 3px;
 }
 
-.header-tabs span {
+.header-tabs div {
   font-weight: 500;
   font-size: large;
   margin: 0;
-  flex: 1;
   padding: 12px 0;
   text-align: center;
   cursor: pointer;
@@ -47,12 +46,12 @@
   transition: background-color 0.1s var(--ease-out-quad), color 0.1s var(--ease-out-quad);
 }
 
-.header-tabs span.active {
+.header-tabs div.active {
   color: #a3ffa5; /* Light green color for active tab text */
   background-color: rgba(161, 254, 160, 0.05);
 }
 
-.header-tabs span.inactive {
+.header-tabs div.inactive {
   background-color: rgba(255, 255, 255, 0.02);
   color: #666666; /* Dark gray color for inactive tab text */
 }
@@ -70,7 +69,7 @@
   align-items: center;
   position: relative;
   width: 100%;
-  margin-bottom: 20px;
+  margin-bottom: 12px;
 }
 
 .network-box {
@@ -95,6 +94,12 @@
   display: flex;
   align-items: center;
   margin-bottom: 2px;
+
+  transition: color 100ms var(--ease-out-quad);
+}
+
+.disconnect svg path {
+  transition: stroke 100ms var(--ease-out-quad), stroke-opacity 100ms var(--ease-out-quad);
 }
 
 .disconnect:hover svg path,
@@ -102,7 +107,6 @@
   stroke: #EB4D4D;
   color: #EB4D4D;
   stroke-opacity: 1;
-
 }
 
 .deposit-cross {
@@ -181,7 +185,7 @@
 }
 
 .amount-input:hover {
-  background-color: rgba(255, 255, 255, 0.05);
+  background-color: rgba(255, 255, 255, 0.03);
 }
 
 .amount-input.disabled { 

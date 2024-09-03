@@ -41,6 +41,7 @@ body, html {
   font-family: 'IBM Plex Sans', sans-serif;
   height: 100%;
   color: rgb(var(--foreground-rgb));
+  overflow-x: hidden;
   background: linear-gradient(
       to bottom,
       transparent,

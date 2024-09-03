@@ -12,6 +12,7 @@ const ibmPlexSans = IBM_Plex_Sans({
   weight: ['400', '500', '700'],
 });
 
+// TODO: maybe we can read it from a file
 const cssOverrides = `
   img[data-testid='iconic-solana'] {
     content: url('/eclipse.png');
@@ -48,6 +49,12 @@ const cssOverrides = `
   .dynamic-shadow-dom-content div {
     transition: none;
   }
+
+  .bridge-welcome-layout__body {
+    gap: 20px;
+    padding: 0 20px 20px;
+  }
+  .bridge-welcome-layout__message-container { gap: 6px; }
 `
 
 export default function RootLayout({
@@ -63,10 +70,16 @@ export default function RootLayout({
               onAuthFlowOpen: () => {
                 const depositBox = document.getElementsByClassName("deposit-container")[0] as HTMLElement;
                 depositBox.style.transform = "scale(0.9)";
+
+                const submitButton = document.getElementsByClassName("submit-button")[0] as HTMLElement;
+                submitButton.className += " disabled";
             },
             onAuthFlowClose: () => {
                 const depositBox = document.getElementsByClassName("deposit-container")[0] as HTMLElement;
                 depositBox.style.transform = "scale(1)";
+
+                const submitButton = document.getElementsByClassName("submit-button")[0] as HTMLElement;
+                submitButton.className = submitButton.className.replace("disabled", "");
             }
           },
           walletsFilter: (wallets) => wallets.filter((w) => w.walletConnector.supportedChains.includes("EVM") || w.key === "phantom"),

@@ -82,7 +82,7 @@
   padding: 12px;
 }
 
-.wallet-item {
+.wallet-item:first-of-type {
   margin-bottom: 24px;
 }
 

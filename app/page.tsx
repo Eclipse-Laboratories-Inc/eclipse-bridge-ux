@@ -28,6 +28,7 @@ function ProfileAvatar() {
   const depositRef = useRef<HTMLDivElement>(null);
 
 
+  // TODO: need some refactor here
   const content = () => {
     if (!solWallet && !evmWallet) {
       return  (
@@ -87,11 +88,11 @@ function ProfileAvatar() {
 
   return (
     <div className="flex items-center space-x-2">
-      <div onClick={(e) => openModal(e)} className="connect-wallet"> 
+      <div onClick={(e) => openModal(e) } className="connect-wallet"> 
         <Connect connectClassName="connect-wallet-icon" /> {content()}
-        <Chevron />
-       { showModal && <ConnectedWallets ref={modalRef} close={(e) => closeModal(e)} />}
+        { (solWallet && evmWallet) && <Chevron /> }
       </div>
+        { showModal && <ConnectedWallets ref={modalRef} close={(e) => closeModal(e)} />}
     </div>
   );
 

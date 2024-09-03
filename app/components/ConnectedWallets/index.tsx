@@ -55,7 +55,6 @@ const ConnectedWallets = forwardRef<HTMLDivElement, ConnectedWalletsProps>(({ cl
         const formattedEtherBalance = balanceAsEther.includes('.') ? balanceAsEther.slice(0, balanceAsEther.indexOf('.') + 5) : balanceAsEther
         const balanceEther = parseFloat(formattedEtherBalance);
         setAmountBalanceEther(balanceEther);
-
       }
       if (wallet.chain == "SOL") {
         const balance = await getWalletBalance(wallet.address);

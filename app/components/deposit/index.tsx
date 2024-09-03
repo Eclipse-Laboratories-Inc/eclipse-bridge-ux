@@ -201,9 +201,11 @@ const Deposit: React.FC<DepositProps> = ({ amountEther, setAmountEther }) => {
     <div className="deposit-container">
       <div className="deposit-card">
         <div className="header-tabs">
-          <span className="active">Deposit</span>
-          <span className="inactive">Withdraw</span>
-          <span className="inactive">L</span>
+          <div className="active header-tab" style={{ width: "43.5%" }}>Deposit</div>
+          <div className="inactive header-tab" style={{ width: "43.5%" }}>Withdraw</div>
+          <div className="inactive header-tab flex items-center justify-center" style={{ width: "56px" }}>
+              <Loading loadingClassName=""/>
+          </div>
         </div>
         <div className="network-section">
           <div className="arrow-container">
