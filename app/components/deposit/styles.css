@@ -32,6 +32,7 @@
   margin-bottom: 20px;
   padding: 5px;
   border: 1px solid rgba(255, 255, 255, 0.1);
+  gap: 3px;
 }
 
 .header-tabs span {
@@ -42,7 +43,7 @@
   padding: 12px 0;
   text-align: center;
   cursor: pointer;
-  border-radius: 8px;
+  border-radius: 5px;
   transition: background-color 0.1s var(--ease-out-quad), color 0.1s var(--ease-out-quad);
 }
 
@@ -52,9 +53,10 @@
 }
 
 .header-tabs span.inactive {
-  background-color: transparent;
+  background-color: rgba(255, 255, 255, 0.02);
   color: #666666; /* Dark gray color for inactive tab text */
 }
+
 .arrow-container {
   position: absolute;
   top: 50%;

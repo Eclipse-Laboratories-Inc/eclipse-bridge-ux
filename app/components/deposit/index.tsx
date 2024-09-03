@@ -10,7 +10,6 @@ import {
   useDynamicContext,
   Wallet,
 } from "@dynamic-labs/sdk-react-core";
-
 import Cross from '../icons/cross';
 import Loading from '../icons/loading';
 import { createPublicClient, createWalletClient, custom, formatEther, http, parseEther, toHex } from 'viem'
@@ -43,6 +42,7 @@ const client = createPublicClient({
       chain: mainnet,
       transport: custom(window.ethereum!),
     })
+
   }
 
 interface DepositProps {
@@ -203,6 +203,7 @@ const Deposit: React.FC<DepositProps> = ({ amountEther, setAmountEther }) => {
         <div className="header-tabs">
           <span className="active">Deposit</span>
           <span className="inactive">Withdraw</span>
+          <span className="inactive">L</span>
         </div>
         <div className="network-section">
           <div className="arrow-container">

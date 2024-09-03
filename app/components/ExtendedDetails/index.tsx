@@ -35,17 +35,15 @@ const ExtendedDetails: React.FC<{amountEther: undefined | string | number}> = ({
         </div>
       </div>
 
-
       <div className="flex flex-row justify-between items-center single-line">
         <div><span className="white-text">Transfer Time</span></div>
         <div className="flex gap-2 items-center">
-        {(amountEth)
+        {(amountEth && amountEth >= 0.002)
             ? <span className="green-text">~ 5 mins</span>
             : <span className="gray-text">-</span>
         }
         </div>
       </div>
-
 
       <div className="flex flex-row justify-between items-center single-line">
         <div><span className="white-text">Network Fee</span></div>
