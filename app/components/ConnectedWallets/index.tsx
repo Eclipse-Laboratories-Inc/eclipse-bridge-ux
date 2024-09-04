@@ -91,8 +91,7 @@ const ConnectedWallets = forwardRef<HTMLDivElement, ConnectedWalletsProps>(({ cl
           <div className={solWallet ? "wallet-details" : "wallet-details disconnected"}>
             <div className="wallet-details-top flex justify-between items-center">
             <div className="flex flex-row">
-
-                <img
+         t       <img
                   src={eclipseWallet.icon}
                   alt="Eclipse Icon"
                   className="wallet-icon"
