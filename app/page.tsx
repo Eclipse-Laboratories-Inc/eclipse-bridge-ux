@@ -157,7 +157,7 @@ function Header() {
   return (
     <header className="header w-full bg-black text-green-500 flex items-center justify-between p-4 border-b border-white border-opacity-10">
       <div className="flex items-center space-x-2">
-      { (window.innerWidth >= 768) 
+      { (window && window.innerWidth >= 768) 
         ? <img src="/wordmark.png" alt="Eclipse Logo" width={183} height={34} />
         : <img src="/eclipse-e.png" alt="Eclipse Logo" width={35} height={34} />
       }
