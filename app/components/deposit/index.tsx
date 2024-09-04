@@ -12,6 +12,7 @@ import {
 } from "@dynamic-labs/sdk-react-core";
 import Cross from '../icons/cross';
 import Loading from '../icons/loading';
+import Activity from '../icons/activity';
 import { createPublicClient, createWalletClient, custom, formatEther, http, parseEther, toHex } from 'viem'
 import { mainnet } from 'viem/chains'
 import { getBalance } from 'viem/actions';
@@ -204,7 +205,7 @@ const Deposit: React.FC<DepositProps> = ({ amountEther, setAmountEther }) => {
           <div className="active header-tab" style={{ width: "43.5%" }}>Deposit</div>
           <div className="inactive header-tab" style={{ width: "43.5%" }}>Withdraw</div>
           <div className="inactive header-tab flex items-center justify-center" style={{ width: "56px" }}>
-              <Loading loadingClassName=""/>
+              <Activity activityClassName="" />
           </div>
         </div>
         <div className="network-section">
