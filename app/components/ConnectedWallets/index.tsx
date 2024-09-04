@@ -5,11 +5,7 @@ import { useDynamicContext, DynamicConnectButton } from "@dynamic-labs/sdk-react
 import { getBalance } from 'viem/actions';
 import { mainnet } from 'viem/chains';
 import './styles.css';
-import Cross from '../icons/cross';
-import Copy from '../icons/copy'
-import ConnectIcon from '../icons/connect'
-import CircleCheck from '../icons/circle-check'
-import Disconnect from '../icons/disconnect';
+import { Cross, Copy, ConnectIcon, CircleCheck, Disconnect} from "../icons";
 import { truncateWalletAddress } from '@/lib/stringUtils';
 import { getWalletBalance } from '@/lib/solanaUtils';
 
@@ -20,10 +16,8 @@ const client = createPublicClient({
 
 interface ConnectedWalletsProps {
   close: (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => void;
-//ref: React.RefObject<HTMLDivElement>;
 }
 
-// const ConnectedWallets = ({ close, ref }: ConnectedWalletsProps ) => {
 const ConnectedWallets = forwardRef<HTMLDivElement, ConnectedWalletsProps>(({ close }, ref) => {
   const userWallets: Wallet[] = useUserWallets() as Wallet[];
   const solWallet = userWallets.find(w => w.chain == "SOL");

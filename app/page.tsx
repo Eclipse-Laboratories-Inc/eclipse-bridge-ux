@@ -9,12 +9,8 @@ import {
   Wallet
 } from "@dynamic-labs/sdk-react-core";
 import { truncateWalletAddress } from "@/lib/stringUtils";
-import Chevron from "./components/icons/chevron-right-small";
 import ConnectedWallets from "./components/ConnectedWallets/index";
-import Gas from "./components/icons/gas";
-import Eth from "./components/icons/eth";
-import Block from "./components/icons/block";
-import Connect from "./components/icons/connect"
+import { Block, ConnectIcon, Eth, Gas, Chevron } from "./components/icons";
 import useEthereumData from "@/lib/ethUtils";
 import { EthereumDataContext } from "./context"
 
@@ -100,7 +96,7 @@ function ProfileAvatar() {
   return (
     <div className="flex items-center space-x-2">
       <div onClick={(e) => {(!showModal) ? openModal(e) : closeModal(e)}} ref={openModalRef} className="connect-wallet"> 
-        <Connect connectClassName="connect-wallet-icon" /> {content()}
+        <ConnectIcon connectClassName="connect-wallet-icon" /> {content()}
         { (solWallet && evmWallet) && <Chevron /> }
       </div>
         { <ConnectedWallets ref={modalRef} close={(e) => closeModal(e)} />}

@@ -1,6 +1,5 @@
 "use client";
 import React, { useEffect, useState, useCallback } from 'react';
-import ExtendedDetails from "../ExtendedDetails";
 import { PublicKey, PublicKeyInitData } from '@solana/web3.js';
 import './styles.css';
 import TransferArrow from '../icons/transferArrow';
@@ -10,10 +9,7 @@ import {
   useDynamicContext,
   Wallet,
 } from "@dynamic-labs/sdk-react-core";
-import Cross from '../icons/cross';
-import Loading from '../icons/loading';
-import Activity from '../icons/activity';
-import ConnectIcon from '../icons/connect'
+import { Cross, Loading, ConnectIcon, Activity } from "../icons";
 import { createPublicClient, createWalletClient, custom, formatEther, http, parseEther, toHex } from 'viem'
 import { mainnet } from 'viem/chains'
 import { getBalance } from 'viem/actions';
