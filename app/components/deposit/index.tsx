@@ -13,6 +13,7 @@ import {
 import Cross from '../icons/cross';
 import Loading from '../icons/loading';
 import Activity from '../icons/activity';
+import ConnectIcon from '../icons/connect'
 import { createPublicClient, createWalletClient, custom, formatEther, http, parseEther, toHex } from 'viem'
 import { mainnet } from 'viem/chains'
 import { getBalance } from 'viem/actions';
@@ -24,7 +25,6 @@ const client = createPublicClient({
   chain: mainnet,
   transport: http(),
 })
-
 
   // TODO: move this to the lib
   const solanaToBytes32 = (solanaAddress: PublicKeyInitData) => {
@@ -54,6 +54,8 @@ interface DepositProps {
 const Deposit: React.FC<DepositProps> = ({ amountEther, setAmountEther }) => {
   const [balanceEther, setAmountBalanceEther] = useState<number>(-1);
   const [isMmPopup, setIsMmPopup] = useState(false);
+  const [isEvmDisconnected, setIsEvmDisconnected] = useState(false);
+  const [isSolDisconnected, setIsSolDisconnected] = useState(false);
 
   const userWallets: Wallet[] = useUserWallets() as Wallet[];
   const solWallet = userWallets.find(w => w.chain == "SOL");
@@ -222,12 +224,22 @@ const Deposit: React.FC<DepositProps> = ({ amountEther, setAmountEther }) => {
                 </div>
               </div>
               {evmWallet && <div className="network-info-right-section">
-                <div onClick={() => evmWallet && handleUnlinkWallet(evmWallet.id)} className="disconnect">
+                <div onClick={() => evmWallet && handleUnlinkWallet(evmWallet.id) && setIsEvmDisconnected(!isEvmDisconnected)} className="disconnect">
                   <Cross crossClassName="deposit-cross" />
                   <div>Disconnect</div>
                 </div>
                 <div className="wallet-addresss">{truncateWalletAddress(userWallets.find(w => w.chain == "EVM")?.address || '')}</div>
-              </div>
+              </div>}
+              { (!evmWallet && isEvmDisconnected)
+                  ? <DynamicConnectButton>
+                      <div className="flex items-center gap-1 modal-connect">
+                        <div>
+                          <ConnectIcon connectClassName="modal-connect"/>
+                        </div>
+                        <div className="modal-connect-wallet">Connect Wallet</div>
+                      </div>
+                    </DynamicConnectButton>
+                : null
               }
             </div>
           </div>
@@ -242,12 +254,23 @@ const Deposit: React.FC<DepositProps> = ({ amountEther, setAmountEther }) => {
                 </div>
               </div>
               {solWallet && <div className="network-info-right-section">
-                <div onClick={() => solWallet && handleUnlinkWallet(solWallet.id)} className="disconnect">
+                <div onClick={() => solWallet && handleUnlinkWallet(solWallet.id) && setIsSolDisconnected(!isSolDisconnected)} className="disconnect">
                   <Cross crossClassName="deposit-cross" />
                   <div>Disconnect</div>
                 </div>
                 <div className="wallet-addresss">{truncateWalletAddress(solWallet?.address || '')}</div>
               </div>}
+              { (!solWallet && isSolDisconnected)
+                  ? <DynamicConnectButton>
+                      <div className="flex items-center gap-1 modal-connect">
+                        <div>
+                          <ConnectIcon connectClassName="modal-connect"/>
+                        </div>
+                        <div className="modal-connect-wallet">Connect Wallet</div>
+                      </div>
+                    </DynamicConnectButton>
+                : null
+              }
             </div>
           </div>
         </div>
