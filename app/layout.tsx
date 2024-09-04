@@ -18,9 +18,9 @@ const cssOverrides = `
     content: url('/eclipse.png');
   }
   
-  .bridge-welcome-layout, .wallet-progress-stepper, .accordion-item {
+  .wallet-progress-stepper, .accordion-item {
     border: 1px solid rgba(255, 255, 255, 0.1);
-    border-radius: 30px;
+    border-radius: 27px;
     background: rgb(5, 5, 5);
   }
   
@@ -61,6 +61,15 @@ const cssOverrides = `
   }
   .bridge-welcome-layout__message-container { gap: 6px; }
   .portal__backdrop { display: none!important; }
+  .modal-header--align-content-bottom {
+    border-bottom: none!important;
+    margin-bottom: 0!important;
+  }
+  .modal-header { 
+    border-bottom: 1px rgba(255, 255, 255, 0.1) solid; 
+    margin-bottom: 16px;
+    padding: 20px;
+  }
 `
 
 export default function RootLayout({

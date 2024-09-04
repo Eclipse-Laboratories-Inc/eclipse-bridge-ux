@@ -8,6 +8,7 @@
 }
 
 .main-content {
+  width: 95%;
   background-color: #000000; /* Black background */
   transition: transform 300ms var(--ease-out-quad), filter 300ms var(--ease-out-quad);
 }
@@ -32,7 +33,7 @@
   margin-bottom: 20px;
   padding: 5px;
   border: 1px solid rgba(255, 255, 255, 0.1);
-  gap: 3px;
+  gap: 5px;
 }
 
 .header-tabs div {
@@ -83,10 +84,12 @@
   border: 1px solid rgba(255, 255, 255, 0.1);
   width: 100%;
 }
+
 .network-info-left-section {
   display: flex;
   flex-direction: row;
 }
+
 .disconnect {
   color: rgba(255, 255, 255, 0.3);
   cursor: pointer;
@@ -99,7 +102,7 @@
 }
 
 .disconnect svg path {
-  transition: stroke 100ms var(--ease-out-quad), stroke-opacity 100ms var(--ease-out-quad);
+  transition: stroke 100ms var(--ease-out-quad), stroke-opacity 100ms var(--ease-out-quad), fill-opacity 100ms var(--ease-out-quad);
 }
 
 .disconnect:hover svg path,
@@ -501,3 +504,33 @@ input::placeholder {
   background-color: transparent; 
   pointer-events: auto; 
 }
+
+@media (max-width: 500px) {
+  .deposit-card {
+    padding: 14px;
+  }
+  .submit-button {
+    margin-top: 14px;
+  }
+  .header-tabs {
+    margin-bottom: 14px;
+    padding: 4px;
+    gap: 4px;
+  }
+  .network-section {
+    margin-bottom: 6px;
+  }
+  .network-box {
+    padding: 14px 12px;
+  }
+  .network-info img {
+    margin-right: 6px;
+  }
+  .amount-input {
+    padding: 12px;
+  }
+  .deposit-button {
+    padding: 14px;
+  }
+}
+

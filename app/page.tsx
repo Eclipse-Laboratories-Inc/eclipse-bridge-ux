@@ -116,7 +116,7 @@ export default function Main() {
           transition: "filter 300ms var(--ease-out-quad)" 
     }}>
         <Header />
-        <div className="main-content">
+        <div className="main-content flex flex-col gap-2 items-center">
           <Deposit amountEther={amountEther} setAmountEther={setAmountEther} />
           <br></br>
           <ExtendedDetails amountEther={amountEther} />

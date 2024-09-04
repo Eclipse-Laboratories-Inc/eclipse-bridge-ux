@@ -139,8 +139,16 @@
   transition: stroke-opacity 0.1s var(--ease-out-quad);
 }
 
-.modal-connect:hover path, .modal-connect:hover div {
+.modal-connect:hover path:first-of-type {
   stroke: #a3ffa5;
   stroke-opacity: 1;
-  color: #a3ffa5;
 }
+
+.modal-connect:hover path:nth-of-type(2) {
+  fill: #a3ffa5;
+  fill-opacity: 1;
+}
+
+.modal-connect:hover div {
+  color: #a3ffa5;
+} 
