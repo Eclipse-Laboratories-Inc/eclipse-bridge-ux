@@ -55,6 +55,7 @@ const cssOverrides = `
     padding: 0 20px 20px;
   }
   .bridge-welcome-layout__message-container { gap: 6px; }
+  .portal__backdrop { display: none!important; }
 `
 
 export default function RootLayout({
@@ -62,6 +63,7 @@ export default function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
+  // TODO
   return (
     <html lang="en">
       <DynamicContextProvider
@@ -73,6 +75,9 @@ export default function RootLayout({
 
                 const submitButton = document.getElementsByClassName("submit-button")[0] as HTMLElement;
                 submitButton.className += " disabled";
+
+                const mainContent = document.getElementById("main-content") as HTMLElement;
+                mainContent.style.filter = "blur(3px)"
             },
             onAuthFlowClose: () => {
                 const depositBox = document.getElementsByClassName("deposit-container")[0] as HTMLElement;
@@ -80,6 +85,9 @@ export default function RootLayout({
 
                 const submitButton = document.getElementsByClassName("submit-button")[0] as HTMLElement;
                 submitButton.className = submitButton.className.replace("disabled", "");
+
+                const mainContent = document.getElementById("main-content") as HTMLElement;
+                mainContent.style.filter = ""
             }
           },
           walletsFilter: (wallets) => wallets.filter((w) => w.walletConnector.supportedChains.includes("EVM") || w.key === "phantom"),

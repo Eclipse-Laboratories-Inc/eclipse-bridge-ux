@@ -9,7 +9,7 @@
 
 .main-content {
   background-color: #000000; /* Black background */
-  transition: transform 300ms cubic-bezier(.25, .46, .45, .94), filter 300ms cubic-bezier(.25, .46, .45, .94);;
+  transition: transform 300ms var(--ease-out-quad), filter 300ms var(--ease-out-quad);
 }
 
 .deposit-card {

@@ -69,7 +69,7 @@ function ProfileAvatar() {
       console.log(showModal)
       // add blur 
       const element = document.querySelector(".main-content") as HTMLElement;
-      element.style.filter = "blur(5px)"
+      element.style.filter = "blur(3px)"
     }
   };
 
@@ -115,7 +115,10 @@ export default function Main() {
 
   return (
     <EthereumDataContext.Provider value={[gasPrice, ethPrice]}>
-    <div className="flex items-center text-white h-full flex flex-col justify-between" style={{background: "black"}}>
+    <div className="flex items-center text-white h-full flex flex-col justify-between" id="main-content" style={{
+          background: "black", 
+          transition: "filter 300ms var(--ease-out-quad)" 
+    }}>
         <Header />
         <div className="main-content">
           <Deposit amountEther={amountEther} setAmountEther={setAmountEther} />
