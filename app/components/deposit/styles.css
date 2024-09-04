@@ -322,6 +322,9 @@ input::placeholder {
 .submit-button.alarm {
   background: rgba(235, 77, 77, 0.1);
   color: #EB4D4D;
+
+  pointer-events: none;
+  cursor: not-allowed;
 }
 
 .submit-button.alarm:hover {
