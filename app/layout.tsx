@@ -69,6 +69,12 @@ export default function RootLayout({
       <DynamicContextProvider
         settings={{
           events: {
+              onWalletRemoved: (args) => {
+                if (args.wallet.chain === "EVM") { 
+                  const client: any = args.wallet.connector.getWalletClient();
+                  client.request({ "method": "wallet_revokePermissions", "params": [{"eth_accounts": {}}]});
+                }
+              },
               onAuthFlowOpen: () => {
                 const depositBox = document.getElementsByClassName("deposit-container")[0] as HTMLElement;
                 depositBox.style.transform = "scale(0.9)";
