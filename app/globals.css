@@ -105,15 +105,49 @@ img[data-testid='iconic-solana'] {
 
 footer {
   border-top: 1px solid rgba(255, 255, 255, 0.1);
-  padding: 10px;
   text-align: center;
   height: 50px;
   width: 100%;
+  padding: 10px;
   color: rgba(255, 255, 255, 0.3);
   display: flex;
   flex-direction: row;
   justify-content: space-between;
   a {
     margin-right: 20px;
+  }
+}
+
+@media (max-width: 500px) {
+  footer {
+    padding: 0px;
+    flex-direction: column;
+    a {
+      margin-right: 0;
+    }
+  }
+
+  .legal-footer {
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    padding: 6px 18px;
+    font-size: 14px;
+  }
+
+  .info-footer {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    margin-left: 0px;
+    padding: 6px;
+    font-size: 14px;
+    gap: 20px;
+    div {
+        gap: 4px;
+        margin-left: 0px;
+    }
   }
 }

@@ -121,17 +121,30 @@ export default function Main() {
           <br></br>
           <ExtendedDetails amountEther={amountEther} />
         </div>
-      <footer>
-        <div className="flex flex-row">
+      <footer className="flex items-center">
+        <div className="flex flex-row legal-footer justify-center">
           <Link href="https://www.eclipse.xyz/terms"> Terms & Conditions </Link>
           <Link href="https://www.eclipse.xyz/privacy-policy"> Privacy Policy </Link>
           <Link href="https://docs.eclipse.xyz">  Docs </Link>
-
         </div>
-        <div className="flex flex-row">
-          <div className="ml-[28px] flex flex-row"><Gas gasClassName="gas" /> &nbsp; Gas <span style={{color: "rgba(161, 254, 160, 0.5)"}}> &nbsp; ${gasPrice}</span></div>
-          <div className="ml-[28px] flex flex-row"><Eth ethClassName="eth" /> &nbsp; Eth <span style={{color: "rgba(161, 254, 160, 0.5)"}}> &nbsp; ${ethPrice}</span> </div>
-          <div className="ml-[28px] flex flex-row"><Block blockClassName="block" /> &nbsp; Block <span style={{color: "rgba(161, 254, 160, 0.5)"}}> &nbsp; {blockNumber}</span> </div>
+          <div className="flex flex-row info-footer">
+          <div className="ml-[28px] flex flex-row items-center gap-2">
+            <Gas gasClassName="gas" />  
+            <span>Gas</span>
+            <span style={{color: "rgba(161, 254, 160, 0.5)"}}> ${gasPrice}</span>
+          </div>
+
+          <div className="ml-[28px] flex flex-row items-center gap-2">
+            <Eth ethClassName="eth" />
+            <span>Eth</span> 
+            <span style={{color: "rgba(161, 254, 160, 0.5)"}}> ${ethPrice}</span>
+          </div>
+
+          <div className="ml-[28px] flex flex-row items-center gap-2">
+            <Block blockClassName="block" /> 
+            <span>Block</span> 
+            <span style={{color: "rgba(161, 254, 160, 0.5)"}}> {blockNumber}</span>
+          </div>
         </div>
       </footer>
     </div>
