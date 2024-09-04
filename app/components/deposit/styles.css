@@ -532,5 +532,9 @@ input::placeholder {
   .deposit-button {
     padding: 14px;
   }
+  
+  .bridge-text{
+    display: none;
+  }
 }
 
