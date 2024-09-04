@@ -25,8 +25,13 @@ const cssOverrides = `
   }
   
   .wallet-progress-stepper {border-radius: 20px;} 
-  .wallet-list-item__tile {
+  .wallet-progress-stepper div:first-of-type { background: transparent; }
+  .wallet-list-item__tile, .list-tile {
     background: rgba(255, 255, 255, 0.03);
+  }
+
+  .wallet-list-item__tile:hover, .list-tile:hover {
+    background-color: rgba(255, 255, 255, 0.05)!important;
   }
 
   .accordion-item, .default-footer__footer {background: rgb(5, 5, 5);}
@@ -96,7 +101,7 @@ export default function RootLayout({
                 mainContent.style.filter = ""
             }
           },
-          walletsFilter: (wallets) => wallets.filter((w) => w.walletConnector.supportedChains.includes("EVM") || w.key === "backpacksol"),
+          walletsFilter: (wallets) => wallets.filter((w) => w.walletConnector.supportedChains.includes("EVM") || w.key === "phantom"),
           environmentId: process.env.NEXT_PUBLIC_ENVIRONMENT_ID || '',
           walletConnectors: [EthereumWalletConnectors, SolanaWalletConnectors],
           initialAuthenticationMode: 'connect-only',
