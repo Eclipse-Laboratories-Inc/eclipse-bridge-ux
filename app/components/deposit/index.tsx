@@ -1,6 +1,5 @@
 "use client";
 import React, { useEffect, useState, useCallback } from 'react';
-import { PublicKey, PublicKeyInitData } from '@solana/web3.js';
 import './styles.css';
 import TransferArrow from '../icons/transferArrow';
 import {
@@ -10,10 +9,11 @@ import {
   Wallet,
 } from "@dynamic-labs/sdk-react-core";
 import { Cross, Loading, ConnectIcon, Activity } from "../icons";
-import { createPublicClient, createWalletClient, custom, formatEther, http, parseEther, toHex } from 'viem'
+import { createPublicClient, createWalletClient, custom, formatEther, http, parseEther } from 'viem'
 import { mainnet } from 'viem/chains'
 import { getBalance } from 'viem/actions';
 import { truncateWalletAddress } from '@/lib/stringUtils';
+import { solanaToBytes32 } from '@/lib/solanaUtils'
 import Skeleton, { SkeletonTheme } from 'react-loading-skeleton'
 import 'react-loading-skeleton/dist/skeleton.css'
 
@@ -21,26 +21,14 @@ const client = createPublicClient({
   chain: mainnet,
   transport: http(),
 })
-
-  // TODO: move this to the lib
-  const solanaToBytes32 = (solanaAddress: PublicKeyInitData) => {
-    try {
-      const publicKey = new PublicKey(solanaAddress);
-      return toHex(publicKey.toBytes().slice(0, 32));
-    } catch (error) {
-      console.error('Invalid Solana address', error);
-      throw new Error('Invalid Solana address');
-    }
-  };
   
-  let walletClient: any;
-  if (typeof window !== 'undefined' && window.ethereum) {
-    walletClient = createWalletClient({
-      chain: mainnet,
-      transport: custom(window.ethereum!),
-    })
-
-  }
+let walletClient: any;
+if (typeof window !== 'undefined' && window.ethereum) {
+  walletClient = createWalletClient({
+    chain: mainnet,
+    transport: custom(window.ethereum!),
+  })
+}
 
 interface DepositProps {
   amountEther: number | string | undefined;
@@ -77,8 +65,6 @@ const Deposit: React.FC<DepositProps> = ({ amountEther, setAmountEther }) => {
   useEffect(() => {
     userWallets.forEach(async (wallet) => {
       if (!wallet) return;
-
-
       if (!provider || !(wallet.chain == "EVM")) return;
       const balance = await getBalance(client, {
         //@ts-ignore
@@ -165,7 +151,6 @@ const Deposit: React.FC<DepositProps> = ({ amountEther, setAmountEther }) => {
     if (parseFloat(amountEther as string) > balanceEther) {
       return 'submit-button alarm'
     }
-    
     return 'submit-button' 
   }
 
@@ -308,7 +293,6 @@ const Deposit: React.FC<DepositProps> = ({ amountEther, setAmountEther }) => {
                     <span style={{width: "20%"}}><Skeleton inline={true}/></span>
                   </SkeletonTheme>
                 }
-
               </div>
             }
             <div className={evmWallet ? "percentage-buttons" : "invisible"}>

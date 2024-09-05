@@ -22,22 +22,12 @@ function ProfileAvatar() {
 
   const modalRef   = useRef<HTMLDivElement>(null);
   const openModalRef   = useRef<HTMLDivElement>(null);
-  const depositRef = useRef<HTMLDivElement>(null);
 
-
-  // TODO: need some refactor here
   const content = () => {
-    if (!solWallet && !evmWallet) {
-      return  (
-          <DynamicConnectButton buttonClassName="connect-button-header">
-            Connect Wallets
-          </DynamicConnectButton>
-      )
-    }
     if (!solWallet || !evmWallet) {
       return  (
         <DynamicConnectButton buttonClassName="connect-button-header">
-          Connect Wallet
+          { !solWallet && !evmWallet ? "Connect Wallets" : "Connect Wallet"} 
         </DynamicConnectButton>
       )
     }
@@ -46,26 +36,18 @@ function ProfileAvatar() {
   };
 
   //TODO: fix any usage here
-  const closeModal = (e: any) => {
-    if (e) e.stopPropagation();
-    if (modalRef.current) modalRef.current.className = "connected-wallets-modal"
-    setShowModal(!showModal);
-    console.log(showModal)
-    
-    // remove blur effect
-    const element = document.querySelector(".main-content") as HTMLElement;
-    element.style.filter = ""
-  };
-
-  const openModal = (e: any) => {
-    if (e) e.stopPropagation();
+  const toggleModal = (e: any) => {
+  if (e) e.stopPropagation();
     if (evmWallet && solWallet) {
-      if (modalRef.current) modalRef.current.className = "connected-wallets-modal modal-active"
-      setShowModal(!showModal);
-      console.log(showModal)
-      // add blur 
+      const modalState = !showModal;
+      setShowModal(modalState);
+    
+      if (modalRef.current) {
+        modalRef.current.className = modalState ? "connected-wallets-modal modal-active" : "connected-wallets-modal";
+      }
+    
       const element = document.querySelector(".main-content") as HTMLElement;
-      element.style.filter = "blur(3px)"
+      element.style.filter = modalState ? "blur(3px)" : "";
     }
   };
 
@@ -77,7 +59,7 @@ function ProfileAvatar() {
     const clickedOutsideButton = openButtonElement && !openButtonElement.contains(e.target as Node);
 
     if (clickedOutsideModal && clickedOutsideButton) {
-      closeModal(null);
+      toggleModal(null);
     }
   };
 
@@ -95,11 +77,11 @@ function ProfileAvatar() {
 
   return (
     <div className="flex items-center space-x-2">
-      <div onClick={(e) => {(!showModal) ? openModal(e) : closeModal(e)}} ref={openModalRef} className="connect-wallet"> 
+      <div onClick={(e) => {toggleModal(e)}} ref={openModalRef} className="connect-wallet"> 
         <ConnectIcon connectClassName="connect-wallet-icon" /> {content()}
         { (solWallet && evmWallet) && <Chevron /> }
       </div>
-        { <ConnectedWallets ref={modalRef} close={(e) => closeModal(e)} />}
+        { <ConnectedWallets ref={modalRef} close={(e) => toggleModal(e)} />}
     </div>
   );
 
