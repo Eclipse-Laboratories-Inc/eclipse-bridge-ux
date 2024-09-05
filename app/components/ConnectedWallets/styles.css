@@ -152,3 +152,10 @@
 .modal-connect:hover div {
   color: #a3ffa5;
 } 
+
+@media (max-width: 500px) {
+  .connected-wallets-modal {
+    width: 95%;
+    right: 2%;
+  }
+}
