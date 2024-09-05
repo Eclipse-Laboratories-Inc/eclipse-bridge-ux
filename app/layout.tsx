@@ -113,7 +113,7 @@ export default function RootLayout({
                 mainContent.style.filter = ""
             }
           },
-          walletsFilter: (wallets) => wallets.filter((w) => w.walletConnector.supportedChains.includes("EVM") || w.key === "phantom"),
+          walletsFilter: (wallets) => wallets.filter((w) => w.walletConnector.supportedChains.includes("EVM") || w.key === "backpacksol"),
           environmentId: process.env.NEXT_PUBLIC_ENVIRONMENT_ID || '',
           walletConnectors: [EthereumWalletConnectors, SolanaWalletConnectors],
           initialAuthenticationMode: 'connect-only',

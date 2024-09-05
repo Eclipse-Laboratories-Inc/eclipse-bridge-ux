@@ -15,7 +15,7 @@ const client = createPublicClient({
 })
 
 interface ConnectedWalletsProps {
-  close: (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => void;
+  close: React.MouseEventHandler<HTMLDivElement>; 
 }
 
 const ConnectedWallets = forwardRef<HTMLDivElement, ConnectedWalletsProps>(({ close }, ref) => {

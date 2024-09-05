@@ -10,3 +10,5 @@ export { default as Eth } from "./eth";
 export { default as Gas } from "./gas";
 export { default as Loading } from "./loading";
 export { default as TransferArrow } from "./transferArrow";
+export { default as Arrow } from "./arrow";
+export { default as TransactionIcon } from "./transaction-icon";

@@ -1,6 +1,5 @@
-import React, { useContext, useEffect } from 'react';
-import  { DataArray, EthereumDataContext } from "@/app/context";
-import useEthereumData from "@/lib/ethUtils";
+import React, { useContext } from 'react';
+import  { EthereumDataContext } from "@/app/context";
 import Skeleton, { SkeletonTheme } from 'react-loading-skeleton'
 import 'react-loading-skeleton/dist/skeleton.css'
 import "./styles.css"

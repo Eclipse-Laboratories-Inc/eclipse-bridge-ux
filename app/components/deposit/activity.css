@@ -1,0 +1,62 @@
+.activity-container {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  font-weight: 500;
+  width: 100%;
+}
+
+.deposit-transaction {
+  padding: 16px 15px 16px 15px;
+  width: 100%;
+  height: 85px;
+
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.03);
+}
+
+.white-in {
+  font-size: 20px;
+  color: white;
+  line-height: 26px;
+}
+
+.gray-in {
+  color: rgba(85, 85, 85, 1);
+  font-size: 16px;
+  line-height: 20.8px;
+}
+
+.status-div {
+  padding: 3px 8px 3px 3px;
+  gap: 6px;
+  border-radius: 13px;
+  font-size: 12px;
+}
+
+.status-div.failed {
+  background: rgba(235, 77, 77, 0.05);
+  color: rgba(235, 77, 77, 1);
+}
+
+.status-div.loading {
+  background: rgba(255, 255, 255, 0.05);
+  color: rgba(255, 255, 255, 0.3);
+  svg { width: 16px;}
+}
+
+.status-div.completed {
+  background: rgba(161, 254, 160, 0.05);
+  color: rgba(161, 254, 160, 1);
+}
+
+@media (max-width: 500px) {
+  .white-in {
+    font-size: 16px;
+    line-size: 20px;
+  }
+  .gray-in {
+    font-size: 12px;
+  }
+}
