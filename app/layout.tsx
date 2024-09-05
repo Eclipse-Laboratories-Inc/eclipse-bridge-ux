@@ -37,6 +37,9 @@ const cssOverrides = `
   .accordion-item, .default-footer__footer {background: rgb(5, 5, 5);}
   .button {background: rgba(161, 254, 160, 1); }
   .button span {color: black; font-size: 15px;}
+  .button--padding-large {
+    padding: 14px 20px;
+  }
   .stepper {
     background: rgba(255, 255, 255, 0.03);
     padding: 8px;
