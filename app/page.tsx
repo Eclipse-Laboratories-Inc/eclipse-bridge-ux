@@ -2,41 +2,32 @@
 import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import Deposit from "./components/deposit";
+import ExtendedDetails from './components/ExtendedDetails'
 import {
   DynamicConnectButton,
   useUserWallets,
   Wallet
 } from "@dynamic-labs/sdk-react-core";
 import { truncateWalletAddress } from "@/lib/stringUtils";
-import Chevron from "./components/icons/chevron-right-small";
 import ConnectedWallets from "./components/ConnectedWallets/index";
-import Gas from "./components/icons/gas";
-import Eth from "./components/icons/eth";
-import Block from "./components/icons/block";
+import { Block, ConnectIcon, Eth, Gas, Chevron } from "./components/icons";
 import useEthereumData from "@/lib/ethUtils";
+import { EthereumDataContext } from "./context"
 
 function ProfileAvatar() {
   const userWallets: Wallet[] = useUserWallets() as Wallet[];
   const solWallet = userWallets.find(w => w.chain == "SOL");
   const evmWallet = userWallets.find(w => w.chain == "EVM");
-  const [showModal, setShowModal] = useState(true);
+  const [showModal, setShowModal] = useState(false);
 
   const modalRef   = useRef<HTMLDivElement>(null);
-  const depositRef = useRef<HTMLDivElement>(null);
-
+  const openModalRef   = useRef<HTMLDivElement>(null);
 
   const content = () => {
-    if (!solWallet && !evmWallet) {
-      return  (
-        <DynamicConnectButton>
-        Connect Wallets
-        </DynamicConnectButton>
-      )
-    }
     if (!solWallet || !evmWallet) {
       return  (
-        <DynamicConnectButton>
-          Connect Wallet
+        <DynamicConnectButton buttonClassName="connect-button-header">
+          { !solWallet && !evmWallet ? "Connect Wallets" : "Connect Wallet"} 
         </DynamicConnectButton>
       )
     }
@@ -45,28 +36,30 @@ function ProfileAvatar() {
   };
 
   //TODO: fix any usage here
-  const closeModal = (e: any) => {
-    if (e) e.stopPropagation();
-    if (modalRef.current) modalRef.current.className = "connected-wallets-modal"
-    
-    // remove blur effect
-    const element = document.querySelector(".deposit-container") as HTMLElement;
-    element.style.filter = ""
-  };
-
-  const openModal = (e: any) => {
-    e.stopPropagation();
+  const toggleModal = (e: any) => {
+  if (e) e.stopPropagation();
     if (evmWallet && solWallet) {
-      if (modalRef.current) modalRef.current.className = "connected-wallets-modal modal-active"
-      // add blur 
-      const element = document.querySelector(".deposit-container") as HTMLElement;
-      element.style.filter = "blur(5px)"
+      const modalState = !showModal;
+      setShowModal(modalState);
+    
+      if (modalRef.current) {
+        modalRef.current.className = modalState ? "connected-wallets-modal modal-active" : "connected-wallets-modal";
+      }
+    
+      const element = document.querySelector(".main-content") as HTMLElement;
+      element.style.filter = modalState ? "blur(3px)" : "";
     }
   };
 
   const handleClickOutside = (e: any) => {
-    if (!(modalRef.current && (modalRef.current as HTMLElement).contains(e.target as Node))) {
-      closeModal(null)
+    const modalElement = modalRef.current as HTMLElement;
+    const openButtonElement = openModalRef.current as HTMLElement;
+  
+    const clickedOutsideModal = modalElement && !modalElement.contains(e.target as Node);
+    const clickedOutsideButton = openButtonElement && !openButtonElement.contains(e.target as Node);
+
+    if (clickedOutsideModal && clickedOutsideButton) {
+      toggleModal(null);
     }
   };
 
@@ -84,37 +77,60 @@ function ProfileAvatar() {
 
   return (
     <div className="flex items-center space-x-2">
-      <div onClick={(e) => openModal(e)} className="connect-wallet"> 
-        {content()}
-        <Chevron />
-       { showModal && <ConnectedWallets ref={modalRef} close={(e) => closeModal(e)} />}
+      <div onClick={(e) => {toggleModal(e)}} ref={openModalRef} className="connect-wallet"> 
+        <ConnectIcon connectClassName="connect-wallet-icon" /> {content()}
+        { (solWallet && evmWallet) && <Chevron /> }
       </div>
+        { <ConnectedWallets ref={modalRef} close={(e) => toggleModal(e)} />}
     </div>
   );
 
 }
 
 export default function Main() {
-  const { blockNumber, gasPrice, ethPrice, error } = useEthereumData()
-  console.log({ ethPrice })
+  const { blockNumber, gasPrice, ethPrice, error } = useEthereumData();
+  const [amountEther, setAmountEther] = useState<number | string | undefined>(undefined);
+
   return (
-    <div className="flex items-center text-white h-full flex flex-col justify-between" style={{background: "black"}}>
-      <Header />
-      <Deposit /> 
-      <footer>
-        <div className="flex flex-row">
+    <EthereumDataContext.Provider value={[gasPrice, ethPrice]}>
+    <div className="flex items-center text-white h-full flex flex-col justify-between" id="main-content" style={{
+          background: "black", 
+          transition: "filter 300ms var(--ease-out-quad)" 
+    }}>
+        <Header />
+        <div className="main-content flex flex-col gap-2 items-center">
+          <Deposit amountEther={amountEther} setAmountEther={setAmountEther} />
+          <br></br>
+          <ExtendedDetails amountEther={amountEther} />
+        </div>
+      <footer className="flex items-center">
+        <div className="flex flex-row legal-footer justify-center">
           <Link href="https://www.eclipse.xyz/terms"> Terms & Conditions </Link>
           <Link href="https://www.eclipse.xyz/privacy-policy"> Privacy Policy </Link>
           <Link href="https://docs.eclipse.xyz">  Docs </Link>
-
         </div>
-        <div className="flex flex-row">
-          <div className="ml-[28px] flex flex-row"><Gas gasClassName="gas" /> &nbsp; Gas <span style={{color: "rgba(161, 254, 160, 0.5)"}}> &nbsp; ${gasPrice}</span></div>
-          <div className="ml-[28px] flex flex-row"><Eth ethClassName="eth" /> &nbsp; Eth <span style={{color: "rgba(161, 254, 160, 0.5)"}}> &nbsp; ${ethPrice}</span> </div>
-          <div className="ml-[28px] flex flex-row"><Block blockClassName="block" /> &nbsp; Block <span style={{color: "rgba(161, 254, 160, 0.5)"}}> &nbsp; {blockNumber}</span> </div>
+          <div className="flex flex-row info-footer">
+          <div className="ml-[28px] flex flex-row items-center gap-2">
+            <Gas gasClassName="gas" />  
+            <span>Gas</span>
+            <span style={{color: "rgba(161, 254, 160, 0.5)"}}> ${gasPrice}</span>
+          </div>
+
+          <div className="ml-[28px] flex flex-row items-center gap-2">
+            <Eth ethClassName="eth" />
+            <span>Eth</span> 
+            <span style={{color: "rgba(161, 254, 160, 0.5)"}}> ${ethPrice}</span>
+          </div>
+
+          <div className="ml-[28px] flex flex-row items-center gap-2">
+            <Block blockClassName="block" /> 
+            <span>Block</span> 
+            <span style={{color: "rgba(161, 254, 160, 0.5)"}}> {blockNumber}</span>
+          </div>
         </div>
       </footer>
     </div>
+    </ EthereumDataContext.Provider>
   );
 }
 
@@ -123,12 +139,16 @@ function Header() {
   return (
     <header className="header w-full bg-black text-green-500 flex items-center justify-between p-4 border-b border-white border-opacity-10">
       <div className="flex items-center space-x-2">
-        <img src="/wordmark.png" alt="Eclipse Logo" width={183} height={34} />
+      { (typeof window !== "undefined" && window.innerWidth >= 768) 
+        ? <img src="/wordmark.png" alt="Eclipse Logo" width={183} height={34} />
+        : <img src="/eclipse-e.png" alt="Eclipse Logo" width={35} height={34} />
+      }
       </div>
-      <h1 className="text-xl tracking-widest">BRIDGE</h1>
+      <h1 className="text-xl tracking-widest bridge-text">BRIDGE</h1>
       <>
         <ProfileAvatar />
       </>
     </header>
   );
 }
+

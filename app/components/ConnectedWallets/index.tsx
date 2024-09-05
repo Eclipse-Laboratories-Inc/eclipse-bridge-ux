@@ -5,11 +5,7 @@ import { useDynamicContext, DynamicConnectButton } from "@dynamic-labs/sdk-react
 import { getBalance } from 'viem/actions';
 import { mainnet } from 'viem/chains';
 import './styles.css';
-import Cross from '../icons/cross';
-import Copy from '../icons/copy'
-import ConnectIcon from '../icons/connect'
-import CircleCheck from '../icons/circle-check'
-import Disconnect from '../icons/disconnect';
+import { Cross, Copy, ConnectIcon, CircleCheck, Disconnect} from "../icons";
 import { truncateWalletAddress } from '@/lib/stringUtils';
 import { getWalletBalance } from '@/lib/solanaUtils';
 
@@ -19,11 +15,9 @@ const client = createPublicClient({
 })
 
 interface ConnectedWalletsProps {
-  close: (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => void;
-//ref: React.RefObject<HTMLDivElement>;
+  close: React.MouseEventHandler<HTMLDivElement>; 
 }
 
-// const ConnectedWallets = ({ close, ref }: ConnectedWalletsProps ) => {
 const ConnectedWallets = forwardRef<HTMLDivElement, ConnectedWalletsProps>(({ close }, ref) => {
   const userWallets: Wallet[] = useUserWallets() as Wallet[];
   const solWallet = userWallets.find(w => w.chain == "SOL");
@@ -32,7 +26,7 @@ const ConnectedWallets = forwardRef<HTMLDivElement, ConnectedWalletsProps>(({ cl
   const [copiedEth, setCopiedEth] = useState(false);
   const [balanceEther, setAmountBalanceEther] = useState(0);
   const [balanceEclipse, setAmountBalanceEclipse] = useState(0);
-  const { handleUnlinkWallet, rpcProviders } = useDynamicContext();
+  const { handleUnlinkWallet } = useDynamicContext();
   
   const handleCopy = (address: string = "", stateSetter: (state: boolean) => void) => {
     stateSetter(true);
@@ -55,7 +49,6 @@ const ConnectedWallets = forwardRef<HTMLDivElement, ConnectedWalletsProps>(({ cl
         const formattedEtherBalance = balanceAsEther.includes('.') ? balanceAsEther.slice(0, balanceAsEther.indexOf('.') + 5) : balanceAsEther
         const balanceEther = parseFloat(formattedEtherBalance);
         setAmountBalanceEther(balanceEther);
-
       }
       if (wallet.chain == "SOL") {
         const balance = await getWalletBalance(wallet.address);
@@ -92,7 +85,6 @@ const ConnectedWallets = forwardRef<HTMLDivElement, ConnectedWalletsProps>(({ cl
           <div className={solWallet ? "wallet-details" : "wallet-details disconnected"}>
             <div className="wallet-details-top flex justify-between items-center">
             <div className="flex flex-row">
-
                 <img
                   src={eclipseWallet.icon}
                   alt="Eclipse Icon"
@@ -154,7 +146,7 @@ const ConnectedWallets = forwardRef<HTMLDivElement, ConnectedWalletsProps>(({ cl
                 <div className={copiedEth ? "visible" : "hidden"}>
                   <CircleCheck circleClassName="modal-circle" />
                 </div>
-                <div onClick={() => evmWallet && handleUnlinkWallet(evmWallet.id)}>
+                <div onClick={() => evmWallet && handleUnlinkWallet(evmWallet.id) }>
                   <Disconnect disconnectClassName="modal-disconnect" />
                 </div>
             </div>

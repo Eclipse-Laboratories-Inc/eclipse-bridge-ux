@@ -4,7 +4,13 @@
   justify-content: center;
   align-items: center;
   background-color: #000000; /* Black background */
-  transition: filter 0.5s ease-out;
+  transition: transform 300ms cubic-bezier(.25, .46, .45, .94), filter 300ms cubic-bezier(.25, .46, .45, .94);;
+}
+
+.main-content {
+  width: 95%;
+  background-color: #000000; /* Black background */
+  transition: transform 300ms var(--ease-out-quad), filter 300ms var(--ease-out-quad);
 }
 
 .deposit-card {
@@ -27,30 +33,30 @@
   margin-bottom: 20px;
   padding: 5px;
   border: 1px solid rgba(255, 255, 255, 0.1);
+  gap: 5px;
 }
 
-.header-tabs span {
+.header-tabs div {
   font-weight: 500;
   font-size: large;
   margin: 0;
-  flex: 1;
   padding: 12px 0;
   text-align: center;
   cursor: pointer;
-  border-radius: 8px;
-  transition: background-color 0.3s, color 0.3s;
+  border-radius: 5px;
+  transition: background-color 0.1s var(--ease-out-quad), color 0.1s var(--ease-out-quad);
 }
 
-.header-tabs span.active {
+.header-tabs div.active {
   color: #a3ffa5; /* Light green color for active tab text */
   background-color: rgba(161, 254, 160, 0.05);
-
 }
 
-.header-tabs span.inactive {
-  background-color: transparent;
+.header-tabs div.inactive {
+  background-color: rgba(255, 255, 255, 0.02);
   color: #666666; /* Dark gray color for inactive tab text */
 }
+
 .arrow-container {
   position: absolute;
   top: 50%;
@@ -64,8 +70,7 @@
   align-items: center;
   position: relative;
   width: 100%;
-  margin-bottom: 20px;
-
+  margin-bottom: 12px;
 }
 
 .network-box {
@@ -79,10 +84,12 @@
   border: 1px solid rgba(255, 255, 255, 0.1);
   width: 100%;
 }
+
 .network-info-left-section {
   display: flex;
   flex-direction: row;
 }
+
 .disconnect {
   color: rgba(255, 255, 255, 0.3);
   cursor: pointer;
@@ -90,6 +97,12 @@
   display: flex;
   align-items: center;
   margin-bottom: 2px;
+
+  transition: color 100ms var(--ease-out-quad);
+}
+
+.disconnect svg path {
+  transition: stroke 100ms var(--ease-out-quad), stroke-opacity 100ms var(--ease-out-quad), fill-opacity 100ms var(--ease-out-quad);
 }
 
 .disconnect:hover svg path,
@@ -97,7 +110,6 @@
   stroke: #EB4D4D;
   color: #EB4D4D;
   stroke-opacity: 1;
-
 }
 
 .deposit-cross {
@@ -139,7 +151,7 @@
 }
 
 .network-info span {
-  font-size: 14px;
+  font-size: 16px;
   color: #ffffff;
 }
 
@@ -171,6 +183,12 @@
   color: #5a5a5a;
   border: 1px solid rgba(255, 255, 255, 0.1);
   width: 100%;
+
+  transition: background-color 0.1s var(--ease-out-quad), border 0.1s var(--ease-out-quad);
+}
+
+.amount-input:hover {
+  background-color: rgba(255, 255, 255, 0.03);
 }
 
 .amount-input.disabled { 
@@ -194,7 +212,7 @@
   bottom: 0;
 
   pointer-events: none; 
-  transition: opacity 0.1s ease-out;
+  transition: opacity 0.1s var(--ease-out-quad);
   border-radius: 10px;
   background: rgba(34,34,34, 0.5);
   opacity: 1;
@@ -202,18 +220,6 @@
 }
 
 .amount-input::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background-color: rgba(255, 255, 255, 0.05); 
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  opacity: 0; 
-  pointer-events: none; 
-  transition: opacity 0.1s ease-out;
-  border-radius: 10px;
 }
 
 .amount-input:hover::before {
@@ -222,9 +228,7 @@
 
 .amount-input:focus-within {
   background-color: rgba(255, 255, 255, 0.03); 
-  transition: background-color 0.1s ease-out;
   border: 1px solid rgba(255, 255, 255, 0.3);
-  transition: border 0.1s ease-out;
 }
 
 .amount-input.alarm {
@@ -300,6 +304,14 @@ input::placeholder {
   font-size: 20px;
   cursor: pointer;
   margin-top: 20px;
+  transition: background-color 0.1s var(--ease-out-quad);
+}
+
+.submit-button.waiting {
+  background: rgba(255, 255, 255, 0.05);
+  color: rgba(255, 255, 255, 0.3);
+  cursor: not-allowed;
+  pointer-events: none;
 }
 
 .submit-button.disabled {
@@ -313,6 +325,9 @@ input::placeholder {
 .submit-button.alarm {
   background: rgba(235, 77, 77, 0.1);
   color: #EB4D4D;
+
+  pointer-events: none;
+  cursor: not-allowed;
 }
 
 .submit-button.alarm:hover {
@@ -325,7 +340,7 @@ input::placeholder {
 
 .submit-button:active {
   transform: scale(0.95);
-  transition: transform 0.1s ease;
+  transition: transform 0.1s var(--ease-out-quad);
   height: 66px;
 }
 
@@ -339,15 +354,17 @@ input::placeholder {
   font-size: 95%;
 }
 
+.deposit-button {
+ display: flex;
+ flex-direction: row;
+ justify-content: center;
+ gap: 1rem;
+}
+
 .deposit-button:active{ 
   transform: scale(1.052631);
   transform-origin: center center;
   font-size: 95%;
-}
-
-.estimated-time {
-  color: #a3ffa5;
-  margin-top: 10px;
 }
 
 .amount-input-container {
@@ -469,4 +486,54 @@ input::placeholder {
 
 .hidden {
   display: none;
+}
+
+.connect-button-header {
+  position: relative;
+  display: inline-block;
+}
+
+.connect-button-header::before {
+  content: '';
+  position: absolute;
+  top: -8px; 
+  bottom: -10px; 
+  left: -18px; 
+  right: -45px;
+  z-index: 5;
+  background-color: transparent; 
+  pointer-events: auto; 
+}
+
+@media (max-width: 500px) {
+  .deposit-card {
+    padding: 14px;
+  }
+  .submit-button {
+    margin-top: 14px;
+  }
+  .header-tabs {
+    margin-bottom: 14px;
+    padding: 4px;
+    gap: 4px;
+  }
+  .network-section {
+    margin-bottom: 6px;
+  }
+  .network-box {
+    padding: 14px 12px;
+  }
+  .network-info img {
+    margin-right: 6px;
+  }
+  .amount-input {
+    padding: 12px;
+  }
+  .deposit-button {
+    padding: 14px;
+  }
+  
+  .bridge-text{
+    display: none;
+  }
 }
