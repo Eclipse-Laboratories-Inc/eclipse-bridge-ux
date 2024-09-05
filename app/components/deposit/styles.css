@@ -50,6 +50,12 @@
 .header-tabs div.active {
   color: #a3ffa5; /* Light green color for active tab text */
   background-color: rgba(161, 254, 160, 0.05);
+  transition: background-color 300ms var(--ease-out-quad), color 300ms var(--ease-out-quad);
+  path {
+    stroke-opacity: 1;
+    stroke: #a3ffa5; 
+    transition: stroke-opacity 300ms var(--ease-out-quad);
+  }
 }
 
 .header-tabs div.inactive {
