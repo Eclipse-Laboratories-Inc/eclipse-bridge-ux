@@ -5,6 +5,7 @@ import './styles.css';
 import { DepositContent, DepositProps } from "./depositContent";
 import { ActivityContent } from "./activityContent";
 import { TransactionDetails } from "./transactionDetails";
+import ExtendedDetails from '../ExtendedDetails'
 import classNames from 'classnames';
 
 enum Tabs {
@@ -17,7 +18,7 @@ const Deposit: React.FC<DepositProps> = ({ amountEther, setAmountEther }) => {
   const [activeTab, setActiveTab] = useState<Tabs>(Tabs.Deposit);
   return (
     <>
-    <div className="deposit-container" style={{display: "none"}}>
+    <div className="deposit-container">
       <div className="deposit-card">
         <div className="header-tabs">
           <div className={classNames("header-tab", (activeTab === Tabs.Deposit ? "active" : "inactive"))} style={{ width: "43.5%" }} onClick={() => setActiveTab(Tabs.Deposit)}>Deposit</div>
@@ -30,8 +31,9 @@ const Deposit: React.FC<DepositProps> = ({ amountEther, setAmountEther }) => {
           { activeTab === Tabs.Activity && <ActivityContent /> }
         </div>
       </div>
-      <TransactionDetails />
-      </>
+      <br></br>
+      { (activeTab === Tabs.Deposit) && <ExtendedDetails amountEther={amountEther} /> }
+    </>
   );
 }
 

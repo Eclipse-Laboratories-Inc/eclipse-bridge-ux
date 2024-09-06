@@ -1,7 +1,7 @@
 .transaction-details-modal {
+  position: absolute;
   z-index: 500;
-  
-  top: 40px;
+  top: 150px;
 
   width: 494px;
   height: 631px;
@@ -100,4 +100,9 @@
   width: 100%;
   font-weight: 500;
   height: 58px;
+  transition: transform 100ms var(--ease-out-quad);
 }
+
+.done-button:active {
+  transform: scale(0.95);
+} 

@@ -100,8 +100,6 @@ export default function Main() {
         <Header />
         <div className="main-content flex flex-col gap-2 items-center">
           <Deposit amountEther={amountEther} setAmountEther={setAmountEther} />
-          <br></br>
-          <ExtendedDetails amountEther={amountEther} />
         </div>
       <footer className="flex items-center">
         <div className="flex flex-row legal-footer justify-center">

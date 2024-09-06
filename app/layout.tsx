@@ -14,6 +14,7 @@ const ibmPlexSans = IBM_Plex_Sans({
 
 // TODO: maybe we can read it from a file
 const cssOverrides = `
+  div { font-family: 'IBM Plex Sans', sans-serif; }
   img[data-testid='iconic-solana'] {
     content: url('/eclipse.png');
   }
@@ -97,7 +98,7 @@ export default function RootLayout({
                 depositBox.style.transform = "scale(0.9)";
 
                 const submitButton = document.getElementsByClassName("submit-button")[0] as HTMLElement;
-                submitButton.className += " disabled";
+                if (submitButton) submitButton.className += " disabled";
 
                 const mainContent = document.getElementById("main-content") as HTMLElement;
                 mainContent.style.filter = "blur(3px)"
@@ -107,13 +108,13 @@ export default function RootLayout({
                 depositBox.style.transform = "scale(1)";
 
                 const submitButton = document.getElementsByClassName("submit-button")[0] as HTMLElement;
-                submitButton.className = submitButton.className.replace("disabled", "");
+                if (submitButton) submitButton.className = submitButton.className.replace("disabled", "");
 
                 const mainContent = document.getElementById("main-content") as HTMLElement;
                 mainContent.style.filter = ""
             }
           },
-          walletsFilter: (wallets) => wallets.filter((w) => w.walletConnector.supportedChains.includes("EVM") || w.key === "backpacksol"),
+          walletsFilter: (wallets) => wallets.filter((w) => w.walletConnector.supportedChains.includes("EVM") || w.key === "phantom"),
           environmentId: process.env.NEXT_PUBLIC_ENVIRONMENT_ID || '',
           walletConnectors: [EthereumWalletConnectors, SolanaWalletConnectors],
           initialAuthenticationMode: 'connect-only',
