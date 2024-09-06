@@ -34,11 +34,11 @@ export const ActivityContent = () => {
   return ( 
     <>
     <div className="activity-container">
-   {evmWallet && deposits && deposits.map((tx) => {
+   {evmWallet && deposits && deposits.map((tx, index) => {
      // TODO: add loading state
      const status = Number(tx.isError) ? "failed" : "completed";
      return (
-       <div className="deposit-transaction flex flex-row" onClick={() => { setIsModalOpen(true); setCurrentTx(tx)}}>
+       <div key={index} className="deposit-transaction flex flex-row" onClick={() => { setIsModalOpen(true); setCurrentTx(tx)}}>
             <img src="swap.png" alt="Swap" className="swap-image" style={{position: "absolute", width: "22px"}} hidden />
             <img src="eth.png" alt="Ethereum" style={{ objectFit: "cover", height: "53px", width: "53px", marginLeft: "5px", marginRight: "16px"}} />
           <div className="flex flex-col justify-center" style={{width: "85%"}}>
@@ -64,7 +64,7 @@ export const ActivityContent = () => {
           </div>
       </div>
     )})}
-    {(!evmWallet) ? <span>Connect your evm wallet first.</span> : (!(deposits?.length) && <span>You don't have any transactions.</span>)}
+    {(!evmWallet) ? <span>Connect your evm wallet first.</span> : (!(deposits?.length) && <span>You don&apos;t have any transactions.</span>)}
     </div> 
     { isModalOpen && <TransactionDetails tx={currentTx} closeModal={() => setTimeout(() => setIsModalOpen(false), 100)} /> }
     </>
