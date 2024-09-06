@@ -102,7 +102,6 @@ export const DepositContent: React.FC<DepositProps> = ({ amountEther, setAmountE
 
     try {
       // lets keep this here
-      /*
       const { request } = await client.simulateContract({
         address: contractAddress,
         abi,
@@ -112,15 +111,6 @@ export const DepositContent: React.FC<DepositProps> = ({ amountEther, setAmountE
         value: weiValue
       })
       await walletClient.writeContract(request)
-      */
-      await walletClient.sendTransaction({
-        to: contractAddress,
-        abi,
-        functionName: 'deposit',
-        args: [destinationBytes32, weiValue],
-        account,
-        value: weiValue
-      });
       setIsMmPopup(false)
     } catch (error) {
       setIsMmPopup(false)
