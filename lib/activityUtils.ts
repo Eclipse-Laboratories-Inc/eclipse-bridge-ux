@@ -1,7 +1,7 @@
 export async function getLastDeposits(address: string) {
   const apiKey = 'G6FW2T6RHAAHM9H5ATF8GVIFX8F4K5S38B';
 
-  const response = await fetch(`https://api.etherscan.io/api?module=account&action=txlist&address=${address}&startblock=0&endblock=99999999&page=1&offset=500&sort=asc&apikey=${apiKey}`)
+  const response = await fetch(`https://api.etherscan.io/api?module=account&action=txlist&address=${address}&startblock=0&endblock=99999999&page=1&offset=1000&sort=asc&apikey=${apiKey}`)
   const data = await response.json();
 
   let deposits = [];

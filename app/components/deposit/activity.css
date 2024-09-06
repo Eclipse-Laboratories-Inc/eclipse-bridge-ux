@@ -73,3 +73,9 @@
   .eth-to-ecl { gap: "7px"; }
   .tx-age     { gap: "4px"; }
 }
+
+@keyframes bounce {
+  0% { transform: translateY(-10px); }
+  50% { transform: translateY(5px); }
+  100% { transform: translateY(0); }
+}

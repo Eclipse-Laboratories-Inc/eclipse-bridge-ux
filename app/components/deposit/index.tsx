@@ -4,7 +4,6 @@ import { Activity } from "../icons";
 import './styles.css';
 import { DepositContent, DepositProps } from "./depositContent";
 import { ActivityContent } from "./activityContent";
-import { TransactionDetails } from "./transactionDetails";
 import ExtendedDetails from '../ExtendedDetails'
 import classNames from 'classnames';
 

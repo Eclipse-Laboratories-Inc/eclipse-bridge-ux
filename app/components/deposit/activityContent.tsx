@@ -3,6 +3,7 @@ import { Arrow } from "@/app/components/icons";
 import { TransactionIcon } from "../icons";
 import { getLastDeposits, timeAgo } from "@/lib/activityUtils"
 import { ethers } from 'ethers';
+import { TransactionDetails } from "./transactionDetails";
 import {
   useUserWallets,
   Wallet
@@ -11,6 +12,9 @@ import "./activity.css";
 
 export const ActivityContent = () => {
   const [deposits, setDeposits] = useState<any[] | null>(null);
+  const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
+  const [currentTx, setCurrentTx] = useState<any>(null);
+
   const userWallets: Wallet[] = useUserWallets() as Wallet[];
   const evmWallet = userWallets.find(w => w.chain == "EVM");
 
@@ -28,12 +32,13 @@ export const ActivityContent = () => {
   }, [evmWallet]);
 
   return ( 
+    <>
     <div className="activity-container">
    {evmWallet && deposits && deposits.map((tx) => {
      // TODO: add loading state
      const status = Number(tx.isError) ? "failed" : "completed";
      return (
-       <div className="deposit-transaction flex flex-row">
+       <div className="deposit-transaction flex flex-row" onClick={() => { setIsModalOpen(true); setCurrentTx(tx)}}>
             <img src="swap.png" alt="Swap" className="swap-image" style={{position: "absolute", width: "22px"}} hidden />
             <img src="eth.png" alt="Ethereum" style={{ objectFit: "cover", height: "53px", width: "53px", marginLeft: "5px", marginRight: "16px"}} />
           <div className="flex flex-col justify-center" style={{width: "85%"}}>
@@ -61,5 +66,7 @@ export const ActivityContent = () => {
     )})}
     {(!evmWallet) ? <span>Connect your evm wallet first.</span> : (!(deposits?.length) && <span>You don't have any transactions.</span>)}
     </div> 
+    { isModalOpen && <TransactionDetails tx={currentTx} closeModal={() => setTimeout(() => setIsModalOpen(false), 100)} /> }
+    </>
   )
 }

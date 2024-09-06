@@ -1,9 +1,10 @@
 .transaction-details-modal {
   position: absolute;
   z-index: 500;
-  top: 150px;
-
   width: 494px;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
   height: 631px;
   padding: 20px;
 
@@ -106,3 +107,11 @@
 .done-button:active {
   transform: scale(0.95);
 } 
+
+a {
+  transition: color 100ms var(--ease-out-quad);
+}
+
+a:hover {
+  color: rgba(71, 121, 255, 1);
+}
