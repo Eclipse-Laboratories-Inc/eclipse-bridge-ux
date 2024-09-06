@@ -300,12 +300,10 @@ export const DepositContent: React.FC<DepositProps> = ({ amountEther, setAmountE
               <span style={{ width: '100%' }}> {determineButtonText()}</span>
             </DynamicConnectButton>
         : 
-          <div className={determineButtonClass()}> 
-            <button className="w-full deposit-button p-4" onClick={submitDeposit}>
+            <button className={`w-full deposit-button p-4 ${determineButtonClass()}`} onClick={submitDeposit}>
             {(isMmPopup) ? <Loading loadingClassName="loading-animation" />  : null }
               {determineButtonText()}
             </button>
-          </div>
         }
         </div>
       );

@@ -355,9 +355,7 @@ input::placeholder {
 }
 
 .wallet-connect-button:active {
-  transform: scale(1.0526);
   transform-origin: center center;
-  font-size: 95%;
 }
 
 .deposit-button {
@@ -368,9 +366,7 @@ input::placeholder {
 }
 
 .deposit-button:active{ 
-  transform: scale(1.052631);
   transform-origin: center center;
-  font-size: 95%;
 }
 
 .amount-input-container {
