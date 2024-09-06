@@ -80,7 +80,6 @@ export const TransactionDetails: React.FC<TransactionDetailsProps> = ({ closeMod
         <div className="panel-elem flex flex-row items-center justify-between">
           <div className="left-side flex flex-row">
             <div className="white-text">3. Receive on Eclipse</div>
-            <div className="gray-text">View Txn</div>
           </div>
           <div className="flex flex-row items-center gap-1 done-item">
               <TransactionIcon iconType="completed" className="tx-done-icon" /> 
