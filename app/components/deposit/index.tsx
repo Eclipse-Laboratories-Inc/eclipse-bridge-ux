@@ -21,7 +21,7 @@ const Deposit: React.FC<DepositProps> = ({ amountEther, setAmountEther }) => {
       <div className="deposit-card">
         <div className="header-tabs">
           <div className={classNames("header-tab", (activeTab === Tabs.Deposit ? "active" : "inactive"))} style={{ width: "43.5%" }} onClick={() => setActiveTab(Tabs.Deposit)}>Deposit</div>
-          <div className={classNames("header-tab", (activeTab === Tabs.Withdraw ? "active" : "inactive"))} style={{ width: "43.5%" }}>Withdraw</div>
+          <div className={classNames("header-tab", "disabled", (activeTab === Tabs.Withdraw ? "active" : "inactive"))} style={{ width: "43.5%" }}>Withdraw</div>
           <div className={classNames("header-tab", "flex", "items-center", "justify-center", (activeTab === Tabs.Activity ? "active" : "inactive"))} style={{ width: "56px" }} onClick={() => {setActiveTab(Tabs.Activity)}}>
               <Activity activityClassName="" />
           </div>
