@@ -102,7 +102,6 @@ export const DepositContent: React.FC<DepositProps> = ({ amountEther, setAmountE
 
     try {
       // lets keep this here
-      /*
       const { request } = await client.simulateContract({
         address: contractAddress,
         abi,
@@ -112,15 +111,6 @@ export const DepositContent: React.FC<DepositProps> = ({ amountEther, setAmountE
         value: weiValue
       })
       await walletClient.writeContract(request)
-      */
-      await walletClient.sendTransaction({
-        to: contractAddress,
-        abi,
-        functionName: 'deposit',
-        args: [destinationBytes32, weiValue],
-        account,
-        value: weiValue
-      });
       setIsMmPopup(false)
     } catch (error) {
       setIsMmPopup(false)
@@ -300,12 +290,10 @@ export const DepositContent: React.FC<DepositProps> = ({ amountEther, setAmountE
               <span style={{ width: '100%' }}> {determineButtonText()}</span>
             </DynamicConnectButton>
         : 
-          <div className={determineButtonClass()}> 
-            <button className="w-full deposit-button p-4" onClick={submitDeposit}>
+            <button className={`w-full deposit-button p-4 ${determineButtonClass()}`} onClick={submitDeposit}>
             {(isMmPopup) ? <Loading loadingClassName="loading-animation" />  : null }
               {determineButtonText()}
             </button>
-          </div>
         }
         </div>
       );

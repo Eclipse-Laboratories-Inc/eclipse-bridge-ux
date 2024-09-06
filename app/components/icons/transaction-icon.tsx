@@ -1,7 +1,7 @@
 import React from 'react';
 import { Loading } from "./index"
 
-const TransactionIcon = ({ iconType }: { iconType: string}) => {
+const TransactionIcon = ({ iconType, className }: { iconType: string, className?: string}) => {
   if (iconType === "failed") {
     return (
       <svg width="14" height="15" viewBox="0 0 14 15" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -10,7 +10,7 @@ const TransactionIcon = ({ iconType }: { iconType: string}) => {
     );
   } else if (iconType === "completed") {
     return (
-      <svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <svg className={className} width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
         <path fill-rule="evenodd" clip-rule="evenodd" d="M7.00065 0.333496C3.31875 0.333496 0.333984 3.31826 0.333984 7.00016C0.333984 10.682 3.31875 13.6668 7.00065 13.6668C10.6825 13.6668 13.6673 10.682 13.6673 7.00016C13.6673 3.31826 10.6825 0.333496 7.00065 0.333496ZM9.51665 5.7557C9.74978 5.47071 9.70778 5.0507 9.42278 4.81754C9.13785 4.5844 8.71785 4.6264 8.48465 4.91136L5.95118 8.0079L5.13872 7.19543C4.87837 6.9351 4.45626 6.9351 4.19591 7.19543C3.93556 7.45576 3.93556 7.8779 4.19591 8.13823L5.52924 9.47156C5.66243 9.60476 5.84572 9.67543 6.03385 9.66603C6.22198 9.65663 6.39732 9.5681 6.51665 9.42236L9.51665 5.7557Z" fill="#A1FEA0"/>
       </svg>
     );

@@ -50,11 +50,21 @@
 .header-tabs div.active {
   color: #a3ffa5; /* Light green color for active tab text */
   background-color: rgba(161, 254, 160, 0.05);
+  transition: background-color 300ms var(--ease-out-quad), color 300ms var(--ease-out-quad);
+  path {
+    stroke-opacity: 1;
+    stroke: #a3ffa5; 
+    transition: stroke-opacity 300ms var(--ease-out-quad);
+  }
 }
 
 .header-tabs div.inactive {
   background-color: rgba(255, 255, 255, 0.02);
   color: #666666; /* Dark gray color for inactive tab text */
+}
+
+.header-tabs div.disabled {
+  cursor: not-allowed;
 }
 
 .arrow-container {
@@ -341,7 +351,6 @@ input::placeholder {
 .submit-button:active {
   transform: scale(0.95);
   transition: transform 0.1s var(--ease-out-quad);
-  height: 66px;
 }
 
 .connect-btn:active {
@@ -349,9 +358,7 @@ input::placeholder {
 }
 
 .wallet-connect-button:active {
-  transform: scale(1.0526);
   transform-origin: center center;
-  font-size: 95%;
 }
 
 .deposit-button {
@@ -362,9 +369,7 @@ input::placeholder {
 }
 
 .deposit-button:active{ 
-  transform: scale(1.052631);
   transform-origin: center center;
-  font-size: 95%;
 }
 
 .amount-input-container {
