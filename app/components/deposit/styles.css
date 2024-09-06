@@ -63,6 +63,10 @@
   color: #666666; /* Dark gray color for inactive tab text */
 }
 
+.header-tabs div.disabled {
+  cursor: not-allowed;
+}
+
 .arrow-container {
   position: absolute;
   top: 50%;
