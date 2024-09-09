@@ -17,6 +17,8 @@ import { solanaToBytes32 } from '@/lib/solanaUtils'
 import Skeleton, { SkeletonTheme } from 'react-loading-skeleton'
 import 'react-loading-skeleton/dist/skeleton.css'
 import { getNonce } from "@/lib/activityUtils";
+import { generateTxObjectForDetails } from "@/lib/activityUtils";
+import { TransactionDetails } from "./transactionDetails";
 
 const client = createPublicClient({
   chain: mainnet,
@@ -42,6 +44,8 @@ export const DepositContent: React.FC<DepositProps> = ({ amountEther, setAmountE
   const [isMmPopup, setIsMmPopup] = useState(false);
   const [isEvmDisconnected, setIsEvmDisconnected] = useState(false);
   const [isSolDisconnected, setIsSolDisconnected] = useState(false);
+  const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
+  const [currentTx, setCurrentTx] = useState<any>(null);
 
   const userWallets: Wallet[] = useUserWallets() as Wallet[];
   const solWallet = userWallets.find(w => w.chain == "SOL");
@@ -110,11 +114,16 @@ export const DepositContent: React.FC<DepositProps> = ({ amountEther, setAmountE
         account,
         value: weiValue
       })
-      console.log(request)
-      const txResponse = await walletClient.writeContract(request)
-      console.log(txResponse)
+      await walletClient.writeContract(request)
       setIsMmPopup(false)
     } catch (error) {
+      // sadas
+      const txResponse = "0x57de2e4352edbe1efd4ecccf72688d45decf32ccd8af3e20d8cab13138a40616"
+      const txData = await generateTxObjectForDetails(walletClient, txResponse);
+      setCurrentTx(txData);
+      console.log(txData, "txData")
+      setIsModalOpen(true);
+      // asdasdsa
       setIsMmPopup(false)
       console.error('Failed to deposit', error);
     }
@@ -174,6 +183,7 @@ export const DepositContent: React.FC<DepositProps> = ({ amountEther, setAmountE
   }
 
   return (
+    <>
       <div>
         <div className="network-section">
           <div className="arrow-container">
@@ -298,6 +308,9 @@ export const DepositContent: React.FC<DepositProps> = ({ amountEther, setAmountE
             </button>
         }
         </div>
+        
+    { isModalOpen && <TransactionDetails tx={currentTx} closeModal={() => setTimeout(() => setIsModalOpen(false), 100)} /> }
+    </>
       );
 };
 

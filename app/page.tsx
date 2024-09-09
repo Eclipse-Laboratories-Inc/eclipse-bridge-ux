@@ -13,6 +13,8 @@ import ConnectedWallets from "./components/ConnectedWallets/index";
 import { Block, ConnectIcon, Eth, Gas, Chevron } from "./components/icons";
 import useEthereumData from "@/lib/ethUtils";
 import { EthereumDataContext } from "./context"
+import Skeleton, { SkeletonTheme } from 'react-loading-skeleton'
+
 
 function ProfileAvatar() {
   const userWallets: Wallet[] = useUserWallets() as Wallet[];
@@ -111,19 +113,34 @@ export default function Main() {
           <div className="ml-[28px] flex flex-row items-center gap-2">
             <Gas gasClassName="gas" />  
             <span>Gas</span>
-            <span style={{color: "rgba(161, 254, 160, 0.5)"}}> ${gasPrice}</span>
+            {gasPrice 
+              ? <span style={{color: "rgba(161, 254, 160, 0.5)"}}> ${gasPrice}</span>
+              : <SkeletonTheme baseColor="#313131" highlightColor="#525252">
+                  <Skeleton height={15} width={58} />
+                </SkeletonTheme>
+            }
           </div>
 
           <div className="ml-[28px] flex flex-row items-center gap-2">
             <Eth ethClassName="eth" />
             <span>Eth</span> 
-            <span style={{color: "rgba(161, 254, 160, 0.5)"}}> ${ethPrice}</span>
+            {ethPrice
+              ? <span style={{color: "rgba(161, 254, 160, 0.5)"}}> ${ethPrice}</span>
+              : <SkeletonTheme baseColor="#313131" highlightColor="#525252">
+                  <Skeleton height={15} width={62} />
+                </SkeletonTheme>
+            }
           </div>
 
           <div className="ml-[28px] flex flex-row items-center gap-2">
             <Block blockClassName="block" /> 
             <span>Block</span> 
-            <span style={{color: "rgba(161, 254, 160, 0.5)"}}> {blockNumber}</span>
+            {blockNumber 
+              ? <span style={{color: "rgba(161, 254, 160, 0.5)"}}> {blockNumber}</span>
+              : <SkeletonTheme baseColor="#313131" highlightColor="#525252">
+                  <Skeleton height={15} width={67} />
+                </SkeletonTheme>
+            }
           </div>
         </div>
       </footer>

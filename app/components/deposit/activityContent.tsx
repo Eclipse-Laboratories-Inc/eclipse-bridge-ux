@@ -4,19 +4,39 @@ import { TransactionIcon } from "../icons";
 import { getLastDeposits, timeAgo } from "@/lib/activityUtils"
 import { ethers } from 'ethers';
 import { TransactionDetails } from "./transactionDetails";
-import {
-  useUserWallets,
-  Wallet
-} from "@dynamic-labs/sdk-react-core";
+import { useUserWallets, Wallet } from "@dynamic-labs/sdk-react-core";
+import { getNonce, checkDepositWithPDA } from "@/lib/activityUtils";
+import { createPublicClient, createWalletClient, custom, formatEther, http, parseEther } from 'viem'
+import Skeleton, { SkeletonTheme } from 'react-loading-skeleton'
+import { mainnet } from 'viem/chains'
 import "./activity.css";
+
+let walletClient: any;
+if (typeof window !== 'undefined' && window.ethereum) {
+  walletClient = createWalletClient({
+    chain: mainnet,
+    transport: custom(window.ethereum!),
+  })
+}
 
 export const ActivityContent = () => {
   const [deposits, setDeposits] = useState<any[] | null>(null);
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   const [currentTx, setCurrentTx] = useState<any>(null);
+  const [eclipseStates, setEclipseStates] =  useState<Record<string, any>>({});
 
   const userWallets: Wallet[] = useUserWallets() as Wallet[];
   const evmWallet = userWallets.find(w => w.chain == "EVM");
+
+  const kurdistan = async (txHash: any) => {
+    const data = await getNonce(walletClient, txHash);
+    const onEclipseStatus = data && await checkDepositWithPDA(data);
+    console.log(onEclipseStatus)
+    setEclipseStates(prevStates => ({
+      ...prevStates,
+      [txHash]: onEclipseStatus 
+    }))
+  }
 
   useEffect(() => {
     const fetchDeposits = async () => {
@@ -35,8 +55,8 @@ export const ActivityContent = () => {
     <>
     <div className="activity-container">
    {evmWallet && deposits && deposits.map((tx, index) => {
-     // TODO: add loading state
-     const status = Number(tx.isError) ? "failed" : "completed";
+     const status = Number(tx.isError) ? "failed" : eclipseStates[tx.hash] ? "completed" :  eclipseStates[tx] === undefined ? null : "loading";
+     (eclipseStates[tx.hash] === undefined) && kurdistan(tx.hash);
      return (
        <div key={index} className="deposit-transaction flex flex-row" onClick={() => { setIsModalOpen(true); setCurrentTx(tx)}}>
             <img src="swap.png" alt="Swap" className="swap-image" style={{position: "absolute", width: "22px"}} hidden />
@@ -49,8 +69,13 @@ export const ActivityContent = () => {
                 <span className="gray-in">{timeAgo(Number(tx.timeStamp))}</span>
               </div>
               <div className={`flex flex-row items-center status-div ${status}`}>
-                <TransactionIcon iconType={status}/> 
-                <span>{status}</span>
+                {(status)
+                  ? <><TransactionIcon iconType={status}/> 
+                    <span>{status === "loading" ? "depositing" : status}</span></>
+                  : <SkeletonTheme baseColor="#313131" highlightColor="#525252">
+                      <Skeleton height={15} width={91} />
+                    </SkeletonTheme>
+                }
               </div>
             </div>
             <div className="transaction-bottom flex justify-between">

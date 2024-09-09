@@ -46,6 +46,7 @@ export const TransactionDetails: React.FC<TransactionDetailsProps> = ({ closeMod
 
       setDepositProof(pdaData);
       setEclipseTx(eclTx[0]);
+      if (!pdaData) setTimeout(() => fetchEclipseTx(), 1000) 
     }
 
     fetchEclipseTx();

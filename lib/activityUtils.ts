@@ -3,6 +3,38 @@ const solanaWeb3 = require('@solana/web3.js');
 import { PublicKey } from '@solana/web3.js';
 import * as anchor from '@project-serum/anchor';
 
+export async function generateTxObjectForDetails(walletClient: any, txHash: string) {
+  const receiptPromise = walletClient.request({
+    method: 'eth_getTransactionReceipt',
+    params: [txHash],
+  });
+
+  // eth_getTransactionByHash
+  const transactionPromise = walletClient.request({
+    method: 'eth_getTransactionByHash',
+    params: [txHash],
+  });
+
+  const [receipt, transaction] = await Promise.all([
+    receiptPromise,
+    transactionPromise,
+  ]);
+
+  const blockPromise = walletClient.request({
+    method: 'eth_getBlockByNumber',
+    params: [transaction.blockNumber, false],
+  });
+
+  const block = await blockPromise;
+
+  return {
+    hash: txHash,
+    value: transaction.value, // in wei
+    gasPrice: transaction.gasPrice, // gas price in wei
+    gasUsed: receipt.gasUsed, // gas used in the transaction
+    timeStamp: parseInt(block.timestamp, 16), // block timestamp in seconds
+  };
+}
 
 export async function getNonce(walletClient: any, transactionHash: string) {
   try {
@@ -10,6 +42,7 @@ export async function getNonce(walletClient: any, transactionHash: string) {
       method: "eth_getTransactionReceipt",
       params: [transactionHash]
     });
+    if (!data.logs[0]) return null; 
 
     const values = decodeAbiParameters([
       { name: 'to', type: 'bytes' },
