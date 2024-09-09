@@ -16,7 +16,6 @@ import { truncateWalletAddress } from '@/lib/stringUtils';
 import { solanaToBytes32 } from '@/lib/solanaUtils'
 import Skeleton, { SkeletonTheme } from 'react-loading-skeleton'
 import 'react-loading-skeleton/dist/skeleton.css'
-import { getNonce } from "@/lib/activityUtils";
 import { generateTxObjectForDetails } from "@/lib/activityUtils";
 import { TransactionDetails } from "./transactionDetails";
 

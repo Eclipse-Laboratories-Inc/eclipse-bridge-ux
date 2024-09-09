@@ -30,7 +30,7 @@ export const ActivityContent = () => {
   const userWallets: Wallet[] = useUserWallets() as Wallet[];
   const evmWallet = userWallets.find(w => w.chain == "EVM");
 
-  const kurdistan = async (txHash: any) => {
+  const getTxStatus = async (txHash: any) => {
     const data = await getNonce(walletClient, txHash);
     const onEclipseStatus = data && await checkDepositWithPDA(data);
     console.log(onEclipseStatus)
@@ -59,7 +59,7 @@ export const ActivityContent = () => {
     <div className="activity-container">
    {evmWallet && deposits && deposits.map((tx, index) => {
      const status = Number(tx.isError) ? "failed" : eclipseStates[tx.hash] ? "completed" :  eclipseStates[tx] === undefined ? null : "loading";
-     (eclipseStates[tx.hash] === undefined) && kurdistan(tx.hash);
+     (eclipseStates[tx.hash] === undefined) && getTxStatus(tx.hash);
      return (
        <div key={index} className="deposit-transaction flex flex-row" onClick={() => { setIsModalOpen(true); setCurrentTx(tx)}}>
             <img src="swap.png" alt="Swap" className="swap-image" style={{position: "absolute", width: "22px"}} hidden />
