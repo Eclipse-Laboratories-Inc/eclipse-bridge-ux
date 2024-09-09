@@ -114,20 +114,18 @@ export const DepositContent: React.FC<DepositProps> = ({ amountEther, setAmountE
         account,
         value: weiValue
       })
-      await walletClient.writeContract(request)
-      setIsMmPopup(false)
-    } catch (error) {
-      // sadas
-      const txResponse = "0x57de2e4352edbe1efd4ecccf72688d45decf32ccd8af3e20d8cab13138a40616"
+      const txResponse = await walletClient.writeContract(request);
+
       const txData = await generateTxObjectForDetails(walletClient, txResponse);
       setCurrentTx(txData);
       console.log(txData, "txData")
       setIsModalOpen(true);
-      // asdasdsa
+
+      setIsMmPopup(false)
+    } catch (error) {
       setIsMmPopup(false)
       console.error('Failed to deposit', error);
     }
-
   };
 
   function determineInputClass(): string {
@@ -184,6 +182,7 @@ export const DepositContent: React.FC<DepositProps> = ({ amountEther, setAmountE
 
   return (
     <>
+    <div className={isModalOpen ? "status-overlay active" : "status-overlay"}></div>
       <div>
         <div className="network-section">
           <div className="arrow-container">

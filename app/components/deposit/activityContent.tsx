@@ -1,15 +1,17 @@
-import { useEffect, useState } from 'react';
-import { Arrow } from "@/app/components/icons";
-import { TransactionIcon } from "../icons";
-import { getLastDeposits, timeAgo } from "@/lib/activityUtils"
+import { useEffect, useState } from 'react';  
 import { ethers } from 'ethers';
-import { TransactionDetails } from "./transactionDetails";
+
+import { Arrow } from "@/app/components/icons"; 
+import { TransactionIcon } from "../icons";
+import { getLastDeposits, timeAgo, getNonce, checkDepositWithPDA } from "@/lib/activityUtils";
 import { useUserWallets, Wallet } from "@dynamic-labs/sdk-react-core";
-import { getNonce, checkDepositWithPDA } from "@/lib/activityUtils";
-import { createPublicClient, createWalletClient, custom, formatEther, http, parseEther } from 'viem'
-import Skeleton, { SkeletonTheme } from 'react-loading-skeleton'
-import { mainnet } from 'viem/chains'
-import "./activity.css";
+import { createWalletClient, custom } from 'viem';
+import { mainnet } from 'viem/chains';
+import Skeleton, { SkeletonTheme } from 'react-loading-skeleton'; 
+
+import { TransactionDetails } from "./transactionDetails";  
+
+import "./activity.css";  
 
 let walletClient: any;
 if (typeof window !== 'undefined' && window.ethereum) {
@@ -53,6 +55,7 @@ export const ActivityContent = () => {
 
   return ( 
     <>
+    <div className={isModalOpen ? "status-overlay active" : "status-overlay"}></div>
     <div className="activity-container">
    {evmWallet && deposits && deposits.map((tx, index) => {
      const status = Number(tx.isError) ? "failed" : eclipseStates[tx.hash] ? "completed" :  eclipseStates[tx] === undefined ? null : "loading";
