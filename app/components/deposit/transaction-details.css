@@ -1,7 +1,8 @@
 .transaction-details-modal {
   position: absolute;
   z-index: 500;
-  width: 494px;
+  max-width: 494px;
+  width: 100%;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
@@ -69,13 +70,29 @@
   gap: 8px;
 }
 
-.done-item{
-  color: #A1FEA0;
-  background: rgba(161, 254, 160, 0.05);
+.status-item {
   font-size: 16px;
   font-weight: 500;
   border-radius: 30px;
   padding: 6px 12px 6px 6px;
+  svg {
+    width: 24px;
+  }
+}
+
+.completed-item {
+  color: #A1FEA0;
+  background: rgba(161, 254, 160, 0.05);
+}
+
+.failed-item {
+  color: rgba(235, 77, 77, 1);
+  background: rgba(235, 77, 77, 0.05);
+}
+
+.loading-item {
+  background: rgba(255, 255, 255, 0.05);
+  color: rgba(255, 255, 255, 0.3);
 }
 
 .tx-done-icon {

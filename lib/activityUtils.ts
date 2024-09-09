@@ -1,3 +1,63 @@
+import { decodeAbiParameters } from 'viem'
+const solanaWeb3 = require('@solana/web3.js');
+import { PublicKey } from '@solana/web3.js';
+import * as anchor from '@project-serum/anchor';
+
+
+export async function getNonce(walletClient: any, transactionHash: string) {
+  try {
+    const data = await walletClient.request({
+      method: "eth_getTransactionReceipt",
+      params: [transactionHash]
+    });
+
+    const values = decodeAbiParameters([
+      { name: 'to', type: 'bytes' },
+      { name: 'toChainId', type: 'bytes' },
+      { name: 'message', type: 'bytes' },
+      { name: 'extraData', type: 'bytes' }
+    ], data.logs[0].data);
+
+    const ethDepositNonceBN = new anchor.BN(values[3].replace("0x", ""), 16);
+    const programPublicKey = new PublicKey("br1xwubggTiEZ6b7iNZUwfA3psygFfaXGfZ1heaN9AW");
+
+    const [depositReceiptPda, _] = PublicKey.findProgramAddressSync(
+      [
+        Buffer.from('deposit'),
+        ethDepositNonceBN.toArrayLike(Buffer, 'le', 8)
+      ],
+      programPublicKey
+    );
+    return depositReceiptPda;
+
+  } catch (error) {
+    console.error("Error while getting nonce or deriving PDA:", error);
+  }
+}
+
+
+export async function getEclipseTransaction(address: PublicKey | undefined) {
+  const connection = new solanaWeb3.Connection(
+    'https://mainnetbeta-rpc.eclipse.xyz',
+    'confirmed'
+  );
+
+  const data = await connection.getSignaturesForAddress(address);
+  return data
+} 
+
+
+export async function checkDepositWithPDA(address: PublicKey | string | undefined ) {
+  const connection = new solanaWeb3.Connection(
+    'https://mainnetbeta-rpc.eclipse.xyz',
+    'confirmed'
+  );
+
+  const data = await connection.getAccountInfo(address);
+  return data
+}
+
+
 export async function getLastDeposits(address: string) {
   const apiKey = 'G6FW2T6RHAAHM9H5ATF8GVIFX8F4K5S38B';
 

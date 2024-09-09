@@ -137,10 +137,8 @@ function Header() {
   return (
     <header className="header w-full bg-black text-green-500 flex items-center justify-between p-4 border-b border-white border-opacity-10">
       <div className="flex items-center space-x-2">
-      { (typeof window !== "undefined" && window.innerWidth >= 768) 
-        ? <img src="/wordmark.png" alt="Eclipse Logo" width={183} height={34} />
-        : <img src="/eclipse-e.png" alt="Eclipse Logo" width={35} height={34} />
-      }
+        <img src="/wordmark.png" className="desktop-logo" alt="Eclipse Logo" width={183} height={34} />
+        <img src="/eclipse-e.png" className="mobile-logo" alt="Eclipse Logo" width={35} height={34} />
       </div>
       <h1 className="text-xl tracking-widest bridge-text">BRIDGE</h1>
       <>

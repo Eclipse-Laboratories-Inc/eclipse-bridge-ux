@@ -118,6 +118,13 @@ footer {
   }
 }
 
+.mobile-logo { display: none; }
+
+@media (max-width: 768px ){
+  .desktop-logo { display: none; }
+  .mobile-logo { display: inline; }
+}
+
 @media (max-width: 500px) {
   footer {
     padding: 0px;

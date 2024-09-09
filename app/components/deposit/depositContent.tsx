@@ -8,7 +8,7 @@ import {
   useDynamicContext,
   Wallet,
 } from "@dynamic-labs/sdk-react-core";
-import { Cross, Loading, ConnectIcon, Activity } from "../icons";
+import { Cross, Loading, ConnectIcon } from "../icons";
 import { createPublicClient, createWalletClient, custom, formatEther, http, parseEther } from 'viem'
 import { mainnet } from 'viem/chains'
 import { getBalance } from 'viem/actions';
@@ -16,6 +16,7 @@ import { truncateWalletAddress } from '@/lib/stringUtils';
 import { solanaToBytes32 } from '@/lib/solanaUtils'
 import Skeleton, { SkeletonTheme } from 'react-loading-skeleton'
 import 'react-loading-skeleton/dist/skeleton.css'
+import { getNonce } from "@/lib/activityUtils";
 
 const client = createPublicClient({
   chain: mainnet,
@@ -28,6 +29,7 @@ if (typeof window !== 'undefined' && window.ethereum) {
     chain: mainnet,
     transport: custom(window.ethereum!),
   })
+  
 }
 
 export interface DepositProps {
@@ -99,9 +101,7 @@ export const DepositContent: React.FC<DepositProps> = ({ amountEther, setAmountE
     const [account] = await walletClient.getAddresses()
     const weiValue = parseEther(amountEther?.toString() || '');
     setIsMmPopup(true);
-
     try {
-      // lets keep this here
       const { request } = await client.simulateContract({
         address: contractAddress,
         abi,
@@ -110,7 +110,9 @@ export const DepositContent: React.FC<DepositProps> = ({ amountEther, setAmountE
         account,
         value: weiValue
       })
-      await walletClient.writeContract(request)
+      console.log(request)
+      const txResponse = await walletClient.writeContract(request)
+      console.log(txResponse)
       setIsMmPopup(false)
     } catch (error) {
       setIsMmPopup(false)
