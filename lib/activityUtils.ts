@@ -36,7 +36,7 @@ export async function generateTxObjectForDetails(walletClient: any, txHash: stri
   };
 }
 
-export async function getNonce(walletClient: any, transactionHash: string) {
+export async function getNonce(walletClient: any, transactionHash: string): Promise<PublicKey | null> {
   try {
     const data = await walletClient.request({
       method: "eth_getTransactionReceipt",
@@ -65,11 +65,14 @@ export async function getNonce(walletClient: any, transactionHash: string) {
 
   } catch (error) {
     console.error("Error while getting nonce or deriving PDA:", error);
+    return null
   }
 }
 
 
-export async function getEclipseTransaction(address: PublicKey | undefined) {
+// fix
+export async function getEclipseTransaction(address: PublicKey | null) {
+  if (!address) {return null;} 
   const connection = new solanaWeb3.Connection(
     'https://mainnetbeta-rpc.eclipse.xyz',
     'confirmed'
@@ -80,7 +83,9 @@ export async function getEclipseTransaction(address: PublicKey | undefined) {
 } 
 
 
-export async function checkDepositWithPDA(address: PublicKey | string | undefined ) {
+// fix
+export async function checkDepositWithPDA(address: PublicKey | null ) {
+  if (!address) {return null;} 
   const connection = new solanaWeb3.Connection(
     'https://mainnetbeta-rpc.eclipse.xyz',
     'confirmed'
