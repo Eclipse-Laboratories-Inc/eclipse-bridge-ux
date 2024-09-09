@@ -158,3 +158,21 @@ footer {
     }
   }
 }
+
+.status-overlay {
+  position: absolute;
+  top: -5px;
+  left: 0;
+  width: 100%;
+  height: 135%;
+  transition: opacity 300ms var(--ease-out-quad);
+  backdrop-filter: blur(3px);
+  z-index: 1;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.status-overlay.active {
+  z-index: 1;
+  opacity: 1;
+}

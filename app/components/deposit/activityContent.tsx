@@ -34,9 +34,10 @@ export const ActivityContent = () => {
     const data = await getNonce(walletClient, txHash);
     const onEclipseStatus = data && await checkDepositWithPDA(data);
     console.log(onEclipseStatus)
+    console.log(onEclipseStatus, "GRRAAAh")
     setEclipseStates(prevStates => ({
       ...prevStates,
-      [txHash]: onEclipseStatus 
+      [txHash]: onEclipseStatus ? onEclipseStatus : null 
     }))
   }
 
@@ -58,7 +59,7 @@ export const ActivityContent = () => {
     <div className={isModalOpen ? "status-overlay active" : "status-overlay"}></div>
     <div className="activity-container">
    {evmWallet && deposits && deposits.map((tx, index) => {
-     const status = Number(tx.isError) ? "failed" : eclipseStates[tx.hash] ? "completed" :  eclipseStates[tx] === undefined ? null : "loading";
+     const status = Number(tx.isError) ? "failed" : eclipseStates[tx.hash] ? "completed" :  (eclipseStates[tx.hash] === undefined) ? null : "loading";
      (eclipseStates[tx.hash] === undefined) && getTxStatus(tx.hash);
      return (
        <div key={index} className="deposit-transaction flex flex-row" onClick={() => { setIsModalOpen(true); setCurrentTx(tx)}}>

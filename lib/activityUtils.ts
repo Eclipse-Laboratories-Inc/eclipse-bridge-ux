@@ -92,6 +92,7 @@ export async function checkDepositWithPDA(address: PublicKey | null ) {
   );
 
   const data = await connection.getAccountInfo(address);
+  if (!data) return null
   return data
 }
 
