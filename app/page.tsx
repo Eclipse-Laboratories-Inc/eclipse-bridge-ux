@@ -95,9 +95,10 @@ export default function Main() {
 
   return (
     <EthereumDataContext.Provider value={[gasPrice, ethPrice]}>
-    <div className="flex items-center text-white h-full flex flex-col justify-between" id="main-content" style={{
+    <div className="flex items-center text-white flex flex-col justify-between" id="main-content" style={{
           background: "black", 
-          transition: "filter 300ms var(--ease-out-quad)" 
+          transition: "filter 300ms var(--ease-out-quad)", 
+          height: "99.4%"
     }}>
         <Header />
         <div className="main-content flex flex-col gap-2 items-center">

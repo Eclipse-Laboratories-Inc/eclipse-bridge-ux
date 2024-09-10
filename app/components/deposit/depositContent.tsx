@@ -113,9 +113,10 @@ export const DepositContent: React.FC<DepositProps> = ({ amountEther, setAmountE
         account,
         value: weiValue
       })
+      setIsModalOpen(true);
       const txResponse = await walletClient.writeContract(request);
-
       const txData = await generateTxObjectForDetails(walletClient, txResponse);
+
       setCurrentTx(txData);
       console.log(txData, "txData")
       setIsModalOpen(true);
@@ -270,9 +271,9 @@ export const DepositContent: React.FC<DepositProps> = ({ amountEther, setAmountE
 	            ref={setInputRef}
               onChange={(e) => setAmountEther(e.target.value)}
             />
-            : <SkeletonTheme baseColor="#313131" highlightColor="#525252">
-              <Skeleton height={40} width={160} />
-            </SkeletonTheme>
+            : <SkeletonTheme baseColor="#FFFFFF0A" highlightColor="#FFFFFF26">
+                <Skeleton height={40} width={160} />
+              </SkeletonTheme>
           }
           </div> 
             
@@ -315,7 +316,10 @@ export const DepositContent: React.FC<DepositProps> = ({ amountEther, setAmountE
         }
         </div>
         
-    { isModalOpen && <TransactionDetails tx={currentTx} closeModal={() => setTimeout(() => setIsModalOpen(false), 100)} /> }
+    { isModalOpen && <TransactionDetails tx={currentTx} closeModal={() => {
+        setTimeout(() => setIsModalOpen(false), 100);
+        setCurrentTx(null);
+    }} /> }
     </>
       );
 };

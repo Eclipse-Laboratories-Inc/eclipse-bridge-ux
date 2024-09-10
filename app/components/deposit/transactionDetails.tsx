@@ -1,5 +1,5 @@
 import "./transaction-details.css"
-import { useContext, useEffect, useState } from "react";
+import { useContext, useEffect, useState, useRef } from "react";
 import { Cross, Arrow } from "../icons"
 import { TransactionIcon } from "../icons";
 import { timeAgo } from "@/lib/activityUtils"
@@ -33,25 +33,33 @@ export const TransactionDetails: React.FC<TransactionDetailsProps> = ({ closeMod
   const [gasPrice, ethPrice] = useContext(EthereumDataContext) ?? [0, 0];
   const [eclipseTx, setEclipseTx] = useState<any>(null);
   const [depositProof, setDepositProof] = useState<any>(null);
-
-  const ethAmount = Number(ethers.utils.formatEther(tx.value));
-  const totalFee = calculateFee(tx.gasPrice, tx.gasUsed);
+  
+  const ethAmount = tx && Number(ethers.utils.formatEther(tx.value));
+  const totalFee = tx && calculateFee(tx.gasPrice, tx.gasUsed);
   const depositStatus = depositProof ? "completed" : "loading"; 
-
+  const ethTxStatus   = tx ? "completed" : "loading"
+  
   useEffect(() => {
     const fetchEclipseTx = async () => {
-      const pda = await getNonce(walletClient, tx.hash);
-      const eclTx = await getEclipseTransaction(pda);
-      const pdaData = await checkDepositWithPDA(pda);
+      if (!tx) return;
+      console.log(tx, "tx")
+      const pda = tx && await getNonce(walletClient, tx.hash);
+      const eclTx = pda && await getEclipseTransaction(pda);
+      const pdaData = eclTx && await checkDepositWithPDA(pda);
 
+      console.log(tx, "tx")
+      console.log(pda, "pda")
+      console.log(eclTx, "eclTx")
+      console.log(pdaData, "pdaData")
+      console.log(eclipseTx, "eclipseTx")
       setDepositProof(pdaData);
-      setEclipseTx(eclTx[0]);
+      eclTx && setEclipseTx(eclTx[0]);
       if (!pdaData) setTimeout(() => fetchEclipseTx(), 2500) 
-        else if (!eclTx) setTimeout(() => fetchEclipseTx(), 2500) 
+        // else if (!eclTx) setTimeout(() => fetchEclipseTx(), 2500) 
     }
 
     fetchEclipseTx();
-  }, [tx.hash])
+  }, [tx])
 
   return (
     <div className="transaction-details-modal flex flex-col items-center">
@@ -85,41 +93,43 @@ export const TransactionDetails: React.FC<TransactionDetailsProps> = ({ closeMod
       <div className="status-panel">
         <div className="panel-elem flex flex-row items-center justify-between">
           <div className="left-side flex flex-row">
-            <div className="white-text">1. Confirming transaction</div>
-            <div className="gray-text"><a href={`https://etherscan.io/tx/${tx.hash}`} target="_blank">View Txn</a></div>
+            <div className="white-text" style={{ fontSize: "16px" }}>1. Confirming transaction</div>
+            { tx && <div className="gray-text"><a href={`https://etherscan.io/tx/${tx.hash}`} target="_blank">View Txn</a></div> }
           </div>
-          <div className="flex flex-row items-center gap-1 completed-item status-item">
-              <TransactionIcon iconType="completed" className="tx-done-icon" /> 
-              <span>Done</span>
+          <div className={`flex flex-row items-center gap-1 ${ethTxStatus}-item status-item`}>
+              <TransactionIcon iconType={ethTxStatus} className="tx-done-icon" /> 
+              <span>{ ethTxStatus === "completed" ? "Done"  : "Continue in your wallet" }</span>
           </div>
         </div>
 
 
         <div className="panel-elem flex flex-row items-center justify-between">
           <div className="left-side flex flex-row">
-            <div className="white-text">2. Depositing</div>
+            <div className={tx ? "white-text" : "gray-text"}>2. Depositing</div>
           </div>
-          <div className={`flex flex-row items-center gap-1 ${depositStatus}-item status-item`}>
+          { tx && <div className={`flex flex-row items-center gap-1 ${depositStatus}-item status-item`}>
               <TransactionIcon iconType={depositStatus} className="tx-done-icon" /> 
               <span>{ depositStatus === "completed" ? "Done"  : "Processing" }</span>
-          </div>
+          </div>}
         </div>
 
 
         <div className="panel-elem flex flex-row items-center justify-between">
           <div className="left-side flex flex-row">
-            <div className="white-text">3. Receive on Eclipse</div>
+            <div className={tx ? "white-text" : "gray-text"}>3. Receive on Eclipse</div>
             <div className="gray-text">
             { eclipseTx && <a href={`https://explorer.eclipse.xyz/tx/${eclipseTx.signature}`} target="_blank">View Txn</a> }
             </div>
           </div>
-          <div className={`flex flex-row items-center gap-1 ${depositStatus}-item status-item`}>
+          { tx && <div className={`flex flex-row items-center gap-1 ${depositStatus}-item status-item`}>
               <TransactionIcon iconType={depositStatus} className="tx-done-icon" /> 
               <span>{ depositStatus === "completed" ? "Done"  : "Processing" }</span>
-          </div>
+            </div>
+          }
         </div>
 
 
+        { tx &&
         <div className="flex flex-col" style={{marginTop: "30px", gap: "12px", padding: "0 10px"}}>
           <div className="flex flex-row justify-between items-center">
             <span className="info-name">Deposit Amount</span>
@@ -155,8 +165,9 @@ export const TransactionDetails: React.FC<TransactionDetailsProps> = ({ closeMod
               <span className="green-text">{timeAgo(tx.timeStamp)}</span>
             </div>
           </div>
-        </div>
+        </div>}
 
+        { !tx && <div className="flex items-center justify-center modal-info"> You may close this window anytime</div> }
         <button onClick={closeModal} className="done-button">Done</button>
       </div>
     </div>
