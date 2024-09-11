@@ -63,8 +63,12 @@
   color: #666666; /* Dark gray color for inactive tab text */
 }
 
+.header-tabs div.inactive:hover {
+  background: rgba(255, 255, 255, 0.05);
+}
+
 .header-tabs div.disabled {
-  cursor: not-allowed;
+  cursor: url("../../../public/cursor.svg") 52 11, auto;
 }
 
 .arrow-container {

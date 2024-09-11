@@ -74,6 +74,9 @@ const cssOverrides = `
     margin-bottom: 16px;
     padding: 20px;
   }
+  .step__icon--done {
+      background-color: #4779ff!important;
+  }
 `
 
 export default function RootLayout({
