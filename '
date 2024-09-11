@@ -14,7 +14,6 @@ const ExtendedDetails: React.FC<{amountEther: undefined | string | number}> = ({
   const solWallet = userWallets.find(w => w.chain == "SOL");
   const evmWallet = userWallets.find(w => w.chain == "EVM");
 
-  console.log(parseFloat(((amountEth || 0) * (ethPrice || 0)).toFixed(3)))
   if (solWallet && evmWallet)
   return (
     <div className="extended-details" style={{marginTop: "18px"}}>
@@ -24,20 +23,14 @@ const ExtendedDetails: React.FC<{amountEther: undefined | string | number}> = ({
         {(gasPrice && ethPrice)
             ? (amountEth && amountEth >= 0.002) 
               ? <>
-                  <span className="gray-text flex items-center">
-                    <span>$</span>
-                    <MotionNumber
-                      value={parseFloat((amountEth * ethPrice).toFixed(3))}
-                      format={{ notation: 'compact' }} 
-                      locales="en-US" 
-                    />
-                  </span>
-                  <span className="green-text flex items-center">
-                    <MotionNumber
-                      value={parseFloat(String(amountEther ?? "0")).toFixed(3)}
-                      format={{ notation: 'compact' }} 
-                      locales="en-US" 
-                    /> &nbsp;ETH
+                  <span className="gray-text">${(amountEth * ethPrice).toFixed(2)}</span>
+                  {/* <span className="green-text">{ amountEther } ETH</span> */ }
+<span className="green-text">
+                  <MotionNumber
+                    value={parseFloat(String(amountEther ?? "0")).toFixed(3)}
+                    format={{ notation: 'compact' }} 
+                    locales="en-US" 
+                  />
                   </span>
                 </>
               : <span className="gray-text">-</span>

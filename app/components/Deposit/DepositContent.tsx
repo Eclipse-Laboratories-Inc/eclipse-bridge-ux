@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect, useState, useCallback } from 'react';
+import React, { useEffect, useState, useCallback, useRef, ChangeEvent, KeyboardEvent } from 'react';
 import './styles.css';
 import TransferArrow from '../icons/transferArrow';
 import {
@@ -261,15 +261,15 @@ export const DepositContent: React.FC<DepositProps> = ({ amountEther, setAmountE
           <div className="input-wrapper"> 
           { (!evmWallet || evmWallet && (balanceEther >= 0))
             ? <input
-              disabled={!evmWallet || !solWallet}
-              type="number"
-              step="0.01"
-              min="0"
-              placeholder="0 ETH"
-              style={{fontWeight: "500"}}
-              value={amountEther}
-	            ref={setInputRef}
-              onChange={(e) => setAmountEther(e.target.value)}
+                disabled={!evmWallet || !solWallet}
+                type="number"
+                step="0.01"
+                min="0"
+                placeholder="0 ETH"
+                style={{fontWeight: "500"}}
+                value={amountEther}
+	              ref={setInputRef}
+                onChange={(e) => setAmountEther(e.target.value)} 
             />
             : <SkeletonTheme baseColor="#FFFFFF0A" highlightColor="#FFFFFF26">
                 <Skeleton height={40} width={160} />

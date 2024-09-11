@@ -79,7 +79,8 @@ function ProfileAvatar() {
   return (
     <div className="flex items-center space-x-2">
       <div onClick={(e) => {toggleModal(e)}} ref={openModalRef} className="connect-wallet"> 
-        <ConnectIcon connectClassName="connect-wallet-icon" /> {content()}
+       <ConnectIcon connectClassName="connect-wallet-icon" /> 
+        {content()}
         { (solWallet && evmWallet) && <Chevron /> }
       </div>
         { <ConnectedWallets ref={modalRef} close={(e) => toggleModal(e)} />}
