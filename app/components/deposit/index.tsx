@@ -17,7 +17,7 @@ const Deposit: React.FC<DepositProps> = ({ amountEther, setAmountEther }) => {
   const [activeTab, setActiveTab] = useState<Tabs>(Tabs.Deposit);
   return (
     <>
-    <div className="deposit-container">
+    <div className="deposit-container flex flex-col">
       <div className="deposit-card">
         <div className="header-tabs">
           <div className={classNames("header-tab", (activeTab === Tabs.Deposit ? "active" : "inactive"))} style={{ width: "43.5%" }} onClick={() => setActiveTab(Tabs.Deposit)}>Deposit</div>
@@ -29,9 +29,8 @@ const Deposit: React.FC<DepositProps> = ({ amountEther, setAmountEther }) => {
           { activeTab === Tabs.Deposit && <DepositContent amountEther={amountEther} setAmountEther={setAmountEther}/> }
           { activeTab === Tabs.Activity && <ActivityContent /> }
         </div>
-      </div>
-      <br></br>
       { (activeTab === Tabs.Deposit) && <ExtendedDetails amountEther={amountEther} /> }
+      </div>
     </>
   );
 }

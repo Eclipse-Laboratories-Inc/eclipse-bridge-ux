@@ -2,7 +2,6 @@
 import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import Deposit from "./components/deposit";
-import ExtendedDetails from './components/ExtendedDetails'
 import {
   DynamicConnectButton,
   useUserWallets,

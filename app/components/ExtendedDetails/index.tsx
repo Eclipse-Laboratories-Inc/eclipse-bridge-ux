@@ -15,7 +15,7 @@ const ExtendedDetails: React.FC<{amountEther: undefined | string | number}> = ({
 
   if (solWallet && evmWallet)
   return (
-    <div className="extended-details">
+    <div className="extended-details" style={{marginTop: "18px"}}>
       <div className="flex flex-row justify-between items-center single-line">
         <div><span className="white-text">Receive on Eclipse</span></div>
         <div className="flex gap-2 items-center">
