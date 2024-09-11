@@ -1,5 +1,5 @@
 import "./transaction-details.css"
-import { useContext, useEffect, useState, useRef } from "react";
+import { useContext, useEffect, useState } from "react";
 import { Cross, Arrow } from "../icons"
 import { TransactionIcon } from "../icons";
 import { timeAgo } from "@/lib/activityUtils"
@@ -41,20 +41,13 @@ export const TransactionDetails: React.FC<TransactionDetailsProps> = ({ closeMod
   useEffect(() => {
     const fetchEclipseTx = async () => {
       if (!tx) return;
-      console.log(tx, "tx")
       const pda = tx && await getNonce(walletClient, tx.hash);
       const eclTx = pda && await getEclipseTransaction(pda);
       const pdaData = eclTx && await checkDepositWithPDA(pda);
 
-      console.log(tx, "tx")
-      console.log(pda, "pda")
-      console.log(eclTx, "eclTx")
-      console.log(pdaData, "pdaData")
-      console.log(eclipseTx, "eclipseTx")
       setDepositProof(pdaData);
       eclTx && setEclipseTx(eclTx[0]);
       if (!pdaData) setTimeout(() => fetchEclipseTx(), 2500) 
-        // else if (!eclTx) setTimeout(() => fetchEclipseTx(), 2500) 
     }
 
     fetchEclipseTx();

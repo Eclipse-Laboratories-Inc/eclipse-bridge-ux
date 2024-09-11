@@ -2,8 +2,8 @@
 import { useState } from "react";
 import { Activity } from "../icons";
 import './styles.css';
-import { DepositContent, DepositProps } from "./depositContent";
-import { ActivityContent } from "./activityContent";
+import { DepositContent, DepositProps } from "./DepositContent";
+import { ActivityContent } from "./ActivityContent";
 import ExtendedDetails from '../ExtendedDetails'
 import classNames from 'classnames';
 

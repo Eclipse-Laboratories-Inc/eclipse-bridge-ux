@@ -9,7 +9,7 @@ import { createWalletClient, custom } from 'viem';
 import { mainnet } from 'viem/chains';
 import Skeleton, { SkeletonTheme } from 'react-loading-skeleton'; 
 
-import { TransactionDetails } from "./transactionDetails";  
+import { TransactionDetails } from "./TransactionDetails";  
 
 import "./activity.css";  
 

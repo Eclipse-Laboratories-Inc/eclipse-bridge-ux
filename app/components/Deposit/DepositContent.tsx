@@ -17,7 +17,7 @@ import { solanaToBytes32 } from '@/lib/solanaUtils'
 import Skeleton, { SkeletonTheme } from 'react-loading-skeleton'
 import 'react-loading-skeleton/dist/skeleton.css'
 import { generateTxObjectForDetails } from "@/lib/activityUtils";
-import { TransactionDetails } from "./transactionDetails";
+import { TransactionDetails } from "./TransactionDetails";
 
 const client = createPublicClient({
   chain: mainnet,

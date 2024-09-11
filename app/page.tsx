@@ -1,7 +1,7 @@
 'use client';
 import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
-import Deposit from "./components/deposit";
+import Deposit from "./components/Deposit";
 import {
   DynamicConnectButton,
   useUserWallets,
