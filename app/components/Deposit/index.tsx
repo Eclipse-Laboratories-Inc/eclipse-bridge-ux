@@ -15,10 +15,12 @@ enum Tabs {
 
 const Deposit: React.FC<DepositProps> = ({ amountEther, setAmountEther }) => {
   const [activeTab, setActiveTab] = useState<Tabs>(Tabs.Deposit);
+  const [isModalOpen, setIsModalOpen] = useState(false); 
+
   return (
     <>
     <div className="deposit-container flex flex-col">
-      <div className="deposit-card">
+      <div className="deposit-card" style={{width: isModalOpen ? "0px" : "inherit"}}>
         <div className="header-tabs">
           <div className={classNames("header-tab", (activeTab === Tabs.Deposit ? "active" : "inactive"))} style={{ width: "43.5%" }} onClick={() => setActiveTab(Tabs.Deposit)}>Deposit</div>
           <div className={classNames("header-tab", "disabled", (activeTab === Tabs.Withdraw ? "active" : "inactive"))} style={{ width: "43.5%" }}>Withdraw</div>
@@ -26,10 +28,10 @@ const Deposit: React.FC<DepositProps> = ({ amountEther, setAmountEther }) => {
               <Activity activityClassName="" />
           </div>
         </div>
-          { activeTab === Tabs.Deposit && <DepositContent amountEther={amountEther} setAmountEther={setAmountEther}/> }
+          { activeTab === Tabs.Deposit && <DepositContent modalStuff={[isModalOpen, setIsModalOpen]} amountEther={amountEther} setAmountEther={setAmountEther}/> }
           { activeTab === Tabs.Activity && <ActivityContent /> }
         </div>
-      { (activeTab === Tabs.Deposit) && <ExtendedDetails amountEther={amountEther} /> }
+      { (activeTab === Tabs.Deposit) && !isModalOpen && <ExtendedDetails amountEther={amountEther} /> }
       </div>
     </>
   );

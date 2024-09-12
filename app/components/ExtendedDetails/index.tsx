@@ -27,8 +27,11 @@ const ExtendedDetails: React.FC<{amountEther: undefined | string | number}> = ({
                   <span className="gray-text flex items-center">
                     <span>$</span>
                     <MotionNumber
-                      value={parseFloat((amountEth * ethPrice).toFixed(3))}
-                      format={{ notation: 'compact' }} 
+                      value={parseFloat((amountEth * ethPrice).toFixed(2))}
+                      format={{ notation: 'standard' }} 
+                      transition={{
+                        y: { type: 'spring', duration: 0.65, bounce: 0.25 }
+                      }}
                       locales="en-US" 
                     />
                   </span>
@@ -36,6 +39,9 @@ const ExtendedDetails: React.FC<{amountEther: undefined | string | number}> = ({
                     <MotionNumber
                       value={parseFloat(String(amountEther ?? "0")).toFixed(3)}
                       format={{ notation: 'compact' }} 
+                      transition={{
+                        y: { type: 'spring', duration: 0.65, bounce: 0.25 }
+                      }}
                       locales="en-US" 
                     /> &nbsp;ETH
                   </span>

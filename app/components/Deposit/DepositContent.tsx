@@ -34,16 +34,17 @@ if (typeof window !== 'undefined' && window.ethereum) {
 }
 
 export interface DepositProps {
+  modalStuff: [boolean, React.Dispatch<React.SetStateAction<boolean>>];
   amountEther: number | string | undefined;
   setAmountEther: React.Dispatch<React.SetStateAction<number | undefined | string>>;
 }
 
-export const DepositContent: React.FC<DepositProps> = ({ amountEther, setAmountEther }) => {
+export const DepositContent: React.FC<DepositProps> = ({ modalStuff, amountEther, setAmountEther }) => {
   const [balanceEther, setAmountBalanceEther] = useState<number>(-1);
   const [isMmPopup, setIsMmPopup] = useState(false);
   const [isEvmDisconnected, setIsEvmDisconnected] = useState(false);
   const [isSolDisconnected, setIsSolDisconnected] = useState(false);
-  const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
+  const [isModalOpen, setIsModalOpen] = modalStuff; 
   const [currentTx, setCurrentTx] = useState<any>(null);
 
   const userWallets: Wallet[] = useUserWallets() as Wallet[];
@@ -190,8 +191,10 @@ export const DepositContent: React.FC<DepositProps> = ({ amountEther, setAmountE
 
   return (
     <>
+
     <div className={isModalOpen ? "status-overlay active" : "status-overlay"}></div>
-      <div>
+
+    { !isModalOpen && <div>
         <div className="network-section">
           <div className="arrow-container">
             <TransferArrow />
@@ -315,10 +318,10 @@ export const DepositContent: React.FC<DepositProps> = ({ amountEther, setAmountE
             </button>
         }
         </div>
+    }
         
-    { isModalOpen && <TransactionDetails tx={currentTx} closeModal={() => {
-        setTimeout(() => setIsModalOpen(false), 100);
-        setCurrentTx(null);
+    { isModalOpen && <TransactionDetails fromDeposit={true} tx={currentTx} closeModal={() => {
+        setTimeout(() => { setIsModalOpen(false), setCurrentTx(null) }, 100);
     }} /> }
     </>
       );

@@ -10,6 +10,7 @@ import { mainnet } from 'viem/chains'
 import { createWalletClient, custom, WalletClient } from 'viem'
 
 interface TransactionDetailsProps {
+  fromDeposit: boolean;
   closeModal: () => void; 
   tx: any;
 }
@@ -28,7 +29,7 @@ const calculateFee = (gPrice: string, gUsed: string) => {
   return ethers.utils.formatEther(gasFee);
 }
 
-export const TransactionDetails: React.FC<TransactionDetailsProps> = ({ closeModal, tx }) => {
+export const TransactionDetails: React.FC<TransactionDetailsProps> = ({ fromDeposit, closeModal, tx }) => {
   const [gasPrice, ethPrice] = useContext(EthereumDataContext) ?? [0, 0];
   const [eclipseTx, setEclipseTx] = useState<any>(null);
   const [depositProof, setDepositProof] = useState<any>(null);
@@ -113,7 +114,7 @@ export const TransactionDetails: React.FC<TransactionDetailsProps> = ({ closeMod
             { eclipseTx && <a href={`https://explorer.eclipse.xyz/tx/${eclipseTx.signature}`} target="_blank">View Txn</a> }
             </div>
           </div>
-          { tx && <div className={`flex flex-row items-center gap-1 ${depositStatus}-item status-item`}>
+          { tx && eclipseTx && <div className={`flex flex-row items-center gap-1 ${depositStatus}-item status-item`}>
               <TransactionIcon iconType={depositStatus} className="tx-done-icon" /> 
               <span>{ depositStatus === "completed" ? "Done"  : "Processing" }</span>
             </div>
@@ -150,16 +151,17 @@ export const TransactionDetails: React.FC<TransactionDetailsProps> = ({ closeMod
             </div>
           </div>
 
-          <div className="flex flex-row justify-between items-center">
+
+          {(fromDeposit ? eclipseTx : true) && <div className="flex flex-row justify-between items-center">
             <span className="info-name">Age</span>
             <div className="flex flex-row gap-2">
               <span className="green-text">{timeAgo(tx.timeStamp)}</span>
             </div>
-          </div>
+          </div>}
         </div>}
 
-        { !tx && <div className="flex w-full items-center justify-center modal-info"> You may close this window anytime</div> }
-        <button onClick={closeModal} className="done-button">Done</button>
+        { tx && !eclipseTx && fromDeposit && <div className="flex w-full items-center justify-center modal-info"> You may close this window anytime</div> }
+        { tx && <button onClick={closeModal} className="done-button">Done</button> } 
     </div>
   )
 };
