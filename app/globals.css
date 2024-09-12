@@ -125,7 +125,7 @@ footer {
   .mobile-logo { display: inline; }
 }
 
-@media (max-width: 500px) {
+@media (max-width: 900px) {
   footer {
     padding: 0px;
     flex-direction: column;
@@ -147,6 +147,8 @@ footer {
   .info-footer {
     display: flex;
     flex-direction: row;
+    width: 100%;
+    max-width: 520px;
     justify-content: space-between;
     margin-left: 0px;
     padding: 6px;

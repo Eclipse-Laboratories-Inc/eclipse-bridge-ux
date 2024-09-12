@@ -1,6 +1,6 @@
 import React, { useContext } from 'react';
 import  { EthereumDataContext } from "@/app/context";
-import Skeleton, { SkeletonTheme } from 'react-loading-skeleton'
+import Skeleton from 'react-loading-skeleton'
 import 'react-loading-skeleton/dist/skeleton.css'
 import "./styles.css"
 import { useUserWallets, Wallet } from "@dynamic-labs/sdk-react-core";
@@ -48,9 +48,7 @@ const ExtendedDetails: React.FC<{amountEther: undefined | string | number}> = ({
                 </>
               : <span className="gray-text">-</span>
 
-            : <SkeletonTheme baseColor="#313131" highlightColor="#525252">
-                <Skeleton width={80} />
-              </SkeletonTheme>
+            : <Skeleton width={80} />
         }
         </div>
       </div>
@@ -75,10 +73,7 @@ const ExtendedDetails: React.FC<{amountEther: undefined | string | number}> = ({
                   <span className="green-text">{(113200 * (gasPrice) / 10**9).toFixed(4)} ETH</span>
                 </>
               : <span className="gray-text">-</span>
-
-            : <SkeletonTheme baseColor="#313131" highlightColor="#525252">
-                <Skeleton width={80} />
-              </SkeletonTheme>
+            : <Skeleton width={80} />
         }
         </div>
       </div>

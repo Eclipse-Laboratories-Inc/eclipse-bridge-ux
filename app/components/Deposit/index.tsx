@@ -2,7 +2,7 @@
 import { useState } from "react";
 import { Activity } from "../icons";
 import './styles.css';
-import { DepositContent, DepositProps } from "./DepositContent";
+import { DepositContent } from "./DepositContent";
 import { ActivityContent } from "./ActivityContent";
 import ExtendedDetails from '../ExtendedDetails'
 import classNames from 'classnames';
@@ -11,6 +11,11 @@ enum Tabs {
   Deposit,
   Withdraw,
   Activity
+}
+
+export interface DepositProps {
+  amountEther: number | string | undefined;
+  setAmountEther: React.Dispatch<React.SetStateAction<number | undefined | string>>;
 }
 
 const Deposit: React.FC<DepositProps> = ({ amountEther, setAmountEther }) => {

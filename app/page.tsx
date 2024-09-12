@@ -12,7 +12,7 @@ import ConnectedWallets from "./components/ConnectedWallets/index";
 import { Block, ConnectIcon, Eth, Gas, Chevron } from "./components/icons";
 import useEthereumData from "@/lib/ethUtils";
 import { EthereumDataContext } from "./context"
-import Skeleton, { SkeletonTheme } from 'react-loading-skeleton'
+import Skeleton from 'react-loading-skeleton'
 
 
 function ProfileAvatar() {
@@ -95,6 +95,7 @@ export default function Main() {
 
   return (
     <EthereumDataContext.Provider value={[gasPrice, ethPrice]}>
+    <SkeletonTheme baseColor="#FFFFFF0A" highlightColor="#FFFFFF26">
     <div className="flex items-center text-white flex flex-col justify-between" id="main-content" style={{
           background: "black", 
           transition: "filter 300ms var(--ease-out-quad)", 
@@ -104,21 +105,19 @@ export default function Main() {
         <div className="main-content flex flex-col gap-2 items-center">
           <Deposit amountEther={amountEther} setAmountEther={setAmountEther} />
         </div>
-      <footer className="flex items-center">
+      <footer className="flex items-center" style={{ height: "auto" }}>
         <div className="flex flex-row legal-footer justify-center">
           <Link href="https://www.eclipse.xyz/terms"> Terms & Conditions </Link>
           <Link href="https://www.eclipse.xyz/privacy-policy"> Privacy Policy </Link>
           <Link href="https://docs.eclipse.xyz">  Docs </Link>
         </div>
-          <div className="flex flex-row info-footer">
+          <div className="flex flex-row info-footer justify-between" style={{}}>
           <div className="ml-[28px] flex flex-row items-center gap-2">
             <Gas gasClassName="gas" />  
             <span>Gas</span>
             {gasPrice 
               ? <span style={{color: "rgba(161, 254, 160, 0.5)"}}> ${gasPrice}</span>
-              : <SkeletonTheme baseColor="#313131" highlightColor="#525252">
-                  <Skeleton height={15} width={58} />
-                </SkeletonTheme>
+              : <Skeleton height={15} width={58} />
             }
           </div>
 
@@ -127,9 +126,7 @@ export default function Main() {
             <span>Eth</span> 
             {ethPrice
               ? <span style={{color: "rgba(161, 254, 160, 0.5)"}}> ${ethPrice}</span>
-              : <SkeletonTheme baseColor="#313131" highlightColor="#525252">
-                  <Skeleton height={15} width={62} />
-                </SkeletonTheme>
+              : <Skeleton height={15} width={62} />
             }
           </div>
 
@@ -138,14 +135,13 @@ export default function Main() {
             <span>Block</span> 
             {blockNumber 
               ? <span style={{color: "rgba(161, 254, 160, 0.5)"}}> {blockNumber}</span>
-              : <SkeletonTheme baseColor="#313131" highlightColor="#525252">
-                  <Skeleton height={15} width={67} />
-                </SkeletonTheme>
+              : <Skeleton height={15} width={67} />
             }
           </div>
         </div>
       </footer>
     </div>
+    </SkeletonTheme>
     </ EthereumDataContext.Provider>
   );
 }

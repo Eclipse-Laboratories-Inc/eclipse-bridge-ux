@@ -7,7 +7,7 @@ import { getLastDeposits, timeAgo, getNonce, checkDepositWithPDA } from "@/lib/a
 import { useUserWallets, Wallet } from "@dynamic-labs/sdk-react-core";
 import { createWalletClient, custom } from 'viem';
 import { mainnet } from 'viem/chains';
-import Skeleton, { SkeletonTheme } from 'react-loading-skeleton'; 
+import Skeleton from 'react-loading-skeleton'; 
 
 import { TransactionDetails } from "./TransactionDetails";  
 
@@ -76,9 +76,7 @@ export const ActivityContent = () => {
                 {(status)
                   ? <><TransactionIcon iconType={status}/> 
                     <span>{status === "loading" ? "depositing" : status}</span></>
-                  : <SkeletonTheme baseColor="#313131" highlightColor="#525252">
-                      <Skeleton height={15} width={91} />
-                    </SkeletonTheme>
+                  : <Skeleton height={15} width={91} />
                 }
               </div>
             </div>

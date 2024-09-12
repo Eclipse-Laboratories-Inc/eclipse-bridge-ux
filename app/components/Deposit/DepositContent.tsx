@@ -33,13 +33,13 @@ if (typeof window !== 'undefined' && window.ethereum) {
   
 }
 
-export interface DepositProps {
+export interface DepositContentProps {
   modalStuff: [boolean, React.Dispatch<React.SetStateAction<boolean>>];
   amountEther: number | string | undefined;
   setAmountEther: React.Dispatch<React.SetStateAction<number | undefined | string>>;
 }
 
-export const DepositContent: React.FC<DepositProps> = ({ modalStuff, amountEther, setAmountEther }) => {
+export const DepositContent: React.FC<DepositContentProps> = ({ modalStuff, amountEther, setAmountEther }) => {
   const [balanceEther, setAmountBalanceEther] = useState<number>(-1);
   const [isMmPopup, setIsMmPopup] = useState(false);
   const [isEvmDisconnected, setIsEvmDisconnected] = useState(false);
@@ -274,9 +274,7 @@ export const DepositContent: React.FC<DepositProps> = ({ modalStuff, amountEther
 	              ref={setInputRef}
                 onChange={(e) => setAmountEther(e.target.value)} 
             />
-            : <SkeletonTheme baseColor="#FFFFFF0A" highlightColor="#FFFFFF26">
-                <Skeleton height={40} width={160} />
-              </SkeletonTheme>
+            : <Skeleton height={40} width={160} />
           }
           </div> 
             
@@ -293,9 +291,7 @@ export const DepositContent: React.FC<DepositProps> = ({ modalStuff, amountEther
                 <span>Bal</span> 
                 {(balanceEther >= 0)
                 ?  <><span style={{ color: '#fff' }}>{balanceEther + " "} </span> <>ETH</></> 
-                : <SkeletonTheme baseColor="#313131" highlightColor="#525252">
-                    <span style={{width: "20%"}}><Skeleton inline={true}/></span>
-                  </SkeletonTheme>
+                :  <span style={{width: "20%"}}><Skeleton inline={true}/></span>
                 }
               </div>
             }
