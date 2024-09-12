@@ -6,10 +6,10 @@ import "./styles.css"
 import { useUserWallets, Wallet } from "@dynamic-labs/sdk-react-core";
 import MotionNumber from 'motion-number'
 
+
 const ExtendedDetails: React.FC<{amountEther: undefined | string | number}> = ({ amountEther }) => {
   const [gasPrice, ethPrice] = useContext(EthereumDataContext) ?? [null, null];
   const amountEth = (typeof amountEther === "string" ? parseFloat(amountEther) : amountEther)
-
   const userWallets: Wallet[] = useUserWallets() as Wallet[];
   const solWallet = userWallets.find(w => w.chain == "SOL");
   const evmWallet = userWallets.find(w => w.chain == "EVM");
@@ -82,4 +82,3 @@ const ExtendedDetails: React.FC<{amountEther: undefined | string | number}> = ({
 };
 
 export default ExtendedDetails;
-
