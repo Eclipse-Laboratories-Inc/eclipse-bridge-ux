@@ -8,20 +8,14 @@ import { useUserWallets, Wallet } from "@dynamic-labs/sdk-react-core";
 import { createWalletClient, custom } from 'viem';
 import { mainnet } from 'viem/chains';
 import Skeleton from 'react-loading-skeleton'; 
+import { WalletClientContext } from "@/app/context";
 
 import { TransactionDetails } from "./TransactionDetails";  
 
 import "./activity.css";  
 
-let walletClient: any;
-if (typeof window !== 'undefined' && window.ethereum) {
-  walletClient = createWalletClient({
-    chain: mainnet,
-    transport: custom(window.ethereum!),
-  })
-}
-
 export const ActivityContent = () => {
+  const walletClient = useContext(WalletClientContext);
   const [deposits, setDeposits] = useState<any[] | null>(null);
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   const [currentTx, setCurrentTx] = useState<any>(null);
@@ -33,8 +27,6 @@ export const ActivityContent = () => {
   const getTxStatus = async (txHash: any) => {
     const data = await getNonce(walletClient, txHash);
     const onEclipseStatus = data && await checkDepositWithPDA(data);
-    console.log(onEclipseStatus)
-    console.log(onEclipseStatus, "GRRAAAh")
     setEclipseStates(prevStates => ({
       ...prevStates,
       [txHash]: onEclipseStatus ? onEclipseStatus : null 

@@ -11,9 +11,19 @@ import { truncateWalletAddress } from "@/lib/stringUtils";
 import ConnectedWallets from "./components/ConnectedWallets/index";
 import { Block, ConnectIcon, Eth, Gas, Chevron } from "./components/icons";
 import useEthereumData from "@/lib/ethUtils";
-import { EthereumDataContext } from "./context"
+import { EthereumDataContext, WalletClientContext } from "./context"
 import Skeleton, { SkeletonTheme } from 'react-loading-skeleton'
+import { createContext } from "react";
+import { createWalletClient, custom, WalletClient } from 'viem';
+import { mainnet } from 'viem/chains';
 
+let walletClient: any;
+if (typeof window !== 'undefined' && window.ethereum) {
+  walletClient = createWalletClient({
+    chain: mainnet,
+    transport: custom(window.ethereum!),
+  })
+}
 
 function ProfileAvatar() {
   const userWallets: Wallet[] = useUserWallets() as Wallet[];
@@ -95,6 +105,7 @@ export default function Main() {
 
   return (
     <EthereumDataContext.Provider value={[gasPrice, ethPrice]}>
+    <WalletClientContext.Provider value={walletClient}>
     <SkeletonTheme baseColor="#FFFFFF0A" highlightColor="#FFFFFF26">
     <div className="flex items-center text-white flex flex-col justify-between" id="main-content" style={{
           background: "black", 
@@ -142,6 +153,7 @@ export default function Main() {
       </footer>
     </div>
     </SkeletonTheme>
+    </WalletClientContext.Provider >
     </ EthereumDataContext.Provider>
   );
 }

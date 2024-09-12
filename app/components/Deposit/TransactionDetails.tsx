@@ -4,7 +4,7 @@ import { Cross, Arrow } from "../icons"
 import { TransactionIcon } from "../icons";
 import { timeAgo } from "@/lib/activityUtils"
 import { ethers } from 'ethers';
-import { EthereumDataContext } from "@/app/context"
+import { WalletClientContext, EthereumDataContext } from "@/app/context"
 import { getNonce, getEclipseTransaction, checkDepositWithPDA } from "@/lib/activityUtils"
 import { mainnet } from 'viem/chains'
 import { createWalletClient, custom, WalletClient } from 'viem'
@@ -15,13 +15,6 @@ interface TransactionDetailsProps {
   tx: any;
 }
 
-const walletClient: WalletClient | null = typeof window !== 'undefined' && window.ethereum
-  ? createWalletClient({
-      chain: mainnet,
-      transport: custom(window.ethereum),
-    })
-  : null;
-
 const calculateFee = (gPrice: string, gUsed: string) => {
   const gasPriceBN = ethers.BigNumber.from(gPrice); 
   const gasUsedBN = ethers.BigNumber.from(gUsed);   
@@ -30,6 +23,7 @@ const calculateFee = (gPrice: string, gUsed: string) => {
 }
 
 export const TransactionDetails: React.FC<TransactionDetailsProps> = ({ fromDeposit, closeModal, tx }) => {
+  const walletClient = useContext(WalletClientContext);
   const [gasPrice, ethPrice] = useContext(EthereumDataContext) ?? [0, 0];
   const [eclipseTx, setEclipseTx] = useState<any>(null);
   const [depositProof, setDepositProof] = useState<any>(null);
