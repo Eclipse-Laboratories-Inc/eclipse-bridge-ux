@@ -6,8 +6,6 @@ import { timeAgo } from "@/lib/activityUtils"
 import { ethers } from 'ethers';
 import { WalletClientContext, EthereumDataContext } from "@/app/context"
 import { getNonce, getEclipseTransaction, checkDepositWithPDA } from "@/lib/activityUtils"
-import { mainnet } from 'viem/chains'
-import { createWalletClient, custom, WalletClient } from 'viem'
 
 interface TransactionDetailsProps {
   fromDeposit: boolean;

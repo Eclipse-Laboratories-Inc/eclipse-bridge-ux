@@ -1,17 +1,12 @@
-import { useEffect, useState } from 'react';  
+import { useEffect, useState, useContext } from 'react';  
 import { ethers } from 'ethers';
-
 import { Arrow } from "@/app/components/icons"; 
 import { TransactionIcon } from "../icons";
 import { getLastDeposits, timeAgo, getNonce, checkDepositWithPDA } from "@/lib/activityUtils";
 import { useUserWallets, Wallet } from "@dynamic-labs/sdk-react-core";
-import { createWalletClient, custom } from 'viem';
-import { mainnet } from 'viem/chains';
 import Skeleton from 'react-loading-skeleton'; 
 import { WalletClientContext } from "@/app/context";
-
 import { TransactionDetails } from "./TransactionDetails";  
-
 import "./activity.css";  
 
 export const ActivityContent = () => {
