@@ -12,7 +12,7 @@ import ConnectedWallets from "./components/ConnectedWallets/index";
 import { Block, ConnectIcon, Eth, Gas, Chevron } from "./components/icons";
 import useEthereumData from "@/lib/ethUtils";
 import { EthereumDataContext } from "./context"
-import Skeleton from 'react-loading-skeleton'
+import Skeleton, { SkeletonTheme } from 'react-loading-skeleton'
 
 
 function ProfileAvatar() {
