@@ -14,10 +14,11 @@
 }
 
 .deposit-card {
-  background-color: rgba(255, 255, 255, 0.03);
+  background-color: rgba(255, 255, 255, 0.02);
   border-radius: 30px;
   padding: 20px;
-  width: 520px;
+  max-width: 520px;
+  width: 95vw;
   box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.2);
   color: #ffffff;
   text-align: center;
@@ -63,8 +64,12 @@
   color: #666666; /* Dark gray color for inactive tab text */
 }
 
-.header-tabs div.disabled {
-  cursor: not-allowed;
+.header-tabs div.inactive:hover {
+  background: rgba(255, 255, 255, 0.05);
+}
+
+ div.disabled {
+  cursor: url("../../../public/cursor.svg") 52 11, auto;
 }
 
 .arrow-container {
@@ -345,7 +350,7 @@ input::placeholder {
 }
 
 .submit-button:hover {
-  background-color: #82e085;
+  background-color: #74FF71;
 }
 
 .submit-button:active {

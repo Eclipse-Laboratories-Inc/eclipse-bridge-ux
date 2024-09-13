@@ -75,9 +75,9 @@ const ConnectedWallets = forwardRef<HTMLDivElement, ConnectedWalletsProps>(({ cl
 
   return (
     <div ref={ref} className="connected-wallets-modal">
-      <div className="connected-wallets-header">
+      <div className="connected-wallets-header flex items-center">
         <div>Connected Wallets</div>
-        <div onClick={(e) => close(e)}> <Cross crossClassName='wallets-cross' /> </div>
+        <div className="cross-wrapper" onClick={(e) => close(e)}> <Cross crossClassName='wallets-cross' /> </div>
       </div>
       <ul className="wallet-list">
         <li className="wallet-item">

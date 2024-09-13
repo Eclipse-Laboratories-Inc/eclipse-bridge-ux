@@ -1,16 +1,105 @@
-export async function getLastDeposits(address: string) {
-  const apiKey = 'G6FW2T6RHAAHM9H5ATF8GVIFX8F4K5S38B';
+import { decodeAbiParameters } from 'viem'
+const solanaWeb3 = require('@solana/web3.js');
+import { PublicKey } from '@solana/web3.js';
+import * as anchor from '@project-serum/anchor';
 
-  const response = await fetch(`https://api.etherscan.io/api?module=account&action=txlist&address=${address}&startblock=0&endblock=99999999&page=1&offset=1000&sort=asc&apikey=${apiKey}`)
-  const data = await response.json();
+export async function generateTxObjectForDetails(walletClient: any, txHash: string) {
+  const receiptPromise = walletClient.request({
+    method: 'eth_getTransactionReceipt',
+    params: [txHash],
+  });
 
-  let deposits = [];
-  for (const tx of data.result) {
-    // if to is bridge contract
-    if (tx.to === "0x83cb71d80078bf670b3efec6ad9e5e6407cd0fd1") {
-      deposits.push(tx);
-    }
+  // eth_getTransactionByHash
+  const transactionPromise = walletClient.request({
+    method: 'eth_getTransactionByHash',
+    params: [txHash],
+  });
+
+  const [receipt, transaction] = await Promise.all([
+    receiptPromise,
+    transactionPromise,
+  ]);
+
+  const blockPromise = walletClient.request({
+    method: 'eth_getBlockByNumber',
+    params: [transaction.blockNumber, false],
+  });
+
+  const block = await blockPromise;
+
+  return {
+    hash: txHash,
+    value: transaction.value, // in wei
+    gasPrice: transaction.gasPrice, // gas price in wei
+    gasUsed: receipt.gasUsed, // gas used in the transaction
+    timeStamp: parseInt(block.timestamp, 16), // block timestamp in seconds
+  };
+}
+
+export async function getNonce(walletClient: any, transactionHash: string): Promise<PublicKey | null> {
+  try {
+    const data = await walletClient.request({
+      method: "eth_getTransactionReceipt",
+      params: [transactionHash]
+    });
+    if (!data.logs[0]) return null; 
+
+    const values = decodeAbiParameters([
+      { name: 'to', type: 'bytes' },
+      { name: 'toChainId', type: 'bytes' },
+      { name: 'message', type: 'bytes' },
+      { name: 'extraData', type: 'bytes' }
+    ], data.logs[0].data);
+
+    const ethDepositNonceBN = new anchor.BN(values[3].replace("0x", ""), 16);
+    const programPublicKey = new PublicKey("br1xwubggTiEZ6b7iNZUwfA3psygFfaXGfZ1heaN9AW");
+
+    const [depositReceiptPda, _] = PublicKey.findProgramAddressSync(
+      [
+        Buffer.from('deposit'),
+        ethDepositNonceBN.toArrayLike(Buffer, 'le', 8)
+      ],
+      programPublicKey
+    );
+    return depositReceiptPda;
+
+  } catch (error) {
+    console.error("Error while getting nonce or deriving PDA:", error);
+    return null
   }
+}
+
+
+// fix
+export async function getEclipseTransaction(address: PublicKey | null) {
+  if (!address) {return null;} 
+  const connection = new solanaWeb3.Connection(
+    'https://mainnetbeta-rpc.eclipse.xyz',
+    'confirmed'
+  );
+
+  const data = await connection.getSignaturesForAddress(address);
+  return data
+} 
+
+
+// fix
+export async function checkDepositWithPDA(address: PublicKey | null ) {
+  if (!address) {return null;} 
+  const connection = new solanaWeb3.Connection(
+    'https://mainnetbeta-rpc.eclipse.xyz',
+    'confirmed'
+  );
+
+  const data = await connection.getAccountInfo(address);
+  if (!data) return null
+  return data
+}
+
+
+export async function getLastDeposits(address: string) {
+  const response = await fetch(`/api/get-transactions?address=${address}`)
+  const deposits = await response.json();
 
   return deposits;
 }

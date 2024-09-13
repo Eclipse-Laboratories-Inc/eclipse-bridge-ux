@@ -153,6 +153,20 @@
   color: #a3ffa5;
 } 
 
+.cross-wrapper path {
+  transition: fill-opacity 100ms var(--ease-out-quad), fill 100ms var(--ease-out-quad);
+}
+
+.cross-wrapper:hover path {
+  fill-opacity: 1;
+  fill: var(--dynamic-text-secondary);
+}
+
+.cross-wrapper:active path {
+  fill-opacity: 1;
+  fill: var(--dynamic-text-primary);
+}
+
 @media (max-width: 500px) {
   .connected-wallets-modal {
     width: 95%;

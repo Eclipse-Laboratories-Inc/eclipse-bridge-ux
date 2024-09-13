@@ -5,7 +5,9 @@
   font-weight: 500;
   width: 100%;
   height: 364px;
-  overflow: scroll;
+  overflow-y: scroll;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(161, 254, 160, 1) rgba(255, 255, 255, 0.02);
 }
 
 .deposit-transaction {
@@ -62,16 +64,39 @@
   color: rgba(161, 254, 160, 1);
 }
 
+.status-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  transition: opacity 300ms var(--ease-out-quad);
+  backdrop-filter: blur(3px);
+  z-index: 1;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.status-overlay.active {
+  z-index: 1;
+  opacity: 1;
+}
+
 @media (max-width: 500px) {
   .white-in {
     font-size: 16px;
-    line-size: 20px;
   }
   .gray-in {
-    font-size: 12px;
+    font-size: 14px;
   }
-  .eth-to-ecl { gap: "7px"; }
-  .tx-age     { gap: "4px"; }
+  .status-div span {font-size: 10px} 
+  .eth-to-ecl { gap: 8px!important; }
+  .tx-age     { gap: 4px; }
+  .deposit-transaction {padding: 12px 10px 12px 10px;}
+  .deposit-transaction img {
+    width: 39px!important;
+    height: 39px!important;
+  }
 }
 
 @keyframes bounce {

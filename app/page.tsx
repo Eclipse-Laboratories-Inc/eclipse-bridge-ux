@@ -1,8 +1,7 @@
 'use client';
 import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
-import Deposit from "./components/deposit";
-import ExtendedDetails from './components/ExtendedDetails'
+import Deposit from "./components/Deposit";
 import {
   DynamicConnectButton,
   useUserWallets,
@@ -12,7 +11,19 @@ import { truncateWalletAddress } from "@/lib/stringUtils";
 import ConnectedWallets from "./components/ConnectedWallets/index";
 import { Block, ConnectIcon, Eth, Gas, Chevron } from "./components/icons";
 import useEthereumData from "@/lib/ethUtils";
-import { EthereumDataContext } from "./context"
+import { EthereumDataContext, WalletClientContext } from "./context"
+import Skeleton, { SkeletonTheme } from 'react-loading-skeleton'
+import MotionNumber from 'motion-number'
+import { createWalletClient, custom, WalletClient } from 'viem';
+import { mainnet } from 'viem/chains';
+
+let walletClient: any;
+if (typeof window !== 'undefined' && window.ethereum) {
+  walletClient = createWalletClient({
+    chain: mainnet,
+    transport: custom(window.ethereum!),
+  })
+}
 
 function ProfileAvatar() {
   const userWallets: Wallet[] = useUserWallets() as Wallet[];
@@ -78,13 +89,13 @@ function ProfileAvatar() {
   return (
     <div className="flex items-center space-x-2">
       <div onClick={(e) => {toggleModal(e)}} ref={openModalRef} className="connect-wallet"> 
-        <ConnectIcon connectClassName="connect-wallet-icon" /> {content()}
+       <ConnectIcon connectClassName="connect-wallet-icon" /> 
+        {content()}
         { (solWallet && evmWallet) && <Chevron /> }
       </div>
         { <ConnectedWallets ref={modalRef} close={(e) => toggleModal(e)} />}
     </div>
   );
-
 }
 
 export default function Main() {
@@ -93,41 +104,75 @@ export default function Main() {
 
   return (
     <EthereumDataContext.Provider value={[gasPrice, ethPrice]}>
-    <div className="flex items-center text-white h-full flex flex-col justify-between" id="main-content" style={{
+    <WalletClientContext.Provider value={walletClient}>
+    <SkeletonTheme baseColor="#FFFFFF0A" highlightColor="#FFFFFF26">
+    <div className="flex items-center text-white flex flex-col justify-between" id="main-content" style={{
           background: "black", 
-          transition: "filter 300ms var(--ease-out-quad)" 
+          transition: "filter 300ms var(--ease-out-quad)", 
+          height: "100%"
     }}>
         <Header />
         <div className="main-content flex flex-col gap-2 items-center">
           <Deposit amountEther={amountEther} setAmountEther={setAmountEther} />
         </div>
-      <footer className="flex items-center">
+      <footer className="flex items-center" style={{ height: "auto" }}>
         <div className="flex flex-row legal-footer justify-center">
           <Link href="https://www.eclipse.xyz/terms"> Terms & Conditions </Link>
           <Link href="https://www.eclipse.xyz/privacy-policy"> Privacy Policy </Link>
           <Link href="https://docs.eclipse.xyz">  Docs </Link>
         </div>
-          <div className="flex flex-row info-footer">
+          <div className="flex flex-row info-footer justify-between" style={{}}>
           <div className="ml-[28px] flex flex-row items-center gap-2">
             <Gas gasClassName="gas" />  
             <span>Gas</span>
-            <span style={{color: "rgba(161, 254, 160, 0.5)"}}> ${gasPrice}</span>
+            {gasPrice 
+              ? <span style={{color: "rgba(161, 254, 160, 0.5)"}}> ${gasPrice}</span>
+              : <Skeleton height={15} width={58} />
+            }
           </div>
 
           <div className="ml-[28px] flex flex-row items-center gap-2">
             <Eth ethClassName="eth" />
             <span>Eth</span> 
-            <span style={{color: "rgba(161, 254, 160, 0.5)"}}> ${ethPrice}</span>
+            {ethPrice
+              ?  <MotionNumber
+                      value={ethPrice}
+                      format={{ notation: "standard", style: 'currency', currency: 'USD'}} 
+                      style={{
+                        color: "rgba(161, 254, 160, 0.5)"
+                      }}
+                      transition={{
+                        y: { type: 'spring', duration: 1, bounce: 0.25 }
+                      }}
+                      locales="en-US" 
+                    />
+              : <Skeleton height={15} width={62} />
+            }
           </div>
 
           <div className="ml-[28px] flex flex-row items-center gap-2">
             <Block blockClassName="block" /> 
             <span>Block</span> 
-            <span style={{color: "rgba(161, 254, 160, 0.5)"}}> {blockNumber}</span>
+            {blockNumber 
+               ? <MotionNumber
+                      value={blockNumber}
+                      format={{ useGrouping: false }} 
+                      style={{
+                        color: "rgba(161, 254, 160, 0.5)"
+                      }}
+                      transition={{
+                        y: { type: 'spring', duration: 1, bounce: 0.25 }
+                      }}
+                      locales="en-US" 
+                    />
+              : <Skeleton height={15} width={67} />
+            }
           </div>
         </div>
       </footer>
     </div>
+    </SkeletonTheme>
+    </WalletClientContext.Provider >
     </ EthereumDataContext.Provider>
   );
 }
@@ -137,10 +182,8 @@ function Header() {
   return (
     <header className="header w-full bg-black text-green-500 flex items-center justify-between p-4 border-b border-white border-opacity-10">
       <div className="flex items-center space-x-2">
-      { (typeof window !== "undefined" && window.innerWidth >= 768) 
-        ? <img src="/wordmark.png" alt="Eclipse Logo" width={183} height={34} />
-        : <img src="/eclipse-e.png" alt="Eclipse Logo" width={35} height={34} />
-      }
+        <img src="/wordmark.png" className="desktop-logo" alt="Eclipse Logo" width={183} height={34} />
+        <img src="/eclipse-e.png" className="mobile-logo" alt="Eclipse Logo" width={35} height={34} />
       </div>
       <h1 className="text-xl tracking-widest bridge-text">BRIDGE</h1>
       <>

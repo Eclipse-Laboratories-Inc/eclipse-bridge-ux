@@ -1,22 +1,32 @@
-import { useEffect, useState } from 'react';
-import { Arrow } from "@/app/components/icons";
-import { TransactionIcon } from "../icons";
-import { getLastDeposits, timeAgo } from "@/lib/activityUtils"
+import { useEffect, useState, useContext } from 'react';  
 import { ethers } from 'ethers';
-import { TransactionDetails } from "./transactionDetails";
-import {
-  useUserWallets,
-  Wallet
-} from "@dynamic-labs/sdk-react-core";
-import "./activity.css";
+import { Arrow } from "@/app/components/icons"; 
+import { TransactionIcon } from "../icons";
+import { getLastDeposits, timeAgo, getNonce, checkDepositWithPDA } from "@/lib/activityUtils";
+import { useUserWallets, Wallet } from "@dynamic-labs/sdk-react-core";
+import Skeleton from 'react-loading-skeleton'; 
+import { WalletClientContext } from "@/app/context";
+import { TransactionDetails } from "./TransactionDetails";  
+import "./activity.css";  
 
 export const ActivityContent = () => {
+  const walletClient = useContext(WalletClientContext);
   const [deposits, setDeposits] = useState<any[] | null>(null);
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   const [currentTx, setCurrentTx] = useState<any>(null);
+  const [eclipseStates, setEclipseStates] =  useState<Record<string, any>>({});
 
   const userWallets: Wallet[] = useUserWallets() as Wallet[];
   const evmWallet = userWallets.find(w => w.chain == "EVM");
+
+  const getTxStatus = async (txHash: any) => {
+    const data = await getNonce(walletClient, txHash);
+    const onEclipseStatus = data && await checkDepositWithPDA(data);
+    setEclipseStates(prevStates => ({
+      ...prevStates,
+      [txHash]: onEclipseStatus ? onEclipseStatus : null 
+    }))
+  }
 
   useEffect(() => {
     const fetchDeposits = async () => {
@@ -33,12 +43,13 @@ export const ActivityContent = () => {
 
   return ( 
     <>
+    <div className={isModalOpen ? "status-overlay active" : "status-overlay"}></div>
     <div className="activity-container">
    {evmWallet && deposits && deposits.map((tx, index) => {
-     // TODO: add loading state
-     const status = Number(tx.isError) ? "failed" : "completed";
+     const status = Number(tx.isError) ? "failed" : eclipseStates[tx.hash] ? "completed" :  (eclipseStates[tx.hash] === undefined) ? null : "loading";
+     (eclipseStates[tx.hash] === undefined) && getTxStatus(tx.hash);
      return (
-       <div key={index} className="deposit-transaction flex flex-row" onClick={() => { setIsModalOpen(true); setCurrentTx(tx)}}>
+       <div key={index} className="deposit-transaction flex flex-row items-center" onClick={() => { setIsModalOpen(true); setCurrentTx(tx)}}>
             <img src="swap.png" alt="Swap" className="swap-image" style={{position: "absolute", width: "22px"}} hidden />
             <img src="eth.png" alt="Ethereum" style={{ objectFit: "cover", height: "53px", width: "53px", marginLeft: "5px", marginRight: "16px"}} />
           <div className="flex flex-col justify-center" style={{width: "85%"}}>
@@ -49,8 +60,11 @@ export const ActivityContent = () => {
                 <span className="gray-in">{timeAgo(Number(tx.timeStamp))}</span>
               </div>
               <div className={`flex flex-row items-center status-div ${status}`}>
-                <TransactionIcon iconType={status}/> 
-                <span>{status}</span>
+                {(status)
+                  ? <><TransactionIcon iconType={status}/> 
+                    <span>{status === "loading" ? "depositing" : status}</span></>
+                  : <Skeleton height={15} width={91} />
+                }
               </div>
             </div>
             <div className="transaction-bottom flex justify-between">
@@ -66,7 +80,7 @@ export const ActivityContent = () => {
     )})}
     {(!evmWallet) ? <span>Connect your evm wallet first.</span> : (!(deposits?.length) && <span>You don&apos;t have any transactions.</span>)}
     </div> 
-    { isModalOpen && <TransactionDetails tx={currentTx} closeModal={() => setTimeout(() => setIsModalOpen(false), 100)} /> }
+    { isModalOpen && <TransactionDetails fromDeposit={false} tx={currentTx} closeModal={() => setTimeout(() => setIsModalOpen(false), 100)} /> }
     </>
   )
 }

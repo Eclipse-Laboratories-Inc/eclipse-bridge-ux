@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect, useState, useCallback } from 'react';
+import React, { useEffect, useState, useCallback, useContext } from 'react';
 import './styles.css';
 import TransferArrow from '../icons/transferArrow';
 import {
@@ -8,38 +8,58 @@ import {
   useDynamicContext,
   Wallet,
 } from "@dynamic-labs/sdk-react-core";
-import { Cross, Loading, ConnectIcon, Activity } from "../icons";
-import { createPublicClient, createWalletClient, custom, formatEther, http, parseEther } from 'viem'
+import { Cross, Loading, ConnectIcon } from "../icons";
+import { createPublicClient, formatEther, http, parseEther } from 'viem'
 import { mainnet } from 'viem/chains'
 import { getBalance } from 'viem/actions';
 import { truncateWalletAddress } from '@/lib/stringUtils';
 import { solanaToBytes32 } from '@/lib/solanaUtils'
-import Skeleton, { SkeletonTheme } from 'react-loading-skeleton'
+import Skeleton from 'react-loading-skeleton'
 import 'react-loading-skeleton/dist/skeleton.css'
+import { generateTxObjectForDetails } from "@/lib/activityUtils";
+import { TransactionDetails } from "./TransactionDetails";
+import { WalletClientContext, EthereumDataContext} from "@/app/context";
+
+const CONTRACT_ADDRESS = '0x83cB71D80078bf670b3EfeC6AD9E5E6407cD0fd1';
+const MIN_DEPOSIT_AMOUNT = 0.002;
+
+const CONTRACT_ABI = [{
+      inputs: [{
+          internalType: 'bytes32',
+          name: '',
+          type: 'bytes32'
+      }, {
+          internalType: 'uint256',
+          name: '',
+          type: 'uint256'
+      }, ],
+      name: 'deposit',
+      outputs: [],
+      stateMutability: 'payable',
+      type: 'function',
+}];
 
 const client = createPublicClient({
   chain: mainnet,
   transport: http(),
 })
   
-let walletClient: any;
-if (typeof window !== 'undefined' && window.ethereum) {
-  walletClient = createWalletClient({
-    chain: mainnet,
-    transport: custom(window.ethereum!),
-  })
-}
 
-export interface DepositProps {
+export interface DepositContentProps {
+  modalStuff: [boolean, React.Dispatch<React.SetStateAction<boolean>>];
   amountEther: number | string | undefined;
   setAmountEther: React.Dispatch<React.SetStateAction<number | undefined | string>>;
 }
 
-export const DepositContent: React.FC<DepositProps> = ({ amountEther, setAmountEther }) => {
+export const DepositContent: React.FC<DepositContentProps> = ({ modalStuff, amountEther, setAmountEther }) => {
+  const [gasPrice, ethPrice] = useContext(EthereumDataContext) ?? [null, null];
+  const walletClient = useContext(WalletClientContext);
   const [balanceEther, setAmountBalanceEther] = useState<number>(-1);
   const [isMmPopup, setIsMmPopup] = useState(false);
   const [isEvmDisconnected, setIsEvmDisconnected] = useState(false);
   const [isSolDisconnected, setIsSolDisconnected] = useState(false);
+  const [isModalOpen, setIsModalOpen] = modalStuff; 
+  const [currentTx, setCurrentTx] = useState<any>(null);
 
   const userWallets: Wallet[] = useUserWallets() as Wallet[];
   const solWallet = userWallets.find(w => w.chain == "SOL");
@@ -53,9 +73,7 @@ export const DepositContent: React.FC<DepositProps> = ({ amountEther, setAmountE
       const handleWheel = (event: WheelEvent) => {
         event.preventDefault();
       };
-
       node.addEventListener('wheel', handleWheel);
-
       return () => {
         node.removeEventListener('wheel', handleWheel);
       };
@@ -79,20 +97,6 @@ export const DepositContent: React.FC<DepositProps> = ({ amountEther, setAmountE
     });
   }, [userWallets]);
 
-  const contractAddress = '0x83cB71D80078bf670b3EfeC6AD9E5E6407cD0fd1';
-  const abi = [
-    {
-      inputs: [
-        { internalType: 'bytes32', name: '', type: 'bytes32' },
-        { internalType: 'uint256', name: '', type: 'uint256' },
-      ],
-      name: 'deposit',
-      outputs: [],
-      stateMutability: 'payable',
-      type: 'function',
-    },
-  ];
-
 
   const submitDeposit = async () => {
     const destinationBytes32 = solanaToBytes32(solWallet?.address || '');
@@ -101,22 +105,26 @@ export const DepositContent: React.FC<DepositProps> = ({ amountEther, setAmountE
     setIsMmPopup(true);
 
     try {
-      // lets keep this here
       const { request } = await client.simulateContract({
-        address: contractAddress,
-        abi,
+        address: CONTRACT_ADDRESS,
+        abi: CONTRACT_ABI,
         functionName: 'deposit',
         args: [destinationBytes32, weiValue],
         account,
         value: weiValue
       })
-      await walletClient.writeContract(request)
+      setIsModalOpen(true);
+      const txResponse = await walletClient.writeContract(request);
+      const txData = await generateTxObjectForDetails(walletClient, txResponse);
+
+      setCurrentTx(txData);
+      setIsModalOpen(true);
+
       setIsMmPopup(false)
     } catch (error) {
       setIsMmPopup(false)
       console.error('Failed to deposit', error);
     }
-
   };
 
   function determineInputClass(): string {
@@ -134,7 +142,7 @@ export const DepositContent: React.FC<DepositProps> = ({ amountEther, setAmountE
     if (isMmPopup) {
       return 'submit-button waiting'
     }
-    if (parseFloat(amountEther as string) < 0.002) {
+    if (parseFloat(amountEther as string) < MIN_DEPOSIT_AMOUNT) {
       return 'submit-button disabled'
     }
 
@@ -160,7 +168,7 @@ export const DepositContent: React.FC<DepositProps> = ({ amountEther, setAmountE
     if (!amountEther) {
       return 'Deposit'
     }  
-    if (parseFloat(amountEther as string) < 0.002) {
+    if (parseFloat(amountEther as string) < MIN_DEPOSIT_AMOUNT) {
       return 'Min amount 0.002 ETH'
     }
 
@@ -172,7 +180,9 @@ export const DepositContent: React.FC<DepositProps> = ({ amountEther, setAmountE
   }
 
   return (
-      <div>
+    <>
+    <div className={isModalOpen ? "status-overlay active" : "status-overlay"}></div>
+    { !isModalOpen && <div>
         <div className="network-section">
           <div className="arrow-container">
             <TransferArrow />
@@ -242,19 +252,17 @@ export const DepositContent: React.FC<DepositProps> = ({ amountEther, setAmountE
           <div className="input-wrapper"> 
           { (!evmWallet || evmWallet && (balanceEther >= 0))
             ? <input
-              disabled={!evmWallet || !solWallet}
-              type="number"
-              step="0.01"
-              min="0"
-              placeholder="0 ETH"
-              style={{fontWeight: "500"}}
-              value={amountEther}
-	            ref={setInputRef}
-              onChange={(e) => setAmountEther(e.target.value)}
+                disabled={!evmWallet || !solWallet}
+                type="number"
+                step="0.01"
+                min="0"
+                placeholder="0 ETH"
+                style={{fontWeight: "500"}}
+                value={amountEther}
+	              ref={setInputRef}
+                onChange={(e) => setAmountEther(e.target.value)} 
             />
-            : <SkeletonTheme baseColor="#313131" highlightColor="#525252">
-              <Skeleton height={40} width={160} />
-            </SkeletonTheme>
+            : <Skeleton height={40} width={160} />
           }
           </div> 
             
@@ -271,15 +279,14 @@ export const DepositContent: React.FC<DepositProps> = ({ amountEther, setAmountE
                 <span>Bal</span> 
                 {(balanceEther >= 0)
                 ?  <><span style={{ color: '#fff' }}>{balanceEther + " "} </span> <>ETH</></> 
-                : <SkeletonTheme baseColor="#313131" highlightColor="#525252">
-                    <span style={{width: "20%"}}><Skeleton inline={true}/></span>
-                  </SkeletonTheme>
+                :  <span style={{width: "20%"}}><Skeleton inline={true}/></span>
                 }
               </div>
             }
             <div className={evmWallet ? "percentage-buttons" : "invisible"}>
               <button onClick={() => setAmountEther(balanceEther * 0.25)} className="percentage-button">25%</button>
               <button onClick={() => setAmountEther(balanceEther * 0.50)} className="percentage-button">50%</button>
+
               <button onClick={() => setAmountEther(balanceEther)} className="percentage-button">Max</button>
             </div>
           </div>
@@ -296,6 +303,12 @@ export const DepositContent: React.FC<DepositProps> = ({ amountEther, setAmountE
             </button>
         }
         </div>
-      );
+    }
+        
+    { isModalOpen && <TransactionDetails fromDeposit={true} tx={currentTx} closeModal={() => {
+        setTimeout(() => { setIsModalOpen(false), setCurrentTx(null) }, 100);
+    }} /> }
+    </>
+  );
 };
 
