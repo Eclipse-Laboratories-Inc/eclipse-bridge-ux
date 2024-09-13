@@ -1,20 +1,19 @@
 import { useState, useEffect } from 'react';
 
-interface Icache  {
-    blockNumber: number | null,
-    gasPrice: number | null,
-    ethPrice: number | null,
-    timestamp: number | null,
-};
+interface IEthereumData {
+    blockNumber: number | null;
+    gasPrice: number | null;
+    ethPrice: number | null;
+}
 
-const cache: Icache = {
+const CACHE_EXPIRATION_MS = 10000; // Cache expiration time (30 sec)
+
+let cache: IEthereumData & { timestamp: number | null } = {
     blockNumber: null,
     gasPrice: null,
     ethPrice: null,
     timestamp: null,
 };
-
-const CACHE_EXPIRATION_MS = 60000; // Cache expiration time (1 minute)
 
 const useEthereumData = () => {
     const [blockNumber, setBlockNumber] = useState<number | null>(cache.blockNumber);
@@ -23,14 +22,10 @@ const useEthereumData = () => {
     const [error, setError] = useState<string | null>(null);
 
     useEffect(() => {
-        const apiKey = 'G6FW2T6RHAAHM9H5ATF8GVIFX8F4K5S38B';
-
         const fetchData = async () => {
             try {
                 const now = new Date().getTime();
-
                 if (cache.timestamp && now - cache.timestamp < CACHE_EXPIRATION_MS) {
-                    // Use cached data if within expiration time
                     setBlockNumber(cache.blockNumber);
                     setGasPrice(cache.gasPrice);
                     setEthPrice(cache.ethPrice);
@@ -38,41 +33,32 @@ const useEthereumData = () => {
                 }
 
                 console.log('Fetching Ethereum data...');
-                const [blockResponse, gasResponse, priceResponse] = await Promise.all([
-                    fetch(`https://api.etherscan.io/api?module=proxy&action=eth_blockNumber&apikey=${apiKey}`),
-                    fetch(`https://api.etherscan.io/api?module=proxy&action=eth_gasPrice&apikey=${apiKey}`),
-                    fetch(`https://api.etherscan.io/api?module=stats&action=ethprice&apikey=${apiKey}`)
-                ]);
-
-                const blockData = await blockResponse.json();
-                const gasData = await gasResponse.json();
-                const priceData = await priceResponse.json();
-
-                const newBlockNumber = parseInt(blockData.result, 16);
-                const newGasPrice = parseInt(gasData.result, 16) / 1e9; // Convert to Gwei
-                const newEthPrice = parseFloat(priceData.result.ethusd);
-                if (!newBlockNumber || !newGasPrice || !newEthPrice) {
-                  setError('Failed to fetch Ethereum data');
-                  return;
+                const response = await fetch('/api/ethereum-data');
+                if (!response.ok) {
+                    throw new Error('Failed to fetch Ethereum data');
                 }
 
-                // Update state with new data
-                setBlockNumber(newBlockNumber);
-                setGasPrice(Math.round(newGasPrice * 100) / 100);
-                setEthPrice(Math.round(newEthPrice * 100) / 100);
+                const data: IEthereumData = await response.json();
 
-                // Update cache
-                cache.blockNumber = newBlockNumber;
-                cache.gasPrice = Math.round(newGasPrice * 100) / 100;
-                cache.ethPrice = Math.round(newEthPrice * 100) / 100;
-                cache.timestamp = now;
+                if (!data.blockNumber || !data.gasPrice || !data.ethPrice) {
+                    setError('Failed to fetch Ethereum data');
+                    return;
+                }
+                setBlockNumber(data.blockNumber);
+                setGasPrice(data.gasPrice);
+                setEthPrice(data.ethPrice);
 
+                cache = {
+                    ...data,
+                    timestamp: now,
+                };
             } catch (err) {
                 setError('Failed to fetch Ethereum data');
             }
         };
 
         fetchData();
+        const interval = setInterval(fetchData, CACHE_EXPIRATION_MS);
     }, []);
 
     return { blockNumber, gasPrice, ethPrice, error };

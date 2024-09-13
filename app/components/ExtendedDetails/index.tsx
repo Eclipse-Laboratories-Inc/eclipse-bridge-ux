@@ -14,7 +14,6 @@ const ExtendedDetails: React.FC<{amountEther: undefined | string | number}> = ({
   const solWallet = userWallets.find(w => w.chain == "SOL");
   const evmWallet = userWallets.find(w => w.chain == "EVM");
 
-  console.log(parseFloat(((amountEth || 0) * (ethPrice || 0)).toFixed(3)))
   if (solWallet && evmWallet)
   return (
     <div className="extended-details" style={{marginTop: "18px"}}>

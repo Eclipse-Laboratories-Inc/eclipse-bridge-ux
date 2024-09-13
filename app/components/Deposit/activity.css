@@ -6,6 +6,8 @@
   width: 100%;
   height: 364px;
   overflow-y: scroll;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(161, 254, 160, 1) rgba(255, 255, 255, 0.02);
 }
 
 .deposit-transaction {
@@ -97,3 +99,4 @@
   50% { transform: translateY(5px); }
   100% { transform: translateY(0); }
 }
+

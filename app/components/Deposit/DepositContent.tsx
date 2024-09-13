@@ -118,21 +118,10 @@ export const DepositContent: React.FC<DepositContentProps> = ({ modalStuff, amou
       const txData = await generateTxObjectForDetails(walletClient, txResponse);
 
       setCurrentTx(txData);
-      console.log(txData, "txData")
       setIsModalOpen(true);
 
       setIsMmPopup(false)
     } catch (error) {
-
-      // REMOVE THIS
-      const txResponse = "0xcc350be9153e15e4f08f2e54957f109ee48ea29dddd2b23a91571ad5f9553875"
-
-      const txData = await generateTxObjectForDetails(walletClient, txResponse);
-      setCurrentTx(txData);
-      console.log(txData, "txData")
-      setIsModalOpen(true);
-      // REMOVE THIS
-
       setIsMmPopup(false)
       console.error('Failed to deposit', error);
     }

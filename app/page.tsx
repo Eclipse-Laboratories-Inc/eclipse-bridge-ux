@@ -13,7 +13,7 @@ import { Block, ConnectIcon, Eth, Gas, Chevron } from "./components/icons";
 import useEthereumData from "@/lib/ethUtils";
 import { EthereumDataContext, WalletClientContext } from "./context"
 import Skeleton, { SkeletonTheme } from 'react-loading-skeleton'
-import { createContext } from "react";
+import MotionNumber from 'motion-number'
 import { createWalletClient, custom, WalletClient } from 'viem';
 import { mainnet } from 'viem/chains';
 
@@ -96,7 +96,6 @@ function ProfileAvatar() {
         { <ConnectedWallets ref={modalRef} close={(e) => toggleModal(e)} />}
     </div>
   );
-
 }
 
 export default function Main() {
@@ -110,7 +109,7 @@ export default function Main() {
     <div className="flex items-center text-white flex flex-col justify-between" id="main-content" style={{
           background: "black", 
           transition: "filter 300ms var(--ease-out-quad)", 
-          height: "99.4%"
+          height: "100%"
     }}>
         <Header />
         <div className="main-content flex flex-col gap-2 items-center">
@@ -136,7 +135,17 @@ export default function Main() {
             <Eth ethClassName="eth" />
             <span>Eth</span> 
             {ethPrice
-              ? <span style={{color: "rgba(161, 254, 160, 0.5)"}}> ${ethPrice}</span>
+              ?  <MotionNumber
+                      value={ethPrice}
+                      format={{ notation: "standard", style: 'currency', currency: 'USD'}} 
+                      style={{
+                        color: "rgba(161, 254, 160, 0.5)"
+                      }}
+                      transition={{
+                        y: { type: 'spring', duration: 1, bounce: 0.25 }
+                      }}
+                      locales="en-US" 
+                    />
               : <Skeleton height={15} width={62} />
             }
           </div>
@@ -145,7 +154,17 @@ export default function Main() {
             <Block blockClassName="block" /> 
             <span>Block</span> 
             {blockNumber 
-              ? <span style={{color: "rgba(161, 254, 160, 0.5)"}}> {blockNumber}</span>
+               ? <MotionNumber
+                      value={blockNumber}
+                      format={{ useGrouping: false }} 
+                      style={{
+                        color: "rgba(161, 254, 160, 0.5)"
+                      }}
+                      transition={{
+                        y: { type: 'spring', duration: 1, bounce: 0.25 }
+                      }}
+                      locales="en-US" 
+                    />
               : <Skeleton height={15} width={67} />
             }
           </div>
