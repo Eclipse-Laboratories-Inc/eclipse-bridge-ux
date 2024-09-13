@@ -287,7 +287,7 @@ export const DepositContent: React.FC<DepositContentProps> = ({ modalStuff, amou
               <button onClick={() => setAmountEther(balanceEther * 0.25)} className="percentage-button">25%</button>
               <button onClick={() => setAmountEther(balanceEther * 0.50)} className="percentage-button">50%</button>
 
-              <button onClick={() => setAmountEther(balanceEther - (150000 * (gasPrice || 0) / 10**9))} className="percentage-button">Max</button>
+              <button onClick={() => setAmountEther(balanceEther)} className="percentage-button">Max</button>
             </div>
           </div>
         </div>
