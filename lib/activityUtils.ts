@@ -98,18 +98,8 @@ export async function checkDepositWithPDA(address: PublicKey | null ) {
 
 
 export async function getLastDeposits(address: string) {
-  const apiKey = 'G6FW2T6RHAAHM9H5ATF8GVIFX8F4K5S38B';
-
-  const response = await fetch(`https://api.etherscan.io/api?module=account&action=txlist&address=${address}&startblock=0&endblock=99999999&page=1&offset=1000&sort=asc&apikey=${apiKey}`)
-  const data = await response.json();
-
-  let deposits = [];
-  for (const tx of data.result) {
-    // if to is bridge contract
-    if (tx.to === "0x83cb71d80078bf670b3efec6ad9e5e6407cd0fd1") {
-      deposits.push(tx);
-    }
-  }
+  const response = await fetch(`/api/get-transactions?address=${address}`)
+  const deposits = await response.json();
 
   return deposits;
 }

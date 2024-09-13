@@ -85,13 +85,18 @@
 @media (max-width: 500px) {
   .white-in {
     font-size: 16px;
-    line-size: 20px;
   }
   .gray-in {
-    font-size: 12px;
+    font-size: 14px;
   }
-  .eth-to-ecl { gap: "7px"; }
-  .tx-age     { gap: "4px"; }
+  .status-div span {font-size: 10px} 
+  .eth-to-ecl { gap: 8px!important; }
+  .tx-age     { gap: 4px; }
+  .deposit-transaction {padding: 12px 10px 12px 10px;}
+  .deposit-transaction img {
+    width: 39px!important;
+    height: 39px!important;
+  }
 }
 
 @keyframes bounce {
@@ -99,4 +104,3 @@
   50% { transform: translateY(5px); }
   100% { transform: translateY(0); }
 }
-

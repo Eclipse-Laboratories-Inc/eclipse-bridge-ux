@@ -74,5 +74,3 @@ export async function GET() {
         isFetching = false;
     }
 }
-
-export const dynamic = "force-dynamic";

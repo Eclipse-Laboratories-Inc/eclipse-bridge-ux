@@ -2,7 +2,7 @@
   position: absolute;
   z-index: 500;
   max-width: 494px;
-  width: 100%;
+  width: 95%;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
@@ -151,4 +151,17 @@ a:hover {
   border: 7px solid rgba(0, 0, 0, 0.2); 
   outline: 1px solid rgba(255, 255, 255, 0.1); 
   border-radius: 100%;
+}
+
+@media (max-width: 500px) {
+  .transaction-details-modal {
+      padding: 14px;
+      > div {
+        margin-top: 19px!important;
+      }
+  }
+
+  .status-panel div { font-size: 14px !important;}
+  .white-text { font-size: 14px!important; }
+  .gray-text  { font-size: 14px!important; }
 }
