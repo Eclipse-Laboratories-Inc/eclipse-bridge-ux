@@ -19,7 +19,7 @@ let cache: ICache = {
 let isFetching = false;
 
 export async function GET() {
-    const apiKey = process.env.ETHERSCAN_API_KEY || "G6FW2T6RHAAHM9H5ATF8GVIFX8F4K5S38B";
+    const apiKey = process.env.ETHERSCAN_API_KEY || "";
     
     if (!apiKey) {
         return NextResponse.json({ error: 'API key is not configured' }, { status: 500 });
