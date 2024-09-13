@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server';
 
 const BRIDGE_CONTRACT_ADDRESS = "0x83cb71d80078bf670b3efec6ad9e5e6407cd0fd1";
-const API_KEY = process.env.ETHERSCAN_API_KEY || ';
+const API_KEY = process.env.ETHERSCAN_API_KEY || '';
 
 export async function GET(request: Request) {
   const { searchParams } = new URL(request.url);
