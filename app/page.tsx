@@ -1,4 +1,5 @@
 'use client';
+import config from "@/config";
 import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import Deposit from "./components/Deposit";
@@ -15,12 +16,11 @@ import { EthereumDataContext, WalletClientContext } from "./context"
 import Skeleton, { SkeletonTheme } from 'react-loading-skeleton'
 import MotionNumber from 'motion-number'
 import { createWalletClient, custom, WalletClient } from 'viem';
-import { mainnet } from 'viem/chains';
 
 let walletClient: any;
 if (typeof window !== 'undefined' && window.ethereum) {
   walletClient = createWalletClient({
-    chain: mainnet,
+    chain: config.currentChain,
     transport: custom(window.ethereum!),
   })
 }

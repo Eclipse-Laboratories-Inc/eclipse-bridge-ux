@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
+import config from "@/config"
 
-const BRIDGE_CONTRACT_ADDRESS = "0x83cb71d80078bf670b3efec6ad9e5e6407cd0fd1";
+const BRIDGE_CONTRACT_ADDRESS = config.bridgeContract;
 const API_KEY = process.env.ETHERSCAN_API_KEY || '';
 
 export async function GET(request: Request) {
@@ -12,7 +13,7 @@ export async function GET(request: Request) {
   }
 
   try {
-    const apiUrl = `https://api.etherscan.io/api?module=account&action=txlist&address=${address}&startblock=0&endblock=99999999&page=1&offset=1000&sort=asc&apikey=${API_KEY}`;
+    const apiUrl = `${config.etherscanAddress}?module=account&action=txlist&address=${address}&startblock=0&endblock=99999999&page=1&offset=1000&sort=asc&apikey=${API_KEY}`;
     const response = await fetch(apiUrl);
     const data = await response.json();
 

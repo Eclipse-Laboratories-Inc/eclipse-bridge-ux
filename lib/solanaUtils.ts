@@ -1,11 +1,12 @@
 const solanaWeb3 = require('@solana/web3.js');
 import { PublicKey, PublicKeyInitData } from '@solana/web3.js';
 import { toHex } from 'viem';
+import config from "@/config"
 
 export async function getWalletBalance(publicKey: String) {
   // Connect to the Solana mainnet
   const connection = new solanaWeb3.Connection(
-    'https://mainnetbeta-rpc.eclipse.xyz',
+     config.eclipseRpc,
     'confirmed'
   );
 

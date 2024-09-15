@@ -1,4 +1,5 @@
 import { NextResponse } from 'next/server';
+import config from '@/config';
 
 const CACHE_EXPIRATION_MS = 10000; // 10 seconds cache
 
@@ -41,9 +42,9 @@ export async function GET() {
         console.log("Fetching new data from Etherscan");
 
         const [blockResponse, gasResponse, priceResponse] = await Promise.all([
-            fetch(`https://api.etherscan.io/api?module=proxy&action=eth_blockNumber&apikey=${apiKey}`, {cache: "no-store"}),
-            fetch(`https://api.etherscan.io/api?module=proxy&action=eth_gasPrice&apikey=${apiKey}`, {cache: "no-store"}),
-            fetch(`https://api.etherscan.io/api?module=stats&action=ethprice&apikey=${apiKey}`, {cache: "no-store"})
+            fetch(`${config.etherscanAddress}?module=proxy&action=eth_blockNumber&apikey=${apiKey}`, {cache: "no-store"}),
+            fetch(`${config.etherscanAddress}?module=proxy&action=eth_gasPrice&apikey=${apiKey}`, {cache: "no-store"}),
+            fetch(`${config.etherscanAddress}?module=stats&action=ethprice&apikey=${apiKey}`, {cache: "no-store"})
         ]);
 
         const blockData = await blockResponse.json();

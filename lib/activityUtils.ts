@@ -1,5 +1,6 @@
 import { decodeAbiParameters } from 'viem'
 const solanaWeb3 = require('@solana/web3.js');
+import config from "@/config"
 import { PublicKey } from '@solana/web3.js';
 import * as anchor from '@project-serum/anchor';
 
@@ -52,7 +53,7 @@ export async function getNonce(walletClient: any, transactionHash: string): Prom
     ], data.logs[0].data);
 
     const ethDepositNonceBN = new anchor.BN(values[3].replace("0x", ""), 16);
-    const programPublicKey = new PublicKey("br1xwubggTiEZ6b7iNZUwfA3psygFfaXGfZ1heaN9AW");
+    const programPublicKey = new PublicKey(config.bridgeProgram);
 
     const [depositReceiptPda, _] = PublicKey.findProgramAddressSync(
       [
@@ -74,7 +75,7 @@ export async function getNonce(walletClient: any, transactionHash: string): Prom
 export async function getEclipseTransaction(address: PublicKey | null) {
   if (!address) {return null;} 
   const connection = new solanaWeb3.Connection(
-    'https://mainnetbeta-rpc.eclipse.xyz',
+    config.eclipseRpc,
     'confirmed'
   );
 
@@ -87,7 +88,7 @@ export async function getEclipseTransaction(address: PublicKey | null) {
 export async function checkDepositWithPDA(address: PublicKey | null ) {
   if (!address) {return null;} 
   const connection = new solanaWeb3.Connection(
-    'https://mainnetbeta-rpc.eclipse.xyz',
+    config.eclipseRpc,
     'confirmed'
   );
 

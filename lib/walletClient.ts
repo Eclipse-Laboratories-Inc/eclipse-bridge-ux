@@ -1,10 +1,10 @@
 import { createWalletClient, custom } from 'viem';
-import { mainnet } from 'viem/chains';
+import config from "@/config";
 
 export const createWalletClientInstance = () => {
   if (typeof window !== 'undefined' && window.ethereum) {
     return createWalletClient({
-      chain: mainnet,
+      chain: config.currentChain,
       transport: custom(window.ethereum!),
     });
   }

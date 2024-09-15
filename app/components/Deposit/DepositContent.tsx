@@ -1,4 +1,5 @@
 "use client";
+import config from "@/config"
 import React, { useEffect, useState, useCallback, useContext } from 'react';
 import './styles.css';
 import TransferArrow from '../icons/transferArrow';
@@ -10,7 +11,6 @@ import {
 } from "@dynamic-labs/sdk-react-core";
 import { Cross, Loading, ConnectIcon } from "../icons";
 import { createPublicClient, formatEther, http, parseEther } from 'viem'
-import { mainnet } from 'viem/chains'
 import { getBalance } from 'viem/actions';
 import { truncateWalletAddress } from '@/lib/stringUtils';
 import { solanaToBytes32 } from '@/lib/solanaUtils'
@@ -20,7 +20,7 @@ import { generateTxObjectForDetails } from "@/lib/activityUtils";
 import { TransactionDetails } from "./TransactionDetails";
 import { WalletClientContext, EthereumDataContext} from "@/app/context";
 
-const CONTRACT_ADDRESS = '0x83cB71D80078bf670b3EfeC6AD9E5E6407cD0fd1';
+const CONTRACT_ADDRESS = config.bridgeContract;
 const MIN_DEPOSIT_AMOUNT = 0.002;
 
 const CONTRACT_ABI = [{
@@ -40,10 +40,9 @@ const CONTRACT_ABI = [{
 }];
 
 const client = createPublicClient({
-  chain: mainnet,
+  chain: config.currentChain,
   transport: http(),
 })
-  
 
 export interface DepositContentProps {
   modalStuff: [boolean, React.Dispatch<React.SetStateAction<boolean>>];
@@ -66,7 +65,7 @@ export const DepositContent: React.FC<DepositContentProps> = ({ modalStuff, amou
   const evmWallet = userWallets.find(w => w.chain == "EVM");
 
   const { handleUnlinkWallet, rpcProviders } = useDynamicContext();
-  
+
   const provider = rpcProviders.evmDefaultProvider;
   const setInputRef = useCallback((node: HTMLInputElement) => {
     if (node) {

@@ -1,16 +1,16 @@
 import { useUserWallets, Wallet } from '@dynamic-labs/sdk-react-core';
+import config from "@/config"
 import React, { useEffect, useState, forwardRef } from 'react';
 import { createPublicClient, formatEther, http } from 'viem';
 import { useDynamicContext, DynamicConnectButton } from "@dynamic-labs/sdk-react-core";
 import { getBalance } from 'viem/actions';
-import { mainnet } from 'viem/chains';
 import './styles.css';
 import { Cross, Copy, ConnectIcon, CircleCheck, Disconnect} from "../icons";
 import { truncateWalletAddress } from '@/lib/stringUtils';
 import { getWalletBalance } from '@/lib/solanaUtils';
 
 const client = createPublicClient({
-  chain: mainnet,
+  chain: config.currentChain,
   transport: http(),
 })
 
