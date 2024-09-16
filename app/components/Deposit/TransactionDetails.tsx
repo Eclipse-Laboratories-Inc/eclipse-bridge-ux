@@ -6,6 +6,7 @@ import { timeAgo } from "@/lib/activityUtils"
 import { ethers } from 'ethers';
 import { WalletClientContext, EthereumDataContext } from "@/app/context"
 import { getNonce, getEclipseTransaction, checkDepositWithPDA } from "@/lib/activityUtils"
+import { useTransaction } from "../TransactionPool"
 
 interface TransactionDetailsProps {
   fromDeposit: boolean;
@@ -23,27 +24,19 @@ const calculateFee = (gPrice: string, gUsed: string) => {
 export const TransactionDetails: React.FC<TransactionDetailsProps> = ({ fromDeposit, closeModal, tx }) => {
   const walletClient = useContext(WalletClientContext);
   const [gasPrice, ethPrice] = useContext(EthereumDataContext) ?? [0, 0];
-  const [eclipseTx, setEclipseTx] = useState<any>(null);
-  const [depositProof, setDepositProof] = useState<any>(null);
+  const { transactions, pendingTransactions, addTransactionListener } = useTransaction();
   
+  const transaction = transactions.get(tx.hash);
+
+  const eclipseTx = transaction?.eclipseTxHash ?? null;
   const ethAmount = tx && Number(ethers.utils.formatEther(tx.value));
   const totalFee = tx && calculateFee(tx.gasPrice, tx.gasUsed);
-  const depositStatus = depositProof ? "completed" : "loading"; 
+
+  const depositStatus = transaction?.pda ? "completed" : "loading"; 
   const ethTxStatus   = tx ? "completed" : "loading"
   
   useEffect(() => {
-    const fetchEclipseTx = async () => {
-      if (!tx) return;
-      const pda = tx && await getNonce(walletClient, tx.hash);
-      const eclTx = pda && await getEclipseTransaction(pda);
-      const pdaData = eclTx && await checkDepositWithPDA(pda);
-
-      setDepositProof(pdaData);
-      eclTx && setEclipseTx(eclTx[0]);
-      if (!pdaData) setTimeout(() => fetchEclipseTx(), 2500) 
-    }
-
-    fetchEclipseTx();
+    addTransactionListener(tx.hash);
   }, [tx])
 
   return (
@@ -103,10 +96,10 @@ export const TransactionDetails: React.FC<TransactionDetailsProps> = ({ fromDepo
           <div className="left-side flex flex-row">
             <div className={tx ? "white-text" : "gray-text"}>3. Receive on Eclipse</div>
             <div className="gray-text">
-            { eclipseTx && <a href={`https://explorer.eclipse.xyz/tx/${eclipseTx.signature}`} target="_blank">View Txn</a> }
+            { eclipseTx && <a href={`https://explorer.eclipse.xyz/tx/${eclipseTx}`} target="_blank">View Txn</a> }
             </div>
           </div>
-          { tx && eclipseTx && <div className={`flex flex-row items-center gap-1 ${depositStatus}-item status-item`}>
+          { tx && transaction?.pda && <div className={`flex flex-row items-center gap-1 ${depositStatus}-item status-item`}>
               <TransactionIcon iconType={depositStatus} className="tx-done-icon" /> 
               <span>{ depositStatus === "completed" ? "Done"  : "Processing" }</span>
             </div>

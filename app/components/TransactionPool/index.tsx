@@ -37,6 +37,10 @@ export const TransactionProvider = ({ children } : { children: ReactNode}) => {
   }
 
   const addTransactionListener = (txHash: string) => {
+    if (transactions.has(txHash)) {
+      console.log("return")
+      return;
+    }
     const newTransaction: Transaction = { hash: txHash, status: 'pending', pdaData: null, eclipseTxHash: null, pda: null};
     setTransactions((prev) => new Map(prev.set(txHash, newTransaction)));
     setPendingTransactions((prev) => [...prev, newTransaction]);
@@ -55,7 +59,7 @@ export const TransactionProvider = ({ children } : { children: ReactNode}) => {
       const updatedTransaction: Transaction = { 
         hash: txHash, 
         status: pdaData ? "confirmed" : "pending",
-        eclipseTxHash: eclTx,
+        eclipseTxHash: eclTx && (eclTx.length > 0 ?  eclTx[0].signature : null),
         pdaData: pdaData,
         pda: pda ? pda : null
       };
@@ -70,7 +74,7 @@ export const TransactionProvider = ({ children } : { children: ReactNode}) => {
       pdaData && setPendingTransactions((prev) =>
         prev.filter((tx) => tx.hash !== txHash)
       );
-      !pdaData && setTimeout(() => {fetchEclipseTx()}, 2000);
+      if (!pdaData || !eclTx) setTimeout(() => {fetchEclipseTx()}, 2000);
     };
 
     fetchEclipseTx();
