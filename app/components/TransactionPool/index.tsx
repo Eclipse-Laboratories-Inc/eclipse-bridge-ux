@@ -38,9 +38,6 @@ export const TransactionProvider = ({ children } : { children: ReactNode}) => {
   const [pendingTransactions, setPendingTransactions] = useState<Transaction[]>([]);
 
   const walletClient = useContext(WalletClientContext);
-  if (!walletClient) {
-    throw new Error("WalletClientContext is undefined. Ensure that WalletClientContext.Provider is correctly set.");
-  }
 
   const userWallets: Wallet[] = useUserWallets() as Wallet[];
   const evmWallet = userWallets.find(w => w.chain == "EVM");
