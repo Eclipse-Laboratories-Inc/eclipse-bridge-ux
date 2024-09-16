@@ -45,12 +45,13 @@ const client = createPublicClient({
 })
 
 export interface DepositContentProps {
+  activeTxState: [boolean, React.Dispatch<React.SetStateAction<boolean>>];
   modalStuff: [boolean, React.Dispatch<React.SetStateAction<boolean>>];
   amountEther: number | string | undefined;
   setAmountEther: React.Dispatch<React.SetStateAction<number | undefined | string>>;
 }
 
-export const DepositContent: React.FC<DepositContentProps> = ({ modalStuff, amountEther, setAmountEther }) => {
+export const DepositContent: React.FC<DepositContentProps> = ({ activeTxState, modalStuff, amountEther, setAmountEther }) => {
   const [gasPrice, ethPrice] = useContext(EthereumDataContext) ?? [null, null];
   const walletClient = useContext(WalletClientContext);
   const [balanceEther, setAmountBalanceEther] = useState<number>(-1);
@@ -59,6 +60,8 @@ export const DepositContent: React.FC<DepositContentProps> = ({ modalStuff, amou
   const [isSolDisconnected, setIsSolDisconnected] = useState(false);
   const [isModalOpen, setIsModalOpen] = modalStuff; 
   const [currentTx, setCurrentTx] = useState<any>(null);
+  const [hasActiveTx, setHasActiveTx] = activeTxState; 
+
 
   const userWallets: Wallet[] = useUserWallets() as Wallet[];
   const solWallet = userWallets.find(w => w.chain == "SOL");
@@ -70,7 +73,7 @@ export const DepositContent: React.FC<DepositContentProps> = ({ modalStuff, amou
   const setInputRef = useCallback((node: HTMLInputElement) => {
     if (node) {
       const handleWheel = (event: WheelEvent) => {
-        event.preventDefault();
+        event.preventDefault()
       };
       node.addEventListener('wheel', handleWheel);
       return () => {
@@ -105,6 +108,7 @@ export const DepositContent: React.FC<DepositContentProps> = ({ modalStuff, amou
 
     try {
       const { request } = await client.simulateContract({
+        //@ts-ignore
         address: CONTRACT_ADDRESS,
         abi: CONTRACT_ABI,
         functionName: 'deposit',
@@ -115,6 +119,7 @@ export const DepositContent: React.FC<DepositContentProps> = ({ modalStuff, amou
       setIsModalOpen(true);
       const txResponse = await walletClient.writeContract(request);
       const txData = await generateTxObjectForDetails(walletClient, txResponse);
+      setHasActiveTx(true);
 
       setCurrentTx(txData);
       setIsModalOpen(true);

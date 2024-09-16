@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Activity } from "../icons";
 import './styles.css';
 import { DepositContent } from "./DepositContent";
@@ -21,6 +21,10 @@ export interface DepositProps {
 const Deposit: React.FC<DepositProps> = ({ amountEther, setAmountEther }) => {
   const [activeTab, setActiveTab] = useState<Tabs>(Tabs.Deposit);
   const [isModalOpen, setIsModalOpen] = useState(false); 
+  const [hasActiveTx, setHasActiveTx] = useState(false);
+
+  useEffect(() => {
+  }, [hasActiveTx])
 
   return (
     <>
@@ -33,7 +37,8 @@ const Deposit: React.FC<DepositProps> = ({ amountEther, setAmountEther }) => {
               <Activity activityClassName="" />
           </div>
         </div>
-          { activeTab === Tabs.Deposit && <DepositContent modalStuff={[isModalOpen, setIsModalOpen]} amountEther={amountEther} setAmountEther={setAmountEther}/> }
+          { activeTab === Tabs.Deposit && 
+              <DepositContent activeTxState={[hasActiveTx, setHasActiveTx]} modalStuff={[isModalOpen, setIsModalOpen]} amountEther={amountEther} setAmountEther={setAmountEther}/> }
           { activeTab === Tabs.Activity && <ActivityContent /> }
         </div>
       { (activeTab === Tabs.Deposit) && !isModalOpen && <ExtendedDetails amountEther={amountEther} /> }
