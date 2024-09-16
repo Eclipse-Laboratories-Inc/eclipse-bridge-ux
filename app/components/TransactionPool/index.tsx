@@ -1,3 +1,4 @@
+"use client"
 import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 import { WalletClientContext } from "@/app/context"
 import { getLastDeposits, getNonce, getEclipseTransaction, checkDepositWithPDA } from "@/lib/activityUtils"
