@@ -8,7 +8,7 @@ interface Transaction {
   hash: string;
   status: 'pending' | 'confirmed';
   eclipseTxHash: string | null;
-  pdaData: any;
+  pdaData: any | undefined;
   pda: PublicKey | null
 }
 
@@ -16,7 +16,7 @@ const defaultTransaction: Transaction = {
     hash: "",
     status: 'pending',
     eclipseTxHash: null,
-    pdaData: null,
+    pdaData: undefined,
     pda: null
 };
 
@@ -26,6 +26,7 @@ interface TransactionContextType {
   getTransaction: (txHash: string) => Transaction | undefined;
   pendingTransactions: Transaction[];
   deposits: any[] | null
+  addNewDeposit: (txData: any) => void;
 }
 
 export const TransactionContext = createContext<TransactionContextType | undefined>(undefined);
@@ -34,6 +35,7 @@ export const TransactionProvider = ({ children } : { children: ReactNode}) => {
   const [transactions, setTransactions] = useState<Map<string, Transaction>>(new Map());
   const [deposits, setDeposits] = useState<any[] | null>(null);
   const [pendingTransactions, setPendingTransactions] = useState<Transaction[]>([]);
+
   const walletClient = useContext(WalletClientContext);
   if (!walletClient) {
     throw new Error("WalletClientContext is undefined. Ensure that WalletClientContext.Provider is correctly set.");
@@ -47,6 +49,8 @@ export const TransactionProvider = ({ children } : { children: ReactNode}) => {
       try {
         const data = await getLastDeposits(evmWallet?.address || '');
         setDeposits(data.reverse());
+        
+        data && data.map((tx: any) => {console.log("add listener"); addTransactionListener(tx.hash)})
       } catch (error) {
         console.error("Error fetching deposits:", error);
       }
@@ -55,12 +59,16 @@ export const TransactionProvider = ({ children } : { children: ReactNode}) => {
     fetchDeposits();
   }, [evmWallet]);
 
+  const addNewDeposit = (txData: any) => {
+    setDeposits((prev: any) => [...prev, txData]);
+  }
+
   const addTransactionListener = (txHash: string) => {
     if (transactions.has(txHash)) {
       console.log("return")
       return;
     }
-    const newTransaction: Transaction = { hash: txHash, status: 'pending', pdaData: null, eclipseTxHash: null, pda: null};
+    const newTransaction: Transaction = { hash: txHash, status: 'pending', pdaData: undefined, eclipseTxHash: null, pda: null};
     setTransactions((prev) => new Map(prev.set(txHash, newTransaction)));
     setPendingTransactions((prev) => [...prev, newTransaction]);
 
@@ -109,7 +117,8 @@ export const TransactionProvider = ({ children } : { children: ReactNode}) => {
         addTransactionListener, 
         getTransaction, 
         pendingTransactions,
-        deposits
+        deposits,
+        addNewDeposit
       }}>
       {children}
     </TransactionContext.Provider>

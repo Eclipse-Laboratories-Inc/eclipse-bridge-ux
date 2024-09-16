@@ -18,7 +18,8 @@ import Skeleton from 'react-loading-skeleton'
 import 'react-loading-skeleton/dist/skeleton.css'
 import { generateTxObjectForDetails } from "@/lib/activityUtils";
 import { TransactionDetails } from "./TransactionDetails";
-import { WalletClientContext, EthereumDataContext} from "@/app/context";
+import { WalletClientContext} from "@/app/context";
+import { useTransaction } from "../TransactionPool"
 
 const CONTRACT_ADDRESS = config.bridgeContract;
 const MIN_DEPOSIT_AMOUNT = 0.002;
@@ -52,7 +53,6 @@ export interface DepositContentProps {
 }
 
 export const DepositContent: React.FC<DepositContentProps> = ({ activeTxState, modalStuff, amountEther, setAmountEther }) => {
-  const [gasPrice, ethPrice] = useContext(EthereumDataContext) ?? [null, null];
   const walletClient = useContext(WalletClientContext);
   const [balanceEther, setAmountBalanceEther] = useState<number>(-1);
   const [isMmPopup, setIsMmPopup] = useState(false);
@@ -60,14 +60,13 @@ export const DepositContent: React.FC<DepositContentProps> = ({ activeTxState, m
   const [isSolDisconnected, setIsSolDisconnected] = useState(false);
   const [isModalOpen, setIsModalOpen] = modalStuff; 
   const [currentTx, setCurrentTx] = useState<any>(null);
-  const [hasActiveTx, setHasActiveTx] = activeTxState; 
-
 
   const userWallets: Wallet[] = useUserWallets() as Wallet[];
   const solWallet = userWallets.find(w => w.chain == "SOL");
   const evmWallet = userWallets.find(w => w.chain == "EVM");
 
   const { handleUnlinkWallet, rpcProviders } = useDynamicContext();
+  const { addNewDeposit } = useTransaction();
 
   const provider = rpcProviders.evmDefaultProvider;
   const setInputRef = useCallback((node: HTMLInputElement) => {
@@ -119,7 +118,7 @@ export const DepositContent: React.FC<DepositContentProps> = ({ activeTxState, m
       setIsModalOpen(true);
       const txResponse = await walletClient.writeContract(request);
       const txData = await generateTxObjectForDetails(walletClient, txResponse);
-      setHasActiveTx(true);
+      addNewDeposit(txData);
 
       setCurrentTx(txData);
       setIsModalOpen(true);

@@ -17,15 +17,12 @@ export const ActivityContent = () => {
   const userWallets: Wallet[] = useUserWallets() as Wallet[];
   const evmWallet = userWallets.find(w => w.chain == "EVM");
 
-  const getTxStatus = async (txHash: any) => { addTransactionListener(txHash) }
-
   return ( 
     <>
     <div className={isModalOpen ? "status-overlay active" : "status-overlay"}></div>
     <div className="activity-container">
    {evmWallet && deposits && deposits.map((tx, index) => {
-     const status = Number(tx.isError) ? "failed" : transactions.get(tx.hash) ? "completed" :  (transactions.get(tx.hash) === undefined) ? null : "loading";
-     (transactions.get(tx.hash) === undefined) && getTxStatus(tx.hash);
+     const status = Number(tx.isError) ? "failed" : transactions.get(tx.hash)?.pdaData ? "completed" :  (transactions.get(tx.hash)?.pdaData === undefined) ? null : "loading";
      return (
        <div key={index} className="deposit-transaction flex flex-row items-center" onClick={() => { setIsModalOpen(true); setCurrentTx(tx)}}>
             <img src="swap.png" alt="Swap" className="swap-image" style={{position: "absolute", width: "22px"}} hidden />

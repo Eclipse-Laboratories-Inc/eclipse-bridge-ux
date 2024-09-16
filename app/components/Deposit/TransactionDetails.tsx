@@ -23,19 +23,19 @@ const calculateFee = (gPrice: string, gUsed: string) => {
 export const TransactionDetails: React.FC<TransactionDetailsProps> = ({ fromDeposit, closeModal, tx }) => {
   const walletClient = useContext(WalletClientContext);
   const [gasPrice, ethPrice] = useContext(EthereumDataContext) ?? [0, 0];
-  const { transactions, pendingTransactions, addTransactionListener } = useTransaction();
+  const { transactions, addTransactionListener } = useTransaction();
   
-  const transaction = transactions.get(tx.hash);
+  const transaction = tx && transactions.get(tx.hash);
 
   const eclipseTx = transaction?.eclipseTxHash ?? null;
   const ethAmount = tx && Number(ethers.utils.formatEther(tx.value));
   const totalFee = tx && calculateFee(tx.gasPrice, tx.gasUsed);
 
-  const depositStatus = transaction?.pda ? "completed" : "loading"; 
+  const depositStatus = transaction?.eclipseTxHash ? "completed" : "loading"; 
   const ethTxStatus   = tx ? "completed" : "loading"
   
   useEffect(() => {
-    addTransactionListener(tx.hash);
+    tx && addTransactionListener(tx.hash);
   }, [tx])
 
   return (
@@ -98,7 +98,7 @@ export const TransactionDetails: React.FC<TransactionDetailsProps> = ({ fromDepo
             { eclipseTx && <a href={`https://explorer.eclipse.xyz/tx/${eclipseTx}`} target="_blank">View Txn</a> }
             </div>
           </div>
-          { tx && transaction?.pda && <div className={`flex flex-row items-center gap-1 ${depositStatus}-item status-item`}>
+          { tx && transaction?.pdaData && <div className={`flex flex-row items-center gap-1 ${depositStatus}-item status-item`}>
               <TransactionIcon iconType={depositStatus} className="tx-done-icon" /> 
               <span>{ depositStatus === "completed" ? "Done"  : "Processing" }</span>
             </div>
