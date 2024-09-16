@@ -1,6 +1,7 @@
 import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 import { WalletClientContext } from "@/app/context"
-import { getNonce, getEclipseTransaction, checkDepositWithPDA } from "@/lib/activityUtils"
+import { getLastDeposits, getNonce, getEclipseTransaction, checkDepositWithPDA } from "@/lib/activityUtils"
+import { useUserWallets, Wallet } from "@dynamic-labs/sdk-react-core";
 import { PublicKey } from '@solana/web3.js';
 
 interface Transaction {
@@ -24,17 +25,35 @@ interface TransactionContextType {
   addTransactionListener: (txHash: string) => void;
   getTransaction: (txHash: string) => Transaction | undefined;
   pendingTransactions: Transaction[];
+  deposits: any[] | null
 }
 
 export const TransactionContext = createContext<TransactionContextType | undefined>(undefined);
 
 export const TransactionProvider = ({ children } : { children: ReactNode}) => {
   const [transactions, setTransactions] = useState<Map<string, Transaction>>(new Map());
+  const [deposits, setDeposits] = useState<any[] | null>(null);
   const [pendingTransactions, setPendingTransactions] = useState<Transaction[]>([]);
   const walletClient = useContext(WalletClientContext);
   if (!walletClient) {
     throw new Error("WalletClientContext is undefined. Ensure that WalletClientContext.Provider is correctly set.");
   }
+
+  const userWallets: Wallet[] = useUserWallets() as Wallet[];
+  const evmWallet = userWallets.find(w => w.chain == "EVM");
+
+  useEffect(() => {
+    const fetchDeposits = async () => {
+      try {
+        const data = await getLastDeposits(evmWallet?.address || '');
+        setDeposits(data.reverse());
+      } catch (error) {
+        console.error("Error fetching deposits:", error);
+      }
+    };
+
+    fetchDeposits();
+  }, [evmWallet]);
 
   const addTransactionListener = (txHash: string) => {
     if (transactions.has(txHash)) {
@@ -89,7 +108,8 @@ export const TransactionProvider = ({ children } : { children: ReactNode}) => {
         transactions, 
         addTransactionListener, 
         getTransaction, 
-        pendingTransactions 
+        pendingTransactions,
+        deposits
       }}>
       {children}
     </TransactionContext.Provider>

@@ -5,7 +5,6 @@ import { TransactionIcon } from "../icons";
 import { timeAgo } from "@/lib/activityUtils"
 import { ethers } from 'ethers';
 import { WalletClientContext, EthereumDataContext } from "@/app/context"
-import { getNonce, getEclipseTransaction, checkDepositWithPDA } from "@/lib/activityUtils"
 import { useTransaction } from "../TransactionPool"
 
 interface TransactionDetailsProps {
