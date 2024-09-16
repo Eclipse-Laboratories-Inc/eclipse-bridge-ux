@@ -1,9 +1,10 @@
 "use client";
-import { useEffect, useState } from "react";
+import { useEffect, useState, createContext } from "react";
 import { Activity } from "../icons";
 import './styles.css';
 import { DepositContent } from "./DepositContent";
 import { ActivityContent } from "./ActivityContent";
+import { TransactionProvider } from '../TransactionPool';
 import ExtendedDetails from '../ExtendedDetails'
 import classNames from 'classnames';
 
@@ -28,6 +29,7 @@ const Deposit: React.FC<DepositProps> = ({ amountEther, setAmountEther }) => {
 
   return (
     <>
+    <TransactionProvider>
     <div className="deposit-container flex flex-col">
       <div className="deposit-card" style={{width: isModalOpen ? "0px" : "inherit"}}>
         <div className="header-tabs">
@@ -43,6 +45,7 @@ const Deposit: React.FC<DepositProps> = ({ amountEther, setAmountEther }) => {
         </div>
       { (activeTab === Tabs.Deposit) && !isModalOpen && <ExtendedDetails amountEther={amountEther} /> }
       </div>
+      </TransactionProvider>
     </>
   );
 }
