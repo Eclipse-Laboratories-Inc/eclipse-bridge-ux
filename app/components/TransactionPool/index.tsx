@@ -48,7 +48,7 @@ export const TransactionProvider = ({ children } : { children: ReactNode}) => {
         const data = await getLastDeposits(evmWallet?.address || '');
         setDeposits(data.reverse());
         
-        data && data.map((tx: any) => {console.log("add listener"); addTransactionListener(tx.hash)})
+        data && data.map((tx: any) => {addTransactionListener(tx.hash)})
       } catch (error) {
         console.error("Error fetching deposits:", error);
       }
@@ -63,7 +63,6 @@ export const TransactionProvider = ({ children } : { children: ReactNode}) => {
 
   const addTransactionListener = (txHash: string) => {
     if (transactions.has(txHash)) {
-      console.log("return")
       return;
     }
     const newTransaction: Transaction = { hash: txHash, status: 'pending', pdaData: undefined, eclipseTxHash: null, pda: null};

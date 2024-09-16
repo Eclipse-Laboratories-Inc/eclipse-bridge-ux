@@ -81,7 +81,6 @@ export async function getEclipseTransaction(address: PublicKey | null) {
 
   const data = await connection.getSignaturesForAddress(address);
   if (!data) return null
-  console.log("buggy", data)
   return data
 } 
 
