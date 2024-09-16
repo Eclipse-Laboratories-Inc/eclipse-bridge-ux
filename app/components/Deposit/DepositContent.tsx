@@ -127,6 +127,7 @@ export const DepositContent: React.FC<DepositContentProps> = ({ activeTxState, m
       setIsMmPopup(false)
     } catch (error) {
       setIsMmPopup(false)
+      setIsModalOpen(false);
       console.error('Failed to deposit', error);
     }
   };
