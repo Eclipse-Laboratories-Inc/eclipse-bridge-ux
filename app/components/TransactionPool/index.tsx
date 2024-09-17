@@ -3,32 +3,7 @@ import React, { createContext, useContext, useState, useEffect, ReactNode } from
 import { WalletClientContext } from "@/app/context"
 import { getLastDeposits, getNonce, getEclipseTransaction, checkDepositWithPDA } from "@/lib/activityUtils"
 import { useUserWallets, Wallet } from "@dynamic-labs/sdk-react-core";
-import { PublicKey } from '@solana/web3.js';
-
-interface Transaction {
-  hash: string;
-  status: 'pending' | 'confirmed';
-  eclipseTxHash: string | null;
-  pdaData: any | undefined;
-  pda: PublicKey | null
-}
-
-const defaultTransaction: Transaction = {
-    hash: "",
-    status: 'pending',
-    eclipseTxHash: null,
-    pdaData: undefined,
-    pda: null
-};
-
-interface TransactionContextType {
-  transactions: Map<string, Transaction>;
-  addTransactionListener: (txHash: string) => void;
-  getTransaction: (txHash: string) => Transaction | undefined;
-  pendingTransactions: Transaction[];
-  deposits: any[] | null
-  addNewDeposit: (txData: any) => void;
-}
+import { Transaction, defaultTransaction, TransactionContextType } from "./types"
 
 export const TransactionContext = createContext<TransactionContextType | undefined>(undefined);
 
@@ -45,6 +20,7 @@ export const TransactionProvider = ({ children } : { children: ReactNode}) => {
   useEffect(() => {
     const fetchDeposits = async () => {
       try {
+        setDeposits([]);
         const data = await getLastDeposits(evmWallet?.address || '');
         setDeposits(data.reverse());
         
