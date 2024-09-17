@@ -3,6 +3,7 @@ import { useContext, useEffect, useState } from "react";
 import { Cross, Arrow } from "../icons"
 import { TransactionIcon } from "../icons";
 import { timeAgo } from "@/lib/activityUtils"
+import config from "@/config"
 import { ethers } from 'ethers';
 import { WalletClientContext, EthereumDataContext } from "@/app/context"
 import { useTransaction } from "../TransactionPool"
@@ -71,7 +72,7 @@ export const TransactionDetails: React.FC<TransactionDetailsProps> = ({ fromDepo
         <div className="panel-elem flex flex-row items-center justify-between">
           <div className="left-side flex flex-row">
             <div className="white-text" style={{ fontSize: "16px" }}>1. Confirming transaction</div>
-            { tx && <div className="gray-text"><a href={`https://etherscan.io/tx/${tx.hash}`} target="_blank">View Txn</a></div> }
+            { tx && <div className="gray-text"><a href={`${config.evmExplorer}/tx/${tx.hash}`} target="_blank">View Txn</a></div> }
           </div>
           <div className={`flex flex-row items-center gap-1 ${ethTxStatus}-item status-item`}>
               <TransactionIcon iconType={ethTxStatus} className="tx-done-icon" /> 
@@ -95,7 +96,7 @@ export const TransactionDetails: React.FC<TransactionDetailsProps> = ({ fromDepo
           <div className="left-side flex flex-row">
             <div className={tx ? "white-text" : "gray-text"}>3. Receive on Eclipse</div>
             <div className="gray-text">
-            { eclipseTx && <a href={`https://explorer.eclipse.xyz/tx/${eclipseTx}`} target="_blank">View Txn</a> }
+            { eclipseTx && <a href={`https://explorer.eclipse.xyz/tx/${eclipseTx}?cluster=${config.eclipseExplorer}`} target="_blank">View Txn</a> }
             </div>
           </div>
           { tx && transaction?.pdaData && <div className={`flex flex-row items-center gap-1 ${depositStatus}-item status-item`}>

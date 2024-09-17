@@ -5,7 +5,9 @@ interface Config {
   bridgeContract: string,
   eclipseRpc: string,
   currentChain: Chain,
-  etherscanAddress: string
+  etherscanAddress: string,
+  evmExplorer: string,
+  eclipseExplorer: string
 }
 
 const config: Config = {
@@ -13,7 +15,10 @@ const config: Config = {
   bridgeContract: "0x83cB71D80078bf670b3EfeC6AD9E5E6407cD0fd1",
   eclipseRpc: "https://mainnetbeta-rpc.eclipse.xyz",
   currentChain: mainnet,
-  etherscanAddress: "https://api.etherscan.io/api"
+  etherscanAddress: "https://api.etherscan.io/api",
+
+  evmExplorer: "https://etherscan.com",
+  eclipseExplorer: "mainnet" 
 };
 
 export default config;
