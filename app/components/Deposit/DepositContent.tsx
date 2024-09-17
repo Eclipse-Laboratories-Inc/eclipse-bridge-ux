@@ -197,7 +197,7 @@ export const DepositContent: React.FC<DepositContentProps> = ({ activeTxState, m
           </div>
           <div className="network-box">
             <div className="network-info flex items-center justify-center">
-              <div className='network-info-left-section'>
+              <div className='network-info-left-section flex items-center justify-center'>
                 <img src="eth.png" alt="Ethereum" style={{ objectFit: "cover", height: "44px", width: "44px"}} />
                 <div className="input-inner-container">
                   <span className="direction">From</span>
