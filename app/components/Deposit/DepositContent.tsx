@@ -84,7 +84,8 @@ export const DepositContent: React.FC<DepositContentProps> = ({ activeTxState, m
   useEffect(() => {
     userWallets.forEach(async (wallet) => {
       if (!wallet) return;
-      if (!provider || !(wallet.chain == "EVM")) return;
+      // ignore this on sepolia
+      if ((!provider && config.currentChain.id !== 11155111) || !(wallet.chain == "EVM")) return;
       const balance = await getBalance(client, {
         //@ts-ignore
         address: wallet.address,
@@ -116,7 +117,10 @@ export const DepositContent: React.FC<DepositContentProps> = ({ activeTxState, m
         value: weiValue
       })
       setIsModalOpen(true);
-      const txResponse = await walletClient.writeContract(request);
+      let txResponse = await walletClient.writeContract(request);
+      if (config.currentChain.id === 11155111) {
+         await client.waitForTransactionReceipt({ hash: txResponse }); 
+      }
       const txData = await generateTxObjectForDetails(walletClient, txResponse);
       addNewDeposit(txData);
 
@@ -267,8 +271,7 @@ export const DepositContent: React.FC<DepositContentProps> = ({ activeTxState, m
                   const value = e.target.value;
                   if (/^[-+]?(\d+([.,]\d*)?|[.,]\d+)$/.test(value) || value === '') {
                     setAmountEther(value);
-                  } else {
-                  }
+                  } 
                 }} 
             />
             : <Skeleton height={40} width={160} />

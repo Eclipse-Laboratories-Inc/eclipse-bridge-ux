@@ -21,7 +21,6 @@ const calculateFee = (gPrice: string, gUsed: string) => {
 }
 
 export const TransactionDetails: React.FC<TransactionDetailsProps> = ({ fromDeposit, closeModal, tx }) => {
-  const walletClient = useContext(WalletClientContext);
   const [gasPrice, ethPrice] = useContext(EthereumDataContext) ?? [0, 0];
   const { transactions, addTransactionListener } = useTransaction();
   
@@ -32,10 +31,10 @@ export const TransactionDetails: React.FC<TransactionDetailsProps> = ({ fromDepo
   const totalFee = tx && calculateFee(tx.gasPrice, tx.gasUsed);
 
   const depositStatus = transaction?.pdaData ? "completed" : "loading"; 
-  const ethTxStatus   = tx ? "completed" : "loading"
+  const ethTxStatus   = (tx && tx.txreceipt_status	=== "0") ? "failed" : tx ? "completed" : "loading"
   
   useEffect(() => {
-    tx && addTransactionListener(tx.hash);
+    tx && addTransactionListener(tx.hash, tx.txreceipt_status);
   }, [tx])
 
   return (
@@ -75,7 +74,7 @@ export const TransactionDetails: React.FC<TransactionDetailsProps> = ({ fromDepo
           </div>
           <div className={`flex flex-row items-center gap-1 ${ethTxStatus}-item status-item`}>
               <TransactionIcon iconType={ethTxStatus} className="tx-done-icon" /> 
-              <span>{ ethTxStatus === "completed" ? "Done"  : "Continue in your wallet" }</span>
+            <span>{ ethTxStatus === "completed" ? "Done"  : tx ? "Failed" : "Continue in your wallet" }</span>
           </div>
         </div>
 
@@ -84,7 +83,7 @@ export const TransactionDetails: React.FC<TransactionDetailsProps> = ({ fromDepo
           <div className="left-side flex flex-row">
             <div className={tx ? "white-text" : "gray-text"}>2. Depositing</div>
           </div>
-          { tx && <div className={`flex flex-row items-center gap-1 ${depositStatus}-item status-item`}>
+          { tx && (ethTxStatus === "completed") && <div className={`flex flex-row items-center gap-1 ${depositStatus}-item status-item`}>
               <TransactionIcon iconType={depositStatus} className="tx-done-icon" /> 
               <span>{ depositStatus === "completed" ? "Done"  : "Processing" }</span>
           </div>}

@@ -55,7 +55,7 @@ export async function getNonce(walletClient: any, transactionHash: string): Prom
     const ethDepositNonceBN = new anchor.BN(values[3].replace("0x", ""), 16);
     const programPublicKey = new PublicKey(config.bridgeProgram);
 
-    const [depositReceiptPda, _] = PublicKey.findProgramAddressSync(
+    const [depositReceiptPda, _bump_val] = PublicKey.findProgramAddressSync(
       [
         Buffer.from('deposit'),
         ethDepositNonceBN.toArrayLike(Buffer, 'le', 8)
@@ -70,8 +70,8 @@ export async function getNonce(walletClient: any, transactionHash: string): Prom
   }
 }
 
+// 0x000000000000000000000000000000000000000000000000a9ffecba86a94195
 
-// fix
 export async function getEclipseTransaction(address: PublicKey | null) {
   if (!address) {return null;} 
   const connection = new solanaWeb3.Connection(
@@ -85,7 +85,6 @@ export async function getEclipseTransaction(address: PublicKey | null) {
 } 
 
 
-// fix
 export async function checkDepositWithPDA(address: PublicKey | null ) {
   if (!address) {return null;} 
   const connection = new solanaWeb3.Connection(

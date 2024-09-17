@@ -79,6 +79,22 @@ const cssOverrides = `
   }
 `
 
+const evmNetworks = [{
+    blockExplorerUrls: ['https://sepolia.etherscan.io/'],
+    chainId: 11155111,
+    chainName: 'Ethereum Sepolia',
+    iconUrls: ['https://app.dynamic.xyz/assets/networks/eth.svg'],
+    name: 'Ethereum',
+    nativeCurrency: {
+      decimals: 18,
+      name: 'Ether',
+      symbol: 'ETH',
+    },
+    networkId: 11155111,
+    rpcUrls: ['https://rpc.sepolia.org'],
+    vanityName: 'Sepolia',
+}]
+
 export default function RootLayout({
   children,
 }: {
@@ -117,7 +133,7 @@ export default function RootLayout({
                 mainContent.style.filter = ""
             }
           },
-          walletsFilter: (wallets) => wallets.filter((w) => w.walletConnector.supportedChains.includes("EVM") || w.key === "backpacksol"),
+          walletsFilter: (wallets) => wallets.filter((w) => w.walletConnector.supportedChains.includes("EVM") || w.key === "phantom"),
           environmentId: process.env.NEXT_PUBLIC_ENVIRONMENT_ID || '',
           walletConnectors: [EthereumWalletConnectors, SolanaWalletConnectors],
           initialAuthenticationMode: 'connect-only',
@@ -125,6 +141,7 @@ export default function RootLayout({
           privacyPolicyUrl: "https://www.eclipse.xyz/privacy-policy",
           termsOfServiceUrl: "https://www.eclipse.xyz/terms",
           overrides: {
+            evmNetworks: evmNetworks,
             chainDisplayValues: {
               solana: {
                  displayName: 'Eclipse'

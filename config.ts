@@ -9,11 +9,11 @@ interface Config {
 }
 
 const config: Config = {
-  bridgeProgram: "br1xwubggTiEZ6b7iNZUwfA3psygFfaXGfZ1heaN9AW",
-  bridgeContract: "0x83cB71D80078bf670b3EfeC6AD9E5E6407cD0fd1",
-  eclipseRpc: "https://mainnetbeta-rpc.eclipse.xyz",
-  currentChain: mainnet,
-  etherscanAddress: "https://api.etherscan.io/api"
+  bridgeProgram: "3gcds6MrhVNPBxoWR8kaXnv486w4VxWgh8GYPsfJaMRt",
+  bridgeContract: "0x11b8db6bb77ad8cb9af09d0867bb6b92477dd68e",
+  eclipseRpc: "https://testnet.dev2.eclipsenetwork.xyz",
+  currentChain: sepolia,
+  etherscanAddress: "https://api-sepolia.etherscan.io/api"
 };
 
 export default config;
