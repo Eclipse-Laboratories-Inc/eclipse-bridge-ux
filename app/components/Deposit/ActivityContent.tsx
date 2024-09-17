@@ -18,8 +18,10 @@ export const ActivityContent = ({ setActiveTab }: {setActiveTab: React.Dispatch<
   const userWallets: Wallet[] = useUserWallets() as Wallet[];
   const evmWallet = userWallets.find(w => w.chain == "EVM");
 
-  if (!evmWallet)  
-    return setActiveTab(Tabs.Deposit); 
+  if (!evmWallet) {  
+    setActiveTab(Tabs.Deposit); 
+    return <></>
+  }
      
   return ( 
     <>
