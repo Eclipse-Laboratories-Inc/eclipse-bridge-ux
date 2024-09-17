@@ -50,7 +50,7 @@ function ProfileAvatar() {
   //TODO: fix any usage here
   const toggleModal = (e: any) => {
   if (e) e.stopPropagation();
-    if (evmWallet && solWallet) {
+    if ((evmWallet || showModal) && solWallet) {
       const modalState = !showModal;
       setShowModal(modalState);
     
