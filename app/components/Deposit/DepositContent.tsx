@@ -222,7 +222,7 @@ export const DepositContent: React.FC<DepositContentProps> = ({ activeTxState, m
           </div>
 
           <div className="network-box">
-            <div className="network-info flex items-center justify-center">
+            <div className="network-info">
               <div className='network-info-left-section'>
                 <img src="eclipse.png" alt="Eclipse" style={{ objectFit: "cover", height: "44px", width: "44px"}} />
                 <div className="input-inner-container">
@@ -257,14 +257,19 @@ export const DepositContent: React.FC<DepositContentProps> = ({ activeTxState, m
           { (!evmWallet || evmWallet && (balanceEther >= 0))
             ? <input
                 disabled={!evmWallet || !solWallet}
-                type="number"
                 step="0.01"
                 min="0"
                 placeholder="0 ETH"
                 style={{fontWeight: "500"}}
                 value={amountEther}
 	              ref={setInputRef}
-                onChange={(e) => setAmountEther(e.target.value)} 
+                onChange={(e) => { 
+                  const value = e.target.value;
+                  if (/^[-+]?(\d+([.,]\d*)?|[.,]\d+)$/.test(value) || value === '') {
+                    setAmountEther(value);
+                  } else {
+                  }
+                }} 
             />
             : <Skeleton height={40} width={160} />
           }
