@@ -201,7 +201,7 @@ export const DepositContent: React.FC<DepositContentProps> = ({ activeTxState, m
                 <img src="eth.png" alt="Ethereum" style={{ objectFit: "cover", height: "44px", width: "44px"}} />
                 <div className="input-inner-container">
                   <span className="direction">From</span>
-                  <span className="name">Ethereum Mainnet</span>
+                  <span className="name">Ethereum Sepolia</span>
                 </div>
               </div>
               {evmWallet && <div className="network-info-right-section">
@@ -231,7 +231,7 @@ export const DepositContent: React.FC<DepositContentProps> = ({ activeTxState, m
                 <img src="eclipse.png" alt="Eclipse" style={{ objectFit: "cover", height: "44px", width: "44px"}} />
                 <div className="input-inner-container">
                   <span className="direction">To</span>
-                  <span className="name">Eclipse Mainnet</span>
+                  <span className="name">Eclipse Testnet</span>
                 </div>
               </div>
               {solWallet && <div className="network-info-right-section">

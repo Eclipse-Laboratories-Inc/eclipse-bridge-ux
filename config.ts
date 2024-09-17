@@ -5,7 +5,9 @@ interface Config {
   bridgeContract: string,
   eclipseRpc: string,
   currentChain: Chain,
-  etherscanAddress: string
+  etherscanAddress: string,
+  evmExplorer: string,
+  eclipseExplorer: string
 }
 
 const config: Config = {
@@ -13,7 +15,10 @@ const config: Config = {
   bridgeContract: "0x11b8db6bb77ad8cb9af09d0867bb6b92477dd68e",
   eclipseRpc: "https://testnet.dev2.eclipsenetwork.xyz",
   currentChain: sepolia,
-  etherscanAddress: "https://api-sepolia.etherscan.io/api"
+  etherscanAddress: "https://api-sepolia.etherscan.io/api",
+
+  evmExplorer: "https://sepolia.etherscan.com",
+  eclipseExplorer: "testnet"
 };
 
 export default config;
