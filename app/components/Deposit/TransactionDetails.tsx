@@ -31,7 +31,7 @@ export const TransactionDetails: React.FC<TransactionDetailsProps> = ({ fromDepo
   const ethAmount = tx && Number(ethers.utils.formatEther(tx.value));
   const totalFee = tx && calculateFee(tx.gasPrice, tx.gasUsed);
 
-  const depositStatus = transaction?.eclipseTxHash ? "completed" : "loading"; 
+  const depositStatus = transaction?.pdaData ? "completed" : "loading"; 
   const ethTxStatus   = tx ? "completed" : "loading"
   
   useEffect(() => {
