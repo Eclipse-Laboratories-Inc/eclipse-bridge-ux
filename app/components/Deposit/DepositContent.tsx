@@ -192,7 +192,7 @@ export const DepositContent: React.FC<DepositContentProps> = ({ activeTxState, m
             <TransferArrow />
           </div>
           <div className="network-box">
-            <div className="network-info">
+            <div className="network-info flex items-center justify-center">
               <div className='network-info-left-section'>
                 <img src="eth.png" alt="Ethereum" style={{ objectFit: "cover", height: "44px", width: "44px"}} />
                 <div className="input-inner-container">
@@ -222,7 +222,7 @@ export const DepositContent: React.FC<DepositContentProps> = ({ activeTxState, m
           </div>
 
           <div className="network-box">
-            <div className="network-info">
+            <div className="network-info flex items-center justify-center">
               <div className='network-info-left-section'>
                 <img src="eclipse.png" alt="Eclipse" style={{ objectFit: "cover", height: "44px", width: "44px"}} />
                 <div className="input-inner-container">
