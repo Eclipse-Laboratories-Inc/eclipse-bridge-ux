@@ -22,9 +22,7 @@ let walletClient: any;
 if (typeof window !== 'undefined' && window.ethereum) {
   walletClient = createWalletClient({
     chain: (process.env.NEXT_PUBLIC_CURRENT_CHAIN === "mainnet") ? mainnet : sepolia,
-    //@ts-ignore
-    //phantom overrides window.ethereum
-    transport: window.ethereum.providers ? custom(window.ethereum.providers[0]!) : custom(window.ethereum!),
+    transport: custom(window.ethereum!),
   })
 }
 

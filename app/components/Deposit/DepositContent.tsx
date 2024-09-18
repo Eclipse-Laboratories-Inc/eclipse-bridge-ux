@@ -55,7 +55,6 @@ export interface DepositContentProps {
 }
 
 export const DepositContent: React.FC<DepositContentProps> = ({ activeTxState, modalStuff, amountEther, setAmountEther }) => {
-  // const walletClient = useContext(WalletClientContext);
   const [walletClient, setWalletClient] = useState<WalletClient<Transport, Chain, Account> | null>(null);
   const [balanceEther, setAmountBalanceEther] = useState<number>(-1);
   const [isMmPopup, setIsMmPopup] = useState(false);
@@ -70,11 +69,7 @@ export const DepositContent: React.FC<DepositContentProps> = ({ activeTxState, m
 
   useEffect(() => {
     let lWalletClient = evmWallet?.connector.getWalletClient<WalletClient<Transport, Chain, Account>>();
-    if (lWalletClient) 
-      lWalletClient.chain = mainnet;
-  
     setWalletClient(lWalletClient ?? null);
-
   }, [evmWallet?.connector])
 
   const { handleUnlinkWallet, rpcProviders } = useDynamicContext();
@@ -128,7 +123,7 @@ export const DepositContent: React.FC<DepositContentProps> = ({ activeTxState, m
         args: [destinationBytes32, weiValue],
         account,
         value: weiValue,
-        chain: mainnet
+        chain: (process.env.NEXT_PUBLIC_CURRENT_CHAIN === "mainnet") ? mainnet : sepolia
       })
       setIsModalOpen(true);
       const txResponse = await walletClient!.writeContract(request);
