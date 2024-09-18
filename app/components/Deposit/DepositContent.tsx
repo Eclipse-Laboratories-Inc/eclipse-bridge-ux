@@ -10,7 +10,7 @@ import {
   Wallet,
 } from "@dynamic-labs/sdk-react-core";
 import { Cross, Loading, ConnectIcon } from "../icons";
-import { createPublicClient, formatEther, http, parseEther, walletClient } from 'viem'
+import { createPublicClient, formatEther, http, parseEther } from 'viem'
 import { getBalance } from 'viem/actions';
 import { truncateWalletAddress } from '@/lib/stringUtils';
 import { solanaToBytes32 } from '@/lib/solanaUtils'
