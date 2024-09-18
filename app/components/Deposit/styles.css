@@ -69,7 +69,7 @@
 }
 
  div.disabled {
-  cursor: url("../../../public/cursor.png") 0 0, auto;
+  cursor: url("../../../public/cursor.svg") 0 0, auto;
 }
 
 .arrow-container {
