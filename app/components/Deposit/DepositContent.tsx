@@ -118,9 +118,7 @@ export const DepositContent: React.FC<DepositContentProps> = ({ activeTxState, m
       })
       setIsModalOpen(true);
       const txResponse = await walletClient.writeContract(request);
-      if (process.env.NEXT_PUBLIC_CURRENT_CHAIN === "sepolia") {
-         await client.waitForTransactionReceipt({ hash: txResponse }); 
-      }
+      await client.waitForTransactionReceipt({ hash: txResponse }); 
       const txData = await generateTxObjectForDetails(walletClient, txResponse);
       addNewDeposit(txData);
 
