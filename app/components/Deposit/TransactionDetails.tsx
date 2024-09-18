@@ -68,7 +68,7 @@ export const TransactionDetails: React.FC<TransactionDetailsProps> = ({ fromDepo
       </div>
       <div className="status-panel">
         <div className="panel-elem flex flex-row items-center justify-between">
-          <div className="left-side flex flex-row">
+          <div className="left-side flex flex-row items-center">
             <div className="white-text" style={{ fontSize: "16px" }}>1. Confirming transaction</div>
             { tx && <div className="gray-text"><a href={`${process.env.NEXT_PUBLIC_EVM_EXPLORER}/tx/${tx.hash}`} target="_blank">View Txn</a></div> }
           </div>
@@ -91,7 +91,7 @@ export const TransactionDetails: React.FC<TransactionDetailsProps> = ({ fromDepo
 
 
         <div className="panel-elem flex flex-row items-center justify-between">
-          <div className="left-side flex flex-row">
+          <div className="left-side flex flex-row items-center">
             <div className={tx ? "white-text" : "gray-text"}>3. Receive on Eclipse</div>
             <div className="gray-text">
             { eclipseTx && <a href={`https://explorer.eclipse.xyz/tx/${eclipseTx}?cluster=${process.env.NEXT_PUBLIC_ECLIPSE_EXPLORER}`} target="_blank">View Txn</a> }
