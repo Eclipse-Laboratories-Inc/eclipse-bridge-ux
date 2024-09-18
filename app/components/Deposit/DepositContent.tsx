@@ -84,7 +84,8 @@ export const DepositContent: React.FC<DepositContentProps> = ({ activeTxState, m
   useEffect(() => {
     userWallets.forEach(async (wallet) => {
       if (!wallet) return;
-      if (!provider || !(wallet.chain == "EVM")) return;
+      // ignore this for sepolia
+      if (( !provider && process.env.NEXT_PUBLIC_CURRENT_CHAIN === "mainnet")|| !(wallet.chain == "EVM")) return;
       const balance = await getBalance(client, {
         //@ts-ignore
         address: wallet.address,
@@ -117,6 +118,9 @@ export const DepositContent: React.FC<DepositContentProps> = ({ activeTxState, m
       })
       setIsModalOpen(true);
       const txResponse = await walletClient.writeContract(request);
+      if (process.env.NEXT_PUBLIC_CURRENT_CHAIN === "sepolia") {
+         await client.waitForTransactionReceipt({ hash: txResponse }); 
+      }
       const txData = await generateTxObjectForDetails(walletClient, txResponse);
       addNewDeposit(txData);
 
@@ -197,7 +201,7 @@ export const DepositContent: React.FC<DepositContentProps> = ({ activeTxState, m
                 <img src="eth.png" alt="Ethereum" style={{ objectFit: "cover", height: "44px", width: "44px"}} />
                 <div className="input-inner-container">
                   <span className="direction">From</span>
-                  <span className="name">Ethereum Mainnet</span>
+                  <span className="name">{process.env.NEXT_PUBLIC_SOURCE_CHAIN_NAME}</span>
                 </div>
               </div>
               {evmWallet && <div className="network-info-right-section">
@@ -227,7 +231,7 @@ export const DepositContent: React.FC<DepositContentProps> = ({ activeTxState, m
                 <img src="eclipse.png" alt="Eclipse" style={{ objectFit: "cover", height: "44px", width: "44px"}} />
                 <div className="input-inner-container">
                   <span className="direction">To</span>
-                  <span className="name">Eclipse Mainnet</span>
+                  <span className="name">{process.env.NEXT_PUBLIC_TARGET_CHAIN_NAME}</span>
                 </div>
               </div>
               {solWallet && <div className="network-info-right-section">
