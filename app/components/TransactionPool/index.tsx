@@ -31,7 +31,7 @@ export const TransactionProvider = ({ children } : { children: ReactNode}) => {
     };
 
     fetchDeposits();
-  }, [evmWallet]);
+  }, [evmWallet?.address]);
 
   const addNewDeposit = (txData: any) => {
     setDeposits((prev: any) => [...prev, txData]);

@@ -29,12 +29,11 @@
   display: flex;
   justify-content: center;
   background-color: rgba(255, 255, 255, 0.03);
-
   border-radius: 10px;
-  margin-bottom: 20px;
   padding: 5px;
   border: 1px solid rgba(255, 255, 255, 0.1);
   gap: 5px;
+  margin-bottom: 20px;
 }
 
 .header-tabs div {

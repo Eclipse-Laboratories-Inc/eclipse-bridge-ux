@@ -120,12 +120,13 @@ export const DepositContent: React.FC<DepositContentProps> = ({ activeTxState, m
       const txResponse = await walletClient.writeContract(request);
       await client.waitForTransactionReceipt({ hash: txResponse }); 
       const txData = await generateTxObjectForDetails(walletClient, txResponse);
-      addNewDeposit(txData);
 
+      setAmountEther("");
+      addNewDeposit(txData);
       setCurrentTx(txData);
       setIsModalOpen(true);
-
       setIsMmPopup(false)
+
     } catch (error) {
       setIsMmPopup(false)
       setIsModalOpen(false);
@@ -209,7 +210,7 @@ export const DepositContent: React.FC<DepositContentProps> = ({ activeTxState, m
                 </div>
                 <div className="wallet-addresss">{truncateWalletAddress(userWallets.find(w => w.chain == "EVM")?.address || '')}</div>
               </div>}
-              { (!evmWallet && isEvmDisconnected)
+              { (!evmWallet && isEvmDisconnected && !isSolDisconnected)
                   ? <DynamicConnectButton>
                       <div className="flex items-center gap-1 modal-connect">
                         <div>
@@ -239,7 +240,7 @@ export const DepositContent: React.FC<DepositContentProps> = ({ activeTxState, m
                 </div>
                 <div className="wallet-addresss">{truncateWalletAddress(solWallet?.address || '')}</div>
               </div>}
-              { (!solWallet && isSolDisconnected)
+              { (!solWallet && isSolDisconnected && !isEvmDisconnected)
                   ? <DynamicConnectButton>
                       <div className="flex items-center gap-1 modal-connect">
                         <div>
