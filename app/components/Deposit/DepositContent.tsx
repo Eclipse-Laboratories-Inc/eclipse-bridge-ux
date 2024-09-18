@@ -10,7 +10,8 @@ import {
   Wallet,
 } from "@dynamic-labs/sdk-react-core";
 import { Cross, Loading, ConnectIcon } from "../icons";
-import { createPublicClient, formatEther, http, parseEther } from 'viem'
+import { createPublicClient, formatEther, http, parseEther, WalletClient } from 'viem'
+import { Transport, Chain, Account } from 'viem'
 import { getBalance } from 'viem/actions';
 import { truncateWalletAddress } from '@/lib/stringUtils';
 import { solanaToBytes32 } from '@/lib/solanaUtils'
@@ -55,16 +56,7 @@ export interface DepositContentProps {
 
 export const DepositContent: React.FC<DepositContentProps> = ({ activeTxState, modalStuff, amountEther, setAmountEther }) => {
   // const walletClient = useContext(WalletClientContext);
-  // const [walletClient, setWalletClient] = useState<WalletClient | null>(null);
-let walletClient: any;
-if (typeof window !== 'undefined' && window.ethereum) {
-  walletClient = createWalletClient({
-    chain: (process.env.NEXT_PUBLIC_CURRENT_CHAIN === "mainnet") ? mainnet : sepolia,
-    //@ts-ignore
-    //phantom overrides window.ethereum
-    transport: window.ethereum.providers ? custom(window.ethereum.providers[0]) : custom(window.ethereum!),
-  })
-}
+  const [walletClient, setWalletClient] = useState<WalletClient<Transport, Chain, Account> | null>(null);
   const [balanceEther, setAmountBalanceEther] = useState<number>(-1);
   const [isMmPopup, setIsMmPopup] = useState(false);
   const [isEvmDisconnected, setIsEvmDisconnected] = useState(false);
@@ -75,6 +67,15 @@ if (typeof window !== 'undefined' && window.ethereum) {
   const userWallets: Wallet[] = useUserWallets() as Wallet[];
   const solWallet = userWallets.find(w => w.chain == "SOL");
   const evmWallet = userWallets.find(w => w.chain == "EVM");
+
+  useEffect(() => {
+    let lWalletClient = evmWallet?.connector.getWalletClient<WalletClient<Transport, Chain, Account>>();
+    if (lWalletClient) 
+      lWalletClient.chain = mainnet;
+  
+    setWalletClient(lWalletClient ?? null);
+
+  }, [evmWallet?.connector])
 
   const { handleUnlinkWallet, rpcProviders } = useDynamicContext();
   const { addNewDeposit } = useTransaction();
@@ -126,7 +127,8 @@ if (typeof window !== 'undefined' && window.ethereum) {
         functionName: 'deposit',
         args: [destinationBytes32, weiValue],
         account,
-        value: weiValue
+        value: weiValue,
+        chain: mainnet
       })
       setIsModalOpen(true);
       const txResponse = await walletClient!.writeContract(request);
