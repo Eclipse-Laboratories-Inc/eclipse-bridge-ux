@@ -1,53 +1,34 @@
-import { useEffect, useState, useContext } from 'react';  
+import { useState } from 'react';  
 import { ethers } from 'ethers';
 import { Arrow } from "@/app/components/icons"; 
-import { TransactionIcon } from "../icons";
-import { getLastDeposits, timeAgo, getNonce, checkDepositWithPDA } from "@/lib/activityUtils";
+import { TransactionIcon, ActivityBoxIcon } from "../icons";
+import { timeAgo } from "@/lib/activityUtils";
 import { useUserWallets, Wallet } from "@dynamic-labs/sdk-react-core";
 import Skeleton from 'react-loading-skeleton'; 
-import { WalletClientContext } from "@/app/context";
 import { TransactionDetails } from "./TransactionDetails";  
+import { useTransaction } from "../TransactionPool"
+import { Tabs } from "./index";
 import "./activity.css";  
 
-export const ActivityContent = () => {
-  const walletClient = useContext(WalletClientContext);
-  const [deposits, setDeposits] = useState<any[] | null>(null);
+export const ActivityContent = ({ setActiveTab }: {setActiveTab: React.Dispatch<React.SetStateAction<Tabs>>}) => {
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   const [currentTx, setCurrentTx] = useState<any>(null);
-  const [eclipseStates, setEclipseStates] =  useState<Record<string, any>>({});
+  const { transactions, deposits } = useTransaction();
 
   const userWallets: Wallet[] = useUserWallets() as Wallet[];
   const evmWallet = userWallets.find(w => w.chain == "EVM");
 
-  const getTxStatus = async (txHash: any) => {
-    const data = await getNonce(walletClient, txHash);
-    const onEclipseStatus = data && await checkDepositWithPDA(data);
-    setEclipseStates(prevStates => ({
-      ...prevStates,
-      [txHash]: onEclipseStatus ? onEclipseStatus : null 
-    }))
+  if (!evmWallet) {  
+    setActiveTab(Tabs.Deposit); 
+    return <></>
   }
-
-  useEffect(() => {
-    const fetchDeposits = async () => {
-      try {
-        const data = await getLastDeposits(evmWallet?.address || '');
-        setDeposits(data.reverse());
-      } catch (error) {
-        console.error("Error fetching deposits:", error);
-      }
-    };
-
-    if (evmWallet) fetchDeposits();
-  }, [evmWallet]);
-
+     
   return ( 
     <>
     <div className={isModalOpen ? "status-overlay active" : "status-overlay"}></div>
     <div className="activity-container">
    {evmWallet && deposits && deposits.map((tx, index) => {
-     const status = Number(tx.isError) ? "failed" : eclipseStates[tx.hash] ? "completed" :  (eclipseStates[tx.hash] === undefined) ? null : "loading";
-     (eclipseStates[tx.hash] === undefined) && getTxStatus(tx.hash);
+     const status = Number(tx.isError) ? "failed" : transactions.get(tx.hash)?.pdaData ? "completed" :  (transactions.get(tx.hash)?.pdaData === undefined) ? null : "loading";
      return (
        <div key={index} className="deposit-transaction flex flex-row items-center" onClick={() => { setIsModalOpen(true); setCurrentTx(tx)}}>
             <img src="swap.png" alt="Swap" className="swap-image" style={{position: "absolute", width: "22px"}} hidden />
@@ -78,7 +59,14 @@ export const ActivityContent = () => {
           </div>
       </div>
     )})}
-    {(!evmWallet) ? <span>Connect your evm wallet first.</span> : (!(deposits?.length) && <span>You don&apos;t have any transactions.</span>)}
+    {(!evmWallet) 
+      ? <span>Connect your evm wallet first.</span> 
+      : (!(deposits?.length)
+        && <div className="flex flex-col items-center justify-center" style={{height: "90%", gap: "21px"}}>
+          <ActivityBoxIcon activityBoxClassName="" />
+          <span style={{fontSize: "18px", color: "rgba(255, 255, 255, 0.3)", fontWeight: "500", width: "266px"}}>You don’t have any transactions to show</span> 
+        </div>
+    )}
     </div> 
     { isModalOpen && <TransactionDetails fromDeposit={false} tx={currentTx} closeModal={() => setTimeout(() => setIsModalOpen(false), 100)} /> }
     </>

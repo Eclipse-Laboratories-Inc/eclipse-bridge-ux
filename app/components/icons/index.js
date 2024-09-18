@@ -12,3 +12,4 @@ export { default as Loading } from "./loading";
 export { default as TransferArrow } from "./transferArrow";
 export { default as Arrow } from "./arrow";
 export { default as TransactionIcon } from "./transaction-icon";
+export { default as ActivityBoxIcon } from "./activityBox";

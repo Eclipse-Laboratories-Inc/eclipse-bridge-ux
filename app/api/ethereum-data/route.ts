@@ -20,6 +20,7 @@ let isFetching = false;
 
 export async function GET() {
     const apiKey = process.env.ETHERSCAN_API_KEY || "";
+    const etherscanAddress = process.env.NEXT_PUBLIC_ETHERSCAN_ADDRESS;
     
     if (!apiKey) {
         return NextResponse.json({ error: 'API key is not configured' }, { status: 500 });
@@ -41,9 +42,9 @@ export async function GET() {
         console.log("Fetching new data from Etherscan");
 
         const [blockResponse, gasResponse, priceResponse] = await Promise.all([
-            fetch(`https://api.etherscan.io/api?module=proxy&action=eth_blockNumber&apikey=${apiKey}`, {cache: "no-store"}),
-            fetch(`https://api.etherscan.io/api?module=proxy&action=eth_gasPrice&apikey=${apiKey}`, {cache: "no-store"}),
-            fetch(`https://api.etherscan.io/api?module=stats&action=ethprice&apikey=${apiKey}`, {cache: "no-store"})
+            fetch(`${etherscanAddress}?module=proxy&action=eth_blockNumber&apikey=${apiKey}`, {cache: "no-store"}),
+            fetch(`${etherscanAddress}?module=proxy&action=eth_gasPrice&apikey=${apiKey}`, {cache: "no-store"}),
+            fetch(`${etherscanAddress}?module=stats&action=ethprice&apikey=${apiKey}`, {cache: "no-store"})
         ]);
 
         const blockData = await blockResponse.json();

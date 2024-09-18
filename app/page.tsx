@@ -1,7 +1,9 @@
 'use client';
+import { mainnet, sepolia } from "viem/chains";
 import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import Deposit from "./components/Deposit";
+import { TransactionProvider } from '@/app/components/TransactionPool';
 import {
   DynamicConnectButton,
   useUserWallets,
@@ -14,13 +16,12 @@ import useEthereumData from "@/lib/ethUtils";
 import { EthereumDataContext, WalletClientContext } from "./context"
 import Skeleton, { SkeletonTheme } from 'react-loading-skeleton'
 import MotionNumber from 'motion-number'
-import { createWalletClient, custom, WalletClient } from 'viem';
-import { mainnet } from 'viem/chains';
+import { createWalletClient, custom  } from 'viem';
 
 let walletClient: any;
 if (typeof window !== 'undefined' && window.ethereum) {
   walletClient = createWalletClient({
-    chain: mainnet,
+    chain: (process.env.NEXT_PUBLIC_CURRENT_CHAIN === "mainnet") ? mainnet : sepolia,
     transport: custom(window.ethereum!),
   })
 }
@@ -49,7 +50,7 @@ function ProfileAvatar() {
   //TODO: fix any usage here
   const toggleModal = (e: any) => {
   if (e) e.stopPropagation();
-    if (evmWallet && solWallet) {
+    if ((evmWallet || showModal) && solWallet) {
       const modalState = !showModal;
       setShowModal(modalState);
     
@@ -105,6 +106,7 @@ export default function Main() {
   return (
     <EthereumDataContext.Provider value={[gasPrice, ethPrice]}>
     <WalletClientContext.Provider value={walletClient}>
+    <TransactionProvider>
     <SkeletonTheme baseColor="#FFFFFF0A" highlightColor="#FFFFFF26">
     <div className="flex items-center text-white flex flex-col justify-between" id="main-content" style={{
           background: "black", 
@@ -172,6 +174,7 @@ export default function Main() {
       </footer>
     </div>
     </SkeletonTheme>
+    </TransactionProvider>
     </WalletClientContext.Provider >
     </ EthereumDataContext.Provider>
   );

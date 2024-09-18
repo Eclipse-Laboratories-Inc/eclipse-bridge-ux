@@ -1,4 +1,5 @@
 "use client";
+import { mainnet, sepolia } from "viem/chains";
 import React, { useEffect, useState, useCallback, useContext } from 'react';
 import './styles.css';
 import TransferArrow from '../icons/transferArrow';
@@ -9,8 +10,8 @@ import {
   Wallet,
 } from "@dynamic-labs/sdk-react-core";
 import { Cross, Loading, ConnectIcon } from "../icons";
-import { createPublicClient, formatEther, http, parseEther } from 'viem'
-import { mainnet } from 'viem/chains'
+import { createPublicClient, formatEther, http, parseEther, WalletClient } from 'viem'
+import { Transport, Chain, Account } from 'viem'
 import { getBalance } from 'viem/actions';
 import { truncateWalletAddress } from '@/lib/stringUtils';
 import { solanaToBytes32 } from '@/lib/solanaUtils'
@@ -18,9 +19,9 @@ import Skeleton from 'react-loading-skeleton'
 import 'react-loading-skeleton/dist/skeleton.css'
 import { generateTxObjectForDetails } from "@/lib/activityUtils";
 import { TransactionDetails } from "./TransactionDetails";
-import { WalletClientContext, EthereumDataContext} from "@/app/context";
+import { useTransaction } from "../TransactionPool"
 
-const CONTRACT_ADDRESS = '0x83cB71D80078bf670b3EfeC6AD9E5E6407cD0fd1';
+const CONTRACT_ADDRESS = process.env.NEXT_PUBLIC_BRIDGE_CONTRACT || ''
 const MIN_DEPOSIT_AMOUNT = 0.002;
 
 const CONTRACT_ABI = [{
@@ -40,20 +41,19 @@ const CONTRACT_ABI = [{
 }];
 
 const client = createPublicClient({
-  chain: mainnet,
+  chain: (process.env.NEXT_PUBLIC_CURRENT_CHAIN === "mainnet") ? mainnet : sepolia,
   transport: http(),
 })
-  
 
 export interface DepositContentProps {
+  activeTxState: [boolean, React.Dispatch<React.SetStateAction<boolean>>];
   modalStuff: [boolean, React.Dispatch<React.SetStateAction<boolean>>];
   amountEther: number | string | undefined;
   setAmountEther: React.Dispatch<React.SetStateAction<number | undefined | string>>;
 }
 
-export const DepositContent: React.FC<DepositContentProps> = ({ modalStuff, amountEther, setAmountEther }) => {
-  const [gasPrice, ethPrice] = useContext(EthereumDataContext) ?? [null, null];
-  const walletClient = useContext(WalletClientContext);
+export const DepositContent: React.FC<DepositContentProps> = ({ activeTxState, modalStuff, amountEther, setAmountEther }) => {
+  const [walletClient, setWalletClient] = useState<WalletClient<Transport, Chain, Account> | null>(null);
   const [balanceEther, setAmountBalanceEther] = useState<number>(-1);
   const [isMmPopup, setIsMmPopup] = useState(false);
   const [isEvmDisconnected, setIsEvmDisconnected] = useState(false);
@@ -65,13 +65,19 @@ export const DepositContent: React.FC<DepositContentProps> = ({ modalStuff, amou
   const solWallet = userWallets.find(w => w.chain == "SOL");
   const evmWallet = userWallets.find(w => w.chain == "EVM");
 
+  useEffect(() => {
+    let lWalletClient = evmWallet?.connector.getWalletClient<WalletClient<Transport, Chain, Account>>();
+    setWalletClient(lWalletClient ?? null);
+  }, [evmWallet?.connector])
+
   const { handleUnlinkWallet, rpcProviders } = useDynamicContext();
-  
+  const { addNewDeposit } = useTransaction();
+
   const provider = rpcProviders.evmDefaultProvider;
   const setInputRef = useCallback((node: HTMLInputElement) => {
     if (node) {
       const handleWheel = (event: WheelEvent) => {
-        event.preventDefault();
+        event.preventDefault()
       };
       node.addEventListener('wheel', handleWheel);
       return () => {
@@ -83,7 +89,8 @@ export const DepositContent: React.FC<DepositContentProps> = ({ modalStuff, amou
   useEffect(() => {
     userWallets.forEach(async (wallet) => {
       if (!wallet) return;
-      if (!provider || !(wallet.chain == "EVM")) return;
+      // ignore this for sepolia
+      if (( !provider && process.env.NEXT_PUBLIC_CURRENT_CHAIN === "mainnet")|| !(wallet.chain == "EVM")) return;
       const balance = await getBalance(client, {
         //@ts-ignore
         address: wallet.address,
@@ -97,32 +104,37 @@ export const DepositContent: React.FC<DepositContentProps> = ({ modalStuff, amou
     });
   }, [userWallets]);
 
-
   const submitDeposit = async () => {
     const destinationBytes32 = solanaToBytes32(solWallet?.address || '');
-    const [account] = await walletClient.getAddresses()
+    const [account] = await walletClient!.getAddresses()
     const weiValue = parseEther(amountEther?.toString() || '');
     setIsMmPopup(true);
 
     try {
       const { request } = await client.simulateContract({
+        //@ts-ignore
         address: CONTRACT_ADDRESS,
         abi: CONTRACT_ABI,
         functionName: 'deposit',
         args: [destinationBytes32, weiValue],
         account,
-        value: weiValue
+        value: weiValue,
+        chain: (process.env.NEXT_PUBLIC_CURRENT_CHAIN === "mainnet") ? mainnet : sepolia
       })
       setIsModalOpen(true);
-      const txResponse = await walletClient.writeContract(request);
+      const txResponse = await walletClient!.writeContract(request);
+      await client.waitForTransactionReceipt({ hash: txResponse }); 
       const txData = await generateTxObjectForDetails(walletClient, txResponse);
 
+      setAmountEther("");
+      addNewDeposit(txData);
       setCurrentTx(txData);
       setIsModalOpen(true);
-
       setIsMmPopup(false)
+
     } catch (error) {
       setIsMmPopup(false)
+      setIsModalOpen(false);
       console.error('Failed to deposit', error);
     }
   };
@@ -188,12 +200,12 @@ export const DepositContent: React.FC<DepositContentProps> = ({ modalStuff, amou
             <TransferArrow />
           </div>
           <div className="network-box">
-            <div className="network-info">
-              <div className='network-info-left-section'>
+            <div className="network-info flex items-center justify-center">
+              <div className='network-info-left-section flex items-center justify-center'>
                 <img src="eth.png" alt="Ethereum" style={{ objectFit: "cover", height: "44px", width: "44px"}} />
                 <div className="input-inner-container">
                   <span className="direction">From</span>
-                  <span className="name">Ethereum Mainnet</span>
+                  <span className="name">{process.env.NEXT_PUBLIC_SOURCE_CHAIN_NAME}</span>
                 </div>
               </div>
               {evmWallet && <div className="network-info-right-section">
@@ -203,7 +215,7 @@ export const DepositContent: React.FC<DepositContentProps> = ({ modalStuff, amou
                 </div>
                 <div className="wallet-addresss">{truncateWalletAddress(userWallets.find(w => w.chain == "EVM")?.address || '')}</div>
               </div>}
-              { (!evmWallet && isEvmDisconnected)
+              { (!evmWallet && isEvmDisconnected && !isSolDisconnected)
                   ? <DynamicConnectButton>
                       <div className="flex items-center gap-1 modal-connect">
                         <div>
@@ -223,7 +235,7 @@ export const DepositContent: React.FC<DepositContentProps> = ({ modalStuff, amou
                 <img src="eclipse.png" alt="Eclipse" style={{ objectFit: "cover", height: "44px", width: "44px"}} />
                 <div className="input-inner-container">
                   <span className="direction">To</span>
-                  <span className="name">Eclipse Mainnet</span>
+                  <span className="name">{process.env.NEXT_PUBLIC_TARGET_CHAIN_NAME}</span>
                 </div>
               </div>
               {solWallet && <div className="network-info-right-section">
@@ -233,7 +245,7 @@ export const DepositContent: React.FC<DepositContentProps> = ({ modalStuff, amou
                 </div>
                 <div className="wallet-addresss">{truncateWalletAddress(solWallet?.address || '')}</div>
               </div>}
-              { (!solWallet && isSolDisconnected)
+              { (!solWallet && isSolDisconnected && !isEvmDisconnected)
                   ? <DynamicConnectButton>
                       <div className="flex items-center gap-1 modal-connect">
                         <div>
@@ -253,14 +265,19 @@ export const DepositContent: React.FC<DepositContentProps> = ({ modalStuff, amou
           { (!evmWallet || evmWallet && (balanceEther >= 0))
             ? <input
                 disabled={!evmWallet || !solWallet}
-                type="number"
                 step="0.01"
                 min="0"
                 placeholder="0 ETH"
                 style={{fontWeight: "500"}}
                 value={amountEther}
 	              ref={setInputRef}
-                onChange={(e) => setAmountEther(e.target.value)} 
+                onChange={(e) => { 
+                  const value = e.target.value;
+                  if (/^[-+]?(\d+([.,]\d*)?|[.,]\d+)$/.test(value) || value === '') {
+                    setAmountEther(value);
+                  } else {
+                  }
+                }} 
             />
             : <Skeleton height={40} width={160} />
           }

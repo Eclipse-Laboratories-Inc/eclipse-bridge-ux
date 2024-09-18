@@ -5,7 +5,7 @@ import { toHex } from 'viem';
 export async function getWalletBalance(publicKey: String) {
   // Connect to the Solana mainnet
   const connection = new solanaWeb3.Connection(
-    'https://mainnetbeta-rpc.eclipse.xyz',
+     process.env.NEXT_PUBLIC_ECLIPSE_RPC,
     'confirmed'
   );
 

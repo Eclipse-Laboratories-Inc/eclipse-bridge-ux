@@ -52,7 +52,7 @@ export async function getNonce(walletClient: any, transactionHash: string): Prom
     ], data.logs[0].data);
 
     const ethDepositNonceBN = new anchor.BN(values[3].replace("0x", ""), 16);
-    const programPublicKey = new PublicKey("br1xwubggTiEZ6b7iNZUwfA3psygFfaXGfZ1heaN9AW");
+    const programPublicKey = new PublicKey(process.env.NEXT_PUBLIC_BRIDGE_PROGRAM || '');
 
     const [depositReceiptPda, _] = PublicKey.findProgramAddressSync(
       [
@@ -74,11 +74,12 @@ export async function getNonce(walletClient: any, transactionHash: string): Prom
 export async function getEclipseTransaction(address: PublicKey | null) {
   if (!address) {return null;} 
   const connection = new solanaWeb3.Connection(
-    'https://mainnetbeta-rpc.eclipse.xyz',
+    process.env.NEXT_PUBLIC_ECLIPSE_RPC,
     'confirmed'
   );
 
   const data = await connection.getSignaturesForAddress(address);
+  if (!data) return null
   return data
 } 
 
@@ -87,7 +88,7 @@ export async function getEclipseTransaction(address: PublicKey | null) {
 export async function checkDepositWithPDA(address: PublicKey | null ) {
   if (!address) {return null;} 
   const connection = new solanaWeb3.Connection(
-    'https://mainnetbeta-rpc.eclipse.xyz',
+    process.env.NEXT_PUBLIC_ECLIPSE_RPC,
     'confirmed'
   );
 
@@ -109,21 +110,21 @@ export const timeAgo = (timestamp: number): string => {
   const secondsPast = Math.floor((now - timestamp * 1000) / 1000); 
 
   if (secondsPast < 60) {
-    return `${secondsPast} seconds ago`;
+    return `${secondsPast} Secs ago`;
   } else if (secondsPast < 3600) {
     const minutes = Math.floor(secondsPast / 60);
-    return minutes === 1 ? `1 minute ago` : `${minutes} minutes ago`;
+    return minutes === 1 ? `1 Min ago` : `${minutes} Mins ago`;
   } else if (secondsPast < 86400) {
     const hours = Math.floor(secondsPast / 3600);
-    return hours === 1 ? `1 hour ago` : `${hours} hours ago`;
+    return hours === 1 ? `1 Hour ago` : `${hours} Hours ago`;
   } else if (secondsPast < 2592000) { 
     const days = Math.floor(secondsPast / 86400);
-    return days === 1 ? `1 day ago` : `${days} days ago`;
+    return days === 1 ? `1 Day ago` : `${days} Days ago`;
   } else if (secondsPast < 31536000) {
     const months = Math.floor(secondsPast / 2592000);
-    return months === 1 ? `1 month ago` : `${months} months ago`;
+    return months === 1 ? `1 Month ago` : `${months} Months ago`;
   } else {
     const years = Math.floor(secondsPast / 31536000);
-    return years === 1 ? `1 year ago` : `${years} years ago`;
+    return years === 1 ? `1 Year ago` : `${years} Years ago`;
   }
 };
