@@ -10,7 +10,7 @@ import {
   Wallet,
 } from "@dynamic-labs/sdk-react-core";
 import { Cross, Loading, ConnectIcon } from "../icons";
-import { createPublicClient, formatEther, http, parseEther } from 'viem'
+import { createPublicClient, formatEther, http, parseEther, walletClient } from 'viem'
 import { getBalance } from 'viem/actions';
 import { truncateWalletAddress } from '@/lib/stringUtils';
 import { solanaToBytes32 } from '@/lib/solanaUtils'
@@ -19,6 +19,7 @@ import 'react-loading-skeleton/dist/skeleton.css'
 import { generateTxObjectForDetails } from "@/lib/activityUtils";
 import { TransactionDetails } from "./TransactionDetails";
 import { WalletClientContext} from "@/app/context";
+import { createWalletClient, custom  } from 'viem';
 import { useTransaction } from "../TransactionPool"
 
 const CONTRACT_ADDRESS = process.env.NEXT_PUBLIC_BRIDGE_CONTRACT || ''
@@ -53,7 +54,17 @@ export interface DepositContentProps {
 }
 
 export const DepositContent: React.FC<DepositContentProps> = ({ activeTxState, modalStuff, amountEther, setAmountEther }) => {
-  const walletClient = useContext(WalletClientContext);
+  // const walletClient = useContext(WalletClientContext);
+  // const [walletClient, setWalletClient] = useState<WalletClient | null>(null);
+let walletClient: any;
+if (typeof window !== 'undefined' && window.ethereum) {
+  walletClient = createWalletClient({
+    chain: (process.env.NEXT_PUBLIC_CURRENT_CHAIN === "mainnet") ? mainnet : sepolia,
+    //@ts-ignore
+    //phantom overrides window.ethereum
+    transport: window.ethereum.providers ? custom(window.ethereum.providers[0]) : custom(window.ethereum!),
+  })
+}
   const [balanceEther, setAmountBalanceEther] = useState<number>(-1);
   const [isMmPopup, setIsMmPopup] = useState(false);
   const [isEvmDisconnected, setIsEvmDisconnected] = useState(false);
@@ -99,11 +110,10 @@ export const DepositContent: React.FC<DepositContentProps> = ({ activeTxState, m
     });
   }, [userWallets]);
 
-
   const submitDeposit = async () => {
     const destinationBytes32 = solanaToBytes32(solWallet?.address || '');
     console.log("account gg")
-    const [account] = await walletClient.getAddresses()
+    const [account] = await walletClient!.getAddresses()
     console.log(account)
     const weiValue = parseEther(amountEther?.toString() || '');
     setIsMmPopup(true);
@@ -119,7 +129,7 @@ export const DepositContent: React.FC<DepositContentProps> = ({ activeTxState, m
         value: weiValue
       })
       setIsModalOpen(true);
-      const txResponse = await walletClient.writeContract(request);
+      const txResponse = await walletClient!.writeContract(request);
       await client.waitForTransactionReceipt({ hash: txResponse }); 
       const txData = await generateTxObjectForDetails(walletClient, txResponse);
 
