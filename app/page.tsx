@@ -19,7 +19,7 @@ import MotionNumber from 'motion-number'
 import { createWalletClient, custom  } from 'viem';
 
 let walletClient: any;
-if (typeof window !== 'undefined' && window.ethereum) {
+if (typeof window !== 'undefined' && window.ethereum && window.ethereum.providers) {
   walletClient = createWalletClient({
     chain: (process.env.NEXT_PUBLIC_CURRENT_CHAIN === "mainnet") ? mainnet : sepolia,
     //@ts-ignore
