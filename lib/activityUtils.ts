@@ -51,7 +51,6 @@ export async function getNonce(walletClient: any, transactionHash: string): Prom
       { name: 'extraData', type: 'bytes' }
     ], data.logs[0].data);
 
-    console.log(process.env.NEXT_PUBLIC_BRIDGE_PROGRAM, "kurdistanee")
     const ethDepositNonceBN = new anchor.BN(values[3].replace("0x", ""), 16);
     const programPublicKey = new PublicKey(process.env.NEXT_PUBLIC_BRIDGE_PROGRAM || '');
 

@@ -102,7 +102,9 @@ export const DepositContent: React.FC<DepositContentProps> = ({ activeTxState, m
 
   const submitDeposit = async () => {
     const destinationBytes32 = solanaToBytes32(solWallet?.address || '');
+    console.log("account gg")
     const [account] = await walletClient.getAddresses()
+    console.log(account)
     const weiValue = parseEther(amountEther?.toString() || '');
     setIsMmPopup(true);
 
