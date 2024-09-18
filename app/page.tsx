@@ -1,5 +1,5 @@
 'use client';
-import config from "@/config";
+import { mainnet, sepolia } from "viem/chains";
 import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import Deposit from "./components/Deposit";
@@ -21,7 +21,7 @@ import { createWalletClient, custom  } from 'viem';
 let walletClient: any;
 if (typeof window !== 'undefined' && window.ethereum) {
   walletClient = createWalletClient({
-    chain: config.currentChain,
+    chain: (process.env.NEXT_PUBLIC_CURRENT_CHAIN === "mainnet") ? mainnet : sepolia,
     transport: custom(window.ethereum!),
   })
 }

@@ -1,5 +1,5 @@
 "use client";
-import config from "@/config"
+import { mainnet, sepolia } from "viem/chains";
 import React, { useEffect, useState, useCallback, useContext } from 'react';
 import './styles.css';
 import TransferArrow from '../icons/transferArrow';
@@ -21,7 +21,7 @@ import { TransactionDetails } from "./TransactionDetails";
 import { WalletClientContext} from "@/app/context";
 import { useTransaction } from "../TransactionPool"
 
-const CONTRACT_ADDRESS = config.bridgeContract;
+const CONTRACT_ADDRESS = process.env.NEXT_PUBLIC_BRIDGE_CONTRACT || ''
 const MIN_DEPOSIT_AMOUNT = 0.002;
 
 const CONTRACT_ABI = [{
@@ -41,7 +41,7 @@ const CONTRACT_ABI = [{
 }];
 
 const client = createPublicClient({
-  chain: config.currentChain,
+  chain: (process.env.NEXT_PUBLIC_CURRENT_CHAIN === "mainnet") ? mainnet : sepolia,
   transport: http(),
 })
 

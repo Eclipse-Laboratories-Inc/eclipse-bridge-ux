@@ -1,5 +1,5 @@
 import { useUserWallets, Wallet } from '@dynamic-labs/sdk-react-core';
-import config from "@/config"
+import { mainnet, sepolia } from "viem/chains";
 import React, { useEffect, useState, forwardRef } from 'react';
 import { createPublicClient, formatEther, http } from 'viem';
 import { useDynamicContext, DynamicConnectButton } from "@dynamic-labs/sdk-react-core";
@@ -10,7 +10,7 @@ import { truncateWalletAddress } from '@/lib/stringUtils';
 import { getWalletBalance } from '@/lib/solanaUtils';
 
 const client = createPublicClient({
-  chain: config.currentChain,
+  chain: (process.env.NEXT_PUBLIC_CURRENT_CHAIN === "mainnet") ? mainnet : sepolia,
   transport: http(),
 })
 

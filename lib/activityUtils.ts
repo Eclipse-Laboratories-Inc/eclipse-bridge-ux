@@ -1,6 +1,5 @@
 import { decodeAbiParameters } from 'viem'
 const solanaWeb3 = require('@solana/web3.js');
-import config from "@/config"
 import { PublicKey } from '@solana/web3.js';
 import * as anchor from '@project-serum/anchor';
 
@@ -52,8 +51,9 @@ export async function getNonce(walletClient: any, transactionHash: string): Prom
       { name: 'extraData', type: 'bytes' }
     ], data.logs[0].data);
 
+    console.log(process.env.NEXT_PUBLIC_BRIDGE_PROGRAM, "kurdistanee")
     const ethDepositNonceBN = new anchor.BN(values[3].replace("0x", ""), 16);
-    const programPublicKey = new PublicKey(config.bridgeProgram);
+    const programPublicKey = new PublicKey(process.env.NEXT_PUBLIC_BRIDGE_PROGRAM || '');
 
     const [depositReceiptPda, _] = PublicKey.findProgramAddressSync(
       [
@@ -75,7 +75,7 @@ export async function getNonce(walletClient: any, transactionHash: string): Prom
 export async function getEclipseTransaction(address: PublicKey | null) {
   if (!address) {return null;} 
   const connection = new solanaWeb3.Connection(
-    config.eclipseRpc,
+    process.env.NEXT_PUBLIC_ECLIPSE_RPC,
     'confirmed'
   );
 
@@ -89,7 +89,7 @@ export async function getEclipseTransaction(address: PublicKey | null) {
 export async function checkDepositWithPDA(address: PublicKey | null ) {
   if (!address) {return null;} 
   const connection = new solanaWeb3.Connection(
-    config.eclipseRpc,
+    process.env.NEXT_PUBLIC_ECLIPSE_RPC,
     'confirmed'
   );
 
