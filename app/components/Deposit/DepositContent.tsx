@@ -19,8 +19,6 @@ import Skeleton from 'react-loading-skeleton'
 import 'react-loading-skeleton/dist/skeleton.css'
 import { generateTxObjectForDetails } from "@/lib/activityUtils";
 import { TransactionDetails } from "./TransactionDetails";
-import { WalletClientContext} from "@/app/context";
-import { createWalletClient, custom  } from 'viem';
 import { useTransaction } from "../TransactionPool"
 
 const CONTRACT_ADDRESS = process.env.NEXT_PUBLIC_BRIDGE_CONTRACT || ''
@@ -108,9 +106,7 @@ export const DepositContent: React.FC<DepositContentProps> = ({ activeTxState, m
 
   const submitDeposit = async () => {
     const destinationBytes32 = solanaToBytes32(solWallet?.address || '');
-    console.log("account gg")
     const [account] = await walletClient!.getAddresses()
-    console.log(account)
     const weiValue = parseEther(amountEther?.toString() || '');
     setIsMmPopup(true);
 
