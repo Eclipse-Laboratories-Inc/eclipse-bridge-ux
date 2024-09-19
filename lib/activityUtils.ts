@@ -33,6 +33,7 @@ export async function generateTxObjectForDetails(walletClient: any, txHash: stri
     gasPrice: transaction.gasPrice, // gas price in wei
     gasUsed: receipt.gasUsed, // gas used in the transaction
     timeStamp: parseInt(block.timestamp, 16), // block timestamp in seconds
+    txreceipt_status: receipt.status.replace("0x", "") 
   };
 }
 
@@ -42,6 +43,7 @@ export async function getNonce(walletClient: any, transactionHash: string): Prom
       method: "eth_getTransactionReceipt",
       params: [transactionHash]
     });
+    if (!data) return null;
     if (!data.logs[0]) return null; 
 
     const values = decodeAbiParameters([

@@ -23,6 +23,7 @@ if (typeof window !== 'undefined' && window.ethereum) {
   walletClient = createWalletClient({
     chain: (process.env.NEXT_PUBLIC_CURRENT_CHAIN === "mainnet") ? mainnet : sepolia,
     transport: custom(window.ethereum!),
+    cacheTime: 0
   })
 }
 
@@ -122,6 +123,7 @@ export default function Main() {
           <Link href="https://www.eclipse.xyz/terms"> Terms & Conditions </Link>
           <Link href="https://www.eclipse.xyz/privacy-policy"> Privacy Policy </Link>
           <Link href="https://docs.eclipse.xyz">  Docs </Link>
+          <Link href="https://discord.gg/eclipse-fnd">  Discord </Link>
         </div>
           <div className="flex flex-row info-footer justify-between" style={{}}>
           <div className="ml-[28px] flex flex-row items-center gap-2">

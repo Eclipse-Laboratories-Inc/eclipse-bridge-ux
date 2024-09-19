@@ -40,8 +40,8 @@
 body, html {
   font-family: 'IBM Plex Sans', sans-serif;
   height: 100%;
+  overflow-x: hidden;
   color: rgb(var(--foreground-rgb));
-  overflow: hidden;
   background: linear-gradient(
       to bottom,
       transparent,
@@ -119,6 +119,9 @@ footer {
 }
 
 .mobile-logo { display: none; }
+.legal-footer a:hover {
+  color: #A1FEA0; 
+}
 
 @media (max-width: 768px ){
   .desktop-logo { display: none; }

@@ -1,7 +1,8 @@
 "use client"
 import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
-import { WalletClientContext } from "@/app/context"
 import { getLastDeposits, getNonce, getEclipseTransaction, checkDepositWithPDA } from "@/lib/activityUtils"
+import { createPublicClient, formatEther, http, parseEther, WalletClient } from 'viem'
+import { mainnet, sepolia } from "viem/chains";
 import { useUserWallets, Wallet } from "@dynamic-labs/sdk-react-core";
 import { Transaction, defaultTransaction, TransactionContextType } from "./types"
 
@@ -11,11 +12,16 @@ export const TransactionProvider = ({ children } : { children: ReactNode}) => {
   const [transactions, setTransactions] = useState<Map<string, Transaction>>(new Map());
   const [deposits, setDeposits] = useState<any[] | null>(null);
   const [pendingTransactions, setPendingTransactions] = useState<Transaction[]>([]);
-
-  const walletClient = useContext(WalletClientContext);
+  const [lastAddress, setLastAddress] = useState<string>(''); 
 
   const userWallets: Wallet[] = useUserWallets() as Wallet[];
   const evmWallet = userWallets.find(w => w.chain == "EVM");
+
+  const client = createPublicClient({
+    chain: (process.env.NEXT_PUBLIC_CURRENT_CHAIN === "mainnet") ? mainnet : sepolia,
+    transport: (process.env.NEXT_PUBLIC_CURRENT_CHAIN === "mainnet") ? http() : http("https://sepolia.drpc.org"),
+    cacheTime: 0
+  })
 
   useEffect(() => {
     const fetchDeposits = async () => {
@@ -24,12 +30,15 @@ export const TransactionProvider = ({ children } : { children: ReactNode}) => {
         const data = await getLastDeposits(evmWallet?.address || '');
         setDeposits(data.reverse());
         
-        data && data.map((tx: any) => {addTransactionListener(tx.hash, tx.txreceipt_status)})
+        data && data.map((tx: any, index: number) => {setTimeout(() => {addTransactionListener(tx.hash, tx.txreceipt_status)}, index * 0.1)})
       } catch (error) {
         console.error("Error fetching deposits:", error);
       }
     };
-    fetchDeposits();
+    if (evmWallet?.address.startsWith("0x") && (evmWallet?.address !== lastAddress)) { 
+      setLastAddress(evmWallet?.address);
+      fetchDeposits();
+    }
   }, [evmWallet?.address]);
 
   const addNewDeposit = (txData: any) => {
@@ -50,8 +59,7 @@ export const TransactionProvider = ({ children } : { children: ReactNode}) => {
   const checkTransactionStatus = (txHash: string, l1Status: string) => {
     const fetchEclipseTx = async () => {
       const oldTx = transactions.get(txHash) ?? defaultTransaction;
-
-      const pda     = oldTx.pda ?? await getNonce(walletClient, txHash);   
+      const pda     = oldTx.pda ?? await getNonce(client, txHash);   
       const eclTx   = oldTx.eclipseTxHash ?? await getEclipseTransaction(pda);  
       const pdaData = await checkDepositWithPDA(pda);  
 
@@ -73,7 +81,7 @@ export const TransactionProvider = ({ children } : { children: ReactNode}) => {
       (pdaData || l1Status	=== "0" ) && setPendingTransactions((prev) =>
         prev.filter((tx) => tx.hash !== txHash)
       );
-      if (!pdaData || !eclTx) setTimeout(() => {fetchEclipseTx()}, 2000);
+      if ((!pdaData || !eclTx) && (l1Status !== "0")) setTimeout(() => {fetchEclipseTx()}, 2000);
     };
 
     fetchEclipseTx();

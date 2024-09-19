@@ -1,6 +1,6 @@
 "use client";
 import { mainnet, sepolia } from "viem/chains";
-import React, { useEffect, useState, useCallback, useContext } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import './styles.css';
 import TransferArrow from '../icons/transferArrow';
 import {
@@ -9,7 +9,7 @@ import {
   useDynamicContext,
   Wallet,
 } from "@dynamic-labs/sdk-react-core";
-import { Cross, Loading, ConnectIcon } from "../icons";
+import { Cross, ConnectIcon } from "../icons";
 import { createPublicClient, formatEther, http, parseEther, WalletClient } from 'viem'
 import { Transport, Chain, Account } from 'viem'
 import { getBalance } from 'viem/actions';
@@ -42,7 +42,8 @@ const CONTRACT_ABI = [{
 
 const client = createPublicClient({
   chain: (process.env.NEXT_PUBLIC_CURRENT_CHAIN === "mainnet") ? mainnet : sepolia,
-  transport: http(),
+  transport: (process.env.NEXT_PUBLIC_CURRENT_CHAIN === "mainnet") ? http() : http("https://sepolia.drpc.org"),
+  cacheTime: 0
 })
 
 export interface DepositContentProps {
@@ -55,7 +56,6 @@ export interface DepositContentProps {
 export const DepositContent: React.FC<DepositContentProps> = ({ activeTxState, modalStuff, amountEther, setAmountEther }) => {
   const [walletClient, setWalletClient] = useState<WalletClient<Transport, Chain, Account> | null>(null);
   const [balanceEther, setAmountBalanceEther] = useState<number>(-1);
-  const [isMmPopup, setIsMmPopup] = useState(false);
   const [isEvmDisconnected, setIsEvmDisconnected] = useState(false);
   const [isSolDisconnected, setIsSolDisconnected] = useState(false);
   const [isModalOpen, setIsModalOpen] = modalStuff; 
@@ -67,6 +67,10 @@ export const DepositContent: React.FC<DepositContentProps> = ({ activeTxState, m
 
   useEffect(() => {
     let lWalletClient = evmWallet?.connector.getWalletClient<WalletClient<Transport, Chain, Account>>();
+    if (lWalletClient) { 
+      lWalletClient.cacheTime = 0;
+    }
+
     setWalletClient(lWalletClient ?? null);
   }, [evmWallet?.connector])
 
@@ -121,9 +125,13 @@ export const DepositContent: React.FC<DepositContentProps> = ({ activeTxState, m
         value: weiValue,
         chain: (process.env.NEXT_PUBLIC_CURRENT_CHAIN === "mainnet") ? mainnet : sepolia
       })
-      const txResponse = await walletClient!.writeContract(request);
-      await client.waitForTransactionReceipt({ hash: txResponse, retryCount: 150 }); 
-      const txData = await generateTxObjectForDetails(walletClient, txResponse);
+      let txResponse = await walletClient!.writeContract(request);
+      // rabby returns the tx hash without 0x
+      if (!txResponse.startsWith("0x"))
+        txResponse = `0x${txResponse}`
+
+      await client.waitForTransactionReceipt({ hash: txResponse, retryCount: 150, retryDelay: 2_000 }); 
+      const txData = await generateTxObjectForDetails(client, txResponse);
 
       setAmountEther("");
       addNewDeposit(txData);
@@ -148,9 +156,6 @@ export const DepositContent: React.FC<DepositContentProps> = ({ activeTxState, m
     if (!amountEther) {
       return 'submit-button disabled'
     }  
-    if (isMmPopup) {
-      return 'submit-button waiting'
-    }
     if (parseFloat(amountEther as string) < MIN_DEPOSIT_AMOUNT) {
       return 'submit-button disabled'
     }
@@ -170,9 +175,6 @@ export const DepositContent: React.FC<DepositContentProps> = ({ activeTxState, m
     }
     if (!evmWallet && !solWallet) {
       return "Connect Wallets"
-    }
-    if (isMmPopup) {
-      return "Confirm transaction in your wallet"
     }
     if (!amountEther) {
       return 'Deposit'
@@ -279,7 +281,6 @@ export const DepositContent: React.FC<DepositContentProps> = ({ activeTxState, m
             : <Skeleton height={40} width={160} />
           }
           </div> 
-            
             <div className="token-display" style={{width: "45%"}}>
               <div className="token-icon">
                 <img src="eth.png" alt="ETH Icon" />
@@ -312,7 +313,6 @@ export const DepositContent: React.FC<DepositContentProps> = ({ activeTxState, m
             </DynamicConnectButton>
         : 
             <button className={`w-full deposit-button p-4 ${determineButtonClass()}`} onClick={submitDeposit}>
-            {(isMmPopup) ? <Loading loadingClassName="loading-animation" />  : null }
               {determineButtonText()}
             </button>
         }

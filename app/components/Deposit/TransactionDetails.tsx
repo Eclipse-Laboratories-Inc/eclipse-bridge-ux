@@ -35,7 +35,7 @@ export const TransactionDetails: React.FC<TransactionDetailsProps> = ({ fromDepo
   const ethTxStatus   = (tx && tx.txreceipt_status	=== "0") ? "failed" : tx ? "completed" : "loading"
   
   useEffect(() => {
-    tx && addTransactionListener(tx.hash);
+    tx && addTransactionListener(tx.hash, tx.txreceipt_status);
   }, [tx])
 
   return (
