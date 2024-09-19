@@ -105,10 +105,10 @@ export const DepositContent: React.FC<DepositContentProps> = ({ activeTxState, m
   }, [userWallets]);
 
   const submitDeposit = async () => {
+    setIsModalOpen(true);
     const destinationBytes32 = solanaToBytes32(solWallet?.address || '');
     const [account] = await walletClient!.getAddresses()
     const weiValue = parseEther(amountEther?.toString() || '');
-    setIsMmPopup(true);
 
     try {
       const { request } = await client.simulateContract({
@@ -121,19 +121,16 @@ export const DepositContent: React.FC<DepositContentProps> = ({ activeTxState, m
         value: weiValue,
         chain: (process.env.NEXT_PUBLIC_CURRENT_CHAIN === "mainnet") ? mainnet : sepolia
       })
-      setIsModalOpen(true);
       const txResponse = await walletClient!.writeContract(request);
-      await client.waitForTransactionReceipt({ hash: txResponse }); 
+      await client.waitForTransactionReceipt({ hash: txResponse, retryCount: 150 }); 
       const txData = await generateTxObjectForDetails(walletClient, txResponse);
 
       setAmountEther("");
       addNewDeposit(txData);
       setCurrentTx(txData);
       setIsModalOpen(true);
-      setIsMmPopup(false)
 
     } catch (error) {
-      setIsMmPopup(false)
       setIsModalOpen(false);
       console.error('Failed to deposit', error);
     }

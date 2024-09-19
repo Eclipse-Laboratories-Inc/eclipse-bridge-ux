@@ -6,8 +6,10 @@
   width: 100%;
   height: 364px;
   overflow-y: scroll;
-  scrollbar-width: thin;
-  scrollbar-color: rgba(161, 254, 160, 1) rgba(255, 255, 255, 0.02);
+  scrollbar-width: thin; 
+  scrollbar-color: rgba(33, 33, 33, 1) rgba(255, 255, 255, 0);
+
+  padding-right: 12px;
 }
 
 .deposit-transaction {

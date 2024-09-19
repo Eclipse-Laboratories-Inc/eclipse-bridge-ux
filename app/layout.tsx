@@ -79,6 +79,24 @@ const cssOverrides = `
   }
 `
 
+// override this on sepolia
+const evmNetworks = [{
+    blockExplorerUrls: ['https://sepolia.etherscan.io/'],
+    chainId: 11155111,
+    chainName: 'Ethereum Sepolia',
+    iconUrls: ['https://app.dynamic.xyz/assets/networks/eth.svg'],
+    name: 'Ethereum',
+    nativeCurrency: {
+      decimals: 18,
+      name: 'Ether',
+      symbol: 'ETH',
+    },
+    networkId: 11155111,
+    rpcUrls: ['https://rpc.sepolia.org'],
+    vanityName: 'Sepolia',
+}];
+
+
 export default function RootLayout({
   children,
 }: {
@@ -94,7 +112,7 @@ export default function RootLayout({
                 if (args.wallet.chain === "EVM") { 
                   const client: any = args.wallet.connector.getWalletClient();
                   client.request({ "method": "wallet_revokePermissions", "params": [{"eth_accounts": {}}]});
-                }
+                } 
               },
               onAuthFlowOpen: () => {
                 const depositBox = document.getElementsByClassName("deposit-container")[0] as HTMLElement;
@@ -125,9 +143,11 @@ export default function RootLayout({
           privacyPolicyUrl: "https://www.eclipse.xyz/privacy-policy",
           termsOfServiceUrl: "https://www.eclipse.xyz/terms",
           overrides: {
+            ...(process.env.NEXT_PUBLIC_CURRENT_CHAIN === 'sepolia' && { evmNetworks: evmNetworks }),
             chainDisplayValues: {
               solana: {
                  displayName: 'Eclipse'
+
               }
            }
           },

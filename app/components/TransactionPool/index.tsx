@@ -24,20 +24,19 @@ export const TransactionProvider = ({ children } : { children: ReactNode}) => {
         const data = await getLastDeposits(evmWallet?.address || '');
         setDeposits(data.reverse());
         
-        data && data.map((tx: any) => {addTransactionListener(tx.hash)})
+        data && data.map((tx: any) => {addTransactionListener(tx.hash, tx.txreceipt_status)})
       } catch (error) {
         console.error("Error fetching deposits:", error);
       }
     };
-
     fetchDeposits();
   }, [evmWallet?.address]);
 
   const addNewDeposit = (txData: any) => {
-    setDeposits((prev: any) => [...prev, txData]);
+    setDeposits((prev: any) => [txData, ...prev]);
   }
 
-  const addTransactionListener = (txHash: string) => {
+  const addTransactionListener = (txHash: string, l1Status: string) => {
     if (transactions.has(txHash)) {
       return;
     }
@@ -45,10 +44,10 @@ export const TransactionProvider = ({ children } : { children: ReactNode}) => {
     setTransactions((prev) => new Map(prev.set(txHash, newTransaction)));
     setPendingTransactions((prev) => [...prev, newTransaction]);
 
-    checkTransactionStatus(txHash);
+    checkTransactionStatus(txHash, l1Status);
   };
   
-  const checkTransactionStatus = (txHash: string) => {
+  const checkTransactionStatus = (txHash: string, l1Status: string) => {
     const fetchEclipseTx = async () => {
       const oldTx = transactions.get(txHash) ?? defaultTransaction;
 
@@ -71,7 +70,7 @@ export const TransactionProvider = ({ children } : { children: ReactNode}) => {
         return updated;
       });
 
-      pdaData && setPendingTransactions((prev) =>
+      (pdaData || l1Status	=== "0" ) && setPendingTransactions((prev) =>
         prev.filter((tx) => tx.hash !== txHash)
       );
       if (!pdaData || !eclTx) setTimeout(() => {fetchEclipseTx()}, 2000);
