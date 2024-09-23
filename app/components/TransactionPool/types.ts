@@ -18,7 +18,7 @@ export const defaultTransaction: Transaction = {
 
 export interface TransactionContextType {
   transactions: Map<string, Transaction>;
-  addTransactionListener: (txHash: string) => void;
+  addTransactionListener: (txHash: string, l1Status: string) => void;
   getTransaction: (txHash: string) => Transaction | undefined;
   pendingTransactions: Transaction[];
   deposits: any[] | null

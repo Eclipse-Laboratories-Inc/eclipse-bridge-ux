@@ -31,8 +31,13 @@ const Deposit: React.FC<DepositProps> = ({ amountEther, setAmountEther }) => {
   return (
     <>
     <div className="deposit-container flex flex-col">
-      <div className="deposit-card" style={{width: isModalOpen ? "0px" : "inherit"}}>
-        <div className="header-tabs">
+      <div className="deposit-card" style={{
+          width: isModalOpen ? "0px" : "inherit", 
+          paddingRight: activeTab === Tabs.Activity ? "8px" : "20px"
+      }}>
+        <div className="header-tabs" style={{
+          marginRight: activeTab === Tabs.Activity ? "12px" : "0px"
+        }}>
           <div className={classNames("header-tab", (activeTab === Tabs.Deposit ? "active" : "inactive"))} style={{ width: "100%" }} onClick={() => setActiveTab(Tabs.Deposit)}>Deposit</div>
           <div className={classNames("header-tab", "disabled", (activeTab === Tabs.Withdraw ? "active" : "inactive"))} style={{ width: "100%" }}>Withdraw</div>
           { evmWallet && <div className={classNames("header-tab", "flex", "items-center", "justify-center", (activeTab === Tabs.Activity ? "active" : "inactive"))} style={{ width: "131px" }} onClick={() => {setActiveTab(Tabs.Activity)}}>

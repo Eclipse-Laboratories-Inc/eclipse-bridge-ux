@@ -40,14 +40,18 @@
 body, html {
   font-family: 'IBM Plex Sans', sans-serif;
   height: 100%;
+  overflow-x: hidden;
   color: rgb(var(--foreground-rgb));
-  overflow: hidden;
   background: linear-gradient(
       to bottom,
       transparent,
       rgb(var(--background-end-rgb))
     )
     rgb(var(--background-start-rgb));
+}
+
+.dynamic-modal {
+  position: absolute;
 }
 
 /* Hide the step arrows in input[type=number] for Chrome, Safari, Edge, Opera */
@@ -119,6 +123,9 @@ footer {
 }
 
 .mobile-logo { display: none; }
+.legal-footer a:hover {
+  color: #A1FEA0; 
+}
 
 @media (max-width: 768px ){
   .desktop-logo { display: none; }
@@ -153,7 +160,6 @@ footer {
     margin-left: 0px;
     padding: 6px;
     font-size: 14px;
-    gap: 20px;
     div {
         gap: 4px;
         margin-left: 0px;
