@@ -55,6 +55,7 @@ export interface DepositContentProps {
 
 export const DepositContent: React.FC<DepositContentProps> = ({ activeTxState, modalStuff, amountEther, setAmountEther }) => {
   const [walletClient, setWalletClient] = useState<WalletClient<Transport, Chain, Account> | null>(null);
+  const [ethTxStatus, setEthTxStatus] = useState("");
   const [balanceEther, setAmountBalanceEther] = useState<number>(-1);
   const [isEvmDisconnected, setIsEvmDisconnected] = useState(false);
   const [isSolDisconnected, setIsSolDisconnected] = useState(false);
@@ -110,6 +111,7 @@ export const DepositContent: React.FC<DepositContentProps> = ({ activeTxState, m
 
   const submitDeposit = async () => {
     setIsModalOpen(true);
+    setEthTxStatus("Continue in your wallet");
     const destinationBytes32 = solanaToBytes32(solWallet?.address || '');
     const [account] = await walletClient!.getAddresses()
     const weiValue = parseEther(amountEther?.toString() || '');
@@ -130,6 +132,7 @@ export const DepositContent: React.FC<DepositContentProps> = ({ activeTxState, m
       if (!txResponse.startsWith("0x"))
         txResponse = `0x${txResponse}`
 
+      setEthTxStatus("Confirming");
       await client.waitForTransactionReceipt({ hash: txResponse, retryCount: 150, retryDelay: 2_000 }); 
       const txData = await generateTxObjectForDetails(client, txResponse);
 
@@ -323,7 +326,7 @@ export const DepositContent: React.FC<DepositContentProps> = ({ activeTxState, m
         </div>
     }
         
-    { isModalOpen && <TransactionDetails fromDeposit={true} tx={currentTx} closeModal={() => {
+    { isModalOpen && <TransactionDetails ethStatus={ethTxStatus} fromDeposit={true} tx={currentTx} closeModal={() => {
         setTimeout(() => { setIsModalOpen(false), setCurrentTx(null) }, 100);
     }} /> }
     </>

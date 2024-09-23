@@ -22,7 +22,7 @@ const calculateFee = (gPrice: string, gUsed: string) => {
 }
 
 export const TransactionDetails: React.FC<TransactionDetailsProps> = ({ fromDeposit, closeModal, tx, ethStatus }) => {
-  const [gasPrice, ethPrice] = useContext(EthereumDataContext) ?? [0, 0];
+  const [_, ethPrice] = useContext(EthereumDataContext) ?? [0, 0];
   const { transactions, addTransactionListener } = useTransaction();
   
   const transaction = tx && transactions.get(tx.hash);
@@ -75,7 +75,7 @@ export const TransactionDetails: React.FC<TransactionDetailsProps> = ({ fromDepo
           </div>
           <div className={`flex flex-row items-center gap-1 ${ethTxStatus}-item status-item`}>
               <TransactionIcon iconType={ethTxStatus} className="tx-done-icon" isGreen={true} /> 
-              <span>{ ethTxStatus === "completed" ? "Done"  : tx ? "Failed" : "Continue in your wallet" }</span>
+              <span>{ ethTxStatus === "completed" ? "Done"  : tx ? "Failed" : ethStatus }</span>
           </div>
         </div>
 
