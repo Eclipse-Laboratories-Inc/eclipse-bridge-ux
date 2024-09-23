@@ -74,7 +74,7 @@ export const TransactionDetails: React.FC<TransactionDetailsProps> = ({ fromDepo
             { tx && <div className="gray-text"><a href={`${process.env.NEXT_PUBLIC_EVM_EXPLORER}/tx/${tx.hash}`} target="_blank">View Txn</a></div> }
           </div>
           <div className={`flex flex-row items-center gap-1 ${ethTxStatus}-item status-item`}>
-              <TransactionIcon iconType={ethTxStatus} className="tx-done-icon" /> 
+              <TransactionIcon iconType={ethTxStatus} className="tx-done-icon" isGreen={true} /> 
               <span>{ ethTxStatus === "completed" ? "Done"  : tx ? "Failed" : "Continue in your wallet" }</span>
           </div>
         </div>

@@ -125,7 +125,7 @@ export default function Main() {
           <Link href="https://docs.eclipse.xyz">  Docs </Link>
           <Link href="https://discord.gg/eclipse-fnd">  Discord </Link>
         </div>
-          <div className="flex flex-row info-footer justify-between" style={{}}>
+          <div className="flex flex-row info-footer justify-between">
           <div className="ml-[28px] flex flex-row items-center gap-2">
             <Gas gasClassName="gas" />  
             <span>Gas</span>
