@@ -101,6 +101,7 @@ export async function checkDepositWithPDA(address: PublicKey | null ) {
 
 
 export async function getLastDeposits(address: string) {
+  if (!address) return [];
   const response = await fetch(`/api/get-transactions?address=${address}`)
   const deposits = await response.json();
 

@@ -1,7 +1,7 @@
 "use client"
 import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 import { getLastDeposits, getNonce, getEclipseTransaction, checkDepositWithPDA } from "@/lib/activityUtils"
-import { createPublicClient, formatEther, http, parseEther, WalletClient } from 'viem'
+import { createPublicClient, http } from 'viem'
 import { mainnet, sepolia } from "viem/chains";
 import { useUserWallets, Wallet } from "@dynamic-labs/sdk-react-core";
 import { Transaction, defaultTransaction, TransactionContextType } from "./types"
@@ -30,7 +30,7 @@ export const TransactionProvider = ({ children } : { children: ReactNode}) => {
         const data = await getLastDeposits(evmWallet?.address || '');
         setDeposits(data.reverse());
         
-        data && data.map((tx: any, index: number) => {setTimeout(() => {addTransactionListener(tx.hash, tx.txreceipt_status)}, index * 0.1)})
+        data && data.map((tx: any, index: number) => {setTimeout(() => {addTransactionListener(tx.hash, tx.txreceipt_status)}, index * 0.2)})
       } catch (error) {
         console.error("Error fetching deposits:", error);
       }
