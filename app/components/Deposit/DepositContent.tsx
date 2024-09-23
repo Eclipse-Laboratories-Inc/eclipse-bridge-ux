@@ -136,7 +136,6 @@ export const DepositContent: React.FC<DepositContentProps> = ({ activeTxState, m
       setAmountEther("");
       addNewDeposit(txData);
       setCurrentTx(txData);
-      setIsModalOpen(true);
 
     } catch (error) {
       setIsModalOpen(false);
@@ -153,6 +152,9 @@ export const DepositContent: React.FC<DepositContentProps> = ({ activeTxState, m
   }
 
   function determineButtonClass(): string {
+    if (!evmWallet || !solWallet) {
+      return 'submit-button disabled'
+    }
     if (!amountEther) {
       return 'submit-button disabled'
     }  
@@ -167,6 +169,7 @@ export const DepositContent: React.FC<DepositContentProps> = ({ activeTxState, m
   }
 
   function determineButtonText(): string {
+    console.log(amountEther, "button text")
     if (!evmWallet && solWallet) {
       return "Connect Ethereum Wallet"
     }
@@ -273,9 +276,11 @@ export const DepositContent: React.FC<DepositContentProps> = ({ activeTxState, m
                 onChange={(e) => { 
                   const value = e.target.value;
                   if (/^[-+]?(\d+([.,]\d*)?|[.,]\d+)$/.test(value) || value === '') {
-                    setAmountEther(value);
-                  } else {
-                  }
+                    const [_, dp] = value.split(".");
+                    if (!dp || dp.length <= 9) {
+                      setAmountEther(value);
+                    }
+                  } 
                 }} 
             />
             : <Skeleton height={40} width={160} />

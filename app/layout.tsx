@@ -2,8 +2,8 @@ import { Metadata } from 'next';
 import ClientLayout from './client-layout';
 
 export const metadata: Metadata = {
-  title: 'Eclipse Bridge',
-  description: 'Official Eclipse bridge.',
+  title: process.env.WEBSITE_TITLE,
+  description: process.env.WEBSITE_DESCRIPTION,
   icons: [
     {
       rel: 'icon',
