@@ -30,7 +30,15 @@ export const TransactionProvider = ({ children } : { children: ReactNode}) => {
         const data = await getLastDeposits(evmWallet?.address || '');
         setDeposits(data.reverse());
         
-        data && data.map((tx: any, index: number) => {setTimeout(() => {addTransactionListener(tx.hash, tx.txreceipt_status)}, index * 0.2)})
+       const delay = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
+    
+       const processTransactions = async (data: any[]) => {
+         data.forEach(async (tx, index) => {
+           await delay(index * 30);
+           addTransactionListener(tx.hash, tx.txreceipt_status);
+        });
+        };
+        processTransactions(data);
       } catch (error) {
         console.error("Error fetching deposits:", error);
       }
