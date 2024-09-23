@@ -120,10 +120,10 @@ export default function Main() {
         </div>
       <footer className="flex items-center" style={{ height: "auto" }}>
         <div className="flex flex-row legal-footer justify-center">
-          <Link href="https://www.eclipse.xyz/terms"> Terms & Conditions </Link>
-          <Link href="https://www.eclipse.xyz/privacy-policy"> Privacy Policy </Link>
-          <Link href="https://docs.eclipse.xyz">  Docs </Link>
-          <Link href="https://discord.gg/eclipse-fnd">  Discord </Link>
+          <a href="https://www.eclipse.xyz/terms" target="_blank"> Terms & Conditions </a>
+          <a href="https://www.eclipse.xyz/privacy-policy" target="_blank"> Privacy Policy </a>
+          <a href="https://docs.eclipse.xyz" target="_blank"> Docs </a>
+          <a href="https://discord.gg/eclipse-fnd" target="_blank"> Discord </a>
         </div>
           <div className="flex flex-row info-footer justify-between">
           <div className="ml-[28px] flex flex-row items-center gap-2">

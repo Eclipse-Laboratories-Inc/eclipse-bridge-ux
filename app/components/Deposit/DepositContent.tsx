@@ -169,7 +169,6 @@ export const DepositContent: React.FC<DepositContentProps> = ({ activeTxState, m
   }
 
   function determineButtonText(): string {
-    console.log(amountEther, "button text")
     if (!evmWallet && solWallet) {
       return "Connect Ethereum Wallet"
     }
