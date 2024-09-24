@@ -1,44 +1,33 @@
 "use client";
-import { mainnet, sepolia } from "viem/chains";
 import React, { useEffect, useState, useCallback } from 'react';
+
 import './styles.css';
+import 'react-loading-skeleton/dist/skeleton.css';
+
 import TransferArrow from '../icons/transferArrow';
+import { Cross, ConnectIcon } from "../icons";
+
 import {
   DynamicConnectButton,
   useUserWallets,
   useDynamicContext,
   Wallet,
 } from "@dynamic-labs/sdk-react-core";
-import { Cross, ConnectIcon } from "../icons";
-import { createPublicClient, formatEther, http, parseEther, WalletClient } from 'viem'
-import { Transport, Chain, Account } from 'viem'
+
+import { mainnet, sepolia } from "viem/chains";
+import { createPublicClient, formatEther, http, parseEther, WalletClient } from 'viem';
+import { Transport, Chain, Account } from 'viem';
 import { getBalance } from 'viem/actions';
+
 import { truncateWalletAddress } from '@/lib/stringUtils';
-import { solanaToBytes32 } from '@/lib/solanaUtils'
-import Skeleton from 'react-loading-skeleton'
-import 'react-loading-skeleton/dist/skeleton.css'
+import { solanaToBytes32 } from '@/lib/solanaUtils';
 import { generateTxObjectForDetails } from "@/lib/activityUtils";
+
+import Skeleton from 'react-loading-skeleton';
+
 import { TransactionDetails } from "./TransactionDetails";
-import { useTransaction } from "../TransactionPool"
-
-const CONTRACT_ADDRESS = process.env.NEXT_PUBLIC_BRIDGE_CONTRACT || ''
-const MIN_DEPOSIT_AMOUNT = 0.002;
-
-const CONTRACT_ABI = [{
-      inputs: [{
-          internalType: 'bytes32',
-          name: '',
-          type: 'bytes32'
-      }, {
-          internalType: 'uint256',
-          name: '',
-          type: 'uint256'
-      }, ],
-      name: 'deposit',
-      outputs: [],
-      stateMutability: 'payable',
-      type: 'function',
-}];
+import { useTransaction } from "../TransactionPool";
+import { CONTRACT_ABI, CONTRACT_ADDRESS, MIN_DEPOSIT_AMOUNT } from "../constants";
 
 const client = createPublicClient({
   chain: (process.env.NEXT_PUBLIC_CURRENT_CHAIN === "mainnet") ? mainnet : sepolia,
@@ -62,23 +51,22 @@ export const DepositContent: React.FC<DepositContentProps> = ({ activeTxState, m
   const [isModalOpen, setIsModalOpen] = modalStuff; 
   const [currentTx, setCurrentTx] = useState<any>(null);
 
+  const { handleUnlinkWallet, rpcProviders } = useDynamicContext();
+  const { addNewDeposit } = useTransaction();
+
   const userWallets: Wallet[] = useUserWallets() as Wallet[];
   const solWallet = userWallets.find(w => w.chain == "SOL");
   const evmWallet = userWallets.find(w => w.chain == "EVM");
+  const provider = rpcProviders.evmDefaultProvider;
 
   useEffect(() => {
     let lWalletClient = evmWallet?.connector.getWalletClient<WalletClient<Transport, Chain, Account>>();
     if (lWalletClient) { 
       lWalletClient.cacheTime = 0;
     }
-
     setWalletClient(lWalletClient ?? null);
   }, [evmWallet?.connector])
 
-  const { handleUnlinkWallet, rpcProviders } = useDynamicContext();
-  const { addNewDeposit } = useTransaction();
-
-  const provider = rpcProviders.evmDefaultProvider;
   const setInputRef = useCallback((node: HTMLInputElement) => {
     if (node) {
       const handleWheel = (event: WheelEvent) => {
@@ -277,6 +265,7 @@ export const DepositContent: React.FC<DepositContentProps> = ({ activeTxState, m
 	              ref={setInputRef}
                 onChange={(e) => { 
                   const value = e.target.value;
+                  // don't allow string
                   if (/^[-+]?(\d+([.,]\d*)?|[.,]\d+)$/.test(value) || value === '') {
                     const [_, dp] = value.split(".");
                     if (!dp || dp.length <= 9) {

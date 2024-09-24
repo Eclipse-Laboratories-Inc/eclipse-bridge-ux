@@ -1,7 +1,8 @@
 "use client";
+
+import './styles.css';
 import { useState } from "react";
 import { Activity, Loading } from "../icons";
-import './styles.css';
 import { DepositContent } from "./DepositContent";
 import { ActivityContent } from "./ActivityContent";
 import { useTransaction } from "../TransactionPool"
@@ -43,7 +44,7 @@ const Deposit: React.FC<DepositProps> = ({ amountEther, setAmountEther }) => {
           { evmWallet && <div className={classNames("header-tab", "flex", "items-center", "justify-center", (activeTab === Tabs.Activity ? "active" : "inactive"))} style={{ width: "131px" }} onClick={() => {setActiveTab(Tabs.Activity)}}>
           { (pendingTransactions.length === 0 )
             ? <Activity activityClassName="" />
-            : <Loading loadingClassName="" />
+            : <Loading style={{}} loadingClassName="" />
           }
           </div>}
         </div>

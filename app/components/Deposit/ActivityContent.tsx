@@ -28,7 +28,13 @@ export const ActivityContent = ({ setActiveTab }: {setActiveTab: React.Dispatch<
     <div className={isModalOpen ? "status-overlay active" : "status-overlay"}></div>
     <div className="activity-container">
    {evmWallet && deposits && deposits.map((tx, index) => {
-     const status = Number(tx.isError) ? "failed" : transactions.get(tx.hash)?.pdaData ? "completed" :  (transactions.get(tx.hash)?.pdaData === undefined) ? null : "loading";
+     const status = Number(tx.isError) 
+       ? "failed" 
+       : transactions.get(tx.hash)?.pdaData 
+         ? "completed" 
+         : (transactions.get(tx.hash)?.pdaData === undefined) 
+           ? null 
+           : "loading";
      return (
        <div key={index} className="deposit-transaction flex flex-row items-center" onClick={() => { setIsModalOpen(true); setCurrentTx(tx)}}>
             <img src="swap.png" alt="Swap" className="swap-image" style={{position: "absolute", width: "22px"}} hidden />
