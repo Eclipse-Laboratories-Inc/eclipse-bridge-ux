@@ -3,20 +3,19 @@ import { ethers } from 'ethers';
 import { Arrow } from "@/app/components/icons"; 
 import { TransactionIcon, ActivityBoxIcon } from "../icons";
 import { timeAgo } from "@/lib/activityUtils";
-import { useUserWallets, Wallet } from "@dynamic-labs/sdk-react-core";
 import Skeleton from 'react-loading-skeleton'; 
 import { TransactionDetails } from "./TransactionDetails";  
 import { useTransaction } from "../TransactionPool"
 import { Tabs } from "./index";
 import "./activity.css";  
+import { useWallets } from '@/app/hooks/useWallets';
 
 export const ActivityContent = ({ setActiveTab }: {setActiveTab: React.Dispatch<React.SetStateAction<Tabs>>}) => {
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   const [currentTx, setCurrentTx] = useState<any>(null);
   const { transactions, deposits } = useTransaction();
 
-  const userWallets: Wallet[] = useUserWallets() as Wallet[];
-  const evmWallet = userWallets.find(w => w.chain == "EVM");
+  const { evmWallet } = useWallets();
 
   if (!evmWallet) {  
     setActiveTab(Tabs.Deposit); 

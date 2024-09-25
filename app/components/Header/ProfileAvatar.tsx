@@ -1,17 +1,14 @@
 import {
   DynamicConnectButton,
-  useUserWallets,
-  Wallet
 } from "@dynamic-labs/sdk-react-core";
 import { truncateWalletAddress } from "@/lib/stringUtils";
 import { ConnectIcon, Chevron } from "../icons";
 import ConnectedWallets from "../ConnectedWallets/index";
 import React, { useEffect, useRef, useState, useCallback, useMemo } from "react";
+import { useWallets } from "@/app/hooks/useWallets";
 
 export const ProfileAvatar: React.FC = () => {
-  const userWallets: Wallet[] = useUserWallets();
-  const solWallet = useMemo(() => userWallets.find(w => w.chain === "SOL"), [userWallets]);
-  const evmWallet = useMemo(() => userWallets.find(w => w.chain === "EVM"), [userWallets]);
+  const { evmWallet, solWallet } = useWallets();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const modalRef = useRef<HTMLDivElement>(null);
   const openModalRef = useRef<HTMLDivElement>(null);

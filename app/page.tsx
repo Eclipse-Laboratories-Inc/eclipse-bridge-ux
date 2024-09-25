@@ -2,8 +2,8 @@
 import { useState } from "react";
 import Deposit from "./components/Deposit";
 import { Header } from './components/Header';
+import { Footer } from './components/Footer';
 import { TransactionProvider } from './components/TransactionPool';
-import { Footer } from "./footer"
 import useEthereumData from "@/lib/ethUtils";
 import { useWalletClient } from "./hooks"
 import { EthereumDataContext, WalletClientContext } from "./context"

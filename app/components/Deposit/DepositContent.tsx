@@ -9,9 +9,7 @@ import { Cross, ConnectIcon } from "../icons";
 
 import {
   DynamicConnectButton,
-  useUserWallets,
   useDynamicContext,
-  Wallet,
 } from "@dynamic-labs/sdk-react-core";
 
 import { mainnet, sepolia } from "viem/chains";
@@ -28,6 +26,7 @@ import Skeleton from 'react-loading-skeleton';
 import { TransactionDetails } from "./TransactionDetails";
 import { useTransaction } from "../TransactionPool";
 import { CONTRACT_ABI, CONTRACT_ADDRESS, MIN_DEPOSIT_AMOUNT } from "../constants";
+import { useWallets } from "@/app/hooks/useWallets";
 
 const client = createPublicClient({
   chain: (process.env.NEXT_PUBLIC_CURRENT_CHAIN === "mainnet") ? mainnet : sepolia,
@@ -53,9 +52,7 @@ export const DepositContent: React.FC<DepositContentProps> = ({ modalStuff, amou
   const { handleUnlinkWallet, rpcProviders } = useDynamicContext();
   const { addNewDeposit } = useTransaction();
 
-  const userWallets: Wallet[] = useUserWallets() as Wallet[];
-  const solWallet = userWallets.find(w => w.chain == "SOL");
-  const evmWallet = userWallets.find(w => w.chain == "EVM");
+  const { userWallets, evmWallet, solWallet } = useWallets();
   const provider = rpcProviders.evmDefaultProvider;
 
   useEffect(() => {
@@ -288,15 +285,14 @@ export const DepositContent: React.FC<DepositContentProps> = ({ modalStuff, amou
               <div className="balance-info w-full">
                 <span>Bal</span> 
                 {(balanceEther >= 0)
-                ?  <><span style={{ color: '#fff' }}>{balanceEther + " "} </span> <>ETH</></> 
-                :  <span style={{width: "20%"}}><Skeleton inline={true}/></span>
+                  ? <><span style={{ color: '#fff' }}>{balanceEther + " "} </span> <>ETH</></> 
+                  : <span style={{width: "20%"}}><Skeleton inline={true}/></span>
                 }
               </div>
             }
             <div className={evmWallet ? "percentage-buttons" : "invisible"}>
               <button onClick={() => setAmountEther(balanceEther * 0.25)} className="percentage-button">25%</button>
               <button onClick={() => setAmountEther(balanceEther * 0.50)} className="percentage-button">50%</button>
-
               <button onClick={() => setAmountEther(balanceEther)} className="percentage-button">Max</button>
             </div>
           </div>

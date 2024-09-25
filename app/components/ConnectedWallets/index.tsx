@@ -1,5 +1,5 @@
 import React, { useEffect, useState, forwardRef, useMemo, useCallback } from 'react';
-import { useUserWallets, Wallet, useDynamicContext, DynamicConnectButton } from '@dynamic-labs/sdk-react-core';
+import { useDynamicContext, DynamicConnectButton } from '@dynamic-labs/sdk-react-core';
 import { mainnet, sepolia } from "viem/chains";
 import { createPublicClient, formatEther, http } from 'viem';
 import { getBalance } from 'viem/actions';
@@ -7,6 +7,7 @@ import './styles.css';
 import { Cross, Copy, ConnectIcon, CircleCheck, Disconnect} from "../icons";
 import { truncateWalletAddress } from '@/lib/stringUtils';
 import { getWalletBalance } from '@/lib/solanaUtils';
+import { useWallets } from '@/app/hooks/useWallets';
 
 const client = createPublicClient({
   chain: process.env.NEXT_PUBLIC_CURRENT_CHAIN === "mainnet" ? mainnet : sepolia,
@@ -25,7 +26,7 @@ interface WalletData {
 }
 
 const useWalletData = () => {
-  const userWallets: Wallet[] = useUserWallets() as Wallet[];
+  const { userWallets, evmWallet, solWallet } = useWallets();
   const [balanceEther, setBalanceEther] = useState(0);
   const [balanceEclipse, setBalanceEclipse] = useState(0);
 
@@ -49,9 +50,6 @@ const useWalletData = () => {
       }
     });
   }, [userWallets]);
-
-  const solWallet = userWallets.find(w => w.chain === "SOL");
-  const evmWallet = userWallets.find(w => w.chain === "EVM");
 
   return {
     solWallet,
