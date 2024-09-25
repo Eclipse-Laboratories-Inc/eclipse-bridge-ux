@@ -5,7 +5,6 @@ import './styles.css';
 import 'react-loading-skeleton/dist/skeleton.css';
 
 import TransferArrow from '../icons/transferArrow';
-import { Cross, ConnectIcon } from "../icons";
 
 import {
   DynamicConnectButton,
@@ -17,7 +16,6 @@ import { createPublicClient, formatEther, http, parseEther, WalletClient } from 
 import { Transport, Chain, Account } from 'viem';
 import { getBalance } from 'viem/actions';
 
-import { truncateWalletAddress } from '@/lib/stringUtils';
 import { solanaToBytes32 } from '@/lib/solanaUtils';
 import { generateTxObjectForDetails } from "@/lib/activityUtils";
 
@@ -25,6 +23,7 @@ import Skeleton from 'react-loading-skeleton';
 
 import { TransactionDetails } from "./TransactionDetails";
 import { useTransaction } from "../TransactionPool";
+import { NetworkBox } from "./NetworkBox"
 import { CONTRACT_ABI, CONTRACT_ADDRESS, MIN_DEPOSIT_AMOUNT } from "../constants";
 import { useWallets } from "@/app/hooks/useWallets";
 
@@ -187,65 +186,26 @@ export const DepositContent: React.FC<DepositContentProps> = ({ modalStuff, amou
           <div className="arrow-container">
             <TransferArrow />
           </div>
-          <div className="network-box">
-            <div className="network-info flex items-center justify-center">
-              <div className='network-info-left-section flex items-center justify-center'>
-                <img src="eth.png" alt="Ethereum" style={{ objectFit: "cover", height: "44px", width: "44px"}} />
-                <div className="input-inner-container">
-                  <span className="direction">From</span>
-                  <span className="name">{process.env.NEXT_PUBLIC_SOURCE_CHAIN_NAME}</span>
-                </div>
-              </div>
-              {evmWallet && <div className="network-info-right-section">
-                <div onClick={() => evmWallet && handleUnlinkWallet(evmWallet.id) && setIsEvmDisconnected(!isEvmDisconnected)} className="disconnect">
-                  <Cross crossClassName="deposit-cross" />
-                  <div>Disconnect</div>
-                </div>
-                <div className="wallet-addresss">{truncateWalletAddress(userWallets.find(w => w.chain == "EVM")?.address || '')}</div>
-              </div>}
-              { (!evmWallet && isEvmDisconnected && !isSolDisconnected)
-                  ? <DynamicConnectButton>
-                      <div className="flex items-center gap-1 modal-connect">
-                        <div>
-                          <ConnectIcon connectClassName="modal-connect"/>
-                        </div>
-                        <div className="modal-connect-wallet">Connect Wallet</div>
-                      </div>
-                    </DynamicConnectButton>
-                : null
-              }
-            </div>
-          </div>
 
-          <div className="network-box">
-            <div className="network-info">
-              <div className='network-info-left-section'>
-                <img src="eclipse.png" alt="Eclipse" style={{ objectFit: "cover", height: "44px", width: "44px"}} />
-                <div className="input-inner-container">
-                  <span className="direction">To</span>
-                  <span className="name">{process.env.NEXT_PUBLIC_TARGET_CHAIN_NAME}</span>
-                </div>
-              </div>
-              {solWallet && <div className="network-info-right-section">
-                <div onClick={() => solWallet && handleUnlinkWallet(solWallet.id) && setIsSolDisconnected(!isSolDisconnected)} className="disconnect">
-                  <Cross crossClassName="deposit-cross" />
-                  <div>Disconnect</div>
-                </div>
-                <div className="wallet-addresss">{truncateWalletAddress(solWallet?.address || '')}</div>
-              </div>}
-              { (!solWallet && isSolDisconnected && !isEvmDisconnected)
-                  ? <DynamicConnectButton>
-                      <div className="flex items-center gap-1 modal-connect">
-                        <div>
-                          <ConnectIcon connectClassName="modal-connect"/>
-                        </div>
-                        <div className="modal-connect-wallet">Connect Wallet</div>
-                      </div>
-                    </DynamicConnectButton>
-                : null
-              }
-            </div>
-          </div>
+          <NetworkBox 
+            imageSrc="eth.png"
+            direction="From"
+            chainName={process.env.NEXT_PUBLIC_SOURCE_CHAIN_NAME ?? ""}
+            onClickEvent={() => evmWallet && handleUnlinkWallet(evmWallet.id) && setIsEvmDisconnected(!isEvmDisconnected)}
+            walletChain="EVM"
+            showConnect={(!evmWallet && isEvmDisconnected && !isSolDisconnected)}
+            wallet={evmWallet}
+          />
+          <NetworkBox 
+            imageSrc="eclipse.png"
+            direction="To"
+            chainName={process.env.NEXT_PUBLIC_TARGET_CHAIN_NAME ?? ""}
+            onClickEvent={() => solWallet && handleUnlinkWallet(solWallet.id) && setIsSolDisconnected(!isSolDisconnected)}
+            walletChain="SOL"
+            showConnect={(!solWallet && isSolDisconnected && !isEvmDisconnected)}
+            wallet={solWallet}
+          />
+
         </div>
         <div className={ `amount-input flex flex-col ${determineInputClass()}` }>
           <div className="amount-input-top flex justify-between w-full items-center">
