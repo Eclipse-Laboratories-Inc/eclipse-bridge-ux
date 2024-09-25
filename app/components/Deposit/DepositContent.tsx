@@ -36,13 +36,12 @@ const client = createPublicClient({
 })
 
 export interface DepositContentProps {
-  activeTxState: [boolean, React.Dispatch<React.SetStateAction<boolean>>];
   modalStuff: [boolean, React.Dispatch<React.SetStateAction<boolean>>];
   amountEther: number | string | undefined;
   setAmountEther: React.Dispatch<React.SetStateAction<number | undefined | string>>;
 }
 
-export const DepositContent: React.FC<DepositContentProps> = ({ activeTxState, modalStuff, amountEther, setAmountEther }) => {
+export const DepositContent: React.FC<DepositContentProps> = ({ modalStuff, amountEther, setAmountEther }) => {
   const [walletClient, setWalletClient] = useState<WalletClient<Transport, Chain, Account> | null>(null);
   const [ethTxStatus, setEthTxStatus] = useState("");
   const [balanceEther, setAmountBalanceEther] = useState<number>(-1);

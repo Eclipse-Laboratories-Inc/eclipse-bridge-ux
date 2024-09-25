@@ -9,7 +9,9 @@ export const metadata: Metadata = {
       rel: 'icon',
       type: 'image/png',
       sizes: '200x200',
-      url: process.env.NEXT_PUBLIC_CURRENT_CHAIN === 'mainnet' ? '/eclipse-favicon.png'  : '/testnet-favicon.png',
+      url: process.env.NEXT_PUBLIC_CURRENT_CHAIN === 'mainnet' 
+        ? '/eclipse-favicon.png' 
+        : '/testnet-favicon.png',
     }
   ],
 };

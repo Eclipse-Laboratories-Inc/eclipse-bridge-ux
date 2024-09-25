@@ -1,15 +1,14 @@
-'use client';
-import React, { useEffect, useRef, useState, useCallback, useMemo } from "react";
 import {
   DynamicConnectButton,
   useUserWallets,
   Wallet
 } from "@dynamic-labs/sdk-react-core";
 import { truncateWalletAddress } from "@/lib/stringUtils";
-import { ConnectIcon, Chevron } from "./components/icons";
-import ConnectedWallets from "./components/ConnectedWallets/index";
+import { ConnectIcon, Chevron } from "../icons";
+import ConnectedWallets from "../ConnectedWallets/index";
+import React, { useEffect, useRef, useState, useCallback, useMemo } from "react";
 
-const ProfileAvatar: React.FC = () => {
+export const ProfileAvatar: React.FC = () => {
   const userWallets: Wallet[] = useUserWallets();
   const solWallet = useMemo(() => userWallets.find(w => w.chain === "SOL"), [userWallets]);
   const evmWallet = useMemo(() => userWallets.find(w => w.chain === "EVM"), [userWallets]);
@@ -87,18 +86,5 @@ const ProfileAvatar: React.FC = () => {
         close={toggleModal} 
       />
     </div>
-  );
-};
-
-export const Header: React.FC = () => {
-  return (
-    <header className="header w-full bg-black text-green-500 flex items-center justify-between p-4 border-b border-white border-opacity-10">
-      <div className="flex items-center space-x-2">
-        <img src="/wordmark.png" className="desktop-logo" alt="Eclipse Logo" width={183} height={34} />
-        <img src="/eclipse-e.png" className="mobile-logo" alt="Eclipse Logo" width={35} height={34} />
-      </div>
-      <h1 className="text-xl tracking-widest bridge-text">BRIDGE</h1>
-      <ProfileAvatar />
-    </header>
   );
 };

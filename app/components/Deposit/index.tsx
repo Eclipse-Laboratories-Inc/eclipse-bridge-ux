@@ -24,7 +24,6 @@ export interface DepositProps {
 const Deposit: React.FC<DepositProps> = ({ amountEther, setAmountEther }) => {
   const [activeTab, setActiveTab] = useState<Tabs>(Tabs.Deposit);
   const [isModalOpen, setIsModalOpen] = useState(false); 
-  const [hasActiveTx, setHasActiveTx] = useState(false);
   const { pendingTransactions } = useTransaction();
   const userWallets: Wallet[] = useUserWallets() as Wallet[];
   const evmWallet = userWallets.find(w => w.chain == "EVM");
@@ -49,7 +48,7 @@ const Deposit: React.FC<DepositProps> = ({ amountEther, setAmountEther }) => {
           </div>}
         </div>
           { activeTab === Tabs.Deposit && 
-              <DepositContent activeTxState={[hasActiveTx, setHasActiveTx]} modalStuff={[isModalOpen, setIsModalOpen]} amountEther={amountEther} setAmountEther={setAmountEther}/> }
+              <DepositContent modalStuff={[isModalOpen, setIsModalOpen]} amountEther={amountEther} setAmountEther={setAmountEther}/> }
           { activeTab === Tabs.Activity && <ActivityContent setActiveTab={setActiveTab}/> }
         </div>
       { (activeTab === Tabs.Deposit) && !isModalOpen && <ExtendedDetails amountEther={amountEther} /> }
