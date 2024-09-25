@@ -56,9 +56,7 @@ export const DepositContent: React.FC<DepositContentProps> = ({ modalStuff, amou
 
   useEffect(() => {
     let lWalletClient = evmWallet?.connector.getWalletClient<WalletClient<Transport, Chain, Account>>();
-    if (lWalletClient) { 
-      lWalletClient.cacheTime = 0;
-    }
+    lWalletClient && (lWalletClient.cacheTime = 0);
     setWalletClient(lWalletClient ?? null);
   }, [evmWallet?.connector])
 
@@ -168,7 +166,7 @@ export const DepositContent: React.FC<DepositContentProps> = ({ modalStuff, amou
       return 'Deposit'
     }  
     if (parseFloat(amountEther as string) < MIN_DEPOSIT_AMOUNT) {
-      return 'Min amount 0.002 ETH'
+      return `Min amount ${MIN_DEPOSIT_AMOUNT} ETH`
     }
 
     if (parseFloat(amountEther as string) > balanceEther) {
@@ -205,7 +203,6 @@ export const DepositContent: React.FC<DepositContentProps> = ({ modalStuff, amou
             showConnect={(!solWallet && isSolDisconnected && !isEvmDisconnected)}
             wallet={solWallet}
           />
-
         </div>
         <div className={ `amount-input flex flex-col ${determineInputClass()}` }>
           <div className="amount-input-top flex justify-between w-full items-center">
