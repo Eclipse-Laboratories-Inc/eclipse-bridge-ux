@@ -29,6 +29,7 @@ import { useWallets } from "@/app/hooks/useWallets";
 
 const client = createPublicClient({
   chain: (process.env.NEXT_PUBLIC_CURRENT_CHAIN === "mainnet") ? mainnet : sepolia,
+  // transport: (process.env.NEXT_PUBLIC_CURRENT_CHAIN === "mainnet") ? http() : http("https://sepolia.drpc.org"),
   transport: (process.env.NEXT_PUBLIC_CURRENT_CHAIN === "mainnet") ? http("https://eth.llamarpc.com") : http("https://sepolia.drpc.org"),
   cacheTime: 0
 })
@@ -53,6 +54,7 @@ export const DepositContent: React.FC<DepositContentProps> = ({ modalStuff, amou
 
   const { userWallets, evmWallet, solWallet } = useWallets();
   const provider = rpcProviders.evmDefaultProvider;
+  console.log(provider, "PROVADOOOR")
 
   useEffect(() => {
     let lWalletClient = evmWallet?.connector.getWalletClient<WalletClient<Transport, Chain, Account>>();
@@ -115,7 +117,7 @@ export const DepositContent: React.FC<DepositContentProps> = ({ modalStuff, amou
 
       setEthTxStatus("Confirming");
       await client.waitForTransactionReceipt({ hash: txResponse, retryCount: 150, retryDelay: 2_000 }); 
-      const txData = await generateTxObjectForDetails(client, txResponse);
+      const txData = await generateTxObjectForDetails(provider!.provider, txResponse);
 
       setAmountEther("");
       addNewDeposit(txData);
