@@ -17,8 +17,8 @@ export const TransactionProvider = ({ children } : { children: ReactNode}) => {
   const { evmWallet } = useWallets();
 
   const client = createPublicClient({
-    chain: (process.env.NEXT_PUBLIC_CURRENT_CHAIN === "mainnet") ? mainnet : sepolia,
-    transport: (process.env.NEXT_PUBLIC_CURRENT_CHAIN === "mainnet") ? http() : http("https://sepolia.drpc.org"),
+    chain    : (process.env.NEXT_PUBLIC_CURRENT_CHAIN === "mainnet") ? mainnet : sepolia,
+    transport: (process.env.NEXT_PUBLIC_CURRENT_CHAIN === "mainnet") ? http("https://eth.llamarpc.com") : http("https://sepolia.drpc.org"),
     cacheTime: 0
   })
 
