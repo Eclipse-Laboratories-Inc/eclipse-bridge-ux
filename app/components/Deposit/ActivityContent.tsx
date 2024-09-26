@@ -73,7 +73,7 @@ export const ActivityContent = ({ setActiveTab }: {setActiveTab: React.Dispatch<
         </div>
     )}
     </div> 
-    { isModalOpen && <TransactionDetails fromDeposit={false} tx={currentTx} closeModal={() => setTimeout(() => setIsModalOpen(false), 100)} /> }
+    { isModalOpen && <TransactionDetails from={""} tx={currentTx} closeModal={() => setTimeout(() => setIsModalOpen(false), 100)} /> }
     </>
   )
 }

@@ -16,7 +16,7 @@ import { createPublicClient, formatEther, http, parseEther, WalletClient } from 
 import { Transport, Chain, Account } from 'viem';
 import { getBalance } from 'viem/actions';
 
-import { solanaToBytes32 } from '@/lib/solanaUtils';
+import { solanaToBytes32, getWalletBalance } from '@/lib/solanaUtils';
 import { generateTxObjectForDetails } from "@/lib/activityUtils";
 
 import Skeleton from 'react-loading-skeleton';
@@ -29,18 +29,17 @@ import { useWallets } from "@/app/hooks/useWallets";
 
 const client = createPublicClient({
   chain: (process.env.NEXT_PUBLIC_CURRENT_CHAIN === "mainnet") ? mainnet : sepolia,
-  // transport: (process.env.NEXT_PUBLIC_CURRENT_CHAIN === "mainnet") ? http() : http("https://sepolia.drpc.org"),
   transport: (process.env.NEXT_PUBLIC_CURRENT_CHAIN === "mainnet") ? http("https://eth.llamarpc.com") : http("https://sepolia.drpc.org"),
   cacheTime: 0
 })
 
-export interface DepositContentProps {
+export interface WithdrawContentProps {
   modalStuff: [boolean, React.Dispatch<React.SetStateAction<boolean>>];
   amountEther: number | string | undefined;
   setAmountEther: React.Dispatch<React.SetStateAction<number | undefined | string>>;
 }
 
-export const DepositContent: React.FC<DepositContentProps> = ({ modalStuff, amountEther, setAmountEther }) => {
+export const WithdrawContent: React.FC<WithdrawContentProps> = ({ modalStuff, amountEther, setAmountEther }) => {
   const [walletClient, setWalletClient] = useState<WalletClient<Transport, Chain, Account> | null>(null);
   const [ethTxStatus, setEthTxStatus] = useState("");
   const [balanceEther, setAmountBalanceEther] = useState<number>(-1);
@@ -76,22 +75,16 @@ export const DepositContent: React.FC<DepositContentProps> = ({ modalStuff, amou
   useEffect(() => {
     userWallets.forEach(async (wallet) => {
       if (!wallet) return;
-      // ignore this for sepolia
-      if (( !provider && process.env.NEXT_PUBLIC_CURRENT_CHAIN === "mainnet")|| !(wallet.chain == "EVM")) return;
-      const balance = await getBalance(client, {
-        //@ts-ignore
-        address: wallet.address,
-        blockTag: 'safe'
-      })
+      const balance = await getWalletBalance(solWallet?.address || "");
 
-      const balanceAsEther = formatEther(balance);
+      const balanceAsEther = formatEther(BigInt(balance * 10 ** 18));
       const formattedEtherBalance = balanceAsEther.includes('.') ? balanceAsEther.slice(0, balanceAsEther.indexOf('.') + 5) : balanceAsEther
       const balanceEther = parseFloat(formattedEtherBalance);
       setAmountBalanceEther(balanceEther);
     });
   }, [userWallets]);
 
-  const submitDeposit = async () => {
+  const submitWithdraw = async () => {
     setIsModalOpen(true);
     setEthTxStatus("Continue in your wallet");
     const destinationBytes32 = solanaToBytes32(solWallet?.address || '');
@@ -99,24 +92,10 @@ export const DepositContent: React.FC<DepositContentProps> = ({ modalStuff, amou
     const weiValue = parseEther(amountEther?.toString() || '');
 
     try {
-      const { request } = await client.simulateContract({
-        //@ts-ignore
-        address: CONTRACT_ADDRESS,
-        abi: CONTRACT_ABI,
-        functionName: 'deposit',
-        args: [destinationBytes32, weiValue],
-        account,
-        value: weiValue,
-        chain: (process.env.NEXT_PUBLIC_CURRENT_CHAIN === "mainnet") ? mainnet : sepolia
-      })
-      let txResponse = await walletClient!.writeContract(request);
-      // rabby returns the tx hash without 0x
-      if (!txResponse.startsWith("0x"))
-        txResponse = `0x${txResponse}`
+      // doooooo something here 
 
       setEthTxStatus("Confirming");
-      await client.waitForTransactionReceipt({ hash: txResponse, retryCount: 150, retryDelay: 2_000 }); 
-      const txData = await generateTxObjectForDetails(provider ? provider.provider : client, txResponse);
+      const txData = null; 
 
       setAmountEther("");
       addNewDeposit(txData);
@@ -164,7 +143,7 @@ export const DepositContent: React.FC<DepositContentProps> = ({ modalStuff, amou
       return "Connect Wallets"
     }
     if (!amountEther) {
-      return 'Deposit'
+      return 'Withdraw'
     }  
     if (parseFloat(amountEther as string) < MIN_DEPOSIT_AMOUNT) {
       return `Min amount ${MIN_DEPOSIT_AMOUNT} ETH`
@@ -174,7 +153,7 @@ export const DepositContent: React.FC<DepositContentProps> = ({ modalStuff, amou
       return 'Insufficient Funds'
     }
     
-    return 'Deposit'
+    return 'Withdraw'
   }
 
   return (
@@ -187,22 +166,22 @@ export const DepositContent: React.FC<DepositContentProps> = ({ modalStuff, amou
           </div>
 
           <NetworkBox 
-            imageSrc="eth.png"
-            direction="From"
-            chainName={process.env.NEXT_PUBLIC_SOURCE_CHAIN_NAME ?? ""}
-            onClickEvent={() => evmWallet && handleUnlinkWallet(evmWallet.id) && setIsEvmDisconnected(!isEvmDisconnected)}
-            walletChain="EVM"
-            showConnect={(!evmWallet && isEvmDisconnected && !isSolDisconnected)}
-            wallet={evmWallet}
-          />
-          <NetworkBox 
             imageSrc="eclipse.png"
-            direction="To"
+            direction="From"
             chainName={process.env.NEXT_PUBLIC_TARGET_CHAIN_NAME ?? ""}
             onClickEvent={() => solWallet && handleUnlinkWallet(solWallet.id) && setIsSolDisconnected(!isSolDisconnected)}
             walletChain="SOL"
             showConnect={(!solWallet && isSolDisconnected && !isEvmDisconnected)}
             wallet={solWallet}
+          />
+          <NetworkBox 
+            imageSrc="eth.png"
+            direction="To"
+            chainName={process.env.NEXT_PUBLIC_SOURCE_CHAIN_NAME ?? ""}
+            onClickEvent={() => evmWallet && handleUnlinkWallet(evmWallet.id) && setIsEvmDisconnected(!isEvmDisconnected)}
+            walletChain="EVM"
+            showConnect={(!evmWallet && isEvmDisconnected && !isSolDisconnected)}
+            wallet={evmWallet}
           />
         </div>
         <div className={ `amount-input flex flex-col ${determineInputClass()}` }>
@@ -239,7 +218,7 @@ export const DepositContent: React.FC<DepositContentProps> = ({ modalStuff, amou
             </div>
           </div>
           <div className={`${evmWallet ? '' : 'hidden'} amount-input-bottom flex flex-row justify-between w-full items-center`}>
-            {evmWallet && 
+            {solWallet && 
               <div className="balance-info w-full">
                 <span>Bal</span> 
                 {(balanceEther >= 0)
@@ -248,7 +227,7 @@ export const DepositContent: React.FC<DepositContentProps> = ({ modalStuff, amou
                 }
               </div>
             }
-            <div className={evmWallet ? "percentage-buttons" : "invisible"}>
+            <div className={solWallet ? "percentage-buttons" : "invisible"}>
               <button onClick={() => setAmountEther(balanceEther * 0.25)} className="percentage-button">25%</button>
               <button onClick={() => setAmountEther(balanceEther * 0.50)} className="percentage-button">50%</button>
               <button onClick={() => setAmountEther(balanceEther)} className="percentage-button">Max</button>
@@ -261,14 +240,14 @@ export const DepositContent: React.FC<DepositContentProps> = ({ modalStuff, amou
               <span style={{ width: '100%' }}> {determineButtonText()}</span>
             </DynamicConnectButton>
         : 
-            <button className={`w-full deposit-button p-4 ${determineButtonClass()}`} onClick={submitDeposit}>
+            <button className={`w-full deposit-button p-4 ${determineButtonClass()}`} onClick={submitWithdraw}>
               {determineButtonText()}
             </button>
         }
         </div>
     }
         
-    { isModalOpen && <TransactionDetails ethStatus={ethTxStatus} from={"deposit"} tx={currentTx} closeModal={() => {
+    { isModalOpen && <TransactionDetails ethStatus={ethTxStatus} from={"withdraw"} tx={currentTx} closeModal={() => {
         setTimeout(() => { setIsModalOpen(false), setCurrentTx(null) }, 100);
     }} /> }
     </>

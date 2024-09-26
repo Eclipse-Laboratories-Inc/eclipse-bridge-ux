@@ -8,7 +8,7 @@ import { EthereumDataContext } from "@/app/context"
 import { useTransaction } from "../TransactionPool"
 
 interface TransactionDetailsProps {
-  fromDeposit: boolean;
+  from: "deposit" | "withdraw" | "" ;
   closeModal: () => void; 
   tx: any;
   ethStatus?: string;
@@ -21,9 +21,13 @@ const calculateFee = (gPrice: string, gUsed: string) => {
   return ethers.utils.formatEther(gasFee);
 }
 
-export const TransactionDetails: React.FC<TransactionDetailsProps> = ({ fromDeposit, closeModal, tx, ethStatus }) => {
+export const TransactionDetails: React.FC<TransactionDetailsProps> = ({ from, closeModal, tx, ethStatus }) => {
   const [_, ethPrice] = useContext(EthereumDataContext) ?? [0, 0];
   const { transactions, addTransactionListener } = useTransaction();
+
+  const chains = [{ src: "eth.png", name: "Ethereum"}, { src: "eclipse.png", name: "Eclipse"}]
+  from === "withdraw" && chains.reverse();
+  const [fromChain, toChain] = chains; 
   
   const transaction = tx && transactions.get(tx.hash);
 
@@ -38,6 +42,7 @@ export const TransactionDetails: React.FC<TransactionDetailsProps> = ({ fromDepo
     tx && addTransactionListener(tx.hash, tx.txreceipt_status);
   }, [tx])
 
+
   return (
     <div className="transaction-details-modal flex flex-col items-center">
       <div className="transaction-details-header flex flex-row items-center justify-between">
@@ -49,7 +54,7 @@ export const TransactionDetails: React.FC<TransactionDetailsProps> = ({ fromDepo
       </div>
 
       <div className="logo-header flex flex-row items-center">
-            <img src="eth.png" alt="Ethereum" style={{
+            <img src={fromChain.src} alt={fromChain.name} style={{
               objectFit: "cover", 
               height: "55px", 
               width: "55px", 
@@ -57,8 +62,8 @@ export const TransactionDetails: React.FC<TransactionDetailsProps> = ({ fromDepo
               outline: "1px solid rgba(255, 255, 255, 0.1)", 
               borderRadius: "100%"
              }} />
-             <Arrow />
-            <img src="eclipse.png" alt="Eclipse" style={{
+            <Arrow />
+            <img src={toChain.src} alt={toChain.name} style={{
               objectFit: "cover", 
               height: "55px", 
               width: "55px", 
@@ -135,7 +140,7 @@ export const TransactionDetails: React.FC<TransactionDetailsProps> = ({ fromDepo
           </div>
 
 
-          {(fromDeposit ? eclipseTx : true) && <div className="flex flex-row justify-between items-center">
+          {(from ? eclipseTx : true) && <div className="flex flex-row justify-between items-center">
             <span className="info-name">Age</span>
             <div className="flex flex-row gap-2">
               <span className="green-text">{timeAgo(tx.timeStamp)}</span>
@@ -143,7 +148,7 @@ export const TransactionDetails: React.FC<TransactionDetailsProps> = ({ fromDepo
           </div>}
         </div>}
 
-        { tx && !eclipseTx && fromDeposit && <div className="flex w-full items-center justify-center modal-info"> You may close this window anytime</div> }
+        { tx && !eclipseTx && from && <div className="flex w-full items-center justify-center modal-info"> You may close this window anytime</div> }
         { tx && <button onClick={closeModal} className="done-button">Done</button> } 
     </div>
   )
