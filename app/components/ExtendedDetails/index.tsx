@@ -7,8 +7,13 @@ import { MIN_DEPOSIT_AMOUNT } from "../constants";
 import { useWallets } from "@/app/hooks/useWallets";
 import MotionNumber from 'motion-number'
 
+export interface ExtendedDetailsProps {
+  amountEther: undefined | string | number;
+  target: "Eclipse" | "Ethereum"
+  feeInEth: number | null;
+}
 
-const ExtendedDetails: React.FC<{amountEther: undefined | string | number}> = ({ amountEther }) => {
+const ExtendedDetails: React.FC<ExtendedDetailsProps> = ({ amountEther, target, feeInEth }) => {
   const [gasPrice, ethPrice] = useContext(EthereumDataContext) ?? [null, null];
   const amountEth = (typeof amountEther === "string" ? parseFloat(amountEther) : amountEther)
   const { evmWallet, solWallet } = useWallets(); 
@@ -18,7 +23,7 @@ const ExtendedDetails: React.FC<{amountEther: undefined | string | number}> = ({
   return (
     <div className="extended-details" style={{marginTop: "18px"}}>
       <div className="flex flex-row justify-between items-center single-line">
-        <div><span className="white-text">Receive on Eclipse</span></div>
+        <div><span className="white-text">Receive on {target}</span></div>
         <div className="flex gap-2 items-center">
         {(gasPrice && ethPrice)
             ? (amountEth && amountEth >= MIN_DEPOSIT_AMOUNT) 
@@ -65,11 +70,11 @@ const ExtendedDetails: React.FC<{amountEther: undefined | string | number}> = ({
       <div className="flex flex-row justify-between items-center single-line">
         <div><span className="white-text">Network Fee</span></div>
         <div className="flex gap-2 items-center">
-        {(gasPrice && ethPrice)
+        {(feeInEth && ethPrice)
             ? (amountEth && amountEth >= MIN_DEPOSIT_AMOUNT) 
               ? <>
-                  <span className="gray-text">${(113200 * gasPrice * ethPrice / 10**9).toFixed(2)}</span>
-                  <span className="green-text">{(113200 * (gasPrice) / 10**9).toFixed(4)} ETH</span>
+                  <span className="gray-text">${(feeInEth * ethPrice).toFixed(2)}</span>
+                  <span className="green-text">{feeInEth.toFixed(4)} ETH</span>
                 </>
               : <span className="gray-text">-</span>
             : <Skeleton width={80} />

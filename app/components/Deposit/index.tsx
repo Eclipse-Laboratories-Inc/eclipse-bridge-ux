@@ -1,5 +1,7 @@
 "use client";
 
+import React, { useContext } from 'react';
+import  { EthereumDataContext } from "@/app/context";
 import './styles.css';
 import { useState } from "react";
 import { Activity, Loading } from "../icons";
@@ -23,6 +25,7 @@ export interface DepositProps {
 }
 
 const Deposit: React.FC<DepositProps> = ({ amountEther, setAmountEther }) => {
+  const [gasPrice, ethPrice] = useContext(EthereumDataContext) ?? [null, null];
   const [activeTab, setActiveTab] = useState<Tabs>(Tabs.Deposit);
   const [isModalOpen, setIsModalOpen] = useState(false); 
   const { pendingTransactions } = useTransaction();
@@ -51,7 +54,18 @@ const Deposit: React.FC<DepositProps> = ({ amountEther, setAmountEther }) => {
           { activeTab === Tabs.Withdraw && <WithdrawContent modalStuff={[isModalOpen, setIsModalOpen]} amountEther={amountEther} setAmountEther={setAmountEther}/> }
           { activeTab === Tabs.Activity && <ActivityContent setActiveTab={setActiveTab}/> }
         </div>
-      { (activeTab === Tabs.Deposit) && !isModalOpen && <ExtendedDetails amountEther={amountEther} /> }
+      { (activeTab === Tabs.Deposit) && !isModalOpen && 
+        <ExtendedDetails 
+            amountEther={amountEther}
+            target="Eclipse"
+            feeInEth={gasPrice && 113200 * (gasPrice) / 10**9}
+      /> }
+      { (activeTab === Tabs.Withdraw) && !isModalOpen && 
+        <ExtendedDetails 
+            amountEther={amountEther} 
+            target="Ethereum"
+            feeInEth={0.00000005}
+      />}
       </div>
     </>
   );

@@ -77,7 +77,7 @@ export const DepositContent: React.FC<DepositContentProps> = ({ modalStuff, amou
     userWallets.forEach(async (wallet) => {
       if (!wallet) return;
       // ignore this for sepolia
-      if (( !provider && process.env.NEXT_PUBLIC_CURRENT_CHAIN === "mainnet")|| !(wallet.chain == "EVM")) return;
+      if (( !provider && process.env.NEXT_PUBLIC_CURRENT_CHAIN === "mainnet") || !(wallet.chain == "EVM")) return;
       const balance = await getBalance(client, {
         //@ts-ignore
         address: wallet.address,
