@@ -1,7 +1,7 @@
 import React from 'react';
 import { Loading } from "./index"
 
-const TransactionIcon = ({ iconType, className }: { iconType: string, className?: string}) => {
+const TransactionIcon = ({ iconType, className, isGreen }: { iconType: string, className?: string, isGreen?: boolean}) => {
   if (iconType === "failed") {
     return (
       <svg width="14" height="15" viewBox="0 0 14 15" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -15,7 +15,7 @@ const TransactionIcon = ({ iconType, className }: { iconType: string, className?
       </svg>
     );
   } else if (iconType === "loading") {
-    return (<Loading loadingClassName="" />)
+    return (<Loading style={{color: isGreen ? "rgba(161, 254, 160, 1)" : ""}} loadingClassName={className ? className : ""} />)
   }
 }
 

@@ -3,20 +3,19 @@ import { ethers } from 'ethers';
 import { Arrow } from "@/app/components/icons"; 
 import { TransactionIcon, ActivityBoxIcon } from "../icons";
 import { timeAgo } from "@/lib/activityUtils";
-import { useUserWallets, Wallet } from "@dynamic-labs/sdk-react-core";
 import Skeleton from 'react-loading-skeleton'; 
 import { TransactionDetails } from "./TransactionDetails";  
 import { useTransaction } from "../TransactionPool"
 import { Tabs } from "./index";
 import "./activity.css";  
+import { useWallets } from '@/app/hooks/useWallets';
 
 export const ActivityContent = ({ setActiveTab }: {setActiveTab: React.Dispatch<React.SetStateAction<Tabs>>}) => {
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   const [currentTx, setCurrentTx] = useState<any>(null);
   const { transactions, deposits } = useTransaction();
 
-  const userWallets: Wallet[] = useUserWallets() as Wallet[];
-  const evmWallet = userWallets.find(w => w.chain == "EVM");
+  const { evmWallet } = useWallets();
 
   if (!evmWallet) {  
     setActiveTab(Tabs.Deposit); 
@@ -28,7 +27,13 @@ export const ActivityContent = ({ setActiveTab }: {setActiveTab: React.Dispatch<
     <div className={isModalOpen ? "status-overlay active" : "status-overlay"}></div>
     <div className="activity-container">
    {evmWallet && deposits && deposits.map((tx, index) => {
-     const status = Number(tx.isError) ? "failed" : transactions.get(tx.hash)?.pdaData ? "completed" :  (transactions.get(tx.hash)?.pdaData === undefined) ? null : "loading";
+     const status = Number(tx.isError) 
+       ? "failed" 
+       : transactions.get(tx.hash)?.pdaData 
+         ? "completed" 
+         : (transactions.get(tx.hash)?.pdaData === undefined) 
+           ? null 
+           : "loading";
      return (
        <div key={index} className="deposit-transaction flex flex-row items-center" onClick={() => { setIsModalOpen(true); setCurrentTx(tx)}}>
             <img src="swap.png" alt="Swap" className="swap-image" style={{position: "absolute", width: "22px"}} hidden />

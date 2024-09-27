@@ -50,6 +50,8 @@ body, html {
     rgb(var(--background-start-rgb));
 }
 
+body { background: black; }
+
 .dynamic-modal {
   position: absolute;
 }
@@ -120,6 +122,9 @@ footer {
   a {
     margin-right: 20px;
   }
+  /* 
+    a span { font-weight: 500; } 
+  */
 }
 
 .mobile-logo { display: none; }

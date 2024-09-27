@@ -1,11 +1,12 @@
 import React from 'react';
 
-const Loading = ({ loadingClassName }: { loadingClassName: string}) => {
+const Loading = ({ loadingClassName, style }: { loadingClassName: string, style: any}) => {
   return (
     <svg
       viewBox="0 0 24 24"
       xmlns="http://www.w3.org/2000/svg"
       className={loadingClassName}
+      style={...style}
       fill="currentColor"
       width="20px"
     >

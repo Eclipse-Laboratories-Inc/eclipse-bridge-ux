@@ -5,4 +5,4 @@ export type DataArray = (number | null)[]
 export const EthereumDataContext = createContext<DataArray | null>(null);
 
 let walletClient: any;
-export const WalletClientContext = createContext<WalletClient>(walletClient);
+export const WalletClientContext = createContext<WalletClient | null>(walletClient);

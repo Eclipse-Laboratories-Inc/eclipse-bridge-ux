@@ -7,6 +7,7 @@ import {
 } from "@/lib/dynamic";
 import { Providers } from "@/app/providers";
 import { IBM_Plex_Sans } from 'next/font/google';
+
 const ibmPlexSans = IBM_Plex_Sans({
   subsets: ['latin'],
   weight: ['400', '500', '700'],

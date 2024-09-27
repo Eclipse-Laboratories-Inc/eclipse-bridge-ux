@@ -1,178 +1,148 @@
-import { useUserWallets, Wallet } from '@dynamic-labs/sdk-react-core';
+import React, { useEffect, useState, forwardRef, useMemo, useCallback } from 'react';
+import { useDynamicContext, DynamicConnectButton } from '@dynamic-labs/sdk-react-core';
 import { mainnet, sepolia } from "viem/chains";
-import React, { useEffect, useState, forwardRef } from 'react';
 import { createPublicClient, formatEther, http } from 'viem';
-import { useDynamicContext, DynamicConnectButton } from "@dynamic-labs/sdk-react-core";
 import { getBalance } from 'viem/actions';
 import './styles.css';
 import { Cross, Copy, ConnectIcon, CircleCheck, Disconnect} from "../icons";
 import { truncateWalletAddress } from '@/lib/stringUtils';
 import { getWalletBalance } from '@/lib/solanaUtils';
+import { useWallets } from '@/app/hooks/useWallets';
 
 const client = createPublicClient({
-  chain: (process.env.NEXT_PUBLIC_CURRENT_CHAIN === "mainnet") ? mainnet : sepolia,
+  chain: process.env.NEXT_PUBLIC_CURRENT_CHAIN === "mainnet" ? mainnet : sepolia,
   transport: http(),
-})
+});
 
 interface ConnectedWalletsProps {
-  close: React.MouseEventHandler<HTMLDivElement>; 
+  close: (e?: React.MouseEvent<HTMLDivElement>) => void;
 }
 
-const ConnectedWallets = forwardRef<HTMLDivElement, ConnectedWalletsProps>(({ close }, ref) => {
-  const userWallets: Wallet[] = useUserWallets() as Wallet[];
-  const solWallet = userWallets.find(w => w.chain == "SOL");
-  const evmWallet = userWallets.find(w => w.chain == "EVM");
-  const [copiedEclipse, setCopiedEclipse] = useState(false);
-  const [copiedEth, setCopiedEth] = useState(false);
-  const [balanceEther, setAmountBalanceEther] = useState(0);
-  const [balanceEclipse, setAmountBalanceEclipse] = useState(0);
-  const { handleUnlinkWallet } = useDynamicContext();
-  
-  const handleCopy = (address: string = "", stateSetter: (state: boolean) => void) => {
-    stateSetter(true);
-    navigator.clipboard.writeText(address);
-    setTimeout(() => stateSetter(false), 1000);
-  }
-  
+interface WalletData {
+  icon: string;
+  name: string;
+  address?: string;
+  balance: number;
+}
+
+const useWalletData = () => {
+  const { userWallets, evmWallet, solWallet } = useWallets();
+  const [balanceEther, setBalanceEther] = useState(0);
+  const [balanceEclipse, setBalanceEclipse] = useState(0);
+
   useEffect(() => {
     userWallets.forEach(async (wallet) => {
       if (!wallet) return;
 
-      if (wallet.chain == "EVM") {
+      if (wallet.chain === "EVM") {
         const balance = await getBalance(client, {
-          //@ts-ignore
-          address: wallet.address,
+          address: wallet.address as `0x${string}`,
           blockTag: 'safe'
-        })
+        });
 
         const balanceAsEther = formatEther(balance);
-        const formattedEtherBalance = balanceAsEther.includes('.') ? balanceAsEther.slice(0, balanceAsEther.indexOf('.') + 5) : balanceAsEther
-        const balanceEther = parseFloat(formattedEtherBalance);
-        setAmountBalanceEther(balanceEther);
+        const formattedEtherBalance = parseFloat(balanceAsEther.slice(0, balanceAsEther.indexOf('.') + 5));
+        setBalanceEther(formattedEtherBalance);
       }
-      if (wallet.chain == "SOL") {
+      if (wallet.chain === "SOL") {
         const balance = await getWalletBalance(wallet.address);
-        setAmountBalanceEclipse(balance);
+        setBalanceEclipse(balance);
       }
-
     });
   }, [userWallets]);
 
-
-  const eclipseWallet = {
-    icon: 'eclipse.png',
-    name: 'Eclipse Wallet',
-    address: solWallet?.address,
-    balance: balanceEclipse,
+  return {
+    solWallet,
+    evmWallet,
+    balanceEther,
+    balanceEclipse
   };
+};
 
-  const ethereumWallet = {
-    icon: 'eth.png',
-    name: 'Ethereum Wallet',
-    address: evmWallet?.address,
-    balance: balanceEther,
-  };
+const ConnectedWallets = forwardRef<HTMLDivElement, ConnectedWalletsProps>(({ close }, ref) => {
+  const { handleUnlinkWallet } = useDynamicContext();
+  const { solWallet, evmWallet, balanceEther, balanceEclipse } = useWalletData();
+  const [copiedEclipse, setCopiedEclipse] = useState(false);
+  const [copiedEth, setCopiedEth] = useState(false);
+
+  const handleCopy = useCallback((address: string = "", stateSetter: (state: boolean) => void) => {
+    stateSetter(true);
+    navigator.clipboard.writeText(address);
+    setTimeout(() => stateSetter(false), 1000);
+  }, []);
+
+  const walletData: WalletData[] = useMemo(() => [
+    {
+      icon: 'eclipse.png',
+      name: 'Eclipse Wallet',
+      address: solWallet?.address,
+      balance: balanceEclipse,
+    },
+    {
+      icon: 'eth.png',
+      name: 'Ethereum Wallet',
+      address: evmWallet?.address,
+      balance: balanceEther,
+    }
+  ], [solWallet, evmWallet, balanceEclipse, balanceEther]);
+
+  const renderWalletItem = useCallback((wallet: WalletData, index: number) => {
+    const isConnected = !!wallet.address;
+    const isCopied = index === 0 ? copiedEclipse : copiedEth;
+    const setCopied = index === 0 ? setCopiedEclipse : setCopiedEth;
+    const currentWallet = index === 0 ? solWallet : evmWallet;
+
+    return (
+      <li key={wallet.name} className="wallet-item">
+        <div className="wallet-title">{wallet.name}</div>
+        <div className={`wallet-details ${isConnected ? '' : 'disconnected'}`}>
+          <div className="wallet-details-top flex justify-between items-center">
+            <div className="flex flex-row">
+              <img src={wallet.icon} alt={`${wallet.name} Icon`} className="wallet-icon" />
+              <div>{truncateWalletAddress(wallet.address || '-')}</div>
+            </div>
+            {isConnected ? (
+              <div className="flex items-center" style={{gap: "8px"}}>
+                <div className={isCopied ? "hidden" : ""} onClick={() => handleCopy(wallet.address, setCopied)}>
+                  <Copy copyClassName="modal-copy" />
+                </div>
+                <div className={isCopied ? "visible" : "hidden"}>
+                  <CircleCheck circleClassName="modal-circle" />
+                </div>
+                <div onClick={() => currentWallet && handleUnlinkWallet(currentWallet.id) && close()}>
+                  <Disconnect disconnectClassName="modal-disconnect" />
+                </div>
+              </div>
+            ) : (
+              <DynamicConnectButton buttonClassName="" buttonContainerClassName="">
+                <div className="flex items-center gap-1 modal-connect">
+                  <ConnectIcon connectClassName="modal-connect"/>
+                  <div className="modal-connect-wallet">Connect Wallet</div>
+                </div>
+              </DynamicConnectButton>
+            )}
+          </div>
+          {isConnected && (
+            <div className="wallet-details-bottom">
+              <div className="wallet-details-balance">Balance</div>
+              <div className="balance-eth">{wallet.balance} ETH</div>
+            </div>
+          )}
+        </div>
+      </li>
+    );
+  }, [copiedEclipse, copiedEth, handleCopy, handleUnlinkWallet, solWallet, evmWallet]);
 
   return (
     <div ref={ref} className="connected-wallets-modal">
       <div className="connected-wallets-header flex items-center">
         <div>Connected Wallets</div>
-        <div className="cross-wrapper" onClick={(e) => close(e)}> <Cross crossClassName='wallets-cross' /> </div>
+        <div className="cross-wrapper" onClick={close}>
+          <Cross crossClassName='wallets-cross' />
+        </div>
       </div>
       <ul className="wallet-list">
-        <li className="wallet-item">
-          <div className="wallet-title"> Eclipse Wallet </div>
-          <div className={solWallet ? "wallet-details" : "wallet-details disconnected"}>
-            <div className="wallet-details-top flex justify-between items-center">
-            <div className="flex flex-row">
-                <img
-                  src={eclipseWallet.icon}
-                  alt="Eclipse Icon"
-                  className="wallet-icon"
-                />
-                <div> {truncateWalletAddress(solWallet?.address || '-')}</div>
-            </div>
-          { (solWallet)
-            ? <div className="flex items-center" style={{gap: "8px"}}>
-                <div className={copiedEclipse ? "hidden" : ""} onClick={() => handleCopy(solWallet?.address, setCopiedEclipse)}>
-                  <Copy copyClassName="modal-copy" />
-                </div>
-                <div className={copiedEclipse ? "visible" : "hidden"}>
-                  <CircleCheck circleClassName="modal-circle" />
-                </div>
-                <div onClick={() => solWallet && handleUnlinkWallet(solWallet.id)}>
-                  <Disconnect disconnectClassName="modal-disconnect" />
-                </div>
-              </div>
-           : <DynamicConnectButton buttonClassName="" buttonContainerClassName="">
-                <div className="flex items-center gap-1 modal-connect">
-                  <div>
-                    <ConnectIcon connectClassName="modal-connect"/>
-                  </div>
-                  <div className="modal-connect-wallet">Connect Wallet</div>
-                </div>
-            </DynamicConnectButton>
-          }
-            </div>
-            <div className={ solWallet ? "wallet-details-bottom" : "hidden"}>
-              <div className="wallet-details-balance">
-                Balance
-              </div>
-              <div className="balance-eth">
-                {balanceEclipse} ETH
-              </div>
-            </div>
-          </div>
-        </li>
-        <li className="wallet-item">
-          <div className="wallet-title"> Ethereum Wallet </div>
-          <div className={ evmWallet ? "wallet-details" : "wallet-details disconnected"}>
-            <div className="wallet-details-top flex justify-between items-center">
-            <div className="flex flex-row">
-              <img
-                src={ethereumWallet.icon}
-                alt="Ethereum Icon"
-                className="wallet-icon"
-              />
-              <div> {truncateWalletAddress(evmWallet?.address || '-')}</div>
-            </div>
-
-
-          { (evmWallet)
-            ? <div className={evmWallet ? "flex items-center" : "hidden"} style={{gap: "8px"}}>
-                <div className={copiedEth ? "hidden" : ""} onClick={() => handleCopy(evmWallet?.address, setCopiedEth)}>
-                  <Copy copyClassName="modal-copy" />
-                </div>
-                <div className={copiedEth ? "visible" : "hidden"}>
-                  <CircleCheck circleClassName="modal-circle" />
-                </div>
-                <div onClick={() => evmWallet && handleUnlinkWallet(evmWallet.id) }>
-                  <Disconnect disconnectClassName="modal-disconnect" />
-                </div>
-            </div>
-
-
-           : <DynamicConnectButton buttonClassName="" buttonContainerClassName="">
-                <div className="flex items-center gap-1 modal-connect">
-                  <div>
-                    <ConnectIcon connectClassName="modal-connect" />
-                  </div>
-                  <div className="modal-connect-wallet">Connect Wallet</div>
-                </div>
-            </DynamicConnectButton>
-          }
-
-            </div>
-            <div className={ evmWallet ? "wallet-details-bottom" : "hidden" }>
-              <div className="wallet-details-balance">
-                Balance
-              </div>
-              <div className="balance-eth">
-                {balanceEther} ETH
-              </div>
-            </div>
-          </div>
-        </li>
+        {walletData.map(renderWalletItem)}
       </ul>
     </div>
   );

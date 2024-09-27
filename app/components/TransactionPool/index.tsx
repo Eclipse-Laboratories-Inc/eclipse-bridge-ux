@@ -3,8 +3,8 @@ import React, { createContext, useContext, useState, useEffect, ReactNode } from
 import { getLastDeposits, getNonce, getEclipseTransaction, checkDepositWithPDA } from "@/lib/activityUtils"
 import { createPublicClient, http } from 'viem'
 import { mainnet, sepolia } from "viem/chains";
-import { useUserWallets, Wallet } from "@dynamic-labs/sdk-react-core";
 import { Transaction, defaultTransaction, TransactionContextType } from "./types"
+import { useWallets } from '@/app/hooks/useWallets';
 
 export const TransactionContext = createContext<TransactionContextType | undefined>(undefined);
 
@@ -14,11 +14,11 @@ export const TransactionProvider = ({ children } : { children: ReactNode}) => {
   const [pendingTransactions, setPendingTransactions] = useState<Transaction[]>([]);
   const [lastAddress, setLastAddress] = useState<string>(''); 
 
-  const userWallets: Wallet[] = useUserWallets() as Wallet[];
-  const evmWallet = userWallets.find(w => w.chain == "EVM");
+  const { evmWallet } = useWallets();
 
+  // "https://eth.llamarpc.com"
   const client = createPublicClient({
-    chain: (process.env.NEXT_PUBLIC_CURRENT_CHAIN === "mainnet") ? mainnet : sepolia,
+    chain    : (process.env.NEXT_PUBLIC_CURRENT_CHAIN === "mainnet") ? mainnet : sepolia,
     transport: (process.env.NEXT_PUBLIC_CURRENT_CHAIN === "mainnet") ? http() : http("https://sepolia.drpc.org"),
     cacheTime: 0
   })
