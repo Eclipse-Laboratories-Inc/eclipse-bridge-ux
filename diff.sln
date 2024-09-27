@@ -1,0 +1,155 @@
+diff --git a/.env.example b/.env.example
+index 7a8f945..d2cb058 100644
+--- a/.env.example
++++ b/.env.example
+@@ -11,7 +11,7 @@ NEXT_PUBLIC_BRIDGE_PROGRAM=br1xwubggTiEZ6b7iNZUwfA3psygFfaXGfZ1heaN9AW
+ NEXT_PUBLIC_BRIDGE_CONTRACT=0x83cB71D80078bf670b3EfeC6AD9E5E6407cD0fd1
+ NEXT_PUBLIC_ECLIPSE_RPC=https://mainnetbeta-rpc.eclipse.xyz
+ NEXT_PUBLIC_CURRENT_CHAIN=mainnet
+-NEXT_PUBLIC_ETHERSCAN_ADDRESS=https://etherscan.io/api
++NEXT_PUBLIC_ETHERSCAN_ADDRESS=https://api.etherscan.io/api
+ NEXT_PUBLIC_EVM_EXPLORER=https://etherscan.io
+ NEXT_PUBLIC_ECLIPSE_EXPLORER=mainnet
+ NEXT_PUBLIC_SOURCE_CHAIN_NAME="Ethereum Mainnet"
+diff --git a/README.md b/README.md
+index f4da3c4..b9f735e 100644
+--- a/README.md
++++ b/README.md
+@@ -1,5 +1,14 @@
+ This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+ 
++## Setting up Authentication and API access
++
++Create a `.env.local` file by copying the `.env.example` file and set the following environment variables:
++
++- Create a free account on [Dynamic Labs](https://app.dynamic.xyz/) and get your environment id (NEXT_PUBLIC_ENVIRONMENT_ID)
++  - You will need to enable Solana with a RPC for the Eclipse Bridge to work.
++
++- Create a free account on [Etherscan](https://etherscan.io/) and get your API key (ETHERSCAN_API_KEY)
++
+ ## Getting Started
+ 
+ First, run the development server:
+diff --git a/package-lock.json b/package-lock.json
+index 353c690..6e4640a 100644
+--- a/package-lock.json
++++ b/package-lock.json
+@@ -28,6 +28,7 @@
+         "next": "^14.2.5",
+         "pino-pretty": "^11.2.2",
+         "postcss": "8.4.31",
++        "postcss-nesting": "^13.0.0",
+         "react": "18.2.0",
+         "react-dom": "18.2.0",
+         "react-loading-skeleton": "^3.4.0",
+@@ -91,6 +92,50 @@
+         "@solana/web3.js": "^1.68.0"
+       }
+     },
++    "node_modules/@csstools/selector-resolve-nested": {
++      "version": "2.0.0",
++      "resolved": "https://registry.npmjs.org/@csstools/selector-resolve-nested/-/selector-resolve-nested-2.0.0.tgz",
++      "integrity": "sha512-oklSrRvOxNeeOW1yARd4WNCs/D09cQjunGZUgSq6vM8GpzFswN+8rBZyJA29YFZhOTQ6GFzxgLDNtVbt9wPZMA==",
++      "funding": [
++        {
++          "type": "github",
++          "url": "https://github.com/sponsors/csstools"
++        },
++        {
++          "type": "opencollective",
++          "url": "https://opencollective.com/csstools"
++        }
++      ],
++      "license": "MIT-0",
++      "engines": {
++        "node": ">=18"
++      },
++      "peerDependencies": {
++        "postcss-selector-parser": "^6.1.0"
++      }
++    },
++    "node_modules/@csstools/selector-specificity": {
++      "version": "4.0.0",
++      "resolved": "https://registry.npmjs.org/@csstools/selector-specificity/-/selector-specificity-4.0.0.tgz",
++      "integrity": "sha512-189nelqtPd8++phaHNwYovKZI0FOzH1vQEE3QhHHkNIGrg5fSs9CbYP3RvfEH5geztnIA9Jwq91wyOIwAW5JIQ==",
++      "funding": [
++        {
++          "type": "github",
++          "url": "https://github.com/sponsors/csstools"
++        },
++        {
++          "type": "opencollective",
++          "url": "https://opencollective.com/csstools"
++        }
++      ],
++      "license": "MIT-0",
++      "engines": {
++        "node": ">=18"
++      },
++      "peerDependencies": {
++        "postcss-selector-parser": "^6.1.0"
++      }
++    },
+     "node_modules/@dynamic-labs/ethereum": {
+       "version": "2.4.0",
+       "resolved": "https://registry.npmjs.org/@dynamic-labs/ethereum/-/ethereum-2.4.0.tgz",
+@@ -8242,6 +8287,33 @@
+         "postcss": "^8.2.14"
+       }
+     },
++    "node_modules/postcss-nesting": {
++      "version": "13.0.0",
++      "resolved": "https://registry.npmjs.org/postcss-nesting/-/postcss-nesting-13.0.0.tgz",
++      "integrity": "sha512-TCGQOizyqvEkdeTPM+t6NYwJ3EJszYE/8t8ILxw/YoeUvz2rz7aM8XTAmBWh9/DJjfaaabL88fWrsVHSPF2zgA==",
++      "funding": [
++        {
++          "type": "github",
++          "url": "https://github.com/sponsors/csstools"
++        },
++        {
++          "type": "opencollective",
++          "url": "https://opencollective.com/csstools"
++        }
++      ],
++      "license": "MIT-0",
++      "dependencies": {
++        "@csstools/selector-resolve-nested": "^2.0.0",
++        "@csstools/selector-specificity": "^4.0.0",
++        "postcss-selector-parser": "^6.1.0"
++      },
++      "engines": {
++        "node": ">=18"
++      },
++      "peerDependencies": {
++        "postcss": "^8.4"
++      }
++    },
+     "node_modules/postcss-selector-parser": {
+       "version": "6.1.1",
+       "resolved": "https://registry.npmjs.org/postcss-selector-parser/-/postcss-selector-parser-6.1.1.tgz",
+diff --git a/package.json b/package.json
+index bbfb0c4..ffadf4e 100644
+--- a/package.json
++++ b/package.json
+@@ -29,6 +29,7 @@
+     "next": "^14.2.5",
+     "pino-pretty": "^11.2.2",
+     "postcss": "8.4.31",
++    "postcss-nesting": "^13.0.0",
+     "react": "18.2.0",
+     "react-dom": "18.2.0",
+     "react-loading-skeleton": "^3.4.0",
+diff --git a/postcss.config.js b/postcss.config.js
+index 33ad091..774a1f7 100644
+--- a/postcss.config.js
++++ b/postcss.config.js
+@@ -1,6 +1,8 @@
+ module.exports = {
+   plugins: {
++    'postcss-import': {},
++    'tailwindcss/nesting': 'postcss-nesting',
+     tailwindcss: {},
+     autoprefixer: {},
+-  },
++  }
+ }

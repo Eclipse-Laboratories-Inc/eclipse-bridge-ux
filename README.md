@@ -1,5 +1,14 @@
 This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
 
+## Setting up Authentication and API access
+
+Create a `.env.local` file by copying the `.env.example` file and set the following environment variables:
+
+- Create a free account on [Dynamic Labs](https://app.dynamic.xyz/) and get your environment id (NEXT_PUBLIC_ENVIRONMENT_ID)
+  - You will need to enable Solana with a RPC for the Eclipse Bridge to work.
+
+- Create a free account on [Etherscan](https://etherscan.io/) and get your API key (ETHERSCAN_API_KEY)
+
 ## Getting Started
 
 First, run the development server:
