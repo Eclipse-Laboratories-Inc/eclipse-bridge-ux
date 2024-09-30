@@ -14,6 +14,31 @@ export const metadata: Metadata = {
         : '/testnet-favicon.png',
     }
   ],
+  openGraph: {
+    title: process.env.WEBSITE_TITLE,
+    description: process.env.WEBSITE_DESCRIPTION,
+    images: [
+      {
+        url: "/eclipse-favicon.png",
+        width: 800,
+        height: 8000,
+      }
+    ],
+    type: 'website',
+    locale: 'en_US'
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: process.env.WEBSITE_TITLE,
+    description: process.env.WEBSITE_DESCRIPTION,
+    images: [
+      {
+        url: "/eclipse-favicon.png",
+        width: 800,
+        height: 8000,
+      }
+    ]
+  }
 };
 
 export default function RootLayout({
