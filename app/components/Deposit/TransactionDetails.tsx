@@ -91,8 +91,11 @@ export const TransactionDetails: React.FC<TransactionDetailsProps> = ({ from, cl
           </div>
           { tx && (ethTxStatus === "completed") && <div className={`flex flex-row items-center gap-1 ${depositStatus}-item status-item`}>
               <TransactionIcon iconType={depositStatus} className="tx-done-icon" /> 
-              <span>{ depositStatus === "completed" ? "Done"  : "Processing" }</span>
-          </div>}
+              <span>
+                { depositStatus === "completed" ? "Done" : <div className="flex flex-row gap-2 items-center justify-center"><p>Processing</p> <p className="green-text">~5 mins</p></div>} 
+              </span>
+            </div>
+          }
         </div>
 
         <div className="panel-elem flex flex-row items-center justify-between">
