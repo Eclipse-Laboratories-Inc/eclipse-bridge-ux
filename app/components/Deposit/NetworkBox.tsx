@@ -1,13 +1,9 @@
 "use client";
 import React from 'react';
-
 import './styles.css';
 import 'react-loading-skeleton/dist/skeleton.css';
-
 import { Cross, ConnectIcon } from "../icons";
-
 import { DynamicConnectButton } from "@dynamic-labs/sdk-react-core";
-
 import { truncateWalletAddress } from '@/lib/stringUtils';
 import { useWallets } from "@/app/hooks/useWallets";
 

@@ -4,7 +4,7 @@ import { mainnet, sepolia } from "viem/chains";
 import { createPublicClient, formatEther, http } from 'viem';
 import { getBalance } from 'viem/actions';
 import './styles.css';
-import { Cross, Copy, ConnectIcon, CircleCheck, Disconnect} from "../icons";
+import { Cross, Copy, ConnectIcon, CircleCheck, Disconnect } from "../icons";
 import { truncateWalletAddress } from '@/lib/stringUtils';
 import { getWalletBalance } from '@/lib/solanaUtils';
 import { useWallets } from '@/app/hooks/useWallets';
@@ -88,9 +88,10 @@ const ConnectedWallets = forwardRef<HTMLDivElement, ConnectedWalletsProps>(({ cl
 
   const renderWalletItem = useCallback((wallet: WalletData, index: number) => {
     const isConnected = !!wallet.address;
-    const isCopied = index === 0 ? copiedEclipse : copiedEth;
-    const setCopied = index === 0 ? setCopiedEclipse : setCopiedEth;
-    const currentWallet = index === 0 ? solWallet : evmWallet;
+    const isEclipse = index === 0;
+    const isCopied = isEclipse ? copiedEclipse : copiedEth;
+    const setCopied = isEclipse ? setCopiedEclipse : setCopiedEth;
+    const currentWallet = isEclipse ? solWallet : evmWallet;
 
     return (
       <li key={wallet.name} className="wallet-item">
