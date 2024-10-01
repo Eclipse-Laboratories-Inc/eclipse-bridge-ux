@@ -21,7 +21,7 @@ import { generateTxObjectForDetails } from "@/lib/activityUtils";
 
 import Skeleton from 'react-loading-skeleton';
 
-import { TransactionDetails } from "./TransactionDetails";
+import { TransactionDetails } from "../TransactionDetails";
 import { useTransaction } from "../TransactionPool";
 import { NetworkBox } from "./NetworkBox"
 import { CONTRACT_ABI, CONTRACT_ADDRESS, MIN_DEPOSIT_AMOUNT } from "../constants";
