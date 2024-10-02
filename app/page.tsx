@@ -4,6 +4,7 @@ import Deposit from "./components/Deposit";
 import { Header } from './components/Header';
 import { Footer } from './components/Footer';
 import { TransactionProvider } from './components/TransactionPool';
+import { NetworkSwitcher } from "./components/Deposit/NetworkSwitcher";
 import useEthereumData from "@/lib/ethUtils";
 import { useWalletClient } from "./hooks"
 import { EthereumDataContext, WalletClientContext } from "./context"
@@ -25,8 +26,11 @@ export default function Main() {
               height: "100%"
             }}>
               <Header />
-              <div className="main-content flex flex-col gap-2 items-center">
-                <Deposit amountEther={amountEther} setAmountEther={setAmountEther} />
+              <div className="flex flex-col items-center" style={{ gap: "13px"}}>
+                <NetworkSwitcher />
+                <div className="main-content flex flex-col gap-2 items-center">
+                  <Deposit amountEther={amountEther} setAmountEther={setAmountEther} />
+                </div>
               </div>
               <Footer />
             </div>

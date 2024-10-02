@@ -1,0 +1,47 @@
+.switcher-main {
+  position: relative;
+  width: 149px;
+}
+
+.net-switcher {
+  border-radius: 40px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  padding-right: 10px;
+  padding-left: 30px;
+  cursor: pointer;
+
+  height: 46px;
+  gap: 8px;
+  span {
+    font-size: 16px;
+    color: rgba(255, 255, 255, 0.6);
+    font-weight: 500;
+  }
+}
+
+.network-options {
+  position: absolute;
+  margin-top: 56px;
+  z-index: 500;
+
+  border-radius: 15px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: rgba(0, 0, 0, 0.05);
+  backdrop-filter: blur(54px);
+  width: 100%;
+  padding: 8px;
+
+  div {
+    color: rgba(255, 255, 255, 0.6);
+    padding: 10px 9px;
+    font-size: 16px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-weight: 500;
+  }
+
+  div:hover {
+    background: rgba(255, 255, 255, 0.03);
+    color: white;
+  }
+}
