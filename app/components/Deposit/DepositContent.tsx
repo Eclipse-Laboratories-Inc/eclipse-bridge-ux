@@ -15,6 +15,7 @@ import { mainnet, sepolia } from "viem/chains";
 import { createPublicClient, formatEther, http, parseEther, WalletClient } from 'viem';
 import { Transport, Chain, Account } from 'viem';
 import { getBalance } from 'viem/actions';
+import { Options, useNetwork } from "@/app/contexts/NetworkContext"; 
 
 import { solanaToBytes32 } from '@/lib/solanaUtils';
 import { generateTxObjectForDetails } from "@/lib/activityUtils";
@@ -27,13 +28,6 @@ import { NetworkBox } from "./NetworkBox"
 import { CONTRACT_ABI, CONTRACT_ADDRESS, MIN_DEPOSIT_AMOUNT } from "../constants";
 import { useWallets } from "@/app/hooks/useWallets";
 
-const client = createPublicClient({
-  chain: (process.env.NEXT_PUBLIC_CURRENT_CHAIN === "mainnet") ? mainnet : sepolia,
-  // transport: (process.env.NEXT_PUBLIC_CURRENT_CHAIN === "mainnet") ? http() : http("https://sepolia.drpc.org"),
-  transport: (process.env.NEXT_PUBLIC_CURRENT_CHAIN === "mainnet") ? http("https://eth.llamarpc.com") : http("https://sepolia.drpc.org"),
-  cacheTime: 0
-})
-
 export interface DepositContentProps {
   modalStuff: [boolean, React.Dispatch<React.SetStateAction<boolean>>];
   amountEther: number | string | undefined;
@@ -42,18 +36,27 @@ export interface DepositContentProps {
 
 export const DepositContent: React.FC<DepositContentProps> = ({ modalStuff, amountEther, setAmountEther }) => {
   const [walletClient, setWalletClient] = useState<WalletClient<Transport, Chain, Account> | null>(null);
-  const [ethTxStatus, setEthTxStatus] = useState("");
   const [balanceEther, setAmountBalanceEther] = useState<number>(-1);
   const [isEvmDisconnected, setIsEvmDisconnected] = useState(false);
   const [isSolDisconnected, setIsSolDisconnected] = useState(false);
-  const [isModalOpen, setIsModalOpen] = modalStuff; 
   const [currentTx, setCurrentTx] = useState<any>(null);
+  const [ethTxStatus, setEthTxStatus] = useState("");
+  const [isModalOpen, setIsModalOpen] = modalStuff; 
+  const { selectedOption } = useNetwork();
 
   const { handleUnlinkWallet, rpcProviders } = useDynamicContext();
   const { addNewDeposit } = useTransaction();
 
   const { userWallets, evmWallet, solWallet } = useWallets();
   const provider = rpcProviders.evmDefaultProvider;
+  const isMainnet = (selectedOption === Options.Mainnet);
+
+  const client = createPublicClient({
+    chain: isMainnet ? mainnet : sepolia,
+    // transport: (process.env.NEXT_PUBLIC_CURRENT_CHAIN === "mainnet") ? http() : http("https://sepolia.drpc.org"),
+    transport: isMainnet ? http("https://eth.llamarpc.com") : http("https://sepolia.drpc.org"),
+    cacheTime: 0
+  })
 
   useEffect(() => {
     let lWalletClient = evmWallet?.connector.getWalletClient<WalletClient<Transport, Chain, Account>>();
@@ -107,7 +110,7 @@ export const DepositContent: React.FC<DepositContentProps> = ({ modalStuff, amou
         args: [destinationBytes32, weiValue],
         account,
         value: weiValue,
-        chain: (process.env.NEXT_PUBLIC_CURRENT_CHAIN === "mainnet") ? mainnet : sepolia
+        chain: isMainnet ? mainnet : sepolia
       })
       let txResponse = await walletClient!.writeContract(request);
       // rabby returns the tx hash without 0x
@@ -189,7 +192,7 @@ export const DepositContent: React.FC<DepositContentProps> = ({ modalStuff, amou
           <NetworkBox 
             imageSrc="eth.png"
             direction="From"
-            chainName={process.env.NEXT_PUBLIC_SOURCE_CHAIN_NAME ?? ""}
+            chainName={ isMainnet ? "Ethereum Mainnet" : "Ethereum Sepolia" }
             onClickEvent={() => evmWallet && handleUnlinkWallet(evmWallet.id) && setIsEvmDisconnected(!isEvmDisconnected)}
             walletChain="EVM"
             showConnect={(!evmWallet && isEvmDisconnected && !isSolDisconnected)}
@@ -198,7 +201,7 @@ export const DepositContent: React.FC<DepositContentProps> = ({ modalStuff, amou
           <NetworkBox 
             imageSrc="eclipse.png"
             direction="To"
-            chainName={process.env.NEXT_PUBLIC_TARGET_CHAIN_NAME ?? ""}
+            chainName={ isMainnet ? "Eclipse Mainnet" : "Eclipse Testnet" }
             onClickEvent={() => solWallet && handleUnlinkWallet(solWallet.id) && setIsSolDisconnected(!isSolDisconnected)}
             walletChain="SOL"
             showConnect={(!solWallet && isSolDisconnected && !isEvmDisconnected)}

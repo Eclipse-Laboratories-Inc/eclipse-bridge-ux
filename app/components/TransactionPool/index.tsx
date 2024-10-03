@@ -1,7 +1,8 @@
 "use client"
 import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 import { getLastDeposits, getNonce, getEclipseTransaction, checkDepositWithPDA } from "@/lib/activityUtils"
-import { createPublicClient, http } from 'viem'
+import { Options, useNetwork } from "@/app/contexts/NetworkContext"; 
+import { createPublicClient, PublicClient, http } from 'viem'
 import { mainnet, sepolia } from "viem/chains";
 import { Transaction, defaultTransaction, TransactionContextType } from "./types"
 import { useWallets } from '@/app/hooks/useWallets';
@@ -13,15 +14,40 @@ export const TransactionProvider = ({ children } : { children: ReactNode}) => {
   const [deposits, setDeposits] = useState<any[] | null>(null);
   const [pendingTransactions, setPendingTransactions] = useState<Transaction[]>([]);
   const [lastAddress, setLastAddress] = useState<string>(''); 
+  const { selectedOption } = useNetwork();
+  const [client, setClient] = useState<PublicClient | null>(null)
 
   const { evmWallet } = useWallets();
 
-  // "https://eth.llamarpc.com"
-  const client = createPublicClient({
-    chain    : (process.env.NEXT_PUBLIC_CURRENT_CHAIN === "mainnet") ? mainnet : sepolia,
-    transport: (process.env.NEXT_PUBLIC_CURRENT_CHAIN === "mainnet") ? http() : http("https://sepolia.drpc.org"),
-    cacheTime: 0
-  })
+  useEffect(() =>{
+    const isMainnet = (selectedOption === Options.Mainnet);
+    const client = createPublicClient({
+      chain    : isMainnet ? mainnet : sepolia,
+      transport: isMainnet ? http() : http("https://sepolia.drpc.org"),
+      cacheTime: 0
+    })
+    const fetchDeposits = async () => {
+      try {
+        setDeposits([]);
+        const data = await getLastDeposits(evmWallet?.address || '');
+        setDeposits(data.reverse());
+        
+       const delay = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
+    
+       const processTransactions = async (data: any[]) => {
+         data.forEach(async (tx, index) => {
+           await delay(index * 30);
+           addTransactionListener(tx.hash, tx.txreceipt_status);
+        });
+        };
+        processTransactions(data);
+      } catch (error) {
+        console.error("Error fetching deposits:", error);
+      }
+    };
+    setClient(client);
+    fetchDeposits();
+  }, [selectedOption])
 
   useEffect(() => {
     const fetchDeposits = async () => {

@@ -7,6 +7,7 @@ import {
 } from "@/lib/dynamic";
 import { Providers } from "@/app/providers";
 import { IBM_Plex_Sans } from 'next/font/google';
+import { mergeNetworks } from '@dynamic-labs/sdk-react-core';
 
 const ibmPlexSans = IBM_Plex_Sans({
   subsets: ['latin'],
@@ -80,7 +81,7 @@ const cssOverrides = `
   }
 `
 
-// override this on sepolia
+// sepolia
 const evmNetworks = [{
     blockExplorerUrls: ['https://sepolia.etherscan.io/'],
     chainId: 11155111,
@@ -144,7 +145,7 @@ export default function ClientLayout({
           privacyPolicyUrl: "https://www.eclipse.xyz/privacy-policy",
           termsOfServiceUrl: "https://www.eclipse.xyz/terms",
           overrides: {
-            ...(process.env.NEXT_PUBLIC_CURRENT_CHAIN === 'sepolia' && { evmNetworks: evmNetworks }),
+            evmNetworks: (networks) => mergeNetworks(evmNetworks, networks),
             chainDisplayValues: {
               solana: {
                  displayName: 'Eclipse'
