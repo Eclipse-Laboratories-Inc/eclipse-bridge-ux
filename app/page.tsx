@@ -18,8 +18,8 @@ export default function Main() {
 
   return (
     <EthereumDataContext.Provider value={[gasPrice, ethPrice]}>
-      <WalletClientContext.Provider value={walletClient}>
-        <NetworkProvider>
+      <NetworkProvider>
+        <WalletClientContext.Provider value={walletClient}>
           <TransactionProvider>
             <SkeletonTheme baseColor="#FFFFFF0A" highlightColor="#FFFFFF26">
               <div className="flex items-center text-white flex flex-col justify-between" id="main-content" style={{
@@ -38,8 +38,8 @@ export default function Main() {
               </div>
             </SkeletonTheme>
           </TransactionProvider>
-        </NetworkProvider>
-      </WalletClientContext.Provider >
+        </WalletClientContext.Provider >
+      </NetworkProvider>
     </EthereumDataContext.Provider>
   );
 }

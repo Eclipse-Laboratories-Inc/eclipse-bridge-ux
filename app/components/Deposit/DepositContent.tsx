@@ -25,7 +25,7 @@ import Skeleton from 'react-loading-skeleton';
 import { TransactionDetails } from "../TransactionDetails";
 import { useTransaction } from "../TransactionPool";
 import { NetworkBox } from "./NetworkBox"
-import { CONTRACT_ABI, CONTRACT_ADDRESS, MIN_DEPOSIT_AMOUNT } from "../constants";
+import { CONTRACT_ABI, MIN_DEPOSIT_AMOUNT } from "../constants";
 import { useWallets } from "@/app/hooks/useWallets";
 
 export interface DepositContentProps {
@@ -42,21 +42,34 @@ export const DepositContent: React.FC<DepositContentProps> = ({ modalStuff, amou
   const [currentTx, setCurrentTx] = useState<any>(null);
   const [ethTxStatus, setEthTxStatus] = useState("");
   const [isModalOpen, setIsModalOpen] = modalStuff; 
-  const { selectedOption } = useNetwork();
+  const { selectedOption, contractAddress } = useNetwork();
+  const [client, setClient] = useState<any>(null);
+  const [provider, setProvider] = useState<any>(null);
 
   const { handleUnlinkWallet, rpcProviders } = useDynamicContext();
   const { addNewDeposit } = useTransaction();
 
   const { userWallets, evmWallet, solWallet } = useWallets();
-  const provider = rpcProviders.evmDefaultProvider;
   const isMainnet = (selectedOption === Options.Mainnet);
 
-  const client = createPublicClient({
-    chain: isMainnet ? mainnet : sepolia,
-    // transport: (process.env.NEXT_PUBLIC_CURRENT_CHAIN === "mainnet") ? http() : http("https://sepolia.drpc.org"),
-    transport: isMainnet ? http("https://eth.llamarpc.com") : http("https://sepolia.drpc.org"),
-    cacheTime: 0
-  })
+  useEffect(() => {
+    const cid = isMainnet ? 1 : 11155111;
+    const lprovider = rpcProviders.getEvmRpcProviderByChainId(cid);
+    setProvider(lprovider);
+    console.log("new providoo")
+  }, [evmWallet?.chain])
+  
+  useEffect(() => {
+    const isMainnet = (selectedOption === Options.Mainnet);
+    const mclient = createPublicClient({
+      chain: isMainnet ? mainnet : sepolia,
+      // transport: (process.env.NEXT_PUBLIC_CURRENT_CHAIN === "mainnet") ? http() : http("https://sepolia.drpc.org"),
+      transport: isMainnet ? http("https://eth.llamarpc.com") : http("https://sepolia.drpc.org"),
+      cacheTime: 0
+    })
+    setClient(mclient);
+  }, [selectedOption])
+
 
   useEffect(() => {
     let lWalletClient = evmWallet?.connector.getWalletClient<WalletClient<Transport, Chain, Account>>();
@@ -92,7 +105,7 @@ export const DepositContent: React.FC<DepositContentProps> = ({ modalStuff, amou
       const balanceEther = parseFloat(formattedEtherBalance);
       setAmountBalanceEther(balanceEther);
     });
-  }, [userWallets]);
+  }, [userWallets, client]);
 
   const submitDeposit = async () => {
     setIsModalOpen(true);
@@ -102,9 +115,11 @@ export const DepositContent: React.FC<DepositContentProps> = ({ modalStuff, amou
     const weiValue = parseEther(amountEther?.toString() || '');
 
     try {
+      console.log("zzzzoo", contractAddress);
+      console.log("prio", provider)
       const { request } = await client.simulateContract({
         //@ts-ignore
-        address: CONTRACT_ADDRESS,
+        address: contractAddress,
         abi: CONTRACT_ABI,
         functionName: 'deposit',
         args: [destinationBytes32, weiValue],

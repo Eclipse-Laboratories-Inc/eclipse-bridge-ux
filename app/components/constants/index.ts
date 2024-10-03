@@ -1,4 +1,3 @@
-export const CONTRACT_ADDRESS = process.env.NEXT_PUBLIC_BRIDGE_CONTRACT || ''
 export const MIN_DEPOSIT_AMOUNT = 0.002;
 
 export const CONTRACT_ABI = [{

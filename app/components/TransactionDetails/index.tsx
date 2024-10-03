@@ -6,6 +6,7 @@ import { timeAgo } from "@/lib/activityUtils";
 import { ethers } from "ethers";
 import { EthereumDataContext } from "@/app/context";
 import { useTransaction } from "../TransactionPool";
+import { useNetwork } from "@/app/contexts/NetworkContext"; 
 
 interface TransactionDetailsProps {
   from: "deposit" | "withdraw" | "";
@@ -64,6 +65,7 @@ export const TransactionDetails: React.FC<TransactionDetailsProps> = ({
 }) => {
   const [_, ethPrice] = useContext(EthereumDataContext) ?? [0, 0];
   const { transactions, addTransactionListener } = useTransaction();
+  const { evmExplorer, eclipseExplorer } = useNetwork();
 
   const transaction = tx && transactions.get(tx.hash);
 
@@ -101,7 +103,7 @@ export const TransactionDetails: React.FC<TransactionDetailsProps> = ({
             {tx && (
               <div className="gray-text">
                 <a
-                  href={`${process.env.NEXT_PUBLIC_EVM_EXPLORER}/tx/${tx.hash}`}
+                  href={`${evmExplorer}/tx/${tx.hash}`}
                   target="_blank"
                 >
                   View Txn
@@ -157,7 +159,7 @@ export const TransactionDetails: React.FC<TransactionDetailsProps> = ({
             <div className="gray-text">
               {eclipseTx && (
                 <a
-                  href={`https://explorer.eclipse.xyz/tx/${eclipseTx}?cluster=${process.env.NEXT_PUBLIC_ECLIPSE_EXPLORER}`}
+                  href={`https://explorer.eclipse.xyz/tx/${eclipseTx}?cluster=${eclipseExplorer}`}
                   target="_blank"
                 >
                   View Txn

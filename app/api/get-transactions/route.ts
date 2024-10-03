@@ -1,18 +1,28 @@
 import { NextResponse } from 'next/server';
 
-const BRIDGE_CONTRACT_ADDRESS = process.env.NEXT_PUBLIC_BRIDGE_CONTRACT || '';
 const API_KEY = process.env.ETHERSCAN_API_KEY || '';
+const chains: { [key: string]: [string, string] } = {
+  mainnet: ['https://api.etherscan.io/api'         , '0x83cB71D80078bf670b3EfeC6AD9E5E6407cD0fd1'],
+  testnet: ['https://api-sepolia.etherscan.io/api' , '0x11b8db6bb77ad8cb9af09d0867bb6b92477dd68e'],
+};
 
 export async function GET(request: Request) {
   const { searchParams } = new URL(request.url);
   const address = searchParams.get('address');
+  const chain = searchParams.get('chain');
+  console.log(chain, "chain")
+  if (!chain || !chains[chain]) {
+    return NextResponse.json({ message: 'Invalid chain' }, { status: 400 });
+  }
 
   if (!address || typeof address !== 'string') {
     return NextResponse.json({ message: 'Address is required' }, { status: 400 });
   }
+  const [etherscanApi, bridgeContract] = chains[chain];
 
   try {
-    const apiUrl = `${process.env.NEXT_PUBLIC_ETHERSCAN_ADDRESS}?module=account&action=txlist&address=${address}&startblock=0&endblock=99999999&page=1&offset=1000&sort=asc&apikey=${API_KEY}`;
+    const apiUrl = `${etherscanApi}?module=account&action=txlist&address=${address}&startblock=0&endblock=99999999&page=1&offset=1000&sort=asc&apikey=${API_KEY}`;
+    console.log(apiUrl)
     const response = await fetch(apiUrl);
     const data = await response.json();
 
@@ -21,7 +31,7 @@ export async function GET(request: Request) {
     }
 
     const deposits = data.result
-      .filter((tx: any) => tx.to.toLowerCase() === BRIDGE_CONTRACT_ADDRESS.toLowerCase());
+      .filter((tx: any) => tx.to.toLowerCase() === bridgeContract.toLowerCase());
 
     return NextResponse.json(deposits);
   } catch (error) {
