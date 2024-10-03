@@ -24,7 +24,7 @@ import Skeleton from 'react-loading-skeleton';
 import { TransactionDetails } from "../TransactionDetails";
 import { useTransaction } from "../TransactionPool";
 import { NetworkBox } from "./NetworkBox"
-import { CONTRACT_ABI, CONTRACT_ADDRESS, MIN_DEPOSIT_AMOUNT } from "../constants";
+import { CONTRACT_ABI, MIN_DEPOSIT_AMOUNT } from "../constants";
 import { useWallets } from "@/app/hooks/useWallets";
 
 const client = createPublicClient({
