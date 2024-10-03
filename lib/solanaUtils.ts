@@ -1,27 +1,33 @@
-const solanaWeb3 = require('@solana/web3.js');
-import { PublicKey, PublicKeyInitData } from '@solana/web3.js';
+import { Connection, PublicKey, PublicKeyInitData, LAMPORTS_PER_SOL } from '@solana/web3.js';
 import { toHex } from 'viem';
 
-export async function getWalletBalance(publicKey: String) {
-  // Connect to the Solana mainnet
-  const connection = new solanaWeb3.Connection(
-     process.env.NEXT_PUBLIC_ECLIPSE_RPC,
-    'confirmed'
-  );
+// Cache the connection to avoid recreating it on each call
+const connection = new Connection(process.env.NEXT_PUBLIC_ECLIPSE_RPC || '', 'confirmed');
 
-  // Fetch the balance
-  const balance = await connection.getBalance(new solanaWeb3.PublicKey(publicKey));
+// Fetch wallet balance in SOL
+export async function getWalletBalance(publicKey: string): Promise<number> {
+  try {
+    // Validate publicKey input
+    const solanaPublicKey = new PublicKey(publicKey);
 
-  // Convert balance from lamports to SOL (1 SOL = 10^9 lamports)
-  return balance / solanaWeb3.LAMPORTS_PER_SOL;
+    // Fetch the balance in lamports
+    const balanceInLamports = await connection.getBalance(solanaPublicKey);
+
+    // Convert lamports to SOL and return
+    return balanceInLamports / LAMPORTS_PER_SOL;
+  } catch (error) {
+    console.error('Error fetching wallet balance:', error);
+    throw new Error('Invalid Solana address or connection issue');
+  }
 }
 
-export const solanaToBytes32 = (solanaAddress: PublicKeyInitData) => {
+// Convert Solana address to bytes32
+export const solanaToBytes32 = (solanaAddress: PublicKeyInitData): string => {
   try {
     const publicKey = new PublicKey(solanaAddress);
-    return toHex(publicKey.toBytes().slice(0, 32));
+    return toHex(publicKey.toBytes().slice(0, 32)); // Convert to bytes32 hex
   } catch (error) {
-      console.error('Invalid Solana address', error);
-      throw new Error('Invalid Solana address');
-    }
- };
+    console.error('Invalid Solana address:', error);
+    throw new Error('Invalid Solana address');
+  }
+};
