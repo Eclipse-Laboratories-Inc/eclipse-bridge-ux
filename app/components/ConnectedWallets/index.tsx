@@ -5,14 +5,10 @@ import { createPublicClient, formatEther, http } from 'viem';
 import { getBalance } from 'viem/actions';
 import './styles.css';
 import { Cross, Copy, ConnectIcon, CircleCheck, Disconnect } from "../icons";
+import { Options, useNetwork } from "@/app/contexts/NetworkContext"; 
 import { truncateWalletAddress } from '@/lib/stringUtils';
 import { getWalletBalance } from '@/lib/solanaUtils';
 import { useWallets } from '@/app/hooks/useWallets';
-
-const client = createPublicClient({
-  chain: process.env.NEXT_PUBLIC_CURRENT_CHAIN === "mainnet" ? mainnet : sepolia,
-  transport: http(),
-});
 
 interface ConnectedWalletsProps {
   close: (e?: React.MouseEvent<HTMLDivElement>) => void;
@@ -27,10 +23,16 @@ interface WalletData {
 
 const useWalletData = () => {
   const { userWallets, evmWallet, solWallet } = useWallets();
+  const { selectedOption, eclipseRpc } = useNetwork();
   const [balanceEther, setBalanceEther] = useState(0);
   const [balanceEclipse, setBalanceEclipse] = useState(0);
 
   useEffect(() => {
+    const isMainnet = (selectedOption === Options.Mainnet);
+    const client = createPublicClient({
+      chain: isMainnet ? mainnet : sepolia,
+      transport: http(),
+    });
     userWallets.forEach(async (wallet) => {
       if (!wallet) return;
 
@@ -45,7 +47,7 @@ const useWalletData = () => {
         setBalanceEther(formattedEtherBalance);
       }
       if (wallet.chain === "SOL") {
-        const balance = await getWalletBalance(wallet.address);
+        const balance = await getWalletBalance(wallet.address, eclipseRpc);
         setBalanceEclipse(balance);
       }
     });
@@ -87,10 +89,10 @@ const ConnectedWallets = forwardRef<HTMLDivElement, ConnectedWalletsProps>(({ cl
   ], [solWallet, evmWallet, balanceEclipse, balanceEther]);
 
   const renderWalletItem = useCallback((wallet: WalletData, index: number) => {
-    const isConnected = !!wallet.address;
-    const isEclipse = index === 0;
-    const isCopied = isEclipse ? copiedEclipse : copiedEth;
-    const setCopied = isEclipse ? setCopiedEclipse : setCopiedEth;
+    const isConnected   = !!wallet.address;
+    const isEclipse     = index === 0;
+    const isCopied      = isEclipse ? copiedEclipse : copiedEth;
+    const setCopied     = isEclipse ? setCopiedEclipse : setCopiedEth;
     const currentWallet = isEclipse ? solWallet : evmWallet;
 
     return (

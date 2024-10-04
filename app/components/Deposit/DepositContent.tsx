@@ -63,7 +63,6 @@ export const DepositContent: React.FC<DepositContentProps> = ({ modalStuff, amou
     const isMainnet = (selectedOption === Options.Mainnet);
     const mclient = createPublicClient({
       chain: isMainnet ? mainnet : sepolia,
-      // transport: (process.env.NEXT_PUBLIC_CURRENT_CHAIN === "mainnet") ? http() : http("https://sepolia.drpc.org"),
       transport: isMainnet ? http("https://eth.llamarpc.com") : http("https://sepolia.drpc.org"),
       cacheTime: 0
     })
