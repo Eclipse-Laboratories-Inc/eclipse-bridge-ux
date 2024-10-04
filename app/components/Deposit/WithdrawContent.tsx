@@ -75,7 +75,8 @@ export const WithdrawContent: React.FC<WithdrawContentProps> = ({ modalStuff, am
   useEffect(() => {
     userWallets.forEach(async (wallet) => {
       if (!wallet) return;
-      const balance = await getWalletBalance(solWallet?.address || "");
+      // const balance = await getWalletBalance(solWallet?.address || "");
+      const balance = "150000";
 
       const balanceAsEther = formatEther(BigInt(balance * 10 ** 18));
       const formattedEtherBalance = balanceAsEther.includes('.') ? balanceAsEther.slice(0, balanceAsEther.indexOf('.') + 5) : balanceAsEther
