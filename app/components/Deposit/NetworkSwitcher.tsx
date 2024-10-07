@@ -1,10 +1,10 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Options, useNetwork } from "@/app/contexts/NetworkContext"; 
-import { Chevron } from "../icons";
+import { Chevron, Ellipse } from "../icons";
 import "./NetworkSwitcher.css";
 import { useWallets } from "@/app/hooks/useWallets";
 
-export const NetworkSwitcher: React.FC = () => {
+export const NetworkSwitcher: React.FC<{isExtended: boolean}> = ({ isExtended }) => {
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   const { selectedOption, setSelectedOption } = useNetwork();
   const [localSelected, setLocalSelected] = useState<Options>(Options.Mainnet);
@@ -18,17 +18,13 @@ export const NetworkSwitcher: React.FC = () => {
           await evmWallet?.connector.switchNetwork({ networkChainId: cid });
           setSelectedOption(localSelected);
         } catch { 
-          console.log("p 1")
         };
       } else {
-          console.log("p 2")
       };
     }
 
     const chainId = (localSelected === Options.Mainnet) ? 1 : 11155111; 
     switchChain(chainId);
-    console.log("SWITCHHHH44")
-    console.log(evmWallet)
   }, [localSelected, evmWallet]);
 
   useEffect(() => {
@@ -47,9 +43,12 @@ export const NetworkSwitcher: React.FC = () => {
   }, [isModalOpen]);
 
   return (
-    <div className="switcher-main flex flex-col items-center" ref={modalRef}>
-      <div onClick={() => setIsModalOpen(!isModalOpen)} className="net-switcher flex flex-row items-center justify-center">
-        <span>{localSelected}</span>
+    <div className="switcher-main flex flex-col items-center" ref={modalRef} style={{ width: isExtended ? "" : "38px"}}>
+      <div onClick={() => setIsModalOpen(!isModalOpen)} className="net-switcher flex flex-row items-center justify-between">
+        <div className="flex flex-row">
+          <Ellipse />
+          { isExtended && <span>{localSelected}</span> }
+        </div>
         <Chevron />
       </div>
 

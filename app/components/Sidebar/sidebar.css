@@ -3,20 +3,22 @@
  height: 100%;
  left: 0;
  border: 1px solid rgba(255, 255, 255, 0.1);
+ transition: width 0.3s var(--ease-out-quad);
 }
 
 .side-icon-box {
   border: 1px solid rgba(255, 255, 255, 0.1);
   padding: 10px;
-  background: rgba(255, 255, 255, 0.1);
+  background: rgba(255, 255, 255, 0.05);
+  transition: background 0.1s var(--ease-out-quad);
 
   border-radius: 12px;
-  margin-left: 17px;
+  margin-left: 14px;
 }
 
 .sidebar-tabs {
   color: rgba(255, 255, 255, 0.3);
-  span { transition: color 0.1s var(--ease-out-quad); }
+  span { transition: color 0.1s var(--ease-out-quad);  white-space: nowrap; }
   path {
     stroke: rgba(255, 255, 255, 0.3);
     stroke-opacity: 1;
@@ -30,5 +32,8 @@
   path {
     stroke: rgba(255, 255, 255, 1);
     stroke-opacity: 1;
+  }
+  .side-icon-box {
+    background: rgba(255, 255, 255, 0.1); 
   }
 }
