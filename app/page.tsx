@@ -2,6 +2,7 @@
 import { useState } from "react";
 import Deposit from "./components/Deposit";
 import { Header } from './components/Header';
+import { Sidebar } from './components/Sidebar';
 import { Footer } from './components/Footer';
 import { TransactionProvider } from './components/TransactionPool';
 import { NetworkSwitcher } from "./components/Deposit/NetworkSwitcher";
@@ -28,10 +29,13 @@ export default function Main() {
                 height: "100%"
               }}>
                 <Header />
-                <div className="flex flex-col items-center" style={{ gap: "13px", width: "100%"}}>
-                  <NetworkSwitcher />
-                  <div className="main-content flex flex-col gap-2 items-center">
-                    <Deposit amountEther={amountEther} setAmountEther={setAmountEther} />
+                <div className="flex flex-row w-full items-center" style={{height: "100%"}}>
+                  <Sidebar />
+                  <div className="flex flex-col items-center" style={{ gap: "13px", width: "100%"}}>
+                    <NetworkSwitcher />
+                    <div className="main-content flex flex-col gap-2 items-center">
+                      <Deposit amountEther={amountEther} setAmountEther={setAmountEther} />
+                    </div>
                   </div>
                 </div>
                 <Footer />
