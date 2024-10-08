@@ -78,7 +78,12 @@ export const DepositContent: React.FC<DepositContentProps> = ({ modalStuff, amou
       if (!wallet) return;
       // ignore this for sepolia
       if (( !provider && process.env.NEXT_PUBLIC_CURRENT_CHAIN === "mainnet")|| !(wallet.chain == "EVM")) return;
-      const balance = await getBalance(client, {
+      const balClient = createPublicClient({
+      	chain: (process.env.NEXT_PUBLIC_CURRENT_CHAIN === "mainnet") ? mainnet : sepolia,
+  	transport: (process.env.NEXT_PUBLIC_CURRENT_CHAIN === "mainnet") ? http() : http("https://sepolia.drpc.org"),
+  	cacheTime: 0
+      })
+      const balance = await getBalance(balClient, {
         //@ts-ignore
         address: wallet.address,
         blockTag: 'safe'
