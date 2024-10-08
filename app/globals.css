@@ -72,6 +72,13 @@ input:focus {
   box-shadow: none;
 }
 
+.ecl-logo {
+  border-right: 1px solid rgba(255, 255, 255, 0.1); 
+  transition: width 0.3s var(--ease-out-quad);
+  width: 250px;
+  height: 100%;
+}
+
 .header .connect-wallet {
   display: flex;
   align-items: center;
@@ -127,15 +134,16 @@ footer {
   */
 }
 
-.mobile-logo { display: none; }
 .legal-footer a:hover {
   color: #A1FEA0; 
 }
 
+/*
 @media (max-width: 768px ){
   .desktop-logo { display: none; }
   .mobile-logo { display: inline; }
 }
+*/
 
 @media (max-width: 900px) {
   footer {

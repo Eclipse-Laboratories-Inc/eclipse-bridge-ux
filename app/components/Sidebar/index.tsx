@@ -1,7 +1,7 @@
 import "./sidebar.css";
 import { BridgeIcon, WalletIcon, TethIcon, ScanIcon, GasStationIcon, FaucetIcon } from "@/app/components/icons"
 import { NetworkSwitcher } from "../Deposit/NetworkSwitcher";
-import { useState, type ReactNode } from "react";
+import { type ReactNode } from "react";
 
 
 const SidebarItem: React.FC<{name: string, icon: ReactNode, isExtended: boolean}> = ({ name, icon, isExtended }) => {  
@@ -15,8 +15,7 @@ const SidebarItem: React.FC<{name: string, icon: ReactNode, isExtended: boolean}
   );
 }
 
-export const Sidebar: React.FC = () => {
-  const [isExtended, setIsExtended] = useState<boolean>(true);
+export const Sidebar: React.FC<{ isExtended: boolean, setIsExtended: React.Dispatch<React.SetStateAction<boolean>>}> = ({ isExtended, setIsExtended }) => {
   return (
     <div className="sidebar flex flex-col" onClick={() => {setIsExtended((current) => !current)}} style={{ width: isExtended ? "250px" : "66px"}}>
       <NetworkSwitcher isExtended={isExtended} />

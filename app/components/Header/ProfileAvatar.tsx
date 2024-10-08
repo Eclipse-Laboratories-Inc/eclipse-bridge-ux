@@ -65,7 +65,7 @@ export const ProfileAvatar: React.FC = () => {
   }, [isModalOpen]);
 
   return (
-    <div className="flex items-center space-x-2">
+    <div className="flex items-center space-x-2 p-4">
       <div 
         onClick={toggleModal} 
         ref={openModalRef} 
