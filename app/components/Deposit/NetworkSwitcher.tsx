@@ -43,7 +43,7 @@ export const NetworkSwitcher: React.FC<{isExtended: boolean}> = ({ isExtended })
   }, [isModalOpen]);
 
   return (
-    <div className="switcher-main flex flex-col items-center" ref={modalRef} style={{ width: isExtended ? "" : "38px"}}>
+    <div className="switcher-main flex flex-col items-center" ref={modalRef} style={{ width: isExtended ? "187px" : "38px"}}>
       <div onClick={() => setIsModalOpen(!isModalOpen)} className="net-switcher flex flex-row items-center justify-between">
         <div className="flex flex-row">
           <Ellipse />

@@ -1,5 +1,5 @@
 .sidebar {
- width: 250px;
+ width: 215px;
  height: 100%;
  left: 0;
  border-right: 1px solid rgba(255, 255, 255, 0.1);
@@ -13,11 +13,11 @@
   transition: background 0.1s var(--ease-out-quad);
 
   border-radius: 12px;
-  margin-left: 14px;
 }
 
 .sidebar-tabs {
   color: rgba(255, 255, 255, 0.3);
+  gap: 8px;
   span { transition: color 0.1s var(--ease-out-quad);  white-space: nowrap; }
   path {
     stroke: rgba(255, 255, 255, 0.3);
@@ -26,9 +26,19 @@
   }
 }
 
+.side-item {
+  border-radius: 12px;
+  width: 187px;
+  height: 46px;
+  padding: 0px;
+  transition: padding 0.3s var(--ease-out-quad);
+}
+
 .side-item:hover {
   cursor: pointer;
   color: rgba(255, 255, 255, 1);
+  background: rgba(255, 255, 255, 0.05);
+
   path {
     stroke: rgba(255, 255, 255, 1);
     stroke-opacity: 1;
@@ -36,4 +46,27 @@
   .side-icon-box {
     background: rgba(255, 255, 255, 0.1); 
   }
+}
+
+.sidebar-hover {
+  background: rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(4px);
+  height: 24px;
+  width: auto;
+  margin-left: -12px;
+
+  z-index: 500;
+  padding: 4px 10px;
+  font-size: 12px;
+  color: white;
+  font-weight: 500;
+  border-radius: 5px;
+}
+
+.left-arr {
+  font-size: 0px; line-height: 0%; width: 0px;
+  border-top: 10px solid #f6f6f6;
+  border-right: 20px solid #77c;
+  border-bottom: 10px solid #f6f6f6;
+  
 }
