@@ -166,24 +166,6 @@ export const WithdrawContent: React.FC<WithdrawContentProps> = ({ modalStuff, am
             <TransferArrow />
           </div>
 
-          <NetworkBox 
-            imageSrc="eclipse.png"
-            direction="From"
-            chainName={process.env.NEXT_PUBLIC_TARGET_CHAIN_NAME ?? ""}
-            onClickEvent={() => solWallet && handleUnlinkWallet(solWallet.id) && setIsSolDisconnected(!isSolDisconnected)}
-            walletChain="SOL"
-            showConnect={(!solWallet && isSolDisconnected && !isEvmDisconnected)}
-            wallet={solWallet}
-          />
-          <NetworkBox 
-            imageSrc="eth.png"
-            direction="To"
-            chainName={process.env.NEXT_PUBLIC_SOURCE_CHAIN_NAME ?? ""}
-            onClickEvent={() => evmWallet && handleUnlinkWallet(evmWallet.id) && setIsEvmDisconnected(!isEvmDisconnected)}
-            walletChain="EVM"
-            showConnect={(!evmWallet && isEvmDisconnected && !isSolDisconnected)}
-            wallet={evmWallet}
-          />
         </div>
         <div className={ `amount-input flex flex-col ${determineInputClass()}` }>
           <div className="amount-input-top flex justify-between w-full items-center">
