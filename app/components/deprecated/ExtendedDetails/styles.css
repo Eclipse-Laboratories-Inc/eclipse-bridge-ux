@@ -33,39 +33,3 @@
 .single-line:nth-child(3) {
   border-bottom: none;
 }
-
-
-
-/* */ 
-
-.tgreen { color: rgba(161, 254, 160, 1); }
-
-.tx-sum {
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  border-radius: 10px;
-
-  background: rgba(13, 13, 13, 1);
-  font-size: 14px;
-  font-weight: 500;
-
-  width: 480px;
-  height: 88px;
-}
-
-.route-box {
-  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-  height: 44px;
-  padding: 8px 16px;
-}
-
-.route-text {
-  background: rgba(255, 255, 255, 0.05);
-  color: rgba(255, 255, 255, 0.3);
-  width: 62px;
-  border-radius: 100px;
-  padding: 4px 8px;
-}
-
-.amount-sum {
-  padding: 8px 16px;
-}
