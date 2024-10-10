@@ -38,6 +38,17 @@ const Deposit: React.FC<DepositProps> = ({ amountEther, setAmountEther }) => {
           width: isModalOpen ? "0px" : "inherit", 
           paddingRight: activeTab === Tabs.Activity ? "8px" : "20px"
       }}>
+        <div className="lrt-box flex flex-row justify-between items-center">
+          <div className="flex flex-col justify-between h-full">
+            <span className="text-[20px] font-semibold w-[247px] h-[52px] text-left line-[26px]" style={{lineHeight: "26px"}}>Deposit your LRTs to earn restaked yield</span>
+            <span className="text-[14px] text-left" style={{ color: ""}}>Deposit Now</span> 
+          </div>
+          <div>
+            <img src="lrt.svg" alt="LRT image." className="h-[99px]" />
+          </div>
+        </div>
+        <div className="dash-box" ></div>
+
         <div className="header-tabs" style={{
           marginRight: activeTab === Tabs.Activity ? "12px" : "0px"
         }}>

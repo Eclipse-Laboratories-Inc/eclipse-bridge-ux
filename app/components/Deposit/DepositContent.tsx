@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect, useState, useCallback } from 'react';
+import React, { useEffect, useState } from 'react';
 
 import './styles.css';
 import 'react-loading-skeleton/dist/skeleton.css';
@@ -19,8 +19,6 @@ import { Options, useNetwork } from "@/app/contexts/NetworkContext";
 
 import { solanaToBytes32 } from '@/lib/solanaUtils';
 import { generateTxObjectForDetails } from "@/lib/activityUtils";
-
-import Skeleton from 'react-loading-skeleton';
 
 import { TransactionDetails } from "../TransactionDetails";
 import { useTransaction } from "../TransactionPool";
@@ -70,23 +68,19 @@ export const DepositContent: React.FC<DepositContentProps> = ({ modalStuff, amou
   }, [selectedOption])
 
 
+  function determineInputClass(): string {
+    if (!evmWallet || !solWallet) return 'disabled';
+    if (parseFloat(amountEther as string) > balanceEther) {
+      return 'alarm'
+    }
+    return ""
+  }
   useEffect(() => {
     let lWalletClient = evmWallet?.connector.getWalletClient<WalletClient<Transport, Chain, Account>>();
     lWalletClient && (lWalletClient.cacheTime = 0);
     setWalletClient(lWalletClient ?? null);
   }, [evmWallet?.connector])
 
-  const setInputRef = useCallback((node: HTMLInputElement) => {
-    if (node) {
-      const handleWheel = (event: WheelEvent) => {
-        event.preventDefault()
-      };
-      node.addEventListener('wheel', handleWheel);
-      return () => {
-        node.removeEventListener('wheel', handleWheel);
-      };
-    }
-  }, []);
 
   useEffect(() => {
     userWallets.forEach(async (wallet) => {
@@ -145,13 +139,6 @@ export const DepositContent: React.FC<DepositContentProps> = ({ modalStuff, amou
     }
   };
 
-  function determineInputClass(): string {
-    if (!evmWallet || !solWallet) return 'disabled';
-    if (parseFloat(amountEther as string) > balanceEther) {
-      return 'alarm'
-    }
-    return ""
-  }
 
   function determineButtonClass(): string {
     if (!evmWallet || !solWallet) {
@@ -211,6 +198,9 @@ export const DepositContent: React.FC<DepositContentProps> = ({ modalStuff, amou
             walletChain="EVM"
             showConnect={(!evmWallet && isEvmDisconnected && !isSolDisconnected)}
             wallet={evmWallet}
+            balanceEther={balanceEther}
+            amountEther={amountEther}
+            setAmountEther={setAmountEther}
           />
           <NetworkBox 
             imageSrc="eclipse.png"
@@ -220,57 +210,10 @@ export const DepositContent: React.FC<DepositContentProps> = ({ modalStuff, amou
             walletChain="SOL"
             showConnect={(!solWallet && isSolDisconnected && !isEvmDisconnected)}
             wallet={solWallet}
+            balanceEther={balanceEther}
+            amountEther={amountEther}
+            setAmountEther={setAmountEther}
           />
-        </div>
-        <div className={ `amount-input flex flex-col ${determineInputClass()}` }>
-          <div className="amount-input-top flex justify-between w-full items-center">
-          <div className="input-wrapper"> 
-          { (!evmWallet || evmWallet && (balanceEther >= 0))
-            ? <input
-                disabled={!evmWallet || !solWallet}
-                step="0.01"
-                min="0"
-                placeholder="0 ETH"
-                style={{fontWeight: "500"}}
-                value={amountEther}
-	              ref={setInputRef}
-                onChange={(e) => { 
-                  const value = e.target.value;
-                  // don't allow string
-                  if (/^[-+]?(\d+([.,]\d*)?|[.,]\d+)$/.test(value) || value === '') {
-                    const [_, dp] = value.split(".");
-                    if (!dp || dp.length <= 9) {
-                      setAmountEther(value);
-                    }
-                  } 
-                }} 
-            />
-            : <Skeleton height={40} width={160} />
-          }
-          </div> 
-            <div className="token-display" style={{width: "45%"}}>
-              <div className="token-icon">
-                <img src="eth.png" alt="ETH Icon" />
-              </div>
-              <div className="token-name">ETH</div>
-            </div>
-          </div>
-          <div className={`${evmWallet ? '' : 'hidden'} amount-input-bottom flex flex-row justify-between w-full items-center`}>
-            {evmWallet && 
-              <div className="balance-info w-full">
-                <span>Bal</span> 
-                {(balanceEther >= 0)
-                  ? <><span style={{ color: '#fff' }}>{balanceEther + " "} </span> <>ETH</></> 
-                  : <span style={{width: "20%"}}><Skeleton inline={true}/></span>
-                }
-              </div>
-            }
-            <div className={evmWallet ? "percentage-buttons" : "invisible"}>
-              <button onClick={() => setAmountEther(balanceEther * 0.25)} className="percentage-button">25%</button>
-              <button onClick={() => setAmountEther(balanceEther * 0.50)} className="percentage-button">50%</button>
-              <button onClick={() => setAmountEther(balanceEther)} className="percentage-button">Max</button>
-            </div>
-          </div>
         </div>
         { (!evmWallet || !solWallet) 
         ?

@@ -73,7 +73,7 @@
 
 .arrow-container {
   position: absolute;
-  top: 50%;
+  top: 69%;
   transform: translateY(-50%);
   z-index: 1;
 }
@@ -93,7 +93,6 @@
   align-items: center;
   background-color: rgba(255, 255, 255, 0.03);
   border-radius: 10px;
-  padding: 16px;
   margin-bottom: 8px;
   border: 1px solid rgba(255, 255, 255, 0.1);
   width: 100%;
@@ -119,11 +118,20 @@
   transition: stroke 100ms var(--ease-out-quad), stroke-opacity 100ms var(--ease-out-quad), fill-opacity 100ms var(--ease-out-quad);
 }
 
+.disconnect span, .addr {
+  color: rgba(255, 255, 255, 0.3)!important;
+  transition: color 100ms var(--ease-out-quad);
+  font-weight: 500;
+}
+
 .disconnect:hover svg path,
 .disconnect:hover {
   stroke: #EB4D4D;
   color: #EB4D4D;
   stroke-opacity: 1;
+  span {
+    color: #EB4D4D!important;
+  }
 }
 
 .deposit-cross {
@@ -151,6 +159,7 @@
   width: 100%;
   align-items: center;
   justify-content: space-between;
+  padding: 16px;
 }
 
 .input-inner-container {
@@ -192,10 +201,10 @@
   justify-content: space-between;
   align-items: center;
   background-color: #0e0e0e;
-  border-radius: 10px;
+  border-radius: 0px 0px 10px 10px;
   padding: 10px;
   color: #5a5a5a;
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
   width: 100%;
 
   transition: background-color 0.1s var(--ease-out-quad), border 0.1s var(--ease-out-quad);
@@ -530,7 +539,7 @@ input::placeholder {
     margin-bottom: 6px;
   }
   .network-box {
-    padding: 14px 12px;
+    padding: 14px 12px; 
   }
   .network-info img {
     margin-right: 6px;
@@ -545,4 +554,26 @@ input::placeholder {
   .bridge-text{
     display: none;
   }
+}
+
+.dash-box {
+  height: 1px; 
+  background: repeating-linear-gradient(
+      to right,
+      rgba(255, 255, 255, 0.1), 
+      rgba(255, 255, 255, 0.1) 10px, 
+      transparent 10px, 
+      transparent 20px 
+  );
+  width: 100%; 
+  margin: 20px 0; 
+}
+
+.lrt-box {
+  border: 1px solid rgba(161, 254, 160, 0.1);
+  border-radius: 10px;
+  background: rgba(161, 254, 160, 0.1);
+  padding: 20px;
+  height: 131px;
+  width: 480px;
 }
