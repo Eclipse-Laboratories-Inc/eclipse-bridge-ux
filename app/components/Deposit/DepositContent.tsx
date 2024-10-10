@@ -67,14 +67,6 @@ export const DepositContent: React.FC<DepositContentProps> = ({ modalStuff, amou
     setClient(mclient);
   }, [selectedOption])
 
-
-  function determineInputClass(): string {
-    if (!evmWallet || !solWallet) return 'disabled';
-    if (parseFloat(amountEther as string) > balanceEther) {
-      return 'alarm'
-    }
-    return ""
-  }
   useEffect(() => {
     let lWalletClient = evmWallet?.connector.getWalletClient<WalletClient<Transport, Chain, Account>>();
     lWalletClient && (lWalletClient.cacheTime = 0);
@@ -138,7 +130,6 @@ export const DepositContent: React.FC<DepositContentProps> = ({ modalStuff, amou
       console.error('Failed to deposit', error);
     }
   };
-
 
   function determineButtonClass(): string {
     if (!evmWallet || !solWallet) {

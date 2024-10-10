@@ -576,4 +576,52 @@ input::placeholder {
   padding: 20px;
   height: 131px;
   width: 480px;
+
+  position: relative;
+  overflow: hidden;
+  z-index:1 ;
+}
+
+.lrt-cross {
+  width: 10px;
+  height: 10px;
+  position: absolute; 
+  cursor: pointer;
+  right: 2%;
+  top: 9%;
+}
+
+.circle {
+    position: absolute;
+    border-radius: 50%;
+    opacity: 0.5;
+    z-index: -1;
+    border: 1px solid rgba(255, 255, 255, 0.03);
+    background: radial-gradient(50% 50% at 50% 50%, rgba(255, 255, 255, 0.001) 0%, rgba(255, 255, 255, 0.01) 100%);
+}
+.circle1 {
+    width: 70px;
+    height: 70px;
+    top: -20px;
+    left: -20px;
+}
+.circle2 {
+    width: 120px;
+    height: 120px;
+    top: 78px;
+    right: 75px;
+}
+.circle3 {
+    width: 120px;
+    height: 120px;
+    top: 25px;
+    left: 215px;
+    transform: translate(-50%, -50%);
+}
+.circle4 {
+    width: 94px;
+    height: 94px;
+    top: 115px;
+    left: 50px;
+    transform: translate(-50%, -50%);
 }
