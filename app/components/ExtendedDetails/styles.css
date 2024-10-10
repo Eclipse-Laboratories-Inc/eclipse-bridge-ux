@@ -1,43 +1,3 @@
-.extended-details {
-  max-width: 520px;
-  width: 100%;
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  background: rgba(255, 255, 255, 0.02);
-  border-radius: 30px;
-}
-
-.white-text {
-  color: white;
-  font-size: 16px;
-  font-weight: 500;
-}
-
-.green-text {
-  color: rgba(161, 254, 160, 1);
-  font-size: 16px;
-  font-weight: 500;
-  line-height: 20.8px;
-}
-
-.gray-text {
-  font-size: 16px;
-  line-height: 19.2px; 
-  color: rgba(255, 255, 255, 0.3);
-}
-
-.single-line {
-  padding: 10px 20px 10px 20px;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-}
-
-.single-line:nth-child(3) {
-  border-bottom: none;
-}
-
-
-
-/* */ 
-
 .tgreen { color: rgba(161, 254, 160, 1); }
 
 .tx-sum {
@@ -69,3 +29,4 @@
 .amount-sum {
   padding: 8px 16px;
 }
+
