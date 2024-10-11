@@ -278,11 +278,11 @@
 .amount-input .input-wrapper, .amount-input input {
   display: flex;
   justify-content: space-between;
+  max-width: 250px;
   align-items: center;
   border-radius: 8px;
   background-color: inherit;
   color: #ffffff;
-  width: 100%;
   font-size: 34px;
 }
 
@@ -465,10 +465,10 @@ input::placeholder {
   align-items: center;
   justify-content: center;
   background-color: #1c1c1c;
-  padding: 5px;
-  border-radius: 8px;
+  padding: 10px;
+  border-radius: 46px;
   height: 46px;
-  width: 100%;
+  width: 118px;
 }
 
 .token-icon img {

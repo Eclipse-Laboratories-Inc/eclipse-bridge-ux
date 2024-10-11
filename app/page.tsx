@@ -4,7 +4,6 @@ import Deposit from "./components/Deposit";
 import { Header } from './components/Header';
 import { Sidebar } from './components/Sidebar';
 import { Footer } from './components/Footer';
-import { TransactionProvider } from './components/TransactionPool';
 import useEthereumData from "@/lib/ethUtils";
 import { NetworkProvider } from "@/app/contexts/NetworkContext";
 import { useWalletClient } from "./hooks"
@@ -21,7 +20,6 @@ export default function Main() {
     <EthereumDataContext.Provider value={[gasPrice, ethPrice]}>
       <NetworkProvider>
         <WalletClientContext.Provider value={walletClient}>
-          <TransactionProvider>
             <SkeletonTheme baseColor="#FFFFFF0A" highlightColor="#FFFFFF26">
               <div className="flex items-center text-white flex flex-col justify-between" id="main-content" style={{
                 background: "black",
@@ -40,7 +38,6 @@ export default function Main() {
                 <Footer />
               </div>
             </SkeletonTheme>
-          </TransactionProvider>
         </WalletClientContext.Provider >
       </NetworkProvider>
     </EthereumDataContext.Provider>

@@ -1,5 +1,5 @@
 "use client";
-import React, { useCallback } from 'react';
+import React, { useCallback, useRef } from 'react';
 import './styles.css';
 import 'react-loading-skeleton/dist/skeleton.css';
 import { WalletIcon } from "@/app/components/icons"
@@ -38,6 +38,7 @@ export const NetworkBox: React.FC<NetworkBoxProps> = ({
 }) => {
   const { userWallets, evmWallet, solWallet } = useWallets();
   const { blockNumber, gasPrice, ethPrice } = useEthereumData();
+  const inputRef = useRef<HTMLInputElement>(null);
 
   function determineInputClass(): string {
     if (!evmWallet || !solWallet) return 'disabled';
@@ -57,6 +58,14 @@ export const NetworkBox: React.FC<NetworkBoxProps> = ({
       };
     }
   }, []);
+
+  function adjustInputWidth() {
+    if (inputRef.current) {
+      const refs = inputRef.current;
+      const len = refs.value.length; 
+      refs.style.width = ((len ? len : 5) + (refs.value.toString().includes(".") ? 0 : 0.5)) + 'ch';
+    }
+  }
 
   // remove bottom border for ethereum box
   const css = chainName.includes("Ethereum") ? "!border-b-0 !rounded-bl-none !rounded-br-none" : ""; 
@@ -99,14 +108,14 @@ export const NetworkBox: React.FC<NetworkBoxProps> = ({
             <div className="amount-input-top flex justify-between w-full items-center">
             <div className="input-wrapper"> 
             { (!evmWallet || evmWallet && (balanceEther >= 0))
-              ? <input
+              ? <><input
                   disabled={!evmWallet || !solWallet}
                   step="0.01"
                   min="0"
                   placeholder="0 ETH"
-                  style={{fontWeight: "500"}}
+                  style={{fontWeight: "500", minWidth: "1.5ch"}}
                   value={amountEther}
-	                ref={setInputRef}
+                  ref={inputRef}
                   onChange={(e) => { 
                     const value = e.target.value;
                     // don't allow string
@@ -116,12 +125,13 @@ export const NetworkBox: React.FC<NetworkBoxProps> = ({
                         setAmountEther(value);
                       }
                     } 
+                    adjustInputWidth();
                   }} 
-              />
+              />{ amountEther && <span className="font-medium text-[34px] ml-[-4px]">ETH</span> }</>
               : <Skeleton height={40} width={160} />
             }
             </div> 
-              <div className="token-display" style={{width: "45%"}}>
+              <div className="token-display">
                 <div className="token-icon">
                   <img src="eth.png" alt="ETH Icon" />
                 </div>
@@ -142,11 +152,11 @@ export const NetworkBox: React.FC<NetworkBoxProps> = ({
               <div className={evmWallet && solWallet ? "percentage-buttons" : "invisible"}>
                 <div className="flex flex-row items-center gap-2 mr-1">
                   <WalletIcon width="12" />
-                  <span className="font-medium">3.478</span>
+                  <span className="font-medium">{ balanceEther }</span>
                 </div>
                 <span>•</span>
-                <button onClick={() => setAmountEther(balanceEther * 0.50)} className="percentage-button">50%</button>
-                <button onClick={() => setAmountEther(balanceEther)} className="percentage-button">Max</button>
+                <button onClick={() => { setAmountEther(balanceEther * 0.50); setTimeout(adjustInputWidth, 0) }} className="percentage-button">50%</button>
+                <button onClick={() => { setAmountEther(balanceEther); setTimeout(adjustInputWidth, 0) }} className="percentage-button">Max</button>
               </div>
             </div>
           </div>

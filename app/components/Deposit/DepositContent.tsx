@@ -84,8 +84,7 @@ export const DepositContent: React.FC<DepositContentProps> = ({ modalStuff, amou
       if (( !provider && process.env.NEXT_PUBLIC_CURRENT_CHAIN === "mainnet") || !(wallet.chain == "EVM")) return;
       const balance = await getBalance(client, {
         //@ts-ignore
-        address: wallet.address,
-        blockTag: 'safe'
+        address: wallet.address
       })
 
       const balanceAsEther = formatEther(balance);

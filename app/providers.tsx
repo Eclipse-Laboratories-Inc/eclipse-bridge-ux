@@ -2,6 +2,8 @@
 
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { useState, type ReactNode } from "react";
+import { TransactionProvider } from './components/TransactionPool';
+import { NetworkProvider } from "@/app/contexts/NetworkContext";
 
 
 export function Providers(props: { children: ReactNode }) {
@@ -9,7 +11,11 @@ export function Providers(props: { children: ReactNode }) {
 
   return (
       <QueryClientProvider client={queryClient}>
-        {props.children}
+        <NetworkProvider>
+          <TransactionProvider>
+            {props.children}
+          </TransactionProvider>
+        </NetworkProvider>
       </QueryClientProvider>
   );
 }
