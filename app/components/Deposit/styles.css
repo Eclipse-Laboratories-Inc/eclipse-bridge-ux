@@ -94,7 +94,6 @@
   background-color: rgba(255, 255, 255, 0.03);
   border-radius: 10px;
   margin-bottom: 8px;
-  border: 1px solid rgba(255, 255, 255, 0.1);
   width: 100%;
 }
 
@@ -160,6 +159,9 @@
   align-items: center;
   justify-content: space-between;
   padding: 16px;
+
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 10px;
 }
 
 .input-inner-container {
@@ -202,9 +204,9 @@
   align-items: center;
   background-color: #0e0e0e;
   border-radius: 0px 0px 10px 10px;
-  padding: 10px;
+  padding: 16px;
   color: #5a5a5a;
-  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.1);
   width: 100%;
 
   transition: background-color 0.1s var(--ease-out-quad), border 0.1s var(--ease-out-quad);
@@ -236,7 +238,7 @@
 
   pointer-events: none; 
   transition: opacity 0.1s var(--ease-out-quad);
-  border-radius: 10px;
+  border-radius: 0px 0px 10px 10px;
   background: rgba(34,34,34, 0.5);
   opacity: 1;
   z-index: 1;
@@ -456,7 +458,6 @@ input::placeholder {
   align-items: end;
   border-radius: 10px;
   margin-top: 10px;
-  margin-bottom: 4px;
 }
 
 .token-display {
@@ -484,8 +485,7 @@ input::placeholder {
 .percentage-buttons {
   display: flex;
   justify-content: flex-end;
-  width: 30%;
-  margin-top: 8px;
+  width: 20%;
   margin-right: -5px;
 }
 
@@ -494,12 +494,13 @@ input::placeholder {
 }
 
 .percentage-button {
+  color: rgba(161, 254, 160, 0.30);
   font-size: 14px;
-  color: #9e9e9e;
   background: none;
+  font-weight: 500;
   border: none;
   cursor: pointer;
-  margin: 0 10px;
+  margin: 0 4px;
 }
 
 .hidden {

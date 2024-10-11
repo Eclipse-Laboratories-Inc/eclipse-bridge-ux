@@ -57,18 +57,6 @@ const Deposit: React.FC<DepositProps> = ({ amountEther, setAmountEther }) => {
           { activeTab === Tabs.Withdraw && <WithdrawContent modalStuff={[isModalOpen, setIsModalOpen]} amountEther={amountEther} setAmountEther={setAmountEther}/> }
           { activeTab === Tabs.Activity && <ActivityContent setActiveTab={setActiveTab}/> }
         </div>
-      { (activeTab === Tabs.Deposit) && !isModalOpen && 
-        <ExtendedDetails 
-            amountEther={amountEther}
-            target="Eclipse"
-            feeInEth={gasPrice && 113200 * (gasPrice) / 10**9}
-      /> }
-      { (activeTab === Tabs.Withdraw) && !isModalOpen && 
-        <ExtendedDetails 
-            amountEther={amountEther} 
-            target="Ethereum"
-            feeInEth={0.00000005}
-      /> }
       </div>
     </>
   );

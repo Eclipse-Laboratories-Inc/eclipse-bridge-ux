@@ -2,11 +2,14 @@
 import React, { useCallback } from 'react';
 import './styles.css';
 import 'react-loading-skeleton/dist/skeleton.css';
+import { WalletIcon } from "@/app/components/icons"
 import { Cross, ConnectIcon } from "../icons";
+import ExtendedDetails from '../ExtendedDetails'
 import { DynamicConnectButton } from "@dynamic-labs/sdk-react-core";
 import Skeleton from 'react-loading-skeleton';
 import { truncateWalletAddress } from '@/lib/stringUtils';
 import { useWallets } from "@/app/hooks/useWallets";
+import useEthereumData from "@/lib/ethUtils";
 
 export interface NetworkBoxProps {
   imageSrc: string;
@@ -34,6 +37,8 @@ export const NetworkBox: React.FC<NetworkBoxProps> = ({
   setAmountEther
 }) => {
   const { userWallets, evmWallet, solWallet } = useWallets();
+  const { blockNumber, gasPrice, ethPrice } = useEthereumData();
+
   function determineInputClass(): string {
     if (!evmWallet || !solWallet) return 'disabled';
     if (parseFloat(amountEther as string) > balanceEther) {
@@ -53,9 +58,12 @@ export const NetworkBox: React.FC<NetworkBoxProps> = ({
     }
   }, []);
 
+  // remove bottom border for ethereum box
+  const css = chainName.includes("Ethereum") ? "!border-b-0 !rounded-bl-none !rounded-br-none" : ""; 
+
   return (
     <div className="network-box flex flex-col">
-      <div className="network-info flex items-center justify-center">
+      <div className={`network-info flex items-center justify-center ${css}`}>
         <div className='network-info-left-section flex items-center justify-center'>
           <img src={imageSrc} alt="" style={{ objectFit: "cover", height: "44px", width: "44px"}} />
           <div className="input-inner-container">
@@ -86,7 +94,7 @@ export const NetworkBox: React.FC<NetworkBoxProps> = ({
         }
       </div>
       { chainName.includes("Ethereum") && 
-        <div>
+        <div className="w-full">
           <div className={ `amount-input flex flex-col ${determineInputClass()}` }>
             <div className="amount-input-top flex justify-between w-full items-center">
             <div className="input-wrapper"> 
@@ -120,18 +128,23 @@ export const NetworkBox: React.FC<NetworkBoxProps> = ({
                 <div className="token-name">ETH</div>
               </div>
             </div>
-            <div className={`${evmWallet ? '' : 'hidden'} amount-input-bottom flex flex-row justify-between w-full items-center`}>
+            <div className={`${evmWallet && solWallet ? '' : 'hidden'} amount-input-bottom flex flex-row justify-between w-full items-center`}>
               {evmWallet && 
                 <div className="balance-info w-full">
-                  <span>Bal</span> 
-                  {(balanceEther >= 0)
-                    ? <><span style={{ color: '#fff' }}>{balanceEther + " "} </span> <>ETH</></> 
+                  {(balanceEther >= 0 && ethPrice)
+                    ? (amountEther) 
+                      ? <span className="font-medium">${(parseFloat(amountEther.toString()) * ethPrice).toFixed(2)} </span> 
+                      : <span className="font-medium gray-text">-</span>
                     : <span style={{width: "20%"}}><Skeleton inline={true}/></span>
                   }
                 </div>
               }
-              <div className={evmWallet ? "percentage-buttons" : "invisible"}>
-                <button onClick={() => setAmountEther(balanceEther * 0.25)} className="percentage-button">25%</button>
+              <div className={evmWallet && solWallet ? "percentage-buttons" : "invisible"}>
+                <div className="flex flex-row items-center gap-2 mr-1">
+                  <WalletIcon width="12" />
+                  <span className="font-medium">3.478</span>
+                </div>
+                <span>•</span>
                 <button onClick={() => setAmountEther(balanceEther * 0.50)} className="percentage-button">50%</button>
                 <button onClick={() => setAmountEther(balanceEther)} className="percentage-button">Max</button>
               </div>

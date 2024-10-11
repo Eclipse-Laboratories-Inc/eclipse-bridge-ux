@@ -3,7 +3,7 @@ import  { EthereumDataContext } from "@/app/context";
 import Skeleton from 'react-loading-skeleton'
 import 'react-loading-skeleton/dist/skeleton.css'
 import "./styles.css"
-import { MIN_DEPOSIT_AMOUNT } from "../constants";
+import { MIN_DEPOSIT_AMOUNT } from "../../constants";
 import { useWallets } from "@/app/hooks/useWallets";
 import MotionNumber from 'motion-number'
 

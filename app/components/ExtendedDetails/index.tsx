@@ -39,7 +39,6 @@ const ExtendedDetails: React.FC<ExtendedDetailsProps> = ({ amountEther, target, 
 
   return (
     <>
-    <br />
     <div className="tx-sum flex flex-col">
       <div className="route-box flex flex-row justify-between items-center">
         <span style={{ color: "rgba(255, 255, 255, 0.6)" }}>Route</span>

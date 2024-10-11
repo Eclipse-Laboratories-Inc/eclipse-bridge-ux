@@ -16,6 +16,7 @@ import { createPublicClient, formatEther, http, parseEther, WalletClient } from 
 import { Transport, Chain, Account } from 'viem';
 import { getBalance } from 'viem/actions';
 import { Options, useNetwork } from "@/app/contexts/NetworkContext"; 
+import ExtendedDetails from '../ExtendedDetails'
 
 import { solanaToBytes32 } from '@/lib/solanaUtils';
 import { generateTxObjectForDetails } from "@/lib/activityUtils";
@@ -25,6 +26,7 @@ import { useTransaction } from "../TransactionPool";
 import { NetworkBox } from "./NetworkBox"
 import { CONTRACT_ABI, MIN_DEPOSIT_AMOUNT } from "../constants";
 import { useWallets } from "@/app/hooks/useWallets";
+import useEthereumData from "@/lib/ethUtils";
 
 export interface DepositContentProps {
   modalStuff: [boolean, React.Dispatch<React.SetStateAction<boolean>>];
@@ -34,6 +36,7 @@ export interface DepositContentProps {
 
 export const DepositContent: React.FC<DepositContentProps> = ({ modalStuff, amountEther, setAmountEther }) => {
   const [walletClient, setWalletClient] = useState<WalletClient<Transport, Chain, Account> | null>(null);
+  const { gasPrice, ethPrice } = useEthereumData();
   const [balanceEther, setAmountBalanceEther] = useState<number>(-1);
   const [isEvmDisconnected, setIsEvmDisconnected] = useState(false);
   const [isSolDisconnected, setIsSolDisconnected] = useState(false);
@@ -206,6 +209,11 @@ export const DepositContent: React.FC<DepositContentProps> = ({ modalStuff, amou
             setAmountEther={setAmountEther}
           />
         </div>
+        <ExtendedDetails 
+           amountEther={amountEther}
+           target="Eclipse"
+           feeInEth={gasPrice && 113200 * (gasPrice) / 10**9}
+        />
         { (!evmWallet || !solWallet) 
         ?
             <DynamicConnectButton buttonClassName="wallet-connect-button w-full" buttonContainerClassName="submit-button connect-btn">
