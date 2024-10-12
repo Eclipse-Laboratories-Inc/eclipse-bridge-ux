@@ -2,6 +2,7 @@
 import { useState } from "react";
 import { Header } from '../components/Header';
 import { Sidebar } from '../components/Sidebar';
+import { GasStation } from '../components/GasStation';
 import { Footer } from '../components/Footer';
 import useEthereumData from "@/lib/ethUtils";
 import { useWalletClient } from "../hooks"
@@ -28,6 +29,7 @@ export default function GasStationPage() {
                   <Sidebar isExtended={isSidebar} setIsExtended={setIsSidebar} />
                   <div className="flex flex-col items-center" style={{ gap: "13px", flexGrow: "1"}}>
                     <div className="main-content flex flex-col gap-2 items-center">
+                      <GasStation />
                     </div>
                   </div>
                 </div>
