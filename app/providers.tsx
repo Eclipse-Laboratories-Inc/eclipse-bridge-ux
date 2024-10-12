@@ -12,9 +12,7 @@ export function Providers(props: { children: ReactNode }) {
   return (
       <QueryClientProvider client={queryClient}>
         <NetworkProvider>
-          <TransactionProvider>
             {props.children}
-          </TransactionProvider>
         </NetworkProvider>
       </QueryClientProvider>
   );

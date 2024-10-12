@@ -75,7 +75,7 @@ export const NetworkBox: React.FC<NetworkBoxProps> = ({
   const css = chainName.includes("Ethereum") ? "!border-b-0 !rounded-bl-none !rounded-br-none" : ""; 
 
   return (
-    <div className="network-box flex flex-col">
+    <div className="network-box flex flex-col" onClick={() => inputRef.current?.focus()}>
       <div className={`network-info flex items-center justify-center ${css}`}>
         <div className='network-info-left-section flex items-center justify-center'>
           <img src={imageSrc} alt="" style={{ objectFit: "cover", height: "44px", width: "44px"}} />

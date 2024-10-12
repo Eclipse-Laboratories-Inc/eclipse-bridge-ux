@@ -57,8 +57,8 @@ export const DepositContent: React.FC<DepositContentProps> = ({ modalStuff, amou
     const cid = isMainnet ? 1 : 11155111;
     const lprovider = rpcProviders.getEvmRpcProviderByChainId(cid);
     setProvider(lprovider);
-    console.log("new providoo")
-  }, [evmWallet?.chain])
+    console.log("new providoo", cid)
+  }, [evmWallet?.chain, isMainnet])
   
   useEffect(() => {
     const isMainnet = (selectedOption === Options.Mainnet);
