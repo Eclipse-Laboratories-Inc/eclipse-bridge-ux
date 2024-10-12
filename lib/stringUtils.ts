@@ -8,3 +8,8 @@ export function truncateWalletAddress(str: string) {
 
   return `${firstPart}•••${lastPart}`;
 }
+
+export function toKebabCase(str: string) {
+  return str.toLowerCase().replace(" ", "-");
+}
+

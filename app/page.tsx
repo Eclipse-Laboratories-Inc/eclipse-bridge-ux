@@ -8,13 +8,14 @@ import useEthereumData from "@/lib/ethUtils";
 import { NetworkProvider } from "@/app/contexts/NetworkContext";
 import { useWalletClient } from "./hooks"
 import { EthereumDataContext, WalletClientContext } from "./context"
+import { useSidebar } from "@/app/contexts/SidebarContext";
 import { TransactionProvider } from './components/TransactionPool';
 import { SkeletonTheme } from 'react-loading-skeleton'
 
 export default function Main() {
+  const { isSidebar, setIsSidebar } = useSidebar();
   const { gasPrice, ethPrice } = useEthereumData();
   const [amountEther, setAmountEther] = useState<number | string | undefined>(undefined);
-  const [isSidebar, setIsSidebar] = useState(true);
   const walletClient = useWalletClient();
 
   return (

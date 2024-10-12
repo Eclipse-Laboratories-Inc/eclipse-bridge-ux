@@ -278,7 +278,7 @@
 .amount-input .input-wrapper, .amount-input input {
   display: flex;
   justify-content: space-between;
-  max-width: 250px;
+  max-width: 16ch;
   align-items: center;
   border-radius: 8px;
   background-color: inherit;

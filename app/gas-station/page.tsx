@@ -6,12 +6,12 @@ import { Footer } from '../components/Footer';
 import useEthereumData from "@/lib/ethUtils";
 import { useWalletClient } from "../hooks"
 import { EthereumDataContext, WalletClientContext } from "../context"
+import { useSidebar } from "@/app/contexts/SidebarContext";
 import { SkeletonTheme } from 'react-loading-skeleton'
 
 export default function GasStationPage() {
   const { gasPrice, ethPrice } = useEthereumData();
-  const [amountEther, setAmountEther] = useState<number | string | undefined>(undefined);
-  const [isSidebar, setIsSidebar] = useState(true);
+  const { isSidebar, setIsSidebar } = useSidebar();
   const walletClient = useWalletClient();
 
   return (
