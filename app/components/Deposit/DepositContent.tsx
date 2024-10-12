@@ -120,7 +120,7 @@ export const DepositContent: React.FC<DepositContentProps> = ({ modalStuff, amou
         txResponse = `0x${txResponse}`
 
       setEthTxStatus("Confirming");
-      await client.waitForTransactionReceipt({ hash: txResponse, retryCount: 150, retryDelay: 2_000 }); 
+      await client.waitForTransactionReceipt({ hash: txResponse, retryCount: 150, retryDelay: 2_000, confirmations: 1 }); 
       const txData = await generateTxObjectForDetails(provider ? provider.provider : client, txResponse);
 
       setAmountEther("");

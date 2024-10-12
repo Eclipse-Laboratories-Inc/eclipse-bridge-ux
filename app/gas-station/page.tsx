@@ -7,6 +7,7 @@ import { Footer } from '../components/Footer';
 import useEthereumData from "@/lib/ethUtils";
 import { useWalletClient } from "../hooks"
 import { EthereumDataContext, WalletClientContext } from "../context"
+import { useTransactionManager, TMProvider } from "../components/GasStation/TokenManager";
 import { useSidebar } from "@/app/contexts/SidebarContext";
 import { SkeletonTheme } from 'react-loading-skeleton'
 
@@ -18,6 +19,7 @@ export default function GasStationPage() {
   return (
     <EthereumDataContext.Provider value={[gasPrice, ethPrice]}>
         <WalletClientContext.Provider value={walletClient}>
+          <TMProvider>
             <SkeletonTheme baseColor="#FFFFFF0A" highlightColor="#FFFFFF26">
               <div className="flex items-center text-white flex flex-col justify-between" id="main-content" style={{
                 background: "black",
@@ -36,6 +38,7 @@ export default function GasStationPage() {
                 <Footer />
               </div>
             </SkeletonTheme>
+          </TMProvider>
         </WalletClientContext.Provider >
     </EthereumDataContext.Provider>
   );

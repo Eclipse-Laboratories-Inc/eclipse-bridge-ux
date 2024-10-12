@@ -1,28 +1,25 @@
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import { Chevron, GasStationIcon, WalletIcon } from "../icons";
+import { useTransactionManager, Token } from "./TokenManager";
+import { SelectToken} from "./SelectToken"
 
-type Token = {
-  icon: string,
-  name: "USDC" | "SOL"
-}
-
-const tokens: Record<string, Token> = {
-  USDC: { name: 'USDC', icon: 'https://assets.coingecko.com/coins/images/6319/standard/usdc.png?1696506694' },
-  SOL: { name: 'SOL', icon: 'https://assets.coingecko.com/coins/images/4128/standard/solana.png?1718769756' },
-};
 
 export const GasStation: React.FC = () => {
+  const { tokens } = useTransactionManager(); 
   const [selectedToken, setSelectedToken] = useState<Token>(tokens.USDC);
+  const [selectModal, setSelectModal] = useState<boolean>(false);
   const inputRef = useRef<HTMLInputElement>(null);
   const [amount, setAmount] = useState("0");
-
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
     setAmount(value); 
     e.target.style.width = (value.length) + "ch";
-
   };
+
+  useEffect(() => {
+    setSelectedToken(tokens[selectedToken.symbol])
+  }, [tokens])
 
   return (
     <div className="flex flex-col rounded-[30px] w-[520px] p-[20px] gap-[20px]" style={{ border: "1px solid rgba(255, 255, 255, 0.10)" }}>
@@ -35,11 +32,12 @@ export const GasStation: React.FC = () => {
       { /* main content */ }
       <div className="w-full rounded-[10px] h-[292px] bg-[#ffffff08] border-[1px] border-[#ffffff1a]">
         { /* amount input */ }
-        <div className="flex flex-row py-[12px] px-[16px] justify-center items-center gap-[10px]">
+        <div className="flex flex-row py-[12px] px-[16px] justify-center items-center gap-[10px]"
+             onClick={() => setSelectModal(true) } >
             <span className="font-medium text-[#ffffff4d]">Pay with</span>
-            <div className="flex flex-row rounded-[50px] bg-[#ffffff08] h-[33px] w-[106px] items-center p-[6px] cursor-pointer">
+            <div className="flex flex-row rounded-[50px] bg-[#ffffff08] h-[33px] w-auto items-center p-[6px] cursor-pointer">
               <img src={selectedToken.icon} width={"21px"}/> 
-              <span className="font-medium text-[16px] ml-[9px] mr-[4px]">{selectedToken.name}</span>
+              <span className="font-medium text-[16px] ml-[9px] mr-[4px]">{selectedToken.symbol}</span>
               <Chevron size="18" />
             </div>
         </div>
@@ -54,13 +52,15 @@ export const GasStation: React.FC = () => {
                      ref={inputRef}
               />
             </div>
-            <span className="text-[18px] font-medium text-[#ffffff4d]">{amount} {selectedToken.name}</span>
+            <span className="text-[18px] font-medium text-[#ffffff4d]">
+              { (Number(amount) / (selectedToken.price ?? 1)).toFixed(4) } {selectedToken.symbol}
+            </span>
           </div>
           { /* balance - percentage things */ }
           <div className="flex flex-row items-center mt-[58px] mb-[15.5px]">
             <div className="flex flex-row items-center gap-[6px]">
               <WalletIcon width="14" />
-              <span className="text-[#ffffff4d] text-[16px] font-medium">$150.47</span>
+              <span className="text-[#ffffff4d] text-[16px] font-medium">${(Number((selectedToken.balance ?? 0)) / (10 ** selectedToken.decimals) * (selectedToken.price ?? 0)).toFixed(4)}</span>
             </div>
             <div className="flex gap-[22px] ml-[22px]">
               <span className="text-[#ffffff4d]">•</span>
@@ -92,6 +92,12 @@ export const GasStation: React.FC = () => {
       <button className="w-full h-[58px] bg-[#ffffff0d] rounded-[10px]">
        <span className="font-medium text-[20px] text-[#ffffff4d]">Get Gas</span> 
       </button>
+      
+      { /* select token modal */ }
+      { selectModal && setSelectModal && 
+          <SelectToken setSelectModal={setSelectModal} 
+                       selectedToken={selectedToken} 
+                       setSelectedToken={setSelectedToken}/> }
     </div>
   )
 }
