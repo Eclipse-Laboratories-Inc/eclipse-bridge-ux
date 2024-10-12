@@ -1,5 +1,5 @@
 "use client";
-import React, { useCallback, useRef } from 'react';
+import React, { useCallback, useRef, useEffect } from 'react';
 import './styles.css';
 import 'react-loading-skeleton/dist/skeleton.css';
 import { WalletIcon } from "@/app/components/icons"
@@ -66,6 +66,10 @@ export const NetworkBox: React.FC<NetworkBoxProps> = ({
       refs.style.width = ((len ? len : 5) + (refs.value.toString().includes(".") ? 0 : 0.5)) + 'ch';
     }
   }
+
+  useEffect(() => {
+    adjustInputWidth();
+  })
 
   // remove bottom border for ethereum box
   const css = chainName.includes("Ethereum") ? "!border-b-0 !rounded-bl-none !rounded-br-none" : ""; 
@@ -145,14 +149,17 @@ export const NetworkBox: React.FC<NetworkBoxProps> = ({
                     ? (amountEther) 
                       ? <span className="font-medium">${(parseFloat(amountEther.toString()) * ethPrice).toFixed(2)} </span> 
                       : <span className="font-medium gray-text">-</span>
-                    : <span style={{width: "20%"}}><Skeleton inline={true}/></span>
+                    : <span style={{width: "20%"}}><Skeleton inline={true} style={{ borderRadius: "20px"}}/></span>
                   }
                 </div>
               }
               <div className={evmWallet && solWallet ? "percentage-buttons" : "invisible"}>
                 <div className="flex flex-row items-center gap-2 mr-1">
                   <WalletIcon width="12" />
-                  <span className="font-medium">{ balanceEther }</span>
+                  { balanceEther >= 0 
+                    ? <span className="font-medium">{ balanceEther }</span>
+                    : <Skeleton height={18} width={52} style={{ borderRadius: "20px"}} />
+                  }
                 </div>
                 <span>•</span>
                 <button onClick={() => { setAmountEther(balanceEther * 0.50); setTimeout(adjustInputWidth, 0) }} className="percentage-button">50%</button>
