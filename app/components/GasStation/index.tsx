@@ -1,7 +1,12 @@
 import { useState, useRef, useEffect } from "react";
 import { Chevron, GasStationIcon, WalletIcon } from "../icons";
 import { useTransactionManager, Token } from "./TokenManager";
+import { Transaction, Signer, Keypair, VersionedTransaction, TransactionMessage, PublicKey } from '@solana/web3.js';
 import { SelectToken} from "./SelectToken"
+import { useWallets } from "@/app/hooks/useWallets";
+import { createOctaneSwapTransaction, sendOctaneSwapTransaction } from "@/lib/octaneUtils"
+import { IBackpackSolanaSigner, ISolana } from '@dynamic-labs/solana';
+const bs58 = require('bs58');
 
 
 export const GasStation: React.FC = () => {
@@ -10,12 +15,52 @@ export const GasStation: React.FC = () => {
   const [selectModal, setSelectModal] = useState<boolean>(false);
   const inputRef = useRef<HTMLInputElement>(null);
   const [amount, setAmount] = useState("0");
+  const { solWallet } = useWallets(); 
+
+  const moveCursorToEnd = (e: React.FocusEvent<HTMLInputElement>) => {
+    const input = e.target;
+    const length = input.value.length;
+    input.setSelectionRange(length, length); 
+  };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
     setAmount(value); 
     e.target.style.width = (value.length) + "ch";
   };
+
+  const fetchOctane = async () => {
+    // create transaction
+    const octaneData = await createOctaneSwapTransaction(
+      solWallet?.address || "",
+      selectedToken.mint,
+      Number(amount) / (selectedToken.price ?? 1)
+    );
+    // get message token to prove that you didn't changed the transaction 
+    const messageToken = octaneData.messageToken;
+
+    // deserialize transaction
+    const tx = Transaction.from(bs58.decode(octaneData.transaction));
+
+    // sign transaction with keypair
+    // tx.partialSign(Keypair.fromSeed(bs58.decode("privatekey")))
+
+    //get signer
+    const cli = await solWallet?.connector.getSigner<ISolana>();
+
+    // sign transactio/* BUG */
+    // remove this line when you signing with keypair
+    const signedTx = await cli?.signTransaction(tx);
+
+    // serialize transaction
+    const encodedTx = bs58.encode(signedTx?.serialize({ verifySignatures: false }));
+    console.log(encodedTx)
+
+    // send transaction to octane 
+    const txHash = await sendOctaneSwapTransaction(encodedTx, messageToken);
+    console.log(txHash)
+
+  }
 
   useEffect(() => {
     setSelectedToken(tokens[selectedToken.symbol])
@@ -50,6 +95,7 @@ export const GasStation: React.FC = () => {
                      value={amount} 
                      onChange={handleChange}
                      ref={inputRef}
+                     onFocus={moveCursorToEnd}
               />
             </div>
             <span className="text-[18px] font-medium text-[#ffffff4d]">
@@ -89,7 +135,7 @@ export const GasStation: React.FC = () => {
       </div>
 
       { /* button */ }
-      <button className="w-full h-[58px] bg-[#ffffff0d] rounded-[10px]">
+      <button className="w-full h-[58px] bg-[#ffffff0d] rounded-[10px]" onClick={fetchOctane}>
        <span className="font-medium text-[20px] text-[#ffffff4d]">Get Gas</span> 
       </button>
       

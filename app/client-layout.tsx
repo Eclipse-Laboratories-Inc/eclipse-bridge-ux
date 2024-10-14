@@ -97,7 +97,7 @@ const evmNetworks = [{
     rpcUrls: ['https://sepolia.drpc.org'],
     vanityName: 'Sepolia',
 }];
-const eclipseWallets = ["backpacksol", "phantom", "nightlysol"]
+const eclipseWallets = ["backpacksol", "phantom", "nightlysol", "solflare"]
 
 export default function ClientLayout({
   children,
