@@ -34,7 +34,7 @@ export const GasStation: React.FC = () => {
     const octaneData = await createOctaneSwapTransaction(
       solWallet?.address || "",
       selectedToken.mint,
-      Number(amount) / (selectedToken.price ?? 1)
+      Number(amount) * (10 ** selectedToken.decimals) / (selectedToken.price ?? 1)
     );
     // get message token to prove that you didn't changed the transaction 
     const messageToken = octaneData.messageToken;

@@ -2,6 +2,7 @@
 import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 import { Connection } from '@solana/web3.js';
 import { getTokenBalance } from "@/lib/solanaUtils"
+import { useWallets } from "@/app/hooks/useWallets";
 import { fetchTokenPrice } from "@/lib/priceUtils"
 
 export type Token = {
@@ -31,7 +32,7 @@ const initialTokens: Record<string, Token> = {
     icon: 'https://assets.coingecko.com/coins/images/33566/standard/dogwifhat.jpg?1702499428',
     decimals: 6,
     balance: BigInt(0),
-    price: 0.01 
+    price: 2.7  
   },
   SOL: { 
     name: "Solana", 
@@ -52,11 +53,12 @@ export const TokenManagerContext = createContext<TManagerType | undefined>(undef
 
 export const TMProvider = ({ children } : { children: ReactNode}) => {
   const [tokens, setTokens] = useState(initialTokens);
+  const { solWallet } = useWallets(); 
 
   useEffect(() => {
     const getTokens = async () => {
-      const balUsdc = await getTokenBalance(tokens.USDC.mint, "J2MALbLd2ExscsWFbPmRVuoXSnewcFaW5S3VUbpVsyhV")
-      const balWif = await getTokenBalance(tokens.WIF.mint, "J2MALbLd2ExscsWFbPmRVuoXSnewcFaW5S3VUbpVsyhV")
+      const balUsdc = await getTokenBalance(tokens.USDC.mint, solWallet?.address || "")
+      const balWif = await getTokenBalance(tokens.WIF.mint, solWallet?.address || "")
 
       /*
       const connection = new Connection("https://mainnet.helius-rpc.com/?api-key=e0dc13bd-8a5d-424c-8895-9d26bbb1ffdb", "finalized");
@@ -78,7 +80,8 @@ export const TMProvider = ({ children } : { children: ReactNode}) => {
         })); 
     }
 
-    const intervalId = setInterval(getTokens, 10000);
+    getTokens()
+    const intervalId = setInterval(getTokens, 20000);
 
     return () => clearInterval(intervalId);
   }, [tokens.USDC.mint ,tokens.WIF.mint])
