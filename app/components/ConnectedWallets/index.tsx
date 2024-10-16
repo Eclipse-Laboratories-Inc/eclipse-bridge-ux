@@ -36,8 +36,7 @@ const useWalletData = () => {
 
       if (wallet.chain === "EVM") {
         const balance = await getBalance(client, {
-          address: wallet.address as `0x${string}`,
-          blockTag: 'safe'
+          address: wallet.address as `0x${string}`
         });
 
         const balanceAsEther = formatEther(balance);

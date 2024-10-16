@@ -85,8 +85,7 @@ export const DepositContent: React.FC<DepositContentProps> = ({ modalStuff, amou
       })
       const balance = await getBalance(balClient, {
         //@ts-ignore
-        address: wallet.address,
-        blockTag: 'safe'
+        address: wallet.address
       })
 
       const balanceAsEther = formatEther(balance);
