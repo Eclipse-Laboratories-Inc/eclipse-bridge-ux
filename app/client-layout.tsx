@@ -96,7 +96,7 @@ const evmNetworks = [{
     rpcUrls: ['https://sepolia.drpc.org'],
     vanityName: 'Sepolia',
 }];
-const eclipseWallets = ["backpacksol", "nightlysol"]
+const eclipseWallets = ["backpacksol", "nightlysol", "phantom"]
 
 export default function ClientLayout({
   children,
@@ -137,6 +137,7 @@ export default function ClientLayout({
             }
           },
           walletsFilter: (wallets) => wallets.filter((w) => w.walletConnector.supportedChains.includes("EVM") || eclipseWallets.includes(w.key)),
+          mobileExperience: "redirect", 
           environmentId: process.env.NEXT_PUBLIC_ENVIRONMENT_ID || '',
           walletConnectors: [EthereumWalletConnectors, SolanaWalletConnectors],
           initialAuthenticationMode: 'connect-only',
