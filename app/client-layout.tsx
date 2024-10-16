@@ -140,6 +140,7 @@ export default function ClientLayout({
           walletsFilter: (wallets) => wallets.filter((w) => w.walletConnector.supportedChains.includes("EVM") || eclipseWallets.includes(w.key)),
           environmentId: process.env.NEXT_PUBLIC_ENVIRONMENT_ID || '',
           walletConnectors: [EthereumWalletConnectors, SolanaWalletConnectors],
+          mobileExperience: "redirect",
           initialAuthenticationMode: 'connect-only',
           displaySiweStatement: true,
           privacyPolicyUrl: "https://www.eclipse.xyz/privacy-policy",
