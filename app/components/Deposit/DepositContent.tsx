@@ -228,7 +228,7 @@ export const DepositContent: React.FC<DepositContentProps> = ({ modalStuff, amou
           <div className="input-wrapper"> 
           { (!evmWallet || evmWallet && (balanceEther >= 0))
             ? <input
-                disabled={!evmWallet || !solWallet}
+                disabled={!evmWallet || (!solWallet && !eclipseAddr) || !isValid}
                 step="0.01"
                 min="0"
                 placeholder="0 ETH"
