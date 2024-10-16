@@ -44,6 +44,7 @@ export const DepositContent: React.FC<DepositContentProps> = ({ modalStuff, amou
   const [walletClient, setWalletClient] = useState<WalletClient<Transport, Chain, Account> | null>(null);
   const [ethTxStatus, setEthTxStatus] = useState("");
   const [eclipseAddr, setEclipseAddr] = useState<string>("");
+  const [isValid, setIsValid] = useState<boolean | null>(null);
   const [balanceEther, setAmountBalanceEther] = useState<number>(-1);
   const [isEvmDisconnected, setIsEvmDisconnected] = useState(false);
   const [isSolDisconnected, setIsSolDisconnected] = useState(false);
@@ -134,7 +135,7 @@ export const DepositContent: React.FC<DepositContentProps> = ({ modalStuff, amou
   };
 
   function determineInputClass(): string {
-    if (!evmWallet || (!solWallet && !eclipseAddr)) return 'disabled';
+    if (!evmWallet || (!solWallet && !eclipseAddr && !isValid)) return 'disabled';
     if (parseFloat(amountEther as string) > balanceEther) {
       return 'alarm'
     }
@@ -142,7 +143,7 @@ export const DepositContent: React.FC<DepositContentProps> = ({ modalStuff, amou
   }
 
   function determineButtonClass(): string {
-    if (!evmWallet || (!solWallet && !eclipseAddr)) {
+    if (!evmWallet || (!solWallet && !eclipseAddr && !isValid)) {
       return 'submit-button disabled'
     }
     if (!amountEther) {
@@ -159,13 +160,13 @@ export const DepositContent: React.FC<DepositContentProps> = ({ modalStuff, amou
   }
 
   function determineButtonText(): string {
-    if (!evmWallet && (solWallet || eclipseAddr)) {
+    if (!evmWallet && (solWallet || (eclipseAddr && isValid))) {
       return "Connect Ethereum Wallet"
     }
-    if (evmWallet && (!solWallet && !eclipseAddr)) {
+    if (evmWallet && (!solWallet && !eclipseAddr && !isValid)) {
       return "Connect Eclipse Wallet"
     }
-    if (!evmWallet && (!solWallet && !eclipseAddr)) {
+    if (!evmWallet && (!solWallet && !eclipseAddr && !isValid)) {
       return "Connect Wallets"
     }
     if (!amountEther) {
@@ -201,6 +202,8 @@ export const DepositContent: React.FC<DepositContentProps> = ({ modalStuff, amou
             wallet={evmWallet}
             eclipseAddr={eclipseAddr}
             setEclipseAddr={setEclipseAddr}
+            isValid={isValid}
+            setIsValid={setIsValid}
           />
           <NetworkBox 
             imageSrc="eclipse.png"
@@ -212,6 +215,8 @@ export const DepositContent: React.FC<DepositContentProps> = ({ modalStuff, amou
             wallet={solWallet}
             eclipseAddr={eclipseAddr}
             setEclipseAddr={setEclipseAddr}
+            isValid={isValid}
+            setIsValid={setIsValid}
           />
         </div>
         <div className={ `amount-input flex flex-col ${determineInputClass()}` }>
@@ -264,7 +269,7 @@ export const DepositContent: React.FC<DepositContentProps> = ({ modalStuff, amou
             </div>
           </div>
         </div>
-        { (!evmWallet || (!solWallet && !eclipseAddr)) 
+        { (!evmWallet || (!solWallet && !eclipseAddr && !isValid)) 
         ?
             <DynamicConnectButton buttonClassName="wallet-connect-button w-full" buttonContainerClassName="submit-button connect-btn">
               <span style={{ width: '100%' }}> {determineButtonText()}</span>

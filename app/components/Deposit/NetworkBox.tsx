@@ -21,6 +21,8 @@ export interface NetworkBoxProps {
   walletChain: "EVM" | "SOL";
   showConnect: boolean;
   eclipseAddr: string;
+  isValid: boolean | null;
+  setIsValid: React.Dispatch<React.SetStateAction<boolean | null>>;
   setEclipseAddr: React.Dispatch<React.SetStateAction<string>>;
   wallet: any;
 }
@@ -39,9 +41,20 @@ export const InvalidIcon: React.FC = () => (
   </svg>
 )
 
-export const NetworkBox: React.FC<NetworkBoxProps> = ({ imageSrc, direction, chainName, onClickEvent, walletChain, showConnect, wallet, eclipseAddr, setEclipseAddr }) => {
+export const NetworkBox: React.FC<NetworkBoxProps> = ({ 
+  imageSrc, 
+  direction, 
+  chainName, 
+  onClickEvent, 
+  walletChain, 
+  showConnect, 
+  wallet, 
+  eclipseAddr, 
+  setEclipseAddr,
+  isValid,
+  setIsValid
+}) => {
   const [isMobile, setIsMobile] = useState<boolean>(typeof window !== 'undefined' ? window.innerWidth < 768 : false);
-  const [isValid, setIsValid] = useState<boolean | null>(null);
   const { userWallets } = useWallets();
 
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -105,7 +118,7 @@ export const NetworkBox: React.FC<NetworkBoxProps> = ({ imageSrc, direction, cha
           : null
         }
       </div>
-      { true && chainName.includes("Eclipse") && 
+      { isMobile && chainName.includes("Eclipse") && 
         <div className={`
           flex flex-row items-center justify-between 
           p-[10px] w-[104%] h-[34px] mt-[14px] mb-[-8px] 
