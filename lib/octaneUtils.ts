@@ -1,5 +1,5 @@
 export async function createOctaneSwapTransaction(user: string, tokenMint: string, amount: number) {
-  const response = await fetch("http://localhost:3001/api/buildWhirlpoolsSwap", {
+  const response = await fetch("https://octane.namascan.com/api/buildWhirlpoolsSwap", {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ 
@@ -14,7 +14,7 @@ export async function createOctaneSwapTransaction(user: string, tokenMint: strin
 }
 
 export async function sendOctaneSwapTransaction(tx: string, messageToken: string) {
-  const response = await fetch("http://localhost:3001/api/sendWhirlpoolsSwap", {
+  const response = await fetch("https://octane.namascan.com/api/sendWhirlpoolsSwap", {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ 
@@ -27,7 +27,7 @@ export async function sendOctaneSwapTransaction(tx: string, messageToken: string
 }
 
 export async function fetchOctaneConfig() {
-  const response = await fetch("http://localhost:3001/api", {
+  const response = await fetch("https://octane.namascan.com/api", {
     method: 'GET',
     headers: { 'Content-Type': 'application/json' }
   });
