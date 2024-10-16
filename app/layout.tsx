@@ -20,8 +20,8 @@ export const metadata: Metadata = {
     images: [
       {
         url: "/twitter-banner.png",
-        width: 2400 ,
-        height: 1350,
+        width: 1200 ,
+        height: 675,
       }
     ],
     type: 'website',
