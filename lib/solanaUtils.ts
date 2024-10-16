@@ -1,7 +1,8 @@
 const solanaWeb3 = require('@solana/web3.js');
 import { PublicKey, PublicKeyInitData, Connection } from '@solana/web3.js';
-import { createAssociatedTokenAccount, getAccount, getAssociatedTokenAddress } from '@solana/spl-token';
+import { createAssociatedTokenAccount, getAccount, getAssociatedTokenAddress, TokenAccountNotFoundError } from '@solana/spl-token';
 import { toHex } from 'viem';
+import { toTokenAmount } from '@orca-so/whirlpools-sdk';
 
 export async function getWalletBalance(publicKey: String, eclipseRpc: string) {
   // Connect to the Solana mainnet
@@ -27,10 +28,14 @@ export async function getTokenBalance(tokenMint: string, wallet: string) {
     mintAddress,
     walletAddress
   );
-  const tokenAccount = await connection.getTokenAccountBalance(associatedTokenAddress);
-  const tokenBalance = tokenAccount.value;
+  try {
+    const tokenAccount = await connection.getTokenAccountBalance(associatedTokenAddress);
+    const tokenBalance = tokenAccount.value;
 
-  return tokenBalance;
+  return parseInt(tokenBalance.amount);
+  } catch {
+    return 0
+  }
 }
 
 export const solanaToBytes32 = (solanaAddress: PublicKeyInitData) => {

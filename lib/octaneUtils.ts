@@ -25,3 +25,12 @@ export async function sendOctaneSwapTransaction(tx: string, messageToken: string
   
   return response.json()
 }
+
+export async function fetchOctaneConfig() {
+  const response = await fetch("http://localhost:3001/api", {
+    method: 'GET',
+    headers: { 'Content-Type': 'application/json' }
+  });
+  
+  return response.json()
+}

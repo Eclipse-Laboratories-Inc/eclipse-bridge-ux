@@ -5,7 +5,7 @@ import { Transaction, Signer, Keypair, VersionedTransaction, TransactionMessage,
 import { SelectToken} from "./SelectToken"
 import { useWallets } from "@/app/hooks/useWallets";
 import { createOctaneSwapTransaction, sendOctaneSwapTransaction } from "@/lib/octaneUtils"
-import { IBackpackSolanaSigner, ISolana } from '@dynamic-labs/solana';
+import { ISolana } from '@dynamic-labs/solana';
 const bs58 = require('bs58');
 
 
@@ -23,11 +23,11 @@ export const GasStation: React.FC = () => {
     input.setSelectionRange(length, length); 
   };
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = e.target.value;
-    setAmount(value); 
-    e.target.style.width = (value.length) + "ch";
-  };
+  useEffect(() => {
+    if (inputRef.current) {
+      inputRef.current.style.width = (amount.length) + "ch";    
+    }
+  }, [amount])
 
   const fetchOctane = async () => {
     // create transaction
@@ -36,11 +36,9 @@ export const GasStation: React.FC = () => {
       selectedToken.mint,
       Number(amount) * (10 ** selectedToken.decimals) / (selectedToken.price ?? 1)
     );
-    // get message token to prove that you didn't changed the transaction 
-    const messageToken = octaneData.messageToken;
-
     // deserialize transaction
     const tx = Transaction.from(bs58.decode(octaneData.transaction));
+    console.log(tx)
 
     // sign transaction with keypair
     // tx.partialSign(Keypair.fromSeed(bs58.decode("privatekey")))
@@ -50,16 +48,11 @@ export const GasStation: React.FC = () => {
 
     // sign transactio/* BUG */
     // remove this line when you signing with keypair
-    const signedTx = await cli?.signTransaction(tx);
+    const signedTx = await cli?.signAndSendTransaction(tx);
 
-    // serialize transaction
-    const encodedTx = bs58.encode(signedTx?.serialize({ verifySignatures: false }));
-    console.log(encodedTx)
-
-    // send transaction to octane 
-    const txHash = await sendOctaneSwapTransaction(encodedTx, messageToken);
-    console.log(txHash)
-
+    window.open(`https://solscan.io/tx/${signedTx?.signature}`)
+    console.log(tx)
+    console.log(signedTx)
   }
 
   useEffect(() => {
@@ -93,7 +86,7 @@ export const GasStation: React.FC = () => {
               <input type="string" 
                      className="bg-transparent font-semibold text-[44px] text-center w-[1ch]" 
                      value={amount} 
-                     onChange={handleChange}
+                     onChange={() => {setAmount(inputRef.current?.value || "")}}
                      ref={inputRef}
                      onFocus={moveCursorToEnd}
               />
@@ -110,9 +103,9 @@ export const GasStation: React.FC = () => {
             </div>
             <div className="flex gap-[22px] ml-[22px]">
               <span className="text-[#ffffff4d]">•</span>
-              <span className="text-[#a1fea04d] font-medium hover:text-[#a1fea099] cursor-pointer">$5</span>
-              <span className="text-[#a1fea04d] font-medium hover:text-[#a1fea099] cursor-pointer">$10</span>
-              <span className="text-[#a1fea04d] font-medium hover:text-[#a1fea099] cursor-pointer">$20</span>
+              <span className="text-[#a1fea04d] font-medium hover:text-[#a1fea099] cursor-pointer" onClick={() => {setAmount("5")}}>$5</span>
+              <span className="text-[#a1fea04d] font-medium hover:text-[#a1fea099] cursor-pointer" onClick={() => {setAmount("10")}}>$10</span>
+              <span className="text-[#a1fea04d] font-medium hover:text-[#a1fea099] cursor-pointer" onClick={() => {setAmount("20")}}>$20</span>
             </div>
           </div>
         </div>
@@ -125,12 +118,23 @@ export const GasStation: React.FC = () => {
       >
         <div className="flex gap-2">
           <span className="text-[#ffffff99] font-medium text-[14px]">You Receive</span>
-          <span className="text-[#ffffff4d] font-medium text-[14px]">$0</span>
+
+          { amount && parseFloat(amount) > 0 
+            ? <span className="text-[#A1FEA0] font-medium text-[14px]">
+                ${amount}
+              </span>
+            : <span className="text-[#ffffff4d] font-medium text-[14px]">$0</span>
+          }
         </div>
 
         <div className="flex gap-2">
           <span className="text-[#ffffff99] font-medium text-[14px]">Cost</span>
-          <span className="text-[#ffffff4d] font-medium text-[14px]">$0</span>
+          { amount && parseFloat(amount) > 0 
+            ? <span className="text-[#A1FEA0] font-medium text-[14px]">
+                ${ Number(selectedToken.fee) / 10 ** selectedToken.decimals }
+              </span>
+            : <span className="text-[#ffffff4d] font-medium text-[14px]">$0</span> 
+          }
         </div>
       </div>
 
