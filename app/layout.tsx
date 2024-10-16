@@ -19,9 +19,9 @@ export const metadata: Metadata = {
     description: process.env.WEBSITE_DESCRIPTION,
     images: [
       {
-        url: "/eclipse-favicon.png",
-        width: 800,
-        height: 8000,
+        url: "/twitter-banner.png",
+        width: 1200,
+        height: 675,
       }
     ],
     type: 'website',
@@ -33,9 +33,9 @@ export const metadata: Metadata = {
     description: process.env.WEBSITE_DESCRIPTION,
     images: [
       {
-        url: "/eclipse-favicon.png",
-        width: 800,
-        height: 8000,
+        url: "/twitter-banner.png",
+        width: 1200,
+        height: 675,
       }
     ]
   }
