@@ -76,6 +76,10 @@ export const DepositContent: React.FC<DepositContentProps> = ({ modalStuff, amou
   }, []);
 
   useEffect(() => {
+    solWallet?.address && setIsValid(true);
+  }, [solWallet?.address])
+
+  useEffect(() => {
     userWallets.forEach(async (wallet) => {
       if (!wallet) return;
       // ignore this for sepolia
@@ -100,7 +104,7 @@ export const DepositContent: React.FC<DepositContentProps> = ({ modalStuff, amou
   const submitDeposit = async () => {
     setIsModalOpen(true);
     setEthTxStatus("Continue in your wallet");
-    const destinationBytes32 = solanaToBytes32(eclipseAddr|| '');
+    const destinationBytes32 = solanaToBytes32(solWallet?.address || eclipseAddr || '');
     const [account] = await walletClient!.getAddresses()
     const weiValue = parseEther(amountEther?.toString() || '');
 
@@ -135,7 +139,7 @@ export const DepositContent: React.FC<DepositContentProps> = ({ modalStuff, amou
   };
 
   function determineInputClass(): string {
-    if (!evmWallet || (!solWallet && !eclipseAddr && !isValid)) return 'disabled';
+    if (!evmWallet || (!solWallet && !eclipseAddr) || !isValid) return 'disabled';
     if (parseFloat(amountEther as string) > balanceEther) {
       return 'alarm'
     }
@@ -143,7 +147,7 @@ export const DepositContent: React.FC<DepositContentProps> = ({ modalStuff, amou
   }
 
   function determineButtonClass(): string {
-    if (!evmWallet || (!solWallet && !eclipseAddr && !isValid)) {
+    if (!evmWallet || (!solWallet && !eclipseAddr) || !isValid) {
       return 'submit-button disabled'
     }
     if (!amountEther) {
@@ -160,13 +164,13 @@ export const DepositContent: React.FC<DepositContentProps> = ({ modalStuff, amou
   }
 
   function determineButtonText(): string {
-    if (!evmWallet && (solWallet || (eclipseAddr && isValid))) {
+    if (!evmWallet && (solWallet || (eclipseAddr))) {
       return "Connect Ethereum Wallet"
     }
-    if (evmWallet && (!solWallet && !eclipseAddr && !isValid)) {
+    if (evmWallet && (!solWallet && !eclipseAddr)) {
       return "Connect Eclipse Wallet"
     }
-    if (!evmWallet && (!solWallet && !eclipseAddr && !isValid)) {
+    if (!evmWallet && (!solWallet && !eclipseAddr)) {
       return "Connect Wallets"
     }
     if (!amountEther) {

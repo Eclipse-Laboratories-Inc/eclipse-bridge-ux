@@ -80,10 +80,10 @@ export const NetworkBox: React.FC<NetworkBoxProps> = ({
       const wallet = new PublicKey(eclipseAddr);
       setIsValid(true);
     } catch {
-      if (eclipseAddr.length < 32) {
+      if (isMobile && eclipseAddr.length < 32) {
         setIsValid(null)
       } else {
-        setIsValid(false);
+        isMobile && setIsValid(false);
       }
     }
     
