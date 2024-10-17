@@ -26,10 +26,11 @@ export default function Main() {
               height: "100%"
             }}>
               <Header />
-              
+              { isMobile && <br />} 
               <div className="main-content flex flex-col gap-2 items-center">
                 <Deposit amountEther={amountEther} setAmountEther={setAmountEther} />
               </div>
+              { isMobile && <br />} 
               <Footer />
             </div>
           </SkeletonTheme>
