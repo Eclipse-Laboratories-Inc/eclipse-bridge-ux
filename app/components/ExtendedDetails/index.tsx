@@ -13,7 +13,8 @@ const ExtendedDetails: React.FC<{amountEther: undefined | string | number, eclip
   const amountEth = (typeof amountEther === "string" ? parseFloat(amountEther) : amountEther)
   const { evmWallet, solWallet } = useWallets(); 
 
-  if (!solWallet || (!evmWallet && !eclipseAddr)) return null;
+
+  if ((!eclipseAddr && !solWallet) || !evmWallet) return null;
 
   return (
     <div className="extended-details" style={{marginTop: "18px"}}>
