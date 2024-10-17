@@ -64,12 +64,10 @@ export const NetworkBox: React.FC<NetworkBoxProps> = ({
   };
 
   const handlePaste = async () => {
-        console.log("handle")
     try {
       if (navigator.clipboard && navigator.clipboard.readText) {
         // Modern browsers
         const text = await navigator.clipboard.readText();
-        console.log("texto")
         setInnerAddr(text);
       } else {
         // Fallback for older browsers or mobile
