@@ -55,18 +55,21 @@ export const NetworkBox: React.FC<NetworkBoxProps> = ({
   setIsValid
 }) => {
   const [isMobile, setIsMobile] = useState<boolean>(typeof window !== 'undefined' ? window.innerWidth < 768 : false);
+  const [innerAddr, setInnerAddr] = useState<string>("");
   const { userWallets } = useWallets();
 
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setEclipseAddr(event.target.value);
+    setInnerAddr(event.target.value);
   };
 
   const handlePaste = async () => {
+        console.log("handle")
     try {
       if (navigator.clipboard && navigator.clipboard.readText) {
         // Modern browsers
         const text = await navigator.clipboard.readText();
-        setEclipseAddr(text);
+        console.log("texto")
+        setInnerAddr(text);
       } else {
         // Fallback for older browsers or mobile
         throw new Error('Clipboard API not supported');
@@ -76,18 +79,21 @@ export const NetworkBox: React.FC<NetworkBoxProps> = ({
   };
 
   useEffect(() => {
+    if (innerAddr.includes("...")) return;
     try {
-      const wallet = new PublicKey(eclipseAddr);
+      const wallet = new PublicKey(innerAddr);
       setIsValid(true);
+      setEclipseAddr(innerAddr)
+      setInnerAddr(`${innerAddr.slice(0, 14)}...${innerAddr.slice(-15)}`)
     } catch {
-      if (isMobile && eclipseAddr.length < 32) {
+      if (isMobile && innerAddr.length < 32) {
         setIsValid(null)
       } else {
         isMobile && setIsValid(false);
       }
     }
-    
-  }, [eclipseAddr])
+
+  }, [innerAddr])
 
   return (
     <div className="network-box flex-col">
@@ -121,20 +127,20 @@ export const NetworkBox: React.FC<NetworkBoxProps> = ({
       { isMobile && chainName.includes("Eclipse") && 
         <div className={`
           flex flex-row items-center justify-between 
-          p-[10px] w-[104%] h-[34px] mt-[14px] mb-[-8px] 
+          p-[10px] w-[104%] h-[36px] mt-[14px] mb-[-8px] 
           rounded-[4px] bg-[#ffffff08] border-[0.69px] border-[#ffffff1a]
-          ${ isValid && "border-[#a1fea01a] bg-[#a1fea008]" }
-          ${ isValid === false && "border-[#eb4d4d1a] bg-[#eb4d4d08]" }
+          ${ isValid ? "border-[#a1fea01a] bg-[#a1fea008]" : "" }
+          ${ isValid === false ? "border-[#eb4d4d1a] bg-[#eb4d4d08]" : "" }
         `}>
           <input className={`
-            bg-transparent w-[60ch] text-[12px] font-medium
+            bg-transparent w-[60ch] text-[14px] font-medium
             placeholder:text-[14px] placeholder:font-medium placeholder:text-[#ffffff4d]
             ${ isValid && "text-[#A1FEA0]"}
             ${ isValid === false && "text-[#EB4D4D]"}
           `}
             type="" 
             placeholder="Enter Wallet Address"
-            value={eclipseAddr}
+            value={innerAddr}
             onChange={handleInputChange}
           />
           { isValid === null 
@@ -143,7 +149,7 @@ export const NetworkBox: React.FC<NetworkBoxProps> = ({
                   flex items-center w-[42px] h-[17px] 
                   bg-[#a1fea01a] rounded-[10px] 
                   py-[2px] px-[8px] 
-                  text-[12px] text-[#a1fea0] font-medium
+                  text-[11px] text-[#a1fea0] font-medium
                 "
                 onClick={handlePaste}>
                   Paste
