@@ -7,6 +7,7 @@ import {
 } from "@/lib/dynamic";
 import { Providers } from "@/app/providers";
 import { IBM_Plex_Sans } from 'next/font/google';
+import { useState } from "react"
 
 const ibmPlexSans = IBM_Plex_Sans({
   subsets: ['latin'],
@@ -31,7 +32,6 @@ const cssOverrides = `
   .wallet-list-item__tile, .list-tile {
     background: rgba(255, 255, 255, 0.03);
   }
-
   .wallet-list-item__tile:hover, .list-tile:hover {
     background-color: rgba(255, 255, 255, 0.05)!important;
   }
@@ -103,6 +103,7 @@ export default function ClientLayout({
 }: {
   children: React.ReactNode;
 }) {
+  const [isMobile, setIsMobile] = useState<boolean>(typeof window !== 'undefined' ? window.innerWidth < 768 : false);
   // TODO
   return (
     <html lang="en">
@@ -154,13 +155,11 @@ export default function ClientLayout({
           },
           cssOverrides,
           bridgeChains: [
-            {
-              chain: "EVM",
+            { 
+              chain: "EVM" 
             },
-            {
-              chain: "SOL",
-            },
-          ],
+            ...(isMobile ? [] : [{ chain: "SOL" }]) as [{ chain: "SOL"}]
+          ], 
         }}
       >
         <Providers>

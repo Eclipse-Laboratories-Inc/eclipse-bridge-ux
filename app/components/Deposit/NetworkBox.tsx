@@ -128,7 +128,7 @@ export const NetworkBox: React.FC<NetworkBoxProps> = ({
         `}>
           <input className={`
             bg-transparent w-[60ch] text-[12px] font-medium
-            placeholder:text-[12px] placeholder:font-medium placeholder:text-[#ffffff4d]
+            placeholder:text-[14px] placeholder:font-medium placeholder:text-[#ffffff4d]
             ${ isValid && "text-[#A1FEA0]"}
             ${ isValid === false && "text-[#EB4D4D]"}
           `}
@@ -143,7 +143,7 @@ export const NetworkBox: React.FC<NetworkBoxProps> = ({
                   flex items-center w-[42px] h-[17px] 
                   bg-[#a1fea01a] rounded-[10px] 
                   py-[2px] px-[8px] 
-                  text-[10px] text-[#a1fea0] font-medium
+                  text-[12px] text-[#a1fea0] font-medium
                 "
                 onClick={handlePaste}>
                   Paste

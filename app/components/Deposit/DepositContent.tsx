@@ -105,7 +105,7 @@ export const DepositContent: React.FC<DepositContentProps> = ({ modalStuff, amou
 
   const submitDeposit = async () => {
     setIsModalOpen(true);
-    setEthTxStatus("Continue in your wallet");
+    setEthTxStatus("Continue in wallet");
     const destinationBytes32 = solanaToBytes32(solWallet?.address || eclipseAddr || '');
     const [account] = await walletClient!.getAddresses()
     const weiValue = parseEther(amountEther?.toString() || '');
