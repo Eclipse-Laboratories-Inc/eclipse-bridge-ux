@@ -8,12 +8,13 @@ import { useWallets } from "@/app/hooks/useWallets";
 import MotionNumber from 'motion-number'
 
 
-const ExtendedDetails: React.FC<{amountEther: undefined | string | number}> = ({ amountEther }) => {
+const ExtendedDetails: React.FC<{amountEther: undefined | string | number, eclipseAddr: string}> = ({ amountEther, eclipseAddr }) => {
   const [gasPrice, ethPrice] = useContext(EthereumDataContext) ?? [null, null];
   const amountEth = (typeof amountEther === "string" ? parseFloat(amountEther) : amountEther)
   const { evmWallet, solWallet } = useWallets(); 
 
-  if (!solWallet || !evmWallet) return null;
+
+  if ((!eclipseAddr && !solWallet) || !evmWallet) return null;
 
   return (
     <div className="extended-details" style={{marginTop: "18px"}}>

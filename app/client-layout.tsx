@@ -7,6 +7,7 @@ import {
 } from "@/lib/dynamic";
 import { Providers } from "@/app/providers";
 import { IBM_Plex_Sans } from 'next/font/google';
+import { useState, useEffect } from "react"
 
 const ibmPlexSans = IBM_Plex_Sans({
   subsets: ['latin'],
@@ -31,7 +32,6 @@ const cssOverrides = `
   .wallet-list-item__tile, .list-tile {
     background: rgba(255, 255, 255, 0.03);
   }
-
   .wallet-list-item__tile:hover, .list-tile:hover {
     background-color: rgba(255, 255, 255, 0.05)!important;
   }
@@ -103,6 +103,18 @@ export default function ClientLayout({
 }: {
   children: React.ReactNode;
 }) {
+  const [isMobile, setIsMobile] = useState<boolean>(false);
+
+  useEffect(() => {
+    const checkWindowSize = () => {
+      setIsMobile(window.innerWidth <= 768);
+    };
+
+    checkWindowSize();
+    window.addEventListener('resize', checkWindowSize); 
+
+    return () => window.removeEventListener('resize', checkWindowSize);
+  }, []);
   // TODO
   return (
     <html lang="en">
@@ -137,6 +149,7 @@ export default function ClientLayout({
             }
           },
           walletsFilter: (wallets) => wallets.filter((w) => w.walletConnector.supportedChains.includes("EVM") || eclipseWallets.includes(w.key)),
+          mobileExperience: "redirect", 
           environmentId: process.env.NEXT_PUBLIC_ENVIRONMENT_ID || '',
           walletConnectors: [EthereumWalletConnectors, SolanaWalletConnectors],
           initialAuthenticationMode: 'connect-only',
@@ -153,13 +166,8 @@ export default function ClientLayout({
           },
           cssOverrides,
           bridgeChains: [
-            {
-              chain: "EVM",
-            },
-            {
-              chain: "SOL",
-            },
-          ],
+            ...(isMobile ? [] : [{ chain: "EVM"}, { chain: "SOL" }]) as [{ chain: "EVM"}, { chain: "SOL"}]
+          ], 
         }}
       >
         <Providers>

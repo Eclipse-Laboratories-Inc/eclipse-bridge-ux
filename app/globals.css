@@ -105,6 +105,10 @@ input:focus {
   background: rgba(161, 254, 160, 0.1);
 }
 
+.connect-wallet {
+  overflow: hidden;
+}
+
 img[data-testid='iconic-solana'] {
   content: url('/eclipse.png');
 }
