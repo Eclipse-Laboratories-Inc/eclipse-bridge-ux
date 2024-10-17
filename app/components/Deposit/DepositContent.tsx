@@ -38,12 +38,13 @@ export interface DepositContentProps {
   modalStuff: [boolean, React.Dispatch<React.SetStateAction<boolean>>];
   amountEther: number | string | undefined;
   setAmountEther: React.Dispatch<React.SetStateAction<number | undefined | string>>;
+  eclipseAddr: string;
+  setEclipseAddr: React.Dispatch<React.SetStateAction<string>>;
 }
 
-export const DepositContent: React.FC<DepositContentProps> = ({ modalStuff, amountEther, setAmountEther }) => {
+export const DepositContent: React.FC<DepositContentProps> = ({ modalStuff, amountEther, setAmountEther, eclipseAddr, setEclipseAddr }) => {
   const [walletClient, setWalletClient] = useState<WalletClient<Transport, Chain, Account> | null>(null);
   const [ethTxStatus, setEthTxStatus] = useState("");
-  const [eclipseAddr, setEclipseAddr] = useState<string>("");
   const [isValid, setIsValid] = useState<boolean | null>(null);
   const [balanceEther, setAmountBalanceEther] = useState<number>(-1);
   const [isEvmDisconnected, setIsEvmDisconnected] = useState(false);
