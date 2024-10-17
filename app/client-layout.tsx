@@ -163,9 +163,7 @@ export default function ClientLayout({
           },
           cssOverrides,
           bridgeChains: [
-            { 
-              chain: "EVM" 
-            },
+            ...(isMobile ? [] : [{ chain: "SOL" }, { chain: "EVM"}]) as [{ chain: "SOL"}, { chain: "EVM"}]
           ], 
         }}
       >
