@@ -45,6 +45,7 @@ export interface DepositContentProps {
 export const DepositContent: React.FC<DepositContentProps> = ({ modalStuff, amountEther, setAmountEther, eclipseAddr, setEclipseAddr }) => {
   const [walletClient, setWalletClient] = useState<WalletClient<Transport, Chain, Account> | null>(null);
   const [ethTxStatus, setEthTxStatus] = useState("");
+  const [isMobile, setIsMobile] = useState<boolean>(typeof window !== 'undefined' ? window.innerWidth < 768 : false);
   const [isValid, setIsValid] = useState<boolean | null>(null);
   const [balanceEther, setAmountBalanceEther] = useState<number>(-1);
   const [isEvmDisconnected, setIsEvmDisconnected] = useState(false);
@@ -193,7 +194,7 @@ export const DepositContent: React.FC<DepositContentProps> = ({ modalStuff, amou
     <div className={isModalOpen ? "status-overlay active" : "status-overlay"}></div>
     { !isModalOpen && <div>
         <div className="network-section">
-          <div className="arrow-container">
+          <div className={`arrow-container ${ isMobile ? "top-[40%]" : "top-[50%]"}`}>
             <TransferArrow />
           </div>
 

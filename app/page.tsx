@@ -12,6 +12,7 @@ import { SkeletonTheme } from 'react-loading-skeleton'
 export default function Main() {
   const { gasPrice, ethPrice } = useEthereumData();
   const [amountEther, setAmountEther] = useState<number | string | undefined>(undefined);
+  const [isMobile, setIsMobile] = useState<boolean>(typeof window !== 'undefined' ? window.innerWidth < 768 : false);
   const walletClient = useWalletClient();
 
   return (
@@ -25,9 +26,12 @@ export default function Main() {
               height: "100%"
             }}>
               <Header />
+              { isMobile && <br />}
+              
               <div className="main-content flex flex-col gap-2 items-center">
                 <Deposit amountEther={amountEther} setAmountEther={setAmountEther} />
               </div>
+              { isMobile && <br />}
               <Footer />
             </div>
           </SkeletonTheme>

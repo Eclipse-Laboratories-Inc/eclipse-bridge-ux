@@ -1,10 +1,13 @@
+"use client"
 import Skeleton from 'react-loading-skeleton'
 import useEthereumData from "@/lib/ethUtils";
 import MotionNumber from 'motion-number'
 import { Block, Eth, Gas } from "../icons";
+import { useState } from "react";
 
 export function Footer() {
   const { blockNumber, gasPrice, ethPrice } = useEthereumData();
+  const [isMobile, setIsMobile] = useState<boolean>(typeof window !== 'undefined' ? window.innerWidth < 500 : false);
 
   return (
     <footer className="flex items-center" style={{ height: "auto" }}>
@@ -16,7 +19,7 @@ export function Footer() {
       </div>
       <div className="flex flex-row info-footer justify-between">
         <div className="ml-[28px] flex flex-row items-center gap-2">
-          <Gas gasClassName="gas" />  
+          { !isMobile && <Gas gasClassName="gas" /> } 
           <span>Gas</span>
           {gasPrice 
             ? <span style={{color: "rgba(161, 254, 160, 0.5)"}}> ${gasPrice}</span>
@@ -24,7 +27,7 @@ export function Footer() {
           }
         </div>
         <div className="ml-[28px] flex flex-row items-center gap-2">
-          <Eth ethClassName="eth" />
+         { !isMobile && <Eth ethClassName="eth" /> }
           <span>Eth</span> 
           {ethPrice
             ? <MotionNumber
@@ -42,7 +45,7 @@ export function Footer() {
           }
         </div>
         <div className="ml-[28px] flex flex-row items-center gap-2">
-          <Block blockClassName="block" /> 
+          { !isMobile && <Block blockClassName="block" /> } 
           <span>Block</span> 
           {blockNumber 
             ? <MotionNumber
