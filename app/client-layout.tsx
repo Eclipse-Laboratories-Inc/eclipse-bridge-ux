@@ -166,7 +166,6 @@ export default function ClientLayout({
             { 
               chain: "EVM" 
             },
-            ...(isMobile ? [] : [{ chain: "SOL" }]) as [{ chain: "SOL"}]
           ], 
         }}
       >
