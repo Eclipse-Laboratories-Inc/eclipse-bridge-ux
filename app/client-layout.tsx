@@ -159,6 +159,9 @@ export default function ClientLayout({
           overrides: {
             ...(process.env.NEXT_PUBLIC_CURRENT_CHAIN === 'sepolia' && { evmNetworks: evmNetworks }),
             chainDisplayValues: {
+              solana: {
+                 displayName: 'Eclipse'
+              }
            }
           },
           cssOverrides,
