@@ -7,7 +7,7 @@ import {
 } from "@/lib/dynamic";
 import { Providers } from "@/app/providers";
 import { IBM_Plex_Sans } from 'next/font/google';
-import { useState } from "react"
+import { useState, useEffect } from "react"
 
 const ibmPlexSans = IBM_Plex_Sans({
   subsets: ['latin'],
@@ -103,7 +103,18 @@ export default function ClientLayout({
 }: {
   children: React.ReactNode;
 }) {
-  const [isMobile, setIsMobile] = useState<boolean>(typeof window !== 'undefined' ? window.innerWidth < 768 : false);
+  const [isMobile, setIsMobile] = useState<boolean>(false);
+
+  useEffect(() => {
+    const checkWindowSize = () => {
+      setIsMobile(window.innerWidth <= 768);
+    };
+
+    checkWindowSize();
+    window.addEventListener('resize', checkWindowSize); 
+
+    return () => window.removeEventListener('resize', checkWindowSize);
+  }, []);
   // TODO
   return (
     <html lang="en">
