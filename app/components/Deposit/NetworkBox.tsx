@@ -56,6 +56,7 @@ export const NetworkBox: React.FC<NetworkBoxProps> = ({
 }) => {
   const [isMobile, setIsMobile] = useState<boolean>(typeof window !== 'undefined' ? window.innerWidth < 768 : false);
   const [innerAddr, setInnerAddr] = useState<string>("");
+  const [pasted, setPasted] = useState<boolean>(false);
   const { userWallets } = useWallets();
 
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -79,14 +80,18 @@ export const NetworkBox: React.FC<NetworkBoxProps> = ({
   };
 
   useEffect(() => {
-    if (innerAddr.includes("...")) return;
+    if (pasted && innerAddr.includes("...")) { 
+      setPasted(false);
+      return
+    }
     try {
       const wallet = new PublicKey(innerAddr);
       setIsValid(true);
+      setPasted(true);
       setEclipseAddr(innerAddr)
       setInnerAddr(`${innerAddr.slice(0, 14)}...${innerAddr.slice(-15)}`)
     } catch {
-      if (isMobile && innerAddr.length < 32) {
+      if (isMobile && innerAddr.length === 0) {
         setIsValid(null)
       } else {
         isMobile && setIsValid(false);
