@@ -4,24 +4,26 @@ import {
 import { truncateWalletAddress } from "@/lib/stringUtils";
 import { ConnectIcon, Chevron } from "../icons";
 import ConnectedWallets from "../ConnectedWallets/index";
-import React, { useEffect, useRef, useState, useCallback, useMemo } from "react";
+import React, { useEffect, useRef, useState, useCallback, useMemo, useContext } from "react";
 import { useWallets } from "@/app/hooks/useWallets";
+import { EclipseWalletContext } from "@/app/context"
 
 export const ProfileAvatar: React.FC = () => {
   const { evmWallet, solWallet } = useWallets();
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const { eclipseAddr, setEclipseAddr, isValid } = useContext(EclipseWalletContext);
   const modalRef = useRef<HTMLDivElement>(null);
   const openModalRef = useRef<HTMLDivElement>(null);
 
   const content = useMemo(() => {
-    if (!solWallet || !evmWallet) {
+    if ((!solWallet && !eclipseAddr) || !evmWallet) {
       return (
         <DynamicConnectButton buttonClassName="connect-button-header">
-          {!solWallet && !evmWallet ? "Connect Wallets" : "Connect Wallet"}
+          {(!solWallet && (!eclipseAddr || !isValid)) && !evmWallet ? "Connect Wallets" : "Connect Wallet"}
         </DynamicConnectButton>
       );
     }
-    return truncateWalletAddress(solWallet?.address || '');
+    return truncateWalletAddress(solWallet?.address || eclipseAddr || '');
   }, [solWallet, evmWallet]);
 
   const toggleModal = useCallback((e?: React.MouseEvent) => {

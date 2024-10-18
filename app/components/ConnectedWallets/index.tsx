@@ -1,4 +1,4 @@
-import React, { useEffect, useState, forwardRef, useMemo, useCallback } from 'react';
+import React, { useEffect, useState, forwardRef, useMemo, useCallback, useContext } from 'react';
 import { useDynamicContext, DynamicConnectButton } from '@dynamic-labs/sdk-react-core';
 import { mainnet, sepolia } from "viem/chains";
 import { createPublicClient, formatEther, http } from 'viem';
