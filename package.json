@@ -9,7 +9,7 @@
     "lint": "next lint"
   },
   "dependencies": {
-    "@dynamic-labs/ethereum": "^2.0.0",
+    "@dynamic-labs/ethereum": "^3.4.2",
     "@dynamic-labs/ethers-v5": "2.4.0",
     "@dynamic-labs/rpc-provider-ethereum": "^2.0.0",
     "@dynamic-labs/sdk-react-core": "^2.0.0",
