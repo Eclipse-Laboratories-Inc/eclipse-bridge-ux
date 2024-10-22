@@ -4,6 +4,7 @@ import { NetworkSwitcher } from "../Deposit/NetworkSwitcher";
 import { useState, type ReactNode } from "react";
 import { toKebabCase } from "@/lib/stringUtils";
 import { useRouter } from "next/navigation";
+import { usePathname } from 'next/navigation'
 
 
 const ToggleIcon: React.FC<{ isExtended: boolean }> = ({ isExtended }) => {
@@ -13,7 +14,7 @@ const ToggleIcon: React.FC<{ isExtended: boolean }> = ({ isExtended }) => {
          viewBox="0 0 20 20" 
          fill="none" 
          xmlns="http://www.w3.org/2000/svg" 
-         style={ isExtended ? { transform: "rotate(180deg)", transition: "transform 0.1s" } : { transition: "transform 0.1s" }}>
+         style={ !isExtended ? { transform: "rotate(180deg)", transition: "transform 0.1s" } : { transition: "transform 0.1s" }}>
       <path d="M8.33509 13.3333L5.88564 10.8839C5.39749 10.3957 5.39749 9.60421 5.88564 9.11604L8.33509 6.66663M14.1685 13.3333L11.719 10.8839C11.2308 10.3957 11.2308 9.60421 11.719 9.11604L14.1685 6.66663" stroke="white" stroke-opacity="0.3" stroke-width="1.7971" stroke-linecap="round" stroke-linejoin="round"/>
     </svg>
   );
@@ -22,14 +23,15 @@ const ToggleIcon: React.FC<{ isExtended: boolean }> = ({ isExtended }) => {
 const SidebarItem: React.FC<{name: string, icon: ReactNode, isExtended: boolean}> = ({ name, icon, isExtended }) => {  
   const [hover, setHover] = useState(false);
   const router = useRouter();
+  const pathName = usePathname();
 
   return (
-    <div className="side-item flex flex-row items-center" 
+    <div className={ `side-item flex flex-row items-center ${ pathName.slice(1) === toKebabCase(name) ? "highlight-icon" : "" }`} 
          style={{ gap: "11px", padding: isExtended ? "4px" : "0px", background: !isExtended ? "none" : ""}}
          onMouseEnter={() => setHover(true)}
          onMouseLeave={() => setHover(false)}
          onClick={() => router?.push(toKebabCase(name))}>
-      <div className="flex items-center justify-center side-icon-box" style={{width: "38px", height: "38px"}}>
+      <div className={ `flex items-center justify-center side-icon-box` } style={{width: "38px", height: "38px"}}>
         {icon}
       </div>
       { isExtended && <span style={{fontWeight: "500", fontSize: "16px"}}>{name}</span> } 

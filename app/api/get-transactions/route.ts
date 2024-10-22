@@ -33,7 +33,8 @@ export async function GET(request: Request) {
     const deposits = data.result
       .filter((tx: any) => tx.to.toLowerCase() === bridgeContract.toLowerCase());
 
-    return NextResponse.json(deposits);
+    // TODO: remove this
+    return NextResponse.json(deposits.slice(0, 5));
   } catch (error) {
     console.error('Error fetching last deposits:', error);
     return NextResponse.json({ message: 'Internal Server Error' }, { status: 500 });

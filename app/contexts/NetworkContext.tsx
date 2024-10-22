@@ -5,7 +5,6 @@ import React, { createContext, useState, ReactNode, useContext } from 'react';
 export enum Options {
   Mainnet = 'Mainnet',
   Testnet = 'Testnet',
-  Devnet = 'Thirdparty',
 }
 
 type NetworkContextType = {

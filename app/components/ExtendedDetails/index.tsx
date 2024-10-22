@@ -49,7 +49,7 @@ const ExtendedDetails: React.FC<ExtendedDetailsProps> = ({ amountEther, target, 
           <span style={{ color: "rgba(255, 255, 255, 0.3)"}}>Receive</span>
           <span className="tgreen flex items-center">
             <MotionNumber
-              value={parseFloat(String(amountEther ?? "0")).toFixed(3)}
+              value={(parseFloat(String(amountEther ?? "0")) ? parseFloat(String(amountEther ?? "0")) :  0).toFixed(3)}
               format={{ notation: 'standard' }} 
               transition={{
                 y: { type: 'spring', duration: 0.65, bounce: 0.25 }

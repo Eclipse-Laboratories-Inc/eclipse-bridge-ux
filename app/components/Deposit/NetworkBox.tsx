@@ -123,13 +123,13 @@ export const NetworkBox: React.FC<NetworkBoxProps> = ({
                   onChange={(e) => { 
                     const value = e.target.value;
                     // don't allow string
-                    if (/^[-+]?(\d+([.,]\d*)?|[.,]\d+)$/.test(value) || value === '') {
+                    if (/^[-+]?(\d+([.,]\d*)?|[.,]\d+)$/.test(value) || value === "" || value === ".") {
                       const [_, dp] = value.split(".");
                       if (!dp || dp.length <= 9) {
                         setAmountEther(value);
                       }
+                      adjustInputWidth();
                     } 
-                    adjustInputWidth();
                   }} 
               />{ amountEther && <span className="font-medium text-[34px] ml-[-4px]">ETH</span> }</>
               : <Skeleton height={40} width={160} />
@@ -146,7 +146,7 @@ export const NetworkBox: React.FC<NetworkBoxProps> = ({
               {evmWallet && 
                 <div className="balance-info w-full">
                   {(balanceEther >= 0 && ethPrice)
-                    ? (amountEther) 
+                    ? (amountEther && amountEther != ".") 
                       ? <span className="font-medium">${(parseFloat(amountEther.toString()) * ethPrice).toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",")} </span> 
                       : <span className="font-medium gray-text">-</span>
                     : <span style={{width: "20%"}}><Skeleton inline={true} style={{ borderRadius: "20px"}}/></span>

@@ -12,7 +12,7 @@
   background: rgba(255, 255, 255, 0.05);
   transition: background 0.1s var(--ease-out-quad);
 
-  border-radius: 12px;
+  border-radius: 8px;
 }
 
 .sidebar-tabs {
@@ -69,4 +69,15 @@
   border-right: 20px solid #77c;
   border-bottom: 10px solid #f6f6f6;
   
+}
+
+.highlight-icon {
+  svg path {
+    stroke: white
+  }
+  color: rgba(255, 255, 255, 1);
+  background: rgba(255, 255, 255, 0.05);
+  .side-icon-box {
+    background: rgba(255, 255, 255, 0.1); 
+  }
 }
