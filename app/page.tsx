@@ -17,14 +17,17 @@ export default function Main() {
   const { gasPrice, ethPrice } = useEthereumData();
   const [amountEther, setAmountEther] = useState<number | string | undefined>(undefined);
   const [isMobile, setIsMobile] = useState<boolean>(typeof window !== 'undefined' ? window.innerWidth < 768 : false);
+
   const [eclipseAddr, setEclipseAddr] = useState<string>("");
   const [isValid, setIsValid] = useState<boolean | null>(null);
+
   const walletClient = useWalletClient();
 
   return (
     <EthereumDataContext.Provider value={[gasPrice, ethPrice]}>
       <WalletClientContext.Provider value={walletClient}>
         <TransactionProvider>
+
           <EclipseWalletContext.Provider value={{eclipseAddr, setEclipseAddr, isValid, setIsValid}}>
            <SkeletonTheme baseColor="#FFFFFF0A" highlightColor="#FFFFFF26">
              <div className="flex items-center text-white flex flex-col justify-between" id="main-content" style={{
@@ -42,6 +45,7 @@ export default function Main() {
              </div>
            </SkeletonTheme>
           </ EclipseWalletContext.Provider>
+
         </TransactionProvider>
       </WalletClientContext.Provider >
     </ EthereumDataContext.Provider>

@@ -26,6 +26,7 @@ const Deposit: React.FC<DepositProps> = ({ amountEther, setAmountEther }) => {
   const [activeTab, setActiveTab] = useState<Tabs>(Tabs.Deposit);
   const [isModalOpen, setIsModalOpen] = useState(false); 
   const { eclipseAddr, setEclipseAddr } = useContext(EclipseWalletContext); 
+
   const { pendingTransactions } = useTransaction();
   const { evmWallet } = useWallets();
 
