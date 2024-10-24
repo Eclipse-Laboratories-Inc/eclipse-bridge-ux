@@ -1,5 +1,5 @@
 export async function createOctaneSwapTransaction(user: string, tokenMint: string, amount: number) {
-  const response = await fetch("https://octane.namascan.com/api/buildWhirlpoolsSwap", {
+  const response = await fetch("http://localhost:3001/api/buildWhirlpoolsSwap", {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ 

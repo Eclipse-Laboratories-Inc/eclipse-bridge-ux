@@ -13,7 +13,7 @@ export type Token = {
   decimals: number,
   fee: BigInt,
   mint: string,
-  balance?: BigInt,
+  balance?: bigint,
   price?: number
 }
 

@@ -127,8 +127,8 @@ export const NetworkBox: React.FC<NetworkBoxProps> = ({
                       const [_, dp] = value.split(".");
                       if (!dp || dp.length <= 9) {
                         setAmountEther(value);
+                        adjustInputWidth();
                       }
-                      adjustInputWidth();
                     } 
                   }} 
               />{ amountEther && <span className="font-medium text-[34px] ml-[-4px]">ETH</span> }</>
