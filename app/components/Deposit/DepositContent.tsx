@@ -31,7 +31,9 @@ import { EclipseWalletContext } from '@/app/context';
 const client = createPublicClient({
   chain: (process.env.NEXT_PUBLIC_CURRENT_CHAIN === "mainnet") ? mainnet : sepolia,
   // transport: (process.env.NEXT_PUBLIC_CURRENT_CHAIN === "mainnet") ? http() : http("https://sepolia.drpc.org"),
-  transport: (process.env.NEXT_PUBLIC_CURRENT_CHAIN === "mainnet") ? http("https://eth.llamarpc.com") : http("https://sepolia.drpc.org"),
+  transport: (process.env.NEXT_PUBLIC_CURRENT_CHAIN === "mainnet") 
+    ? http("https://empty-responsive-patron.quiknode.pro/91dfa8475605dcdec9afdc8273578c9f349774a1/") 
+    : http("https://sepolia.drpc.org"),
   cacheTime: 0
 })
 
