@@ -1,13 +1,14 @@
 "use client";
 
 import './styles.css';
-import { useState } from "react";
+import { useState, useContext } from "react";
 import { Activity, Loading } from "../icons";
 import { DepositContent } from "./DepositContent";
 import { ActivityContent } from "./ActivityContent";
 import { useTransaction } from "../TransactionPool"
 import ExtendedDetails from '../ExtendedDetails'
 import classNames from 'classnames';
+import  { EclipseWalletContext } from "@/app/context";
 import { useWallets } from '@/app/hooks/useWallets';
 
 export enum Tabs {
@@ -24,7 +25,8 @@ export interface DepositProps {
 const Deposit: React.FC<DepositProps> = ({ amountEther, setAmountEther }) => {
   const [activeTab, setActiveTab] = useState<Tabs>(Tabs.Deposit);
   const [isModalOpen, setIsModalOpen] = useState(false); 
-  const [eclipseAddr, setEclipseAddr] = useState<string>("");
+  const { eclipseAddr, setEclipseAddr } = useContext(EclipseWalletContext); 
+
   const { pendingTransactions } = useTransaction();
   const { evmWallet } = useWallets();
 
