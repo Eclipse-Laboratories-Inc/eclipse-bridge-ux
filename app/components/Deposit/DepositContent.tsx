@@ -232,4 +232,3 @@ export const DepositContent: React.FC<DepositContentProps> = ({ modalStuff, amou
     </>
   );
 };
-
