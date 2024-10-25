@@ -27,7 +27,7 @@ export const GasStationNotification: React.FC<{ txState: string, txStatus: TxSta
   return (
     <div className="
           flex rounded-[70px] h-[46px] items-center gap-[10px] 
-          border-[1px] border-[#ffffff1a] bg-[#ffffff0d] mt-[-65px]
+          border-[1px] border-[#ffffff1a] bg-[#ffffff0d] mt-[-111px]
           pr-[24px] pl-[12px] py-[11px]
     ">
       { txStatus === TxStatus.Waiting && <Loading style={{color: "rgba(161, 254, 160, 1)"}} loadingClassName="" /> }

@@ -62,6 +62,16 @@ export const GasStation: React.FC = () => {
     input.setSelectionRange(length, length); 
   };
 
+  function emitEvent(name: string, status: TxStatus, timeoutSec: number) {
+    setTxState(name);
+    setTxStatus(status);
+
+    setTimeout(() => {
+      setTxState("");
+      setTxId("")
+    }, timeoutSec * 1000)
+  }
+
   useEffect(() => {
     if (inputRef.current) {
       inputRef.current.style.width = (amount.length) + "ch";    
@@ -86,38 +96,39 @@ export const GasStation: React.FC = () => {
     const cli = await solWallet?.connector.getSigner<ISolana>();
     
     if (!cli) { return 1; }
+    let signedTransaction = null;
 
-    const signedTransaction = await cli?.signTransaction(tx);
-    const sik = await cli?.signAndSendTransaction(tx);
-    console.log(sik)
+    try {
+      // signedTransaction = await cli?.signTransaction(tx);
+      signedTransaction = await cli?.signAndSendTransaction(tx);
+      console.log(signedTransaction)
+    } catch {
+      emitEvent(`Refueling for ${amount}$ is failed.`, TxStatus.Failed, 5)
+      return 1;
+    } 
 
     setTxState(`Refueling for ${amount}$ ...`);
+    const latestBlockHash = await connection.getLatestBlockhash();
+    /*
     const rawTransaction = signedTransaction?.serialize();
     const txid = await connection.sendRawTransaction(rawTransaction, {
         skipPreflight: true,
-        maxRetries: 2,
+        maxRetries: 10,
     });
+    */
 
-    const latestBlockHash = await connection.getLatestBlockhash();
     await connection.confirmTransaction({
         blockhash: latestBlockHash.blockhash,
         lastValidBlockHeight: latestBlockHash.lastValidBlockHeight,
-        signature: txid
+        signature: signedTransaction.signature
     }, 'confirmed');
 
 
-    setTxState(`Refuel of ${amount}$ Success`);
-    setTxStatus(TxStatus.Confirmed)
-    setTxId(txid)
+    emitEvent(`Refuel of ${amount}$ Success`, TxStatus.Confirmed, 10)
+    setTxId(signedTransaction.signature)
     // window.open(`https://solscan.io/tx/${txid}`)
     console.log(tx)
-    console.log(txid)
-
-    setTimeout(() => {
-      setTxState("")
-      setTxId("")
-    }, 20_000)
-
+    console.log(signedTransaction.signature)
   }
 
   useEffect(() => {
