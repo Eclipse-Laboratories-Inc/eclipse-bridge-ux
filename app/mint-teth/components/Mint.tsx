@@ -42,6 +42,7 @@ function Mint() {
   const [depositAmount, setDepositAmount] = useState<string>("");
   const [depositAsset, setDepositAsset] = useState<`0x${string}`>(tokenAddresses[0]);
   const [exchangeRate, setExchangeRate] = useState<string>("");
+  console.log("🚀 ~ Mint ~ exchangeRate:", exchangeRate);
   const [depositPending, setDepositPending] = useState<boolean>(false);
   const [tokenBalanceAsBigInt, setTokenBalanceAsBigInt] = useState<bigint>(BigInt(0));
   const [loadingTokenBalance, setLoadingTokenBalance] = useState(false);
@@ -316,6 +317,10 @@ function Mint() {
     setDepositAmount(formattedTokenBalance);
   }
 
+  function handleClickFiftyPercent() {
+    setDepositAmount((parseFloat(formattedTokenBalance) / 2).toString());
+  }
+
   ///////////////////
   // Render
   ///////////////////
@@ -366,6 +371,7 @@ function Mint() {
                   isOverBalance={isOverBalance}
                   tokenBalance={tokenBalanceAsBigInt}
                   onClickMax={handleClickMax}
+                  onClickFiftyPercent={handleClickFiftyPercent}
                 />
                 <MintValueCard
                   title="Receive on"

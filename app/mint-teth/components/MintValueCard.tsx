@@ -16,6 +16,7 @@ interface MintValueCardProps {
   isOverBalance?: boolean;
   tokenBalance?: bigint;
   onClickMax?: () => void;
+  onClickFiftyPercent?: () => void;
   loadingTokenBalance?: boolean;
 }
 
@@ -32,6 +33,7 @@ export function MintValueCard({
   isOverBalance,
   tokenBalance,
   onClickMax,
+  onClickFiftyPercent,
   loadingTokenBalance,
 }: MintValueCardProps) {
   ///////////////////
@@ -78,13 +80,22 @@ export function MintValueCard({
             <Image src="/wallet.svg" alt="wallet" width={18} height={18} />
             <p className="token-balance self-start">{formattedTokenBalance}</p>
           </div>
-          {onClickMax !== undefined && (
-            <div>
-              <button className="max-button" onClick={onClickMax}>
-                Max
-              </button>
-            </div>
-          )}
+          <div className="flex gap-3">
+            {onClickFiftyPercent !== undefined && (
+              <div>
+                <button className="max-button" onClick={onClickFiftyPercent}>
+                  50%
+                </button>
+              </div>
+            )}
+            {onClickMax !== undefined && (
+              <div>
+                <button className="max-button" onClick={onClickMax}>
+                  Max
+                </button>
+              </div>
+            )}
+          </div>
         </div>
       </div>
     </div>
