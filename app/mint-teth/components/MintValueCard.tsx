@@ -43,8 +43,8 @@ export function MintValueCard({
   const formattedTokenBalance = tokenBalance ? parseFloat(formatUnits(tokenBalance, 18)).toFixed(4) : "0.00";
 
   return (
-    <div className="mint-value-card">
-      <div className="mint-value-header">
+    <div className="mint-card">
+      <div className="mint-card-header">
         <div className="flex items-center gap-3">
           <p className="font-medium text-base text-white/30">{title}</p>
           <div className="mint-chip">

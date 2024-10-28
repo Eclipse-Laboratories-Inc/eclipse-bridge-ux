@@ -1,15 +1,13 @@
 import { useWallets } from "@/app/hooks";
 import { generateTxObjectForDetails } from "@/lib/activityUtils";
+import useEthereumData from "@/lib/ethUtils";
 import { solanaToBytes32 } from "@/lib/solanaUtils";
-import { useDynamicContext } from "@dynamic-labs/sdk-react-core";
+import { DynamicConnectButton, useDynamicContext } from "@dynamic-labs/sdk-react-core";
 import classNames from "classnames";
 import { useEffect, useMemo, useState } from "react";
 import { Abi, Address, erc20Abi, formatUnits, parseEther, parseUnits, PublicClient, WalletClient } from "viem";
 import { mainnet } from "viem/chains";
 import WarpRouteContract from "../abis/WarpRouteContract.json";
-import { StepStatus } from "./MintTransactionDetails";
-import { TokenOption } from "./TokenSelect";
-import { hyperlaneIdForEclipse } from "../constants";
 import { warpRouteContractAddress } from "../constants/contracts";
 import { tEthTokenAddress, tokenAddresses, tokenOptions } from "../constants/tokens";
 import { balanceOf } from "../lib/balanceOf";
@@ -17,9 +15,11 @@ import { getRateInQuote } from "../lib/getRateInQuote";
 import { calculateMinimumMint } from "../utils/calculateMinimumMint";
 import { getSolanaBalance } from "../utils/getSolanaBalance";
 import { sanitizeInput } from "../utils/sanitizeInput";
-import { MintTransactionDetails } from "./MintTransactionDetails";
+import { MintSummaryCard } from "./MintSummaryCard";
+import { MintTransactionDetails, StepStatus } from "./MintTransactionDetails";
 import { MintValueCard } from "./MintValueCard";
 import "./styles.css";
+import { TokenOption } from "./TokenSelect";
 
 export enum Tabs {
   Mint,
@@ -42,7 +42,6 @@ function Mint() {
   const [depositAmount, setDepositAmount] = useState<string>("");
   const [depositAsset, setDepositAsset] = useState<`0x${string}`>(tokenAddresses[0]);
   const [exchangeRate, setExchangeRate] = useState<string>("");
-  console.log("🚀 ~ Mint ~ exchangeRate:", exchangeRate);
   const [depositPending, setDepositPending] = useState<boolean>(false);
   const [tokenBalanceAsBigInt, setTokenBalanceAsBigInt] = useState<bigint>(BigInt(0));
   const [loadingTokenBalance, setLoadingTokenBalance] = useState(false);
@@ -53,6 +52,7 @@ function Mint() {
   const [activeTab, setActiveTab] = useState<Tabs>(Tabs.Mint);
   const [depositTxHash, setDepositTxHash] = useState<string>("");
   const [svmBalance, setSvmBalance] = useState<string>("");
+  const { gasPrice, ethPrice } = useEthereumData();
 
   ///////////////////////
   // Derived values
@@ -68,7 +68,8 @@ function Mint() {
 
   const isOverBalance = tokenBalanceAsBigInt < depositAmountAsBigInt;
 
-  const isMintDisabled = depositPending || !depositAmount || !depositAsset || !evmWallet || isOverBalance;
+  const isMintDisabled =
+    depositPending || !depositAmount || !depositAsset || !evmWallet || isOverBalance || Number(depositAmount) === 0;
 
   const provider = rpcProviders.evmDefaultProvider;
 
@@ -321,6 +322,15 @@ function Mint() {
     setDepositAmount((parseFloat(formattedTokenBalance) / 2).toString());
   }
 
+  async function handleConnect() {
+    if (!walletConnector) return;
+    try {
+      await walletConnector.connect();
+    } catch (error) {
+      console.error("Error connecting wallet:", error);
+    }
+  }
+
   ///////////////////
   // Render
   ///////////////////
@@ -387,16 +397,27 @@ function Mint() {
                   }}
                   tokenBalance={BigInt(svmBalance)}
                 />
+                <MintSummaryCard depositAsset={depositAsset} exchangeRate={exchangeRate} />
               </div>
             )}
             {activeTab === Tabs.Redeem && <div>Redeem</div>}
-            <button
-              className={classNames("mint-button mt-3", { "mint-button-disabled": isMintDisabled })}
-              onClick={handleMint}
-              disabled={isMintDisabled}
-            >
-              {depositPending ? "Minting..." : "Mint"}
-            </button>
+            {evmAddress && svmAddress && (
+              <button
+                className={classNames("mint-button mt-3", { "mint-button-disabled": isMintDisabled })}
+                onClick={handleMint}
+                disabled={isMintDisabled}
+              >
+                {depositPending ? "Minting..." : "Mint"}
+              </button>
+            )}
+            {(!evmAddress || !svmAddress) && (
+              <DynamicConnectButton
+                buttonClassName="wallet-connect-button w-full"
+                buttonContainerClassName="submit-button connect-btn"
+              >
+                <span style={{ width: "100%" }}> {"Connect Wallets"}</span>
+              </DynamicConnectButton>
+            )}
           </div>
         </div>
       </div>

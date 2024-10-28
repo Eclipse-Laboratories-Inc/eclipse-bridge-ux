@@ -648,13 +648,13 @@ input::placeholder {
   opacity: 1;
 }
 
-.mint-value-card {
+.mint-card {
   background-color: #0d0d0d;
   border-radius: 10px;
   border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
-.mint-value-header {
+.mint-card-header {
   display: flex;
   padding-left: 20px;
   padding-right: 20px;
@@ -812,4 +812,9 @@ input::placeholder {
   color: #a1fea0;
   filter: brightness(30%);
   text-decoration: underline;
+}
+
+.green-mint-text {
+  color: #a1fea0;
+  font-weight: 500;
 }
