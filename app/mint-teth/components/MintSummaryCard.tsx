@@ -23,11 +23,6 @@ export function MintSummaryCard({ depositAsset, exchangeRate }: MintSummaryCardP
             <Image src="/clock.svg" alt="clock" width={16} height={16} />
             <p className="green-mint-text text-sm">~5mins</p>
           </div>
-          <p>•</p>
-          <div className="flex gap-1">
-            <Image src="/gas.svg" alt="gas" width={16} height={16} />
-            <p className="green-mint-text text-sm">$0.001</p>
-          </div>
         </div>
       </div>
       <div className="flex justify-center gap-1 items-center m-3">
