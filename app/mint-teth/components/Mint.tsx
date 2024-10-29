@@ -21,6 +21,7 @@ import { MintValueCard } from "./MintValueCard";
 import "./styles.css";
 import { TokenOption } from "./TokenSelect";
 import { getRate } from "../lib/getRate";
+import { latestRoundData } from "../lib/latestRoundData";
 
 export enum Tabs {
   Mint,
@@ -55,7 +56,7 @@ function Mint() {
   const [activeTab, setActiveTab] = useState<Tabs>(Tabs.Mint);
   const [depositTxHash, setDepositTxHash] = useState<string>("");
   const [svmBalance, setSvmBalance] = useState<string>("");
-  const { gasPrice, ethPrice } = useEthereumData();
+  const [ethPrice, setEthPrice] = useState<string>("");
 
   ///////////////////////
   // Derived values
@@ -82,7 +83,7 @@ function Mint() {
   const ethPriceAsBigInt = ethPrice ? BigInt(ethPrice) : BigInt(0);
 
   const depositAmountInEth = (depositAmountAsBigInt * BigInt(ethPerAssetRate)) / BigInt(1e18);
-  const depositAmountInUsd = (depositAmountInEth * ethPriceAsBigInt) / BigInt(1e18);
+  const depositAmountInUsd = (depositAmountInEth * ethPriceAsBigInt) / BigInt(1e8);
   const depositAmountInUsdFormatted = Number(formatUnits(depositAmountInUsd, 18));
   const formattedDepositAmountInUsd =
     depositAmountInUsdFormatted > 0 && depositAmountInUsdFormatted < 0.01
@@ -92,7 +93,7 @@ function Mint() {
         )}`;
 
   const receiveAmountInEth = (receiveAmountAsBigInt * BigInt(ethPerTethRate)) / BigInt(1e18);
-  const receiveAmountInUsd = (receiveAmountInEth * ethPriceAsBigInt) / BigInt(1e18);
+  const receiveAmountInUsd = (receiveAmountInEth * ethPriceAsBigInt) / BigInt(1e8);
   const receiveAmountInUsdFormatted = Number(formatUnits(receiveAmountInUsd, 18));
   const formattedReceiveAmountInUsd =
     receiveAmountInUsdFormatted > 0 && receiveAmountInUsdFormatted < 0.01
@@ -176,12 +177,14 @@ function Mint() {
         { quote: "0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2" }, // WETH
         { publicClient }
       );
+      const _ethPrice = await latestRoundData({ publicClient });
 
       // Only update if the asset hasn't changed
       if (!isCancelled && asset === depositAsset) {
         setTethPerAssetRate(rate.toString());
         setEthPerAssetRate(_ethPerAssetRate.toString());
         setEthPerTethRate(_ethPerTethRate.toString());
+        setEthPrice(_ethPrice.toString());
       }
     }
 
