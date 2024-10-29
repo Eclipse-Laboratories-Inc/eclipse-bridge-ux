@@ -20,6 +20,7 @@ import { MintTransactionDetails, StepStatus } from "./MintTransactionDetails";
 import { MintValueCard } from "./MintValueCard";
 import "./styles.css";
 import { TokenOption } from "./TokenSelect";
+import { getRate } from "../lib/getRate";
 
 export enum Tabs {
   Mint,
@@ -41,7 +42,9 @@ function Mint() {
   const [publicClient, setPublicClient] = useState<PublicClient | null>(null);
   const [depositAmount, setDepositAmount] = useState<string>("");
   const [depositAsset, setDepositAsset] = useState<`0x${string}`>(tokenAddresses[0]);
-  const [exchangeRate, setExchangeRate] = useState<string>("");
+  const [tethPerAssetRate, setTethPerAssetRate] = useState<string>("");
+  const [ethPerAssetRate, setEthPerAssetRate] = useState("");
+  const [ethPerTethRate, setEthPerTethRate] = useState("");
   const [depositPending, setDepositPending] = useState<boolean>(false);
   const [tokenBalanceAsBigInt, setTokenBalanceAsBigInt] = useState<bigint>(BigInt(0));
   const [loadingTokenBalance, setLoadingTokenBalance] = useState(false);
@@ -59,7 +62,7 @@ function Mint() {
   ///////////////////////
   const formattedTokenBalance = formatUnits(tokenBalanceAsBigInt, 18);
   const depositAmountAsBigInt = parseUnits(depositAmount, 18);
-  const exchangeRateAsBigInt = BigInt(exchangeRate);
+  const exchangeRateAsBigInt = BigInt(tethPerAssetRate);
   const receiveAmountAsBigInt =
     exchangeRateAsBigInt > BigInt(0)
       ? (depositAmountAsBigInt * BigInt(1e18)) / exchangeRateAsBigInt
@@ -75,6 +78,29 @@ function Mint() {
 
   const evmAddress = evmWallet?.address as `0x${string}` | undefined;
   const svmAddress = solWallet?.address as `0x${string}` | undefined;
+
+  const tempEthPrice = BigInt("2667830000000000000000");
+  const usdPerEthRate = (BigInt(1e18) * BigInt(1e18)) / tempEthPrice;
+
+  const depositAssetBalanceInEth = (tokenBalanceAsBigInt * BigInt(ethPerAssetRate)) / BigInt(1e18);
+  const depositAssetBalanceInUsd = (depositAssetBalanceInEth * usdPerEthRate) / BigInt(1e18);
+  const depositAssetBalanceInUsdFormatted = Number(formatUnits(depositAssetBalanceInUsd, 18));
+  const formattedDepositAssetBalanceInUsd =
+    depositAssetBalanceInUsdFormatted > 0 && depositAssetBalanceInUsdFormatted < 0.01
+      ? "<$0.01"
+      : `$${new Intl.NumberFormat("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 }).format(
+          depositAssetBalanceInUsdFormatted
+        )}`;
+
+  const tethBalanceInEth = (BigInt(svmBalance) * BigInt(ethPerTethRate)) / BigInt(1e18);
+  const tethBalanceInUsd = (tethBalanceInEth * usdPerEthRate) / BigInt(1e18);
+  const tethBalanceInUsdFormatted = Number(formatUnits(tethBalanceInUsd, 18));
+  const formattedTethBalanceInUsd =
+    tethBalanceInUsdFormatted > 0 && tethBalanceInUsdFormatted < 0.01
+      ? "<$0.01"
+      : `$${new Intl.NumberFormat("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 }).format(
+          tethBalanceInUsdFormatted
+        )}`;
 
   // Memoized because it returns a new array on every render
   const steps = useMemo(() => {
@@ -141,10 +167,17 @@ function Mint() {
     async function getExchangeRate(asset: Address) {
       if (!asset || !publicClient) return;
       const rate = await getRateInQuote({ quote: asset }, { publicClient });
+      const _ethPerAssetRate = await getRate({ tokenAddress: asset }, { publicClient });
+      const _ethPerTethRate = await getRateInQuote(
+        { quote: "0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2" }, // WETH
+        { publicClient }
+      );
 
       // Only update if the asset hasn't changed
       if (!isCancelled && asset === depositAsset) {
-        setExchangeRate(rate.toString());
+        setTethPerAssetRate(rate.toString());
+        setEthPerAssetRate(_ethPerAssetRate.toString());
+        setEthPerTethRate(_ethPerTethRate.toString());
       }
     }
 
@@ -382,6 +415,7 @@ function Mint() {
                   tokenBalance={tokenBalanceAsBigInt}
                   onClickMax={handleClickMax}
                   onClickFiftyPercent={handleClickFiftyPercent}
+                  usdValue={formattedDepositAssetBalanceInUsd}
                 />
                 <MintValueCard
                   title="Receive on"
@@ -396,8 +430,9 @@ function Mint() {
                     imageSrc: "/token-teth.svg",
                   }}
                   tokenBalance={BigInt(svmBalance)}
+                  usdValue={formattedTethBalanceInUsd}
                 />
-                <MintSummaryCard depositAsset={depositAsset} exchangeRate={exchangeRate} />
+                <MintSummaryCard depositAsset={depositAsset} exchangeRate={tethPerAssetRate} />
               </div>
             )}
             {activeTab === Tabs.Redeem && <div>Redeem</div>}

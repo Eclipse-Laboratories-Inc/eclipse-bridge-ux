@@ -18,6 +18,7 @@ interface MintValueCardProps {
   onClickMax?: () => void;
   onClickFiftyPercent?: () => void;
   loadingTokenBalance?: boolean;
+  usdValue: string;
 }
 
 export function MintValueCard({
@@ -35,12 +36,14 @@ export function MintValueCard({
   onClickMax,
   onClickFiftyPercent,
   loadingTokenBalance,
+  usdValue,
 }: MintValueCardProps) {
   ///////////////////
   // Derived values
   ///////////////////
   const trimmedUserAddress = userAddress ? userAddress.slice(0, 5) + "•••" + userAddress.slice(-3) : "";
   const formattedTokenBalance = tokenBalance ? parseFloat(formatUnits(tokenBalance, 18)).toFixed(4) : "0.00";
+  const formattedUsdValue = usdValue ? parseFloat(usdValue).toFixed(2) : "$0.00";
 
   return (
     <div className="mint-card">
@@ -76,11 +79,15 @@ export function MintValueCard({
           />
         </div>
         <div className="flex justify-between mt-2 mb-3">
-          <div className="flex gap-2">
-            <Image src="/wallet.svg" alt="wallet" width={18} height={18} />
-            <p className="token-balance self-start">{formattedTokenBalance}</p>
+          <div>
+            <p className="font-medium text-white/30">{usdValue}</p>
           </div>
-          <div className="flex gap-3">
+          <div className="flex gap-2">
+            <div className="flex gap-2">
+              <Image src="/wallet.svg" alt="wallet" width={18} height={18} />
+              <p className="token-balance self-start">{formattedTokenBalance}</p>
+            </div>
+            {(onClickMax || onClickFiftyPercent) && <p className="text-white/30">•</p>}
             {onClickFiftyPercent !== undefined && (
               <div>
                 <button className="max-button" onClick={onClickFiftyPercent}>
