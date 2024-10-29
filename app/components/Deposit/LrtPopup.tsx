@@ -16,7 +16,6 @@ const LrtPopup: React.FC = () => {
 
   useEffect(() => {
     const popupClosed = localStorage.getItem('lrtPopup');
-    console.log(popupClosed, "orrrcoo")
     if (popupClosed === null) {
       setLrtVisible(true);
     }
@@ -36,7 +35,7 @@ const LrtPopup: React.FC = () => {
               <span className="text-[20px] font-semibold w-[247px] h-[52px] text-left line-[26px]" 
                     style={{lineHeight: "26px"}}>Deposit your LRTs to earn restaked yield
               </span>
-              <Link href="/mint-teth">
+              <Link href="https://teth.eclipse.xyz">
                 <div className="flex flex-row gap-[8px] items-center">
                   <span className="text-[14px] font-medium text-left" 
                         style={{ color: "rgba(161, 254, 160, 1)"}}>Deposit Now
