@@ -2,6 +2,7 @@
 
 import './styles.css';
 import { useState, useContext } from "react";
+import LrtPopup from "./LrtPopup"
 import { Activity, Loading } from "../icons";
 import { DepositContent } from "./DepositContent";
 import { ActivityContent } from "./ActivityContent";
@@ -37,6 +38,9 @@ const Deposit: React.FC<DepositProps> = ({ amountEther, setAmountEther }) => {
           width: isModalOpen ? "0px" : "inherit", 
           paddingRight: activeTab === Tabs.Activity ? "8px" : "20px"
       }}>
+        
+        <LrtPopup />
+      
         <div className="header-tabs" style={{
           marginRight: activeTab === Tabs.Activity ? "12px" : "0px"
         }}>
