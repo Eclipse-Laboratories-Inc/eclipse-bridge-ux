@@ -79,27 +79,26 @@ function Mint() {
   const evmAddress = evmWallet?.address as `0x${string}` | undefined;
   const svmAddress = solWallet?.address as `0x${string}` | undefined;
 
-  const tempEthPrice = BigInt("2667830000000000000000");
-  const usdPerEthRate = (BigInt(1e18) * BigInt(1e18)) / tempEthPrice;
+  const ethPriceAsBigInt = ethPrice ? BigInt(ethPrice) : BigInt(0);
 
-  const depositAssetBalanceInEth = (tokenBalanceAsBigInt * BigInt(ethPerAssetRate)) / BigInt(1e18);
-  const depositAssetBalanceInUsd = (depositAssetBalanceInEth * usdPerEthRate) / BigInt(1e18);
-  const depositAssetBalanceInUsdFormatted = Number(formatUnits(depositAssetBalanceInUsd, 18));
-  const formattedDepositAssetBalanceInUsd =
-    depositAssetBalanceInUsdFormatted > 0 && depositAssetBalanceInUsdFormatted < 0.01
+  const depositAmountInEth = (depositAmountAsBigInt * BigInt(ethPerAssetRate)) / BigInt(1e18);
+  const depositAmountInUsd = (depositAmountInEth * ethPriceAsBigInt) / BigInt(1e18);
+  const depositAmountInUsdFormatted = Number(formatUnits(depositAmountInUsd, 18));
+  const formattedDepositAmountInUsd =
+    depositAmountInUsdFormatted > 0 && depositAmountInUsdFormatted < 0.01
       ? "<$0.01"
       : `$${new Intl.NumberFormat("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 }).format(
-          depositAssetBalanceInUsdFormatted
+          depositAmountInUsdFormatted
         )}`;
 
-  const tethBalanceInEth = (BigInt(svmBalance) * BigInt(ethPerTethRate)) / BigInt(1e18);
-  const tethBalanceInUsd = (tethBalanceInEth * usdPerEthRate) / BigInt(1e18);
-  const tethBalanceInUsdFormatted = Number(formatUnits(tethBalanceInUsd, 18));
-  const formattedTethBalanceInUsd =
-    tethBalanceInUsdFormatted > 0 && tethBalanceInUsdFormatted < 0.01
+  const receiveAmountInEth = (receiveAmountAsBigInt * BigInt(ethPerTethRate)) / BigInt(1e18);
+  const receiveAmountInUsd = (receiveAmountInEth * ethPriceAsBigInt) / BigInt(1e18);
+  const receiveAmountInUsdFormatted = Number(formatUnits(receiveAmountInUsd, 18));
+  const formattedReceiveAmountInUsd =
+    receiveAmountInUsdFormatted > 0 && receiveAmountInUsdFormatted < 0.01
       ? "<$0.01"
       : `$${new Intl.NumberFormat("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 }).format(
-          tethBalanceInUsdFormatted
+          receiveAmountInUsdFormatted
         )}`;
 
   // Memoized because it returns a new array on every render
@@ -167,7 +166,12 @@ function Mint() {
     async function getExchangeRate(asset: Address) {
       if (!asset || !publicClient) return;
       const rate = await getRateInQuote({ quote: asset }, { publicClient });
-      const _ethPerAssetRate = await getRate({ tokenAddress: asset }, { publicClient });
+      let _ethPerAssetRate: BigInt;
+      if (asset === "0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2") {
+        _ethPerAssetRate = BigInt(1e18);
+      } else {
+        _ethPerAssetRate = await getRate({ tokenAddress: asset }, { publicClient });
+      }
       const _ethPerTethRate = await getRateInQuote(
         { quote: "0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2" }, // WETH
         { publicClient }
@@ -415,7 +419,7 @@ function Mint() {
                   tokenBalance={tokenBalanceAsBigInt}
                   onClickMax={handleClickMax}
                   onClickFiftyPercent={handleClickFiftyPercent}
-                  usdValue={formattedDepositAssetBalanceInUsd}
+                  usdValue={formattedDepositAmountInUsd}
                 />
                 <MintValueCard
                   title="Receive on"
@@ -430,7 +434,7 @@ function Mint() {
                     imageSrc: "/token-teth.svg",
                   }}
                   tokenBalance={BigInt(svmBalance)}
-                  usdValue={formattedTethBalanceInUsd}
+                  usdValue={formattedReceiveAmountInUsd}
                 />
                 <MintSummaryCard depositAsset={depositAsset} exchangeRate={tethPerAssetRate} />
               </div>
