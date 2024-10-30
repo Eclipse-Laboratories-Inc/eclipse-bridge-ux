@@ -1,17 +1,29 @@
 import { useWallets } from "@/app/hooks";
 import { generateTxObjectForDetails } from "@/lib/activityUtils";
-import useEthereumData from "@/lib/ethUtils";
 import { solanaToBytes32 } from "@/lib/solanaUtils";
 import { DynamicConnectButton, useDynamicContext } from "@dynamic-labs/sdk-react-core";
 import classNames from "classnames";
 import { useEffect, useMemo, useState } from "react";
-import { Abi, Address, erc20Abi, formatUnits, parseEther, parseUnits, PublicClient, WalletClient } from "viem";
+import {
+  Abi,
+  Address,
+  createPublicClient,
+  erc20Abi,
+  formatUnits,
+  http,
+  parseEther,
+  parseUnits,
+  PublicClient,
+  WalletClient,
+} from "viem";
 import { mainnet } from "viem/chains";
 import WarpRouteContract from "../abis/WarpRouteContract.json";
 import { warpRouteContractAddress } from "../constants/contracts";
 import { tEthTokenAddress, tokenAddresses, tokenOptions } from "../constants/tokens";
 import { balanceOf } from "../lib/balanceOf";
+import { getRate } from "../lib/getRate";
 import { getRateInQuote } from "../lib/getRateInQuote";
+import { latestRoundData } from "../lib/latestRoundData";
 import { calculateMinimumMint } from "../utils/calculateMinimumMint";
 import { getSolanaBalance } from "../utils/getSolanaBalance";
 import { sanitizeInput } from "../utils/sanitizeInput";
@@ -20,8 +32,6 @@ import { MintTransactionDetails, StepStatus } from "./MintTransactionDetails";
 import { MintValueCard } from "./MintValueCard";
 import "./styles.css";
 import { TokenOption } from "./TokenSelect";
-import { getRate } from "../lib/getRate";
-import { latestRoundData } from "../lib/latestRoundData";
 
 export enum Tabs {
   Mint,
@@ -148,13 +158,16 @@ function Mint() {
   // Set up the public and wallet clients
   useEffect(() => {
     async function loadClients() {
+      const client = createPublicClient({
+        chain: mainnet,
+        transport: http(process.env.NEXT_PUBLIC_MAINNET_RPC),
+      });
+      setPublicClient(client);
+
       if (!walletConnector) return;
 
       const fetchedWalletClient = walletConnector.getWalletClient(mainnet.id.toString()) as WalletClient;
-      const fetchedPublicClient = (await walletConnector.getPublicClient()) as PublicClient;
-
       setWalletClient(fetchedWalletClient);
-      setPublicClient(fetchedPublicClient);
     }
 
     loadClients();
