@@ -4,7 +4,7 @@
   justify-content: center;
   align-items: center;
   background-color: #000000; /* Black background */
-  transition: transform 300ms cubic-bezier(.25, .46, .45, .94), filter 300ms cubic-bezier(.25, .46, .45, .94);;
+  transition: transform 300ms cubic-bezier(.25, .46, .45, .94), filter 300ms cubic-bezier(.25, .46, .45, .94);
 }
 
 .main-content {
@@ -67,7 +67,7 @@
   background: rgba(255, 255, 255, 0.05);
 }
 
- div.disabled {
+div.disabled {
   cursor: url("../../../public/cursor.svg") 0 0, auto;
 }
 
@@ -197,8 +197,7 @@
   padding: 10px;
   color: #5a5a5a;
   border: 1px solid rgba(255, 255, 255, 0.1);
-  width: 100%;
-
+  
   transition: background-color 0.1s var(--ease-out-quad), border 0.1s var(--ease-out-quad);
 }
 
