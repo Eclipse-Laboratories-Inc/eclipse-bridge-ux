@@ -813,8 +813,6 @@ input::placeholder {
 
 .max-button:active {
   color: #a1fea0;
-  filter: brightness(30%);
-  text-decoration: underline;
 }
 
 .green-mint-text {
