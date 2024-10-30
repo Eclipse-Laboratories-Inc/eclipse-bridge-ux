@@ -73,7 +73,6 @@ input:focus {
 }
 
 .ecl-logo {
-  border-right: 1px solid rgba(255, 255, 255, 0.1); 
   overflow: hidden;
   transition: width 0.3s var(--ease-out-quad);
   width: 215px;

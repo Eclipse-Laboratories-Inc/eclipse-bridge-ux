@@ -1,16 +1,15 @@
-'use client';
-import { useState } from "react";
-import Deposit from "./components/Deposit";
-import { Header } from './components/Header';
-import { Sidebar } from './components/Sidebar';
-import { Footer } from './components/Footer';
-import useEthereumData from "@/lib/ethUtils";
+"use client";
 import { NetworkProvider } from "@/app/contexts/NetworkContext";
-import { useWalletClient } from "./hooks"
-import { EthereumDataContext, WalletClientContext } from "./context"
 import { useSidebar } from "@/app/contexts/SidebarContext";
-import { TransactionProvider } from './components/TransactionPool';
-import { SkeletonTheme } from 'react-loading-skeleton'
+import useEthereumData from "@/lib/ethUtils";
+import { useState } from "react";
+import { SkeletonTheme } from "react-loading-skeleton";
+import { Footer } from "@/app/components/Footer";
+import { Header } from "@/app/components/Header";
+import Mint from "@/app/mint-teth/components/Mint";
+import { TransactionProvider } from "@/app/components/TransactionPool";
+import { EthereumDataContext, WalletClientContext } from "@/app/context";
+import { useWalletClient } from "@/app/hooks";
 
 export default function Main() {
   const { isSidebar, setIsSidebar } = useSidebar();
@@ -24,17 +23,20 @@ export default function Main() {
         <WalletClientContext.Provider value={walletClient}>
           <TransactionProvider>
             <SkeletonTheme baseColor="#FFFFFF0A" highlightColor="#FFFFFF26">
-              <div className="flex items-center text-white flex flex-col justify-between" id="main-content" style={{
-                background: "black",
-                transition: "filter 300ms var(--ease-out-quad)",
-                height: "100%"
-              }}>
+              <div
+                className="flex items-center text-white flex flex-col justify-between"
+                id="main-content"
+                style={{
+                  background: "black",
+                  transition: "filter 300ms var(--ease-out-quad)",
+                  height: "100%",
+                }}
+              >
                 <Header isExtended={isSidebar} />
-                <div className="flex flex-row w-full items-center" style={{height: "100%"}}>
-                  <Sidebar isExtended={isSidebar} setIsExtended={setIsSidebar} />
-                  <div className="flex flex-col items-center" style={{ gap: "13px", flexGrow: "1"}}>
+                <div className="flex flex-row w-full items-center" style={{ height: "100%" }}>
+                  <div className="flex flex-col items-center" style={{ gap: "13px", flexGrow: "1" }}>
                     <div className="main-content flex flex-col gap-2 items-center">
-                      <Deposit amountEther={amountEther} setAmountEther={setAmountEther} />
+                      <Mint />
                     </div>
                   </div>
                 </div>
@@ -42,9 +44,8 @@ export default function Main() {
               </div>
             </SkeletonTheme>
           </TransactionProvider>
-        </WalletClientContext.Provider >
+        </WalletClientContext.Provider>
       </NetworkProvider>
     </EthereumDataContext.Provider>
   );
 }
-

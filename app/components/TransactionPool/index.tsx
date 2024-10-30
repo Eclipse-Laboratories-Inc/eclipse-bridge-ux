@@ -21,7 +21,8 @@ export const TransactionProvider = ({ children } : { children: ReactNode}) => {
   const fetchDeposits = async () => {
     try {
       setDeposits([]);
-      const data = await getLastDeposits(evmWallet?.address || '', (selectedOption === Options.Mainnet) ? "mainnet" : "testnet");
+      // const data = await getLastDeposits(evmWallet?.address || '', (selectedOption === Options.Mainnet) ? "mainnet" : "testnet");
+      const data: any[] = [];
       setDeposits(data.reverse());
       
      const delay = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
@@ -48,7 +49,7 @@ export const TransactionProvider = ({ children } : { children: ReactNode}) => {
     })
     setClient(client);
     setPendingTransactions([]);
-    fetchDeposits();
+    // fetchDeposits();
   }, [selectedOption])
 
   useEffect(() => {

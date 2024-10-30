@@ -12,7 +12,7 @@ export const Header: React.FC<{ isExtended: boolean }> = ({ isExtended }) => {
         : <img src="/eclipse-e.png" className="mobile-logo" alt="Eclipse Logo" width={35} height={34}  style={{ marginLeft: "14px", maxWidth: "none" }} />
       } 
       </div>
-      <h1 className="text-xl tracking-widest bridge-text">BRIDGE</h1>
+      <h1 className="text-xl tracking-widest bridge-text"></h1>
       <ProfileAvatar />
     </header>
   );
