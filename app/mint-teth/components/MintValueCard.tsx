@@ -82,7 +82,7 @@ export function MintValueCard({
             className={`mint-input max-w-[250px] ${disabled ? "mint-input-disabled" : ""} ${
               isOverBalance ? "mint-input-error" : ""
             }`}
-            value={chainName === "Eclipse" ? displayValue : displayValue}
+            value={chainName === "Eclipse" ? displayValue : inputValue}
             onChange={(e) => { 
               onChangeInput?.(e.target.value);
             }}
