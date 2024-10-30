@@ -32,7 +32,7 @@ function Mint() {
   ///////////////////////
   // Hooks
   ///////////////////////
-  const { walletConnector, accountSwitchState } = useDynamicContext();
+  const { walletConnector, accountSwitchState, handleUnlinkWallet } = useDynamicContext();
   const { evmWallet, solWallet } = useWallets();
   const { rpcProviders } = useDynamicContext();
 
@@ -423,6 +423,7 @@ function Mint() {
                   onClickMax={handleClickMax}
                   onClickFiftyPercent={handleClickFiftyPercent}
                   usdValue={formattedDepositAmountInUsd}
+                  handleDisconnect={() => evmWallet && handleUnlinkWallet(evmWallet.id)}
                 />
                 <MintValueCard
                   title="Receive on"
@@ -438,6 +439,7 @@ function Mint() {
                   }}
                   tokenBalance={BigInt(svmBalance)}
                   usdValue={formattedReceiveAmountInUsd}
+                  handleDisconnect={() => solWallet && handleUnlinkWallet(solWallet.id)}
                 />
                 <MintSummaryCard depositAsset={depositAsset} exchangeRate={tethPerAssetRate} />
               </div>
@@ -457,7 +459,11 @@ function Mint() {
                 buttonClassName="wallet-connect-button w-full"
                 buttonContainerClassName="submit-button connect-btn"
               >
-                <span style={{ width: "100%" }}> {"Connect Wallets"}</span>
+                <span style={{ width: "100%" }}> {
+                 (!evmAddress && !svmAddress)
+                  ? "Connect Wallets"
+                  : "Connect Wallet"
+                }</span>
               </DynamicConnectButton>
             )}
           </div>

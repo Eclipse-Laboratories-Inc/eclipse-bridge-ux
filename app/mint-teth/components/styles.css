@@ -672,14 +672,15 @@ input::placeholder {
   border-radius: 50px;
   align-items: center;
   gap: 9px;
-  padding-left: 16px;
-  padding-right: 16px;
+  padding-left: 6px;
+  padding-right: 12px;
   padding-top: 6px;
   padding-bottom: 6px;
 }
 
 .mint-input {
   display: flex;
+  font-weight: 500;
   justify-content: space-between;
   align-items: center;
   border-radius: 8px;
@@ -737,9 +738,12 @@ input::placeholder {
   position: absolute;
   margin-top: 0.5rem;
   width: 100%;
-  border-radius: 0.375rem;
+  border-radius: 1rem;
   background-color: #151515;
   z-index: 10;
+  padding: 4px;
+  padding-top: 0px;
+  padding-bottom: 0px;
 }
 
 .dropdown-item {
@@ -747,6 +751,7 @@ input::placeholder {
   align-items: center;
   width: 100%;
   padding: 0.5rem 1rem;
+  border-radius: 0.725rem;
   font-size: 0.875rem;
   cursor: pointer;
   font-weight: 600;
@@ -782,13 +787,13 @@ input::placeholder {
 }
 
 .mint-button-disabled {
-  filter: brightness(50%);
   cursor: not-allowed;
+  background: #0e0e0e;
+  color: #5a5a5a;
 }
 
 .mint-button-disabled:hover,
 .mint-button-disabled:active {
-  filter: brightness(50%);
 }
 
 .token-balance {
@@ -797,15 +802,13 @@ input::placeholder {
 }
 
 .max-button {
-  color: #a1fea0;
-  filter: brightness(50%);
+  color: rgba(161, 254, 160, 0.3);
   font-weight: 500;
+  transition: color 0.1s var(--ease-out-quad)
 }
 
 .max-button:hover {
-  color: #a1fea0;
-  filter: brightness(40%);
-  text-decoration: underline;
+  color: #A1FEA0;
 }
 
 .max-button:active {
