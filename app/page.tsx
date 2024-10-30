@@ -5,7 +5,7 @@ import { Header } from './components/Header';
 import { Footer } from './components/Footer';
 import { TransactionProvider } from './components/TransactionPool';
 import useEthereumData from "@/lib/ethUtils";
-import { useWalletClient } from "./hooks"
+import { useWalletClient } from "./hooks";
 import { 
   EthereumDataContext, 
   WalletClientContext,
@@ -30,7 +30,7 @@ export default function Main() {
 
           <EclipseWalletContext.Provider value={{eclipseAddr, setEclipseAddr, isValid, setIsValid}}>
            <SkeletonTheme baseColor="#FFFFFF0A" highlightColor="#FFFFFF26">
-             <div className="flex items-center text-white flex flex-col justify-between" id="main-content" style={{
+             <div className="flex items-center text-white flex-col justify-between" id="main-content" style={{
                background: "black",
                transition: "filter 300ms var(--ease-out-quad)",
                height: "100%"
@@ -44,11 +44,11 @@ export default function Main() {
                <Footer />
              </div>
            </SkeletonTheme>
-          </ EclipseWalletContext.Provider>
+          </EclipseWalletContext.Provider>
 
         </TransactionProvider>
       </WalletClientContext.Provider >
-    </ EthereumDataContext.Provider>
+    </EthereumDataContext.Provider>
   );
 }
 
