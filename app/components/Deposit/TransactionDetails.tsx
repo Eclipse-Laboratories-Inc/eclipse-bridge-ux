@@ -94,7 +94,7 @@ export const TransactionDetails: React.FC<TransactionDetailsProps> = ({ fromDepo
           <div className="left-side flex flex-row items-center">
             <div className={tx ? "white-text" : "gray-text"}>3. Receive on Eclipse</div>
             <div className="gray-text">
-            { eclipseTx && <a href={`https://explorer.eclipse.xyz/tx/${eclipseTx}?cluster=${process.env.NEXT_PUBLIC_ECLIPSE_EXPLORER}`} target="_blank">View Txn</a> }
+            { eclipseTx && <a href={`https://eclipsescan.xyz/tx/${eclipseTx}?cluster=${process.env.NEXT_PUBLIC_ECLIPSE_EXPLORER}`} target="_blank">View Txn</a> }
             </div>
           </div>
           { tx && transaction?.pdaData && <div className={`flex flex-row items-center gap-1 ${depositStatus}-item status-item`}>
