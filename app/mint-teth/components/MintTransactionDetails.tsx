@@ -27,6 +27,7 @@ interface TransactionDetailsProps {
   depositAmountAsBigInt: bigint;
   depositAssetLabel: string | undefined;
   depositAssetIcon: string | undefined;
+  depositTxHash: string;
 }
 
 const calculateFee = (gPrice: string, gUsed: string) => {
@@ -44,6 +45,7 @@ export const MintTransactionDetails: React.FC<TransactionDetailsProps> = ({
   depositAmountAsBigInt,
   depositAssetLabel,
   depositAssetIcon,
+  depositTxHash
 }) => {
   const [_, ethPrice] = useContext(EthereumDataContext) ?? [0, 0];
 
@@ -113,8 +115,11 @@ export const MintTransactionDetails: React.FC<TransactionDetailsProps> = ({
                   {step.status === StepStatus.COMPLETED
                     ? "Done"
                     : step.status === StepStatus.FAILED
-                    ? "Failed"
-                    : "Processing"}
+                      ? "Failed"
+                      : depositTxHash
+                        ? "Processing"
+                        : "Confirm in wallet"
+                  }
                 </span>
               </div>
             )}
@@ -126,7 +131,7 @@ export const MintTransactionDetails: React.FC<TransactionDetailsProps> = ({
         <div className="flex w-full flex-col" style={{ marginTop: "30px", gap: "12px", padding: "0 10px" }}>
           <div className="flex flex-row justify-between items-center">
             <span className="info-name">Deposit Amount</span>
-            <div className="flex flex-row gap-2">
+            <div className="flex flex-row gap-2 items-center">
               <span className="gray-text">${ethPrice && (depositAmount * ethPrice).toFixed(2)}</span>
               <span className="green-text">
                 {depositAmount < 0.001 ? "< 0.001" : depositAmount.toFixed(3)} {depositAssetLabel}
@@ -136,7 +141,7 @@ export const MintTransactionDetails: React.FC<TransactionDetailsProps> = ({
 
           <div className="flex flex-row justify-between items-center">
             <span className="info-name">Transaction Fee</span>
-            <div className="flex flex-row gap-2">
+            <div className="flex flex-row gap-2 items-center">
               <span className="gray-text">${ethPrice && (Number(totalFee) * ethPrice).toFixed(3)}</span>
               <span className="green-text">{Number(totalFee).toFixed(4)} ETH</span>
             </div>

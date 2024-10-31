@@ -394,6 +394,7 @@ function Mint() {
             depositAmountAsBigInt={depositAmountAsBigInt}
             depositAssetLabel={depositAssetLabel}
             depositAssetIcon={depositAssetIcon}
+            depositTxHash={depositTxHash}
           />
         )}
         <div className="deposit-container flex flex-col">

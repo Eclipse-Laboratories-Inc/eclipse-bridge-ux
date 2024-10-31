@@ -819,3 +819,17 @@ input::placeholder {
   color: #a1fea0;
   font-weight: 500;
 }
+
+.gray-text {
+  font-weight: 500;
+  font-size: 16px;
+  line-height: 20.8px;
+  color: rgba(255, 255, 255, 0.3);
+}
+
+.green-text {
+  font-weight: 500;
+  color: rgba(161, 254, 160, 1);
+  font-size: 16px;
+}
+
