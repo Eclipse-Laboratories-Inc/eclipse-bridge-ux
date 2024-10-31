@@ -22,6 +22,7 @@ import "./styles.css";
 import { TokenOption } from "./TokenSelect";
 import { getRate } from "../lib/getRate";
 import { latestRoundData } from "../lib/latestRoundData";
+import { quoteGasPayment } from "../lib/quoteGasPayment";
 
 export enum Tabs {
   Mint,
@@ -295,6 +296,11 @@ function Mint() {
       ////////////////////////////////
       // Deposit
       ////////////////////////////////
+      // Get quote gas payment
+      const gasPayment = await quoteGasPayment(
+        { destinationDomain: 1408864445 },
+        { publicClient, contractAddress: "0xc2495f3183F043627CAECD56dAaa726e3B2D9c09" }
+      );
       // Simulate the transaction to catch any errors
       const { request: depositRequest } = await publicClient.simulateContract({
         abi: WarpRouteContract.abi as Abi,
@@ -302,6 +308,7 @@ function Mint() {
         functionName: "depositAndBridge",
         args: [depositAsset, depositAmountAsBigInt, minimumMint, recipientBytes32],
         account: evmAddress,
+        value: gasPayment,
       });
 
       // Execute the transaction
