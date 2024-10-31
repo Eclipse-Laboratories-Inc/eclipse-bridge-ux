@@ -39,7 +39,7 @@ const Deposit: React.FC<DepositProps> = ({ amountEther, setAmountEther }) => {
           paddingRight: activeTab === Tabs.Activity ? "8px" : "20px"
       }}>
         
-        <LrtPopup />
+        { !isModalOpen && <LrtPopup /> }
       
         <div className="header-tabs" style={{
           marginRight: activeTab === Tabs.Activity ? "12px" : "0px"
