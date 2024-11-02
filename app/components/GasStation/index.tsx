@@ -80,7 +80,7 @@ export const GasStation: React.FC = () => {
 
   const fetchOctane = async () => {
     // create transaction
-    const connection = new Connection("https://mainnet.helius-rpc.com/?api-key=e0dc13bd-8a5d-424c-8895-9d26bbb1ffdb"); 
+    const connection = new Connection("https://eclipse.helius-rpc.com"); 
     setTxState("Fetching transaction...");
     setTxStatus(TxStatus.Waiting)
     const octaneData = await createOctaneSwapTransaction(
@@ -124,7 +124,7 @@ export const GasStation: React.FC = () => {
     }, 'confirmed');
 
 
-    emitEvent(`Refuel of ${amount}$ Success`, TxStatus.Confirmed, 10)
+    emitEvent(`Refuel of ${amount}$ Success`, TxStatus.Confirmed, 15)
     setTxId(signedTransaction.signature)
     // window.open(`https://solscan.io/tx/${txid}`)
     console.log(tx)

@@ -13,21 +13,8 @@ export async function createOctaneSwapTransaction(user: string, tokenMint: strin
   return response.json()
 }
 
-export async function sendOctaneSwapTransaction(tx: string, messageToken: string) {
-  const response = await fetch("https://octane.namascan.com/api/sendWhirlpoolsSwap", {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ 
-      transaction: tx,
-      messageToken: messageToken
-    }),
-  });
-  
-  return response.json()
-}
-
 export async function fetchOctaneConfig() {
-  const response = await fetch("https://octane.namascan.com/api", {
+  const response = await fetch("http://localhost:3001/api", {
     method: 'GET',
     headers: { 'Content-Type': 'application/json' }
   });

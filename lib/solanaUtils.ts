@@ -1,6 +1,6 @@
 const solanaWeb3 = require('@solana/web3.js');
 import { PublicKey, PublicKeyInitData, Connection } from '@solana/web3.js';
-import { createAssociatedTokenAccount, getAccount, getAssociatedTokenAddress, TokenAccountNotFoundError } from '@solana/spl-token';
+import { createAssociatedTokenAccount, getAccount, getAssociatedTokenAddress, TokenAccountNotFoundError, TOKEN_2022_PROGRAM_ID } from '@solana/spl-token';
 import { toHex } from 'viem';
 import { toTokenAmount } from '@orca-so/whirlpools-sdk';
 
@@ -19,14 +19,17 @@ export async function getWalletBalance(publicKey: String, eclipseRpc: string) {
 }
 
 export async function getTokenBalance(tokenMint: string, wallet: string) {
-  const connection = new Connection("https://mainnet.helius-rpc.com/?api-key=e0dc13bd-8a5d-424c-8895-9d26bbb1ffdb", "finalized");
+  const connection = new Connection("https://eclipse.helius-rpc.com", "finalized");
 
   const mintAddress = new PublicKey(tokenMint);
   const walletAddress = new PublicKey(wallet);
 
+  console.log(TOKEN_2022_PROGRAM_ID)
   const associatedTokenAddress = await getAssociatedTokenAddress(
     mintAddress,
-    walletAddress
+    walletAddress,
+    false,
+    TOKEN_2022_PROGRAM_ID
   );
   try {
     const tokenAccount = await connection.getTokenAccountBalance(associatedTokenAddress);

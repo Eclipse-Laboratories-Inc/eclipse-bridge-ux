@@ -21,7 +21,7 @@ const initialTokens: Record<string, Token> = {
   USDC: { 
     name: "USD Coin", 
     symbol: 'USDC', 
-    mint: "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+    mint: "AKEWE7Bgh87GPp171b4cJPSSZfmZwQ3KaqYqXoKLNAEE",
     icon: 'https://assets.coingecko.com/coins/images/6319/standard/usdc.png?1696506694',
     decimals: 6,
     fee: BigInt(0),
