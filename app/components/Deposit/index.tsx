@@ -47,7 +47,7 @@ const Deposit: React.FC<DepositProps> = ({ amountEther, setAmountEther }) => {
           <div className={classNames("header-tab", (activeTab === Tabs.Deposit ? "active" : "inactive"))} style={{ width: "100%" }} onClick={() => setActiveTab(Tabs.Deposit)}>Deposit</div>
           <div className={classNames("header-tab", "disabled", (activeTab === Tabs.Withdraw ? "active" : "inactive"))} style={{ width: "100%" }}>Withdraw</div>
           { evmWallet && <div className={classNames("header-tab", "flex", "items-center", "justify-center", (activeTab === Tabs.Activity ? "active" : "inactive"))} style={{ width: "131px" }} onClick={() => {setActiveTab(Tabs.Activity)}}>
-          { (pendingTransactions.length === 0 )
+          { true || (pendingTransactions.length === 0 )
             ? <Activity activityClassName="" />
             : <Loading style={{}} loadingClassName="" />
           }
@@ -74,3 +74,4 @@ const Deposit: React.FC<DepositProps> = ({ amountEther, setAmountEther }) => {
 }
 
 export default Deposit;
+
