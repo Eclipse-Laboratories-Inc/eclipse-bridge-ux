@@ -45,10 +45,10 @@ export const ActivityContent = ({ setActiveTab }: {setActiveTab: React.Dispatch<
                 <span className="gray-in">•</span>
                 <span className="gray-in">{timeAgo(Number(tx.timeStamp))}</span>
               </div>
-              <div className={`flex flex-row items-center status-div ${status}`}>
+              <div className={`flex flex-row items-center status-div completed`}>
                 {(status)
-                  ? <><TransactionIcon iconType={status}/> 
-                    <span>{status === "loading" ? "depositing" : status}</span></>
+                  ? <><TransactionIcon iconType={"completed"}/> 
+                    <span>{status === "loading" ? "completed" : status}</span></>
                   : <Skeleton height={15} width={91} />
                 }
               </div>

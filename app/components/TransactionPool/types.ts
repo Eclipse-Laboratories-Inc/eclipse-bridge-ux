@@ -10,7 +10,7 @@ export interface Transaction {
 
 export const defaultTransaction: Transaction = {
     hash: "",
-    status: 'pending',
+    status: 'confirmed',
     eclipseTxHash: null,
     pdaData: undefined,
     pda: null

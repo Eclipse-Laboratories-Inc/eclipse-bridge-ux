@@ -80,17 +80,18 @@ export const TransactionDetails: React.FC<TransactionDetailsProps> = ({ fromDepo
         </div>
 
 
-        <div className="panel-elem flex flex-row items-center justify-between">
+        <div className="panel-elem flex flex-row items-center justify-between !border-b-[0px]">
           <div className="left-side flex flex-row">
             <div className={tx ? "white-text" : "gray-text"}>2. Depositing</div>
           </div>
-          { tx && (ethTxStatus === "completed") && <div className={`flex flex-row items-center gap-1 ${depositStatus}-item status-item`}>
+          { /* tx && (ethTxStatus === "completed") && <div className={`flex flex-row items-center gap-1 ${depositStatus}-item status-item`}>
               <TransactionIcon iconType={depositStatus} className="tx-done-icon" /> 
               <span>{ depositStatus === "completed" ? "Done"  : "Processing" }</span>
-          </div>}
+          </div> */ }
+         <span className="green-text text-[16px]">~5 minutes</span>
         </div>
 
-        <div className="panel-elem flex flex-row items-center justify-between">
+        { /* <div className="panel-elem flex flex-row items-center justify-between">
           <div className="left-side flex flex-row items-center">
             <div className={tx ? "white-text" : "gray-text"}>3. Receive on Eclipse</div>
             <div className="gray-text">
@@ -103,6 +104,7 @@ export const TransactionDetails: React.FC<TransactionDetailsProps> = ({ fromDepo
             </div>
           }
         </div>
+        */ }
       </div>
         { tx &&
         <div className="flex w-full flex-col" style={{marginTop: "30px", gap: "12px", padding: "0 10px"}}>
@@ -144,6 +146,7 @@ export const TransactionDetails: React.FC<TransactionDetailsProps> = ({ fromDepo
         </div>}
 
         { tx && !eclipseTx && fromDeposit && <div className="flex w-full items-center justify-center modal-info"> You may close this window anytime</div> }
+        { <div className="flex w-full items-center justify-center warning-box">We are having a problem in showing the transaction status. It may take up to ~5 minutes to complete your deposit.</div> }
         { tx && <button onClick={closeModal} className="done-button">Done</button> } 
     </div>
   )

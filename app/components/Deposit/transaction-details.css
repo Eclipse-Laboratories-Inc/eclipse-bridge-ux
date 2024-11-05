@@ -38,7 +38,6 @@
 
 .status-panel {
   width: 100%;
-  height: 192px;
   background: rgba(255, 255, 255, 0.03);
   border: 1px solid rgba(255, 255, 255, 0.1);
   border-radius: 10px;
@@ -139,6 +138,17 @@ a:hover {
   color: rgba(161, 254, 160, 0.6);
   border-radius: 10px;
   height: 37px;
+  margin-top: 30px;
+  margin-bottom: -10px;
+  font-size: 16px;
+}
+
+.warning-box {
+  background: rgba(233, 213, 2, 0.05);
+  border: 1px solid rgba(233, 213, 2, 0.1);
+  color: rgba(233, 213, 2, 0.7);
+  border-radius: 10px;
+  height: 57px;
   margin-top: 30px;
   margin-bottom: -10px;
   font-size: 16px;
