@@ -12,7 +12,7 @@ import { ActivityContent } from "./ActivityContent";
 import { useTransaction } from "../TransactionPool"
 import classNames from 'classnames';
 import { useWallets } from '@/app/hooks/useWallets';
-import { callExampleFunction } from "@/lib/withdrawUtils"
+import { withdrawEthereum } from "@/lib/withdrawUtils"
 
 export enum Tabs {
   Deposit,
@@ -40,8 +40,8 @@ const Deposit: React.FC<DepositProps> = ({ amountEther, setAmountEther }) => {
           paddingRight: activeTab === Tabs.Activity ? "8px" : "20px"
       }}>
         <button className="flex w-[500px] h-[50px]" onClick={() => {
-          callExampleFunction(solWallet?.connector.getSigner());
-        }}>YARAK</button>
+          withdrawEthereum(solWallet?.connector.getSigner());
+        }}>WITHDRAW</button>
         <LrtPopup />
 
         <div className="header-tabs" style={{

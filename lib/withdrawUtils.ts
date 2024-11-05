@@ -4,8 +4,9 @@ import { CanonicalBridge } from "./canonical_bridge";
 import { Connection, PublicKey } from "@solana/web3.js";
 import idl from "./canonical_bridge.json";
 
-export async function callExampleFunction(wallet: any) {
+export async function withdrawEthereum(wallet: any) {
   const signer = await wallet;
+  console.log(signer)
   const connection = new Connection("https://testnet.dev2.eclipsenetwork.xyz");
   const provider = new anchor.AnchorProvider(connection, signer, {
     preflightCommitment: "processed",
