@@ -1,5 +1,7 @@
+const OCTANE_BASE_ADDRESS = "https://octane-server-alpha.vercel.app/api"
+
 export async function createOctaneSwapTransaction(user: string, tokenMint: string, amount: number) {
-  const response = await fetch("http://localhost:3001/api/buildWhirlpoolsSwap", {
+  const response = await fetch(`${OCTANE_BASE_ADDRESS}/buildWhirlpoolsSwap`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ 
@@ -14,10 +16,11 @@ export async function createOctaneSwapTransaction(user: string, tokenMint: strin
 }
 
 export async function fetchOctaneConfig() {
-  const response = await fetch("http://localhost:3001/api", {
+  const response = await fetch(`${OCTANE_BASE_ADDRESS}`, {
     method: 'GET',
     headers: { 'Content-Type': 'application/json' }
   });
   
   return response.json()
 }
+
