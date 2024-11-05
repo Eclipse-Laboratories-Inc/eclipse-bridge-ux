@@ -1,19 +1,17 @@
 import { Connection, Keypair, Transaction, PublicKey } from '@solana/web3.js';
 import {
     buildWhirlpoolClient,
-    PDAUtil,
     PoolUtil,
     SwapQuote, swapQuoteByInputToken,
     Whirlpool,
     WhirlpoolContext,
+    WhirlpoolsConfigExtensionData
 } from '@orca-so/whirlpools-sdk';
 import { AddressUtil, DecimalUtil, Percentage, Wallet} from '@orca-so/common-sdk';
 const BN = require("bn.js")
 import Decimal from "decimal.js";
 
 const WHIRLPOOL_PROGRAM_ID = new PublicKey('whirLbMiicVdio4qvUfM5KAg6Ct8VwpYzGff3uctyCc');
-const WHIRLPOOL_CONFIG_KEY = new PublicKey('2LecshUwdy9xi7meFgHtFJQNSKk4KdTrcpvaB56dP2NQ');
-const WHIRLPOOL_TICK_SPACING = 64;
 
 export function getABMints(sourceMint: PublicKey, targetMint: PublicKey): [PublicKey, PublicKey] {
     const [addressA, addressB] = PoolUtil.orderMints(sourceMint, targetMint);
@@ -33,6 +31,18 @@ export function getWhirlpoolsContext(connection: Connection): WhirlpoolContext {
     return WhirlpoolContext.from(connection, DUMMY_WALLET as Wallet, WHIRLPOOL_PROGRAM_ID);
 }
 
+
+function findCorrectPool(mintA: PublicKey, mintB: PublicKey): PublicKey {
+    // usdc
+    if ([mintA.toBase58(), mintB.toBase58()].includes("AKEWE7Bgh87GPp171b4cJPSSZfmZwQ3KaqYqXoKLNAEE")) {
+        return new PublicKey("2FR5TF3iDCLzGbWAuejR7LKiUL1J8ERnC1z2WGhC9s6D");
+    }
+
+    // sol
+    return new PublicKey("CFYaUSe34VBEoeKdJBXm9ThwsWoLaQ5stgiA3eUWBwV4");
+}
+
+
 export async function getPoolAndQuote(
     context: WhirlpoolContext,
     mintA: PublicKey,
@@ -42,14 +52,8 @@ export async function getPoolAndQuote(
     slippingTolerance: Percentage
 ): Promise<[Whirlpool, SwapQuote]> {
     const client = buildWhirlpoolClient(context);
-    const whirlpoolKey = PDAUtil.getWhirlpool(
-        WHIRLPOOL_PROGRAM_ID,
-        WHIRLPOOL_CONFIG_KEY,
-        AddressUtil.toPubKey(mintA),
-        AddressUtil.toPubKey(mintB),
-        WHIRLPOOL_TICK_SPACING
-    );
-    const whirlpool = await client.getPool(whirlpoolKey.publicKey);
+    const whirlpoolKey = findCorrectPool(mintA, mintB);
+    const whirlpool = await client.getPool(whirlpoolKey);
     const quote = await swapQuoteByInputToken(
         whirlpool,
         sourceMint,
@@ -68,7 +72,7 @@ export async function fetchTokenPrice(connection: Connection, token: string) {
   const [mintA, mintB] = getABMints(
     new PublicKey(token), 
     // USDC mint addr
-    new PublicKey("EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v")
+    new PublicKey("AKEWE7Bgh87GPp171b4cJPSSZfmZwQ3KaqYqXoKLNAEE")
   );
   const [_, quote] = await getPoolAndQuote(
     ctx,

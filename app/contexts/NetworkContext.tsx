@@ -22,11 +22,11 @@ export const NetworkContext = createContext<NetworkContextType | undefined>(unde
 export const NetworkProvider = ({ children }: { children: ReactNode }) => {
   const [selectedOption, setSelectedOption] = useState<Options>(Options.Mainnet);
   const isMainnet = (selectedOption === Options.Mainnet);
-  const bridgeProgram   = isMainnet ? "br1xwubggTiEZ6b7iNZUwfA3psygFfaXGfZ1heaN9AW" : "3gcds6MrhVNPBxoWR8kaXnv486w4VxWgh8GYPsfJaMRt"
+  const bridgeProgram   = isMainnet ? "br1xwubggTiEZ6b7iNZUwfA3psygFfaXGfZ1heaN9AW" : "br1t2MBNdtVRZk3taADwNLt142cVNkekXe1hn3qJVYb"
   const eclipseRpc      = isMainnet ? "https://mainnetbeta-rpc.eclipse.xyz" : "https://testnet.dev2.eclipsenetwork.xyz"
   const evmExplorer     = isMainnet ? "https://etherscan.io" : "https://sepolia.etherscan.io"
   const eclipseExplorer = isMainnet ? "mainnet" : "testnet"
-  const contractAddress = isMainnet ? "0x83cB71D80078bf670b3EfeC6AD9E5E6407cD0fd1" : "0x11b8db6bb77ad8cb9af09d0867bb6b92477dd68e"
+  const contractAddress = isMainnet ? "0x83cB71D80078bf670b3EfeC6AD9E5E6407cD0fd1" : "0xe49aaa25a10fd6e15dd7ddcb50904ca1e91f6e01"
 
   return (
     <NetworkContext.Provider value={{ selectedOption, setSelectedOption, bridgeProgram, eclipseRpc, evmExplorer, eclipseExplorer, contractAddress}}>

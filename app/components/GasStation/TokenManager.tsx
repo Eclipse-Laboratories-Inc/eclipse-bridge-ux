@@ -28,6 +28,7 @@ const initialTokens: Record<string, Token> = {
     balance: BigInt(14548797),
     price: 1
   },
+  /*
   WIF: {
     name: "dogwifhat", 
     symbol: 'WIF', 
@@ -38,15 +39,16 @@ const initialTokens: Record<string, Token> = {
     balance: BigInt(0),
     price: 2.7  
   },
+  */
   SOL: { 
     name: "Solana", 
     symbol: 'SOL', 
-    mint: "So11111111111111111111111111111111111111112",
+    mint: "BeRUj3h7BqkbdfFU7FBNYbodgf8GCHodzKvF9aVjNNfL",
     icon: 'https://assets.coingecko.com/coins/images/4128/standard/solana.png?1718769756',
     decimals: 9,
     fee: BigInt(0),
-    balance: BigInt(2000000),
-    price: 145.07
+    balance: BigInt(1),
+    price: 158.07
   },
 };
 
@@ -64,11 +66,11 @@ export const TMProvider = ({ children } : { children: ReactNode}) => {
     const getTokens = async () => {
       if (!solWallet?.address) return false;
       const balUsdc = await getTokenBalance(tokens.USDC.mint, solWallet?.address || "")
-      const balWif = await getTokenBalance(tokens.WIF.mint, solWallet?.address || "")
+      const balSol = await getTokenBalance(tokens.SOL.mint, solWallet?.address || "")
 
       /*
-      const connection = new Connection("https://mainnet.helius-rpc.com/?api-key=e0dc13bd-8a5d-424c-8895-9d26bbb1ffdb", "finalized");
-      const price = await fetchTokenPrice(connection, tokens.WIF.mint)
+      const connection = new Connection("https://eclipse.helius-rpc.com", "finalized");
+      const solPrice = await fetchTokenPrice(connection, tokens.SOL.mint)
       */
 
       setTokens((prevTokens) => ({
@@ -77,9 +79,9 @@ export const TMProvider = ({ children } : { children: ReactNode}) => {
             ...prevTokens.USDC,
             balance: BigInt(balUsdc || 0),
           },
-          WIF: {
-            ...prevTokens.WIF,
-            balance: BigInt(balWif || 0),
+          SOL: {
+            ...prevTokens.SOL,
+            balance: BigInt(balSol || 0),
           }
         })); 
     }

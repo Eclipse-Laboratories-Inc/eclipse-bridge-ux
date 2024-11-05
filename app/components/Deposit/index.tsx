@@ -10,9 +10,9 @@ import { DepositContent } from "./DepositContent";
 import { WithdrawContent } from "./WithdrawContent";
 import { ActivityContent } from "./ActivityContent";
 import { useTransaction } from "../TransactionPool"
-import ExtendedDetails from '../ExtendedDetails'
 import classNames from 'classnames';
 import { useWallets } from '@/app/hooks/useWallets';
+import { callExampleFunction } from "@/lib/withdrawUtils"
 
 export enum Tabs {
   Deposit,
@@ -30,7 +30,7 @@ const Deposit: React.FC<DepositProps> = ({ amountEther, setAmountEther }) => {
   const [activeTab, setActiveTab] = useState<Tabs>(Tabs.Deposit);
   const [isModalOpen, setIsModalOpen] = useState(false); 
   const { pendingTransactions } = useTransaction();
-  const { evmWallet } = useWallets();
+  const { evmWallet, solWallet } = useWallets();
 
   return (
     <>
@@ -39,6 +39,9 @@ const Deposit: React.FC<DepositProps> = ({ amountEther, setAmountEther }) => {
           width: isModalOpen ? "0px" : "inherit", 
           paddingRight: activeTab === Tabs.Activity ? "8px" : "20px"
       }}>
+        <button className="flex w-[500px] h-[50px]" onClick={() => {
+          callExampleFunction(solWallet?.connector.getSigner());
+        }}>YARAK</button>
         <LrtPopup />
 
         <div className="header-tabs" style={{

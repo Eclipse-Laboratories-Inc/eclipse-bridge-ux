@@ -120,18 +120,18 @@ export default function ClientLayout({
                 const depositBox = document.getElementsByClassName("deposit-container")[0] as HTMLElement;
                 depositBox.style.transform = "scale(0.9)";
 
-                const submitButton = document.getElementsByClassName("submit-button")[0] as HTMLElement;
-                if (submitButton) submitButton.className += " disabled";
+                // const submitButton = document.getElementsByClassName("submit-button")[0] as HTMLElement;
+                // if (submitButton) submitButton.className += " disabled";
 
                 const mainContent = document.getElementById("main-content") as HTMLElement;
                 mainContent.style.filter = "blur(3px)"
             },
             onAuthFlowClose: () => {
                 const depositBox = document.getElementsByClassName("deposit-container")[0] as HTMLElement;
-                depositBox.style.transform = "scale(1)";
+                depositBox.style.transform = "";
 
-                const submitButton = document.getElementsByClassName("submit-button")[0] as HTMLElement;
-                if (submitButton) submitButton.className = submitButton.className.replace("disabled", "");
+                // const submitButton = document.getElementsByClassName("submit-button")[0] as HTMLElement;
+                // if (submitButton) submitButton.className = submitButton.className.replace("disabled", "");
 
                 const mainContent = document.getElementById("main-content") as HTMLElement;
                 mainContent.style.filter = ""
@@ -169,5 +169,11 @@ export default function ClientLayout({
         </Providers>
       </DynamicContextProvider>
     </html>
+  );
+
+  return (
+    <Providers>
+      <body className={ibmPlexSans.className}>{children}</body>
+    </Providers>
   );
 }
