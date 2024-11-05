@@ -8,7 +8,7 @@ import { Transaction, Signer, Keypair, VersionedTransaction, TransactionMessage,
 import { SelectToken} from "./SelectToken"
 import { GasStationNotification, TxStatus } from "./Notification"
 import { useWallets } from "@/app/hooks/useWallets";
-import { createOctaneSwapTransaction, sendOctaneSwapTransaction } from "@/lib/octaneUtils"
+import { createOctaneSwapTransaction } from "@/lib/octaneUtils"
 import { ISolana } from '@dynamic-labs/solana';
 const bs58 = require('bs58');
 
