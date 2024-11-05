@@ -26,7 +26,7 @@ export const NetworkProvider = ({ children }: { children: ReactNode }) => {
   const eclipseRpc      = isMainnet ? "https://mainnetbeta-rpc.eclipse.xyz" : "https://testnet.dev2.eclipsenetwork.xyz"
   const evmExplorer     = isMainnet ? "https://etherscan.io" : "https://sepolia.etherscan.io"
   const eclipseExplorer = isMainnet ? "mainnet" : "testnet"
-  const contractAddress = isMainnet ? "0x83cB71D80078bf670b3EfeC6AD9E5E6407cD0fd1" : "0xe49aaa25a10fd6e15dd7ddcb50904ca1e91f6e01"
+  const contractAddress = isMainnet ? "0x2B08D7cF7EafF0f5f6623d9fB09b080726D4be11" : "0xe49aaa25a10fd6e15dd7ddcb50904ca1e91f6e01"
 
   return (
     <NetworkContext.Provider value={{ selectedOption, setSelectedOption, bridgeProgram, eclipseRpc, evmExplorer, eclipseExplorer, contractAddress}}>

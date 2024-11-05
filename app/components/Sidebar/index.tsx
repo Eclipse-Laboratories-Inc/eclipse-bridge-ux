@@ -57,11 +57,9 @@ export const Sidebar: React.FC<{ isExtended: boolean, setIsExtended: React.Dispa
         <NetworkSwitcher isExtended={isExtended} />
         <div className="sidebar-tabs flex flex-col" style={{ marginTop: "14px", marginLeft: "14px" }}>
           <SidebarItem isExtended={isExtended} name="Bridge" icon={<BridgeIcon />} />
-          <SidebarItem isExtended={isExtended} name="Wallet" icon={<WalletIcon />} />
-          <SidebarItem isExtended={isExtended} name="Faucet" icon={<FaucetIcon />} />
-          <SidebarItem isExtended={isExtended} name="Scan" icon={<ScanIcon />} />
           <SidebarItem isExtended={isExtended} name="Gas Station" icon={<GasStationIcon />} />
           <SidebarItem isExtended={isExtended} name="Mint tETH" icon={<TethIcon />} />
+          <SidebarItem isExtended={isExtended} name="Eclipse Scan" icon={<ScanIcon />} />
         </div>
       </div>
       <div className="flex w-[31px] mb-[20px] h-[31px] rounded-full cursor-pointer border-[#ffffff1a] bg-black border-[1.35px] items-center justify-center ml-[calc(100%-15.5px)]"

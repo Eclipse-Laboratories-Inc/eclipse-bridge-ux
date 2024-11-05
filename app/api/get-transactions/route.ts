@@ -2,7 +2,7 @@ import { NextResponse } from 'next/server';
 
 const API_KEY = process.env.ETHERSCAN_API_KEY || '';
 const chains: { [key: string]: [string, string] } = {
-  mainnet: ['https://api.etherscan.io/api'         , '0x83cB71D80078bf670b3EfeC6AD9E5E6407cD0fd1'],
+  mainnet: ['https://api.etherscan.io/api'         , '0x2B08D7cF7EafF0f5f6623d9fB09b080726D4be11'],
   testnet: ['https://api-sepolia.etherscan.io/api' , '0x11b8db6bb77ad8cb9af09d0867bb6b92477dd68e'],
 };
 

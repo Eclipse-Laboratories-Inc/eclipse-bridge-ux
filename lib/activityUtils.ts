@@ -54,6 +54,7 @@ export async function getNonce(walletClient: any, transactionHash: string, bridg
     ], data.logs[0].data);
 
     const ethDepositNonceBN = new anchor.BN(values[3].replace("0x", ""), 16);
+    console.log(ethDepositNonceBN, "nonii")
     const programPublicKey = new PublicKey(bridgeProgram);
 
     const [depositReceiptPda, _] = PublicKey.findProgramAddressSync(
@@ -131,3 +132,4 @@ export const timeAgo = (timestamp: number): string => {
     return years === 1 ? `1 Year ago` : `${years} Years ago`;
   }
 };
+
