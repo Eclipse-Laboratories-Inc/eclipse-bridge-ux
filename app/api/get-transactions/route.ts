@@ -12,7 +12,7 @@ export async function GET(request: Request) {
   }
 
   try {
-    const apiUrl = `${process.env.NEXT_PUBLIC_ETHERSCAN_ADDRESS}?module=account&action=txlist&address=${address}&startblock=0&endblock=99999999&page=1&offset=1000&sort=asc&apikey=${API_KEY}`;
+    const apiUrl = `${process.env.NEXT_PUBLIC_ETHERSCAN_ADDRESS}?module=account&action=txlist&address=${address}&startblock=21126289&endblock=99999999&page=1&offset=1000&sort=asc&apikey=${API_KEY}`;
     const response = await fetch(apiUrl);
     const data = await response.json();
 
