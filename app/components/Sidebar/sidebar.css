@@ -43,6 +43,11 @@
     stroke: rgba(255, 255, 255, 1);
     stroke-opacity: 1;
   }
+
+  path.make-filled {
+    fill: white;
+    fill-opacity: 1;
+  }
   .side-icon-box {
     background: rgba(255, 255, 255, 0.1); 
   }
@@ -74,6 +79,10 @@
 .highlight-icon {
   svg path {
     stroke: white
+  }
+  path.make-filled {
+    fill: white;
+    fill-opacity: 1;
   }
   color: rgba(255, 255, 255, 1);
   background: rgba(255, 255, 255, 0.05);

@@ -112,6 +112,7 @@ export const DepositContent: React.FC<DepositContentProps> = ({ modalStuff, amou
       if (!wallet) return;
       // ignore this for sepolia
       if (( !provider && process.env.NEXT_PUBLIC_CURRENT_CHAIN === "mainnet") || !(wallet.chain == "EVM")) return;
+      console.log(client, "gbcli")
       const balance = await getBalance(client, {
         //@ts-ignore
         address: wallet.address
@@ -129,7 +130,6 @@ export const DepositContent: React.FC<DepositContentProps> = ({ modalStuff, amou
   }
 
   const submitDeposit = async () => {
-    alert(isWithdrawFlowOpen)
     setIsModalOpen(true);
     setEthTxStatus("Continue in your wallet");
     const destinationBytes32 = solanaToBytes32(solWallet?.address || '');

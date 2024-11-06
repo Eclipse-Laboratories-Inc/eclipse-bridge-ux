@@ -1,7 +1,9 @@
 import { useWallets } from "@/app/hooks";
 import { generateTxObjectForDetails } from "@/lib/activityUtils";
 import useEthereumData from "@/lib/ethUtils";
+import { createPublicClient, formatEther, http } from 'viem';
 import { solanaToBytes32 } from "@/lib/solanaUtils";
+import { Transport, Chain, Account } from 'viem';
 import { DynamicConnectButton, useDynamicContext } from "@dynamic-labs/sdk-react-core";
 import classNames from "classnames";
 import { useEffect, useMemo, useState } from "react";
@@ -152,6 +154,13 @@ function Mint() {
       if (!walletConnector) return;
 
       const fetchedWalletClient = walletConnector.getWalletClient(mainnet.id.toString()) as WalletClient;
+      // const fetchedWalletClient = evmWallet?.connector.getWalletClient<WalletClient<Transport, Chain, Account>>() as WalletClient;
+      //
+      // const mclient = createPublicClient({
+      //  chain: mainnet,
+      //  transport: http("https://empty-responsive-patron.quiknode.pro/91dfa8475605dcdec9afdc8273578c9f349774a1/"), 
+      //  cacheTime: 0
+      //})
       const fetchedPublicClient = (await walletConnector.getPublicClient()) as PublicClient;
 
       setWalletClient(fetchedWalletClient);

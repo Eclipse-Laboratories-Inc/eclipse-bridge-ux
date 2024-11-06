@@ -8,6 +8,7 @@ import { useTransaction } from "../TransactionPool";
 import { useNetwork } from "@/app/contexts/NetworkContext"; 
 import { withdrawEthereum } from "@/lib/withdrawUtils"
 import { useWallets } from "@/app/hooks/useWallets";
+import { setCoinbase } from "viem/actions";
 
 interface TransactionDetailsProps {
   from: "deposit" | "withdraw" | "";
@@ -24,6 +25,7 @@ enum TxStatus {
 }
 
 enum InitiateTxStates {
+  NotReady = "",
   InWallet = "Approve in wallet",
   Confirming = "Confirming",
   Done = "Done"
@@ -99,8 +101,9 @@ export const WithdrawDetails: React.FC<TransactionDetailsProps> = ({
   const { evmExplorer, eclipseExplorer, relayerAddress, configAccount, eclipseRpc, bridgeProgram } = useNetwork();
   const { userWallets, evmWallet, solWallet } = useWallets();
   const [txHash, setTxHash] = useState<string | null>(null);
+  const [checkbox, setCheckbox] = useState<boolean>(false);
 
-  const [initiateStatus, setInitiateStatus] = useState<InitiateTxStates>(InitiateTxStates.InWallet);
+  const [initiateStatus, setInitiateStatus] = useState<InitiateTxStates>(InitiateTxStates.NotReady);
   const [waitingPeriodStatus, setWaitingPeriodStatus] = useState<WaitingPeriodState>(WaitingPeriodState.Waiting);
 
   const transaction = tx && transactions.get(tx.hash);
@@ -118,6 +121,9 @@ export const WithdrawDetails: React.FC<TransactionDetailsProps> = ({
   }, [tx]);
 
   const handleInitiate = async () => {
+    if (!checkbox) { return; }
+
+    setInitiateStatus(InitiateTxStates.InWallet);
     try {
        let _txHash = await withdrawEthereum(
         solWallet?.connector.getSigner(),
@@ -140,7 +146,7 @@ export const WithdrawDetails: React.FC<TransactionDetailsProps> = ({
       return "Close"
     }
 
-    return "Initiate Withdraw"
+    return "Initiate Withdrawal"
   }
 
   return (
@@ -158,7 +164,7 @@ export const WithdrawDetails: React.FC<TransactionDetailsProps> = ({
       <div className="status-panel">
         <div className="panel-elem flex flex-row items-center justify-between">
           <div className="left-side flex flex-row items-center">
-            <div className="white-text" style={{ fontSize: "16px" }}>
+            <div className={ initiateStatus !== InitiateTxStates.NotReady ? "white-text" : "gray-text" } style={{ fontSize: "16px" }}>
               1. Initiate Withdraw
             </div>
             {txHash && (
@@ -172,7 +178,7 @@ export const WithdrawDetails: React.FC<TransactionDetailsProps> = ({
               </div>
             )}
           </div>
-          <div
+          { initiateStatus !== InitiateTxStates.NotReady && <div
             className={`flex flex-row items-center gap-1 ${ initiateStatus === InitiateTxStates.Done ? "completed" : "loading" }-item status-item`}
           >
             <TransactionIcon
@@ -183,8 +189,8 @@ export const WithdrawDetails: React.FC<TransactionDetailsProps> = ({
             <span>
               { initiateStatus }
             </span>
-          </div>
-        </div>
+          </div> }
+        </div> 
 
         <div className="panel-elem flex flex-row items-center justify-between">
           <div className="left-side flex flex-row">
@@ -311,15 +317,21 @@ export const WithdrawDetails: React.FC<TransactionDetailsProps> = ({
             border-[1px] border-[#a1fea01a]
             h-[66px] text-left 
             cursor-pointer mb-[10px]
-      ">
-          <CheckGreen />
+      " onClick={() => setCheckbox(!checkbox)}>
+          { checkbox 
+            ? <CheckGreen /> 
+            : <span className="w-[25px] h-[25px] border-[0px] rounded-[50%] border-[#ffffff0d]"></span>
+          }
           <span className="w-[396px]">
             I understand that  it will take 7 days until my funds are ready to claim on Ethereum Mainnet.
           </span>
       </div> }
 
       {
-        <button onClick={txHash ? closeModal : handleInitiate } className="initiate-button">
+        <button 
+          onClick={txHash ? closeModal : handleInitiate } 
+          className={ `initiate-button ${ txHash && "!text-white !bg-[#ffffff0d]"} ${ !checkbox && "!text-white cursor-not-allowed !bg-[#ffffff0d]" }` }
+        >
           { getButtonText() }
         </button>
       }

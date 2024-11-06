@@ -1,4 +1,5 @@
 import "./sidebar.css";
+import Link from 'next/link';
 import { BridgeIcon, WalletIcon, TethIcon, ScanIcon, GasStationIcon, FaucetIcon } from "@/app/components/icons"
 import { NetworkSwitcher } from "../Deposit/NetworkSwitcher";
 import { useState, type ReactNode } from "react";
@@ -24,13 +25,17 @@ const SidebarItem: React.FC<{name: string, icon: ReactNode, isExtended: boolean}
   const [hover, setHover] = useState(false);
   const router = useRouter();
   const pathName = usePathname();
+  let targetHref = toKebabCase(name)
+  if (targetHref === "eclipsescan") { targetHref = "https://eclipsescan.xyz"}
+  if (targetHref === "ecosystem")   { targetHref = "https://www.eclipse.xyz/ecosystem"}
 
   return (
+    <Link href={targetHref} target={targetHref.includes("https") ? "_blank" : ""}>
     <div className={ `side-item flex flex-row items-center ${ pathName.slice(1) === toKebabCase(name) ? "highlight-icon" : "" }`} 
          style={{ gap: "11px", padding: isExtended ? "4px" : "0px", background: !isExtended ? "none" : ""}}
          onMouseEnter={() => setHover(true)}
          onMouseLeave={() => setHover(false)}
-         onClick={() => router?.push(toKebabCase(name))}>
+         >
       <div className={ `flex items-center justify-center side-icon-box` } style={{width: "38px", height: "38px"}}>
         {icon}
       </div>
@@ -47,6 +52,7 @@ const SidebarItem: React.FC<{name: string, icon: ReactNode, isExtended: boolean}
         </>
       )}
     </div>
+    </Link>
   );
 }
 
@@ -59,7 +65,8 @@ export const Sidebar: React.FC<{ isExtended: boolean, setIsExtended: React.Dispa
           <SidebarItem isExtended={isExtended} name="Bridge" icon={<BridgeIcon />} />
           <SidebarItem isExtended={isExtended} name="Gas Station" icon={<GasStationIcon />} />
           <SidebarItem isExtended={isExtended} name="Mint tETH" icon={<TethIcon />} />
-          <SidebarItem isExtended={isExtended} name="Eclipse Scan" icon={<ScanIcon />} />
+          <SidebarItem isExtended={isExtended} name="Eclipsescan" icon={<ScanIcon />} />
+          <SidebarItem isExtended={isExtended} name="Ecosystem" icon={<ScanIcon />} />
         </div>
       </div>
       <div className="flex w-[31px] mb-[20px] h-[31px] rounded-full cursor-pointer 

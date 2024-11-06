@@ -42,7 +42,7 @@ export async function withdrawEthereum(
       .withdraw(
         receiver,
         new anchor.BN(randomNonce), 
-        new anchor.BN(10**9 * 0.005)
+        new anchor.BN(10**9 * 0.002)
       )
       .accounts({
         withdrawer: signer.publicKey.toBase58(),

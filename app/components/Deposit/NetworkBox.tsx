@@ -148,7 +148,7 @@ export const NetworkBox: React.FC<NetworkBoxProps> = ({
                   {(balanceEther >= 0 && ethPrice)
                     ? (amountEther && amountEther != ".") 
                       ? <span className="font-medium">${(parseFloat(amountEther.toString()) * ethPrice).toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",")} </span> 
-                      : <span className="font-medium gray-text">-</span>
+                      : <span className="font-medium">$0.00</span>
                     : <span style={{width: "20%"}}><Skeleton inline={true} style={{ borderRadius: "20px"}}/></span>
                   }
                 </div>
