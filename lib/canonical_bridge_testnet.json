@@ -1,8 +1,8 @@
 {
-  "address": "br1xwubggTiEZ6b7iNZUwfA3psygFfaXGfZ1heaN9AW",
+  "address": "br1t2MBNdtVRZk3taADwNLt142cVNkekXe1hn3qJVYb",
   "metadata": {
     "name": "canonical_bridge",
-    "version": "0.1.14",
+    "version": "0.1.13",
     "spec": "0.1.0",
     "description": "Created with Anchor"
   },
@@ -24,7 +24,7 @@
           "name": "relayer",
           "writable": true,
           "signer": true,
-          "address": "E3gVbwzKYgTxgrPZGhq9TF5YGtTjBurR5zqx2kAPKa7P"
+          "address": "CrfbABN2sSvmoZLu9eDDfXpaC2nHg42R7AXbHs9eg4S9"
         },
         {
           "name": "deposit_receipt",
@@ -112,7 +112,7 @@
           "name": "authority",
           "writable": true,
           "signer": true,
-          "address": "pCGzyPdy94qpbZAv1JgbNGHgCbMm9vCS6Fe4SHTVMWx"
+          "address": "BoSSQCzuyEpRBC1eHQHMiJkxQPcCT7H7rMYjPTaFB59D"
         },
         {
           "name": "configuration",
@@ -160,7 +160,7 @@
           "name": "authority",
           "writable": true,
           "signer": true,
-          "address": "pCGzyPdy94qpbZAv1JgbNGHgCbMm9vCS6Fe4SHTVMWx"
+          "address": "BoSSQCzuyEpRBC1eHQHMiJkxQPcCT7H7rMYjPTaFB59D"
         },
         {
           "name": "configuration",
@@ -208,7 +208,7 @@
           "name": "authority",
           "writable": true,
           "signer": true,
-          "address": "pCGzyPdy94qpbZAv1JgbNGHgCbMm9vCS6Fe4SHTVMWx"
+          "address": "BoSSQCzuyEpRBC1eHQHMiJkxQPcCT7H7rMYjPTaFB59D"
         },
         {
           "name": "configuration",
@@ -256,7 +256,7 @@
           "name": "authority",
           "writable": true,
           "signer": true,
-          "address": "pCGzyPdy94qpbZAv1JgbNGHgCbMm9vCS6Fe4SHTVMWx"
+          "address": "BoSSQCzuyEpRBC1eHQHMiJkxQPcCT7H7rMYjPTaFB59D"
         },
         {
           "name": "configuration",
@@ -304,7 +304,7 @@
           "name": "authority",
           "writable": true,
           "signer": true,
-          "address": "pCGzyPdy94qpbZAv1JgbNGHgCbMm9vCS6Fe4SHTVMWx"
+          "address": "BoSSQCzuyEpRBC1eHQHMiJkxQPcCT7H7rMYjPTaFB59D"
         },
         {
           "name": "configuration",
@@ -404,7 +404,7 @@
         {
           "name": "relayer",
           "writable": true,
-          "address": "E3gVbwzKYgTxgrPZGhq9TF5YGtTjBurR5zqx2kAPKa7P"
+          "address": "ec1vCnQKsQSnTbcTyc3SH2azcDXZquiFB3QqtRvm3Px"
         },
         {
           "name": "rent",

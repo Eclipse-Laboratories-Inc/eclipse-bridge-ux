@@ -2,7 +2,8 @@ import * as anchor from "@project-serum/anchor";
 import { Program, Provider } from "@coral-xyz/anchor";
 import { CanonicalBridge } from "./canonical_bridge";
 import { Connection, PublicKey } from "@solana/web3.js";
-import idl from "./canonical_bridge.json";
+import testnet_idl from "./canonical_bridge_testnet.json";
+import mainnet_idl from "./canonical_bridge.json";
 
 export async function withdrawEthereum(
   wallet: any,
@@ -22,6 +23,7 @@ export async function withdrawEthereum(
   anchor.setProvider(provider);
   console.log(provider)
 
+  const idl = programId === "br1xwubggTiEZ6b7iNZUwfA3psygFfaXGfZ1heaN9AW" ? mainnet_idl : testnet_idl;
   const program = new Program<CanonicalBridge>(idl as CanonicalBridge, provider as Provider);
   const bridgeProgram = new PublicKey(programId);
   // program.programId = bridgeProgram;
