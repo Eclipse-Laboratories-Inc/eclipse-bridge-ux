@@ -1,6 +1,6 @@
 import "./sidebar.css";
 import Link from 'next/link';
-import { BridgeIcon, WalletIcon, TethIcon, ScanIcon, GasStationIcon, FaucetIcon } from "@/app/components/icons"
+import { BridgeIcon, WalletIcon, TethIcon, ScanIcon, GasStationIcon, FaucetIcon, EcosystemIcon } from "@/app/components/icons"
 import { NetworkSwitcher } from "../Deposit/NetworkSwitcher";
 import { useState, type ReactNode } from "react";
 import { toKebabCase } from "@/lib/stringUtils";
@@ -66,7 +66,7 @@ export const Sidebar: React.FC<{ isExtended: boolean, setIsExtended: React.Dispa
           <SidebarItem isExtended={isExtended} name="Gas Station" icon={<GasStationIcon />} />
           <SidebarItem isExtended={isExtended} name="Mint tETH" icon={<TethIcon />} />
           <SidebarItem isExtended={isExtended} name="Eclipsescan" icon={<ScanIcon />} />
-          <SidebarItem isExtended={isExtended} name="Ecosystem" icon={<ScanIcon />} />
+          <SidebarItem isExtended={isExtended} name="Ecosystem" icon={<EcosystemIcon />} />
         </div>
       </div>
       <div className="flex w-[31px] mb-[20px] h-[31px] rounded-full cursor-pointer 

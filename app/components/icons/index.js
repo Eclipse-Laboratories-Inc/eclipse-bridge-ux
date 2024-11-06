@@ -18,5 +18,6 @@ export { default as WalletIcon } from "./sidebar-icons/wallet";
 export { default as TethIcon } from "./sidebar-icons/teth";
 export { default as ScanIcon } from "./sidebar-icons/scan";
 export { default as FaucetIcon } from "./sidebar-icons/faucet";
+export { default as EcosystemIcon } from "./sidebar-icons/ecosystem";
 export { default as GasStationIcon } from "./sidebar-icons/gas-station";
 export { default as Ellipse } from "./sidebar-icons/ellipse";
