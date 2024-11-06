@@ -43,26 +43,8 @@ export async function generateTxObjectForDetails(walletClient: any, txHash: stri
 
 export async function getNonce(walletClient: any, transactionHash: string, bridgeProgram: string): Promise<PublicKey | null> {
   try {
-    /*
-    const data = await walletClient.request({
-      method: "eth_getTransactionReceipt",
-      params: [transactionHash]
-    });
-    if (!data) return null;
-    if (!data.logs[0]) return null; 
-
-    const values = decodeAbiParameters([
-      { name: 'to', type: 'bytes' },
-      { name: 'toChainId', type: 'bytes' },
-      { name: 'message', type: 'bytes' },
-      { name: 'extraData', type: 'bytes' }
-    ], data.logs[0].data);
-    */
-
-    // const ethDepositNonceBN = new anchor.BN(values[3].replace("0x", ""), 16);
     const txHashLowU64 = low64(BigInt(transactionHash))
-    const ethDepositNonceBN = new anchor.BN(txHashLowU64, 16);
-    console.log(ethDepositNonceBN, "nonii")
+    const ethDepositNonceBN = new anchor.BN(txHashLowU64, 10);
     const programPublicKey = new PublicKey(bridgeProgram);
 
     const [depositReceiptPda, _] = PublicKey.findProgramAddressSync(

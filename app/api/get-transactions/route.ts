@@ -21,7 +21,7 @@ export async function GET(request: Request) {
   const [etherscanApi, bridgeContract] = chains[chain];
 
   try {
-    const apiUrl = `${etherscanApi}?module=account&action=txlist&address=${address}&startblock=0&endblock=99999999&page=1&offset=1000&sort=asc&apikey=${API_KEY}`;
+    const apiUrl = `${etherscanApi}?module=account&action=txlist&address=${address}&startblock=21126289&endblock=99999999&page=1&offset=1000&sort=asc&apikey=${API_KEY}`;
     console.log(apiUrl)
     const response = await fetch(apiUrl);
     const data = await response.json();
