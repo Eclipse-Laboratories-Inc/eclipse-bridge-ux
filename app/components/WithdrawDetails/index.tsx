@@ -320,7 +320,7 @@ export const WithdrawDetails: React.FC<TransactionDetailsProps> = ({
       " onClick={() => setCheckbox(!checkbox)}>
           { checkbox 
             ? <CheckGreen /> 
-            : <span className="w-[25px] h-[25px] border-[0px] rounded-[50%] border-[#ffffff0d]"></span>
+            : <span className="w-[18px] h-[18px] border-[2px] rounded-[50%] border-[#a1fea099] ml-[7px]"></span>
           }
           <span className="w-[396px]">
             I understand that  it will take 7 days until my funds are ready to claim on Ethereum Mainnet.

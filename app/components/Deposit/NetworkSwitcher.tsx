@@ -10,6 +10,9 @@ export const NetworkSwitcher: React.FC<{isExtended: boolean}> = ({ isExtended })
   const [localSelected, setLocalSelected] = useState<Options>(Options.Mainnet);
   const modalRef = useRef<HTMLDivElement | null>(null);
   const { evmWallet } = useWallets();
+  const customStyle = isExtended 
+    ? {}
+    : { marginLeft: "240px", marginTop: "0px", width: "150px" }
 
   useEffect(() => {
     const switchChain = async (cid: number) => { 
@@ -44,7 +47,10 @@ export const NetworkSwitcher: React.FC<{isExtended: boolean}> = ({ isExtended })
   }, [isModalOpen]);
 
   return (
-    <div className="switcher-main flex flex-col items-center" ref={modalRef} style={{ width: isExtended ? "187px" : "38px"}}>
+    <div className="switcher-main flex flex-col items-center" 
+         ref={modalRef} 
+         style={{ width: isExtended ? "187px" : "38px"}}
+    >
       <div onClick={() => setIsModalOpen(!isModalOpen)} className="net-switcher flex flex-row items-center justify-between">
         <div className="flex flex-row">
           <Ellipse />
@@ -54,7 +60,10 @@ export const NetworkSwitcher: React.FC<{isExtended: boolean}> = ({ isExtended })
       </div>
 
       {isModalOpen && (
-        <div className="network-options flex flex-col" hidden={!isModalOpen}>
+        <div className="network-options flex flex-col" 
+             hidden={!isModalOpen}
+             style={customStyle}
+        >
           {Object.values(Options).map((option) => (
             <div key={option} onClick={() => { setLocalSelected(option); setIsModalOpen(!isModalOpen) }}>
               {option}
