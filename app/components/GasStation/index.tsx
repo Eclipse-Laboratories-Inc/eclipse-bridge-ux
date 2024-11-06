@@ -47,7 +47,7 @@ export const GasStation: React.FC = () => {
       return "Insufficient Balance"
     }
 
-    return "Gas Me Daddy"
+    return "Gas Gas"
   }
 
   function getButtonClassName(): string {
