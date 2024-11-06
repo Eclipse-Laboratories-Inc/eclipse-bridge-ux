@@ -4,10 +4,18 @@ import { CanonicalBridge } from "./canonical_bridge";
 import { Connection, PublicKey } from "@solana/web3.js";
 import idl from "./canonical_bridge.json";
 
-export async function withdrawEthereum(wallet: any) {
+export async function withdrawEthereum(
+  wallet: any,
+  receiver: string,
+  eclipseRpc: string,
+  configAccount: string,
+  relayer: string,
+  programId: string
+) {
   const signer = await wallet;
-  console.log(signer)
-  const connection = new Connection("https://testnet.dev2.eclipsenetwork.xyz");
+  alert(eclipseRpc)
+  alert(programId)
+  const connection = new Connection(eclipseRpc);
   const provider = new anchor.AnchorProvider(connection, signer, {
     preflightCommitment: "processed",
   });
@@ -15,36 +23,40 @@ export async function withdrawEthereum(wallet: any) {
   console.log(provider)
 
   const program = new Program<CanonicalBridge>(idl as CanonicalBridge, provider as Provider);
+  const bridgeProgram = new PublicKey(programId);
+  // program.programId = bridgeProgram;
 
+  const randomNonce = Math.floor(Math.random() * 10**12);
   const [withdrawalReceiptPda, _withdrawalReceiptPdaBump ] = PublicKey.findProgramAddressSync(
       [
         Buffer.from("withdrawal"),
-        new anchor.BN(12345678999).toArrayLike(Buffer, "le", 8),
+        new anchor.BN(randomNonce).toArrayLike(Buffer, "le", 8),
       ],
-      program.programId
+      bridgeProgram 
   );
 
-  console.log("gonderenzo")
   try {
     const tx = await program.methods
       .withdraw(
-        "0xF04089d365F9B4Ad237E63B3b59Fc04DE0B10A34",
-        new anchor.BN(12345678999),
+        receiver,
+        new anchor.BN(randomNonce), 
         new anchor.BN(10**9 * 0.005)
       )
       .accounts({
-        withdrawer: "J2MALbLd2ExscsWFbPmRVuoXSnewcFaW5S3VUbpVsyhV",
+        withdrawer: signer.publicKey.toBase58(),
         //@ts-ignore
-        config: "A3jHKVwNvrvTjnUPGKYei9jbPn7NcraD6H94ewWyfVMY",  // HARDCODED CONFIG ACCOUNT 
+        config: configAccount,  // HARDCODED CONFIG ACCOUNT 
         withdrawalReceipt: withdrawalReceiptPda,
-        relayer: "ec1vCnQKsQSnTbcTyc3SH2azcDXZquiFB3QqtRvm3Px"   // HARDCODED RELAYER ACCOUNT
+        relayer: relayer   // HARDCODED RELAYER ACCOUNT
       })
       .signers([])
       .rpc()
 
     console.log("Transaction Signature:", tx);
+    return tx
   } catch (error) {
     console.error("Transaction Error:", error);
+    throw error;
   }
 }
 

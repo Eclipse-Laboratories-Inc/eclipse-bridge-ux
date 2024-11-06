@@ -72,7 +72,7 @@ export const NetworkBox: React.FC<NetworkBoxProps> = ({
   })
 
   // remove bottom border for ethereum box
-  const css = chainName.includes("Ethereum") ? "!border-b-0 !rounded-bl-none !rounded-br-none" : ""; 
+  const css = direction === "From" ? "!border-b-0 !rounded-bl-none !rounded-br-none" : ""; 
 
   return (
     <div className="network-box flex flex-col" onClick={() => inputRef.current?.focus()}>
@@ -106,7 +106,7 @@ export const NetworkBox: React.FC<NetworkBoxProps> = ({
           : null
         }
       </div>
-      { chainName.includes("Ethereum") && 
+      { direction === "From" && 
         <div className="w-full">
           <div className={ `amount-input flex flex-col ${determineInputClass()}` }>
             <div className="amount-input-top flex justify-between w-full items-center">

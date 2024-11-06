@@ -3,6 +3,10 @@ import { PublicKey } from '@solana/web3.js';
 const solanaWeb3 = require('@solana/web3.js');
 import * as anchor from '@project-serum/anchor';
 
+function low64(value: bigint): bigint {
+    return value & BigInt("0xFFFFFFFFFFFFFFFF");
+}
+
 export async function generateTxObjectForDetails(walletClient: any, txHash: string) {
   const receiptPromise = walletClient.request({
     method: 'eth_getTransactionReceipt',
@@ -39,6 +43,7 @@ export async function generateTxObjectForDetails(walletClient: any, txHash: stri
 
 export async function getNonce(walletClient: any, transactionHash: string, bridgeProgram: string): Promise<PublicKey | null> {
   try {
+    /*
     const data = await walletClient.request({
       method: "eth_getTransactionReceipt",
       params: [transactionHash]
@@ -52,8 +57,11 @@ export async function getNonce(walletClient: any, transactionHash: string, bridg
       { name: 'message', type: 'bytes' },
       { name: 'extraData', type: 'bytes' }
     ], data.logs[0].data);
+    */
 
-    const ethDepositNonceBN = new anchor.BN(values[3].replace("0x", ""), 16);
+    // const ethDepositNonceBN = new anchor.BN(values[3].replace("0x", ""), 16);
+    const txHashLowU64 = low64(BigInt(transactionHash))
+    const ethDepositNonceBN = new anchor.BN(txHashLowU64, 16);
     console.log(ethDepositNonceBN, "nonii")
     const programPublicKey = new PublicKey(bridgeProgram);
 

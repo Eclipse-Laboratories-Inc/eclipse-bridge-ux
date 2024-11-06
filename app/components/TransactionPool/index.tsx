@@ -83,7 +83,6 @@ export const TransactionProvider = ({ children } : { children: ReactNode}) => {
     const fetchEclipseTx = async () => {
       const oldTx = transactions.get(txHash) ?? defaultTransaction;
       const pda     = oldTx.pda ?? await getNonce(client, txHash, bridgeProgram);   
-      console.log(client?.chain, "CAHO", isMainnet)
       const eclTx   = oldTx.eclipseTxHash ?? await getEclipseTransaction(pda, eclipseRpc);  
       const pdaData = await checkDepositWithPDA(pda, eclipseRpc);  
 

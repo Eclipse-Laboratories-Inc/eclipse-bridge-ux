@@ -1,9 +1,7 @@
 "use client"
 import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
-import { Connection } from '@solana/web3.js';
 import { getTokenBalance } from "@/lib/solanaUtils"
 import { useWallets } from "@/app/hooks/useWallets";
-import { fetchTokenPrice } from "@/lib/priceUtils"
 import { fetchOctaneConfig } from '@/lib/octaneUtils';
 
 export type Token = {
@@ -25,7 +23,7 @@ const initialTokens: Record<string, Token> = {
     icon: 'https://assets.coingecko.com/coins/images/6319/standard/usdc.png?1696506694',
     decimals: 6,
     fee: BigInt(0),
-    balance: BigInt(14548797),
+    balance: BigInt(0),
     price: 1
   },
   /*
@@ -47,7 +45,7 @@ const initialTokens: Record<string, Token> = {
     icon: 'https://assets.coingecko.com/coins/images/4128/standard/solana.png?1718769756',
     decimals: 9,
     fee: BigInt(0),
-    balance: BigInt(1),
+    balance: BigInt(0),
     price: 153 
   },
 };

@@ -48,15 +48,12 @@ const Deposit: React.FC<DepositProps> = ({ amountEther, setAmountEther }) => {
           width: isModalOpen ? "0px" : "inherit", 
           paddingRight: activeTab === Tabs.Activity ? "8px" : "20px"
       }}>
-        <button className="flex w-[500px] h-[50px]" onClick={() => {
-          withdrawEthereum(solWallet?.connector.getSigner());
-        }}>WITHDRAW</button>
-        <LrtPopup />
+        { !isModalOpen && <LrtPopup /> }
 
         <div className="header-tabs" style={{
           marginRight: activeTab === Tabs.Activity ? "12px" : "0px"
         }}>
-          <div className={classNames("header-tab", (activeTab === Tabs.Deposit ? "active" : "inactive"))} style={{ width: "100%" }} onClick={() => setActiveTab(Tabs.Deposit)}>Deposit</div>
+          <div className={classNames("header-tab", (activeTab === Tabs.Deposit ? "active" : "inactive"))} style={{ width: "100%" }} onClick={() => setActiveTab(Tabs.Deposit)}>Bridge</div>
           <div className={classNames("header-tab flex items-center justify-center gap-[6px]", "disabled", (activeTab === Tabs.Withdraw ? "active" : "inactive"))} style={{ width: "100%" }}>
             <InstantIcon />
             Instant
