@@ -211,6 +211,7 @@ export const DepositContent: React.FC<DepositContentProps> = ({ modalStuff, amou
 
   const networkBoxes = [
      <NetworkBox 
+       key="eth"
        imageSrc="eth.png"
        direction={ action === Action.Deposit ? "From" : "To" }
        chainName={ isMainnet ? "Ethereum Mainnet" : "Ethereum Sepolia" }
@@ -223,6 +224,7 @@ export const DepositContent: React.FC<DepositContentProps> = ({ modalStuff, amou
        setAmountEther={setAmountEther}
      />,
      <NetworkBox 
+       key="eclipse"
        imageSrc={ isMainnet ? "eclipse.png" : "eclipse-testnet.png" }
        direction={ action === Action.Deposit ? "To" : "From" }
        chainName={ isMainnet ? "Eclipse Mainnet" : "Eclipse Testnet" }
