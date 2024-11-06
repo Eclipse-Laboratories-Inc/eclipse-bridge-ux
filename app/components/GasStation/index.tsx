@@ -116,11 +116,11 @@ export const GasStation: React.FC = () => {
       signedTransaction = await cli?.signAndSendTransaction(tx);
       console.log(signedTransaction)
     } catch {
-      emitEvent(`Refueling for ${amount}$ is failed.`, TxStatus.Failed, 5)
+      emitEvent(`Refueling for $${amount} is failed.`, TxStatus.Failed, 5)
       return 1;
     } 
 
-    setTxState(`Refueling for ${amount}$ ...`);
+    setTxState(`Refueling for $${amount} ...`);
     const latestBlockHash = await connection.getLatestBlockhash();
     /*
     const rawTransaction = signedTransaction?.serialize();
@@ -137,7 +137,7 @@ export const GasStation: React.FC = () => {
     }, 'confirmed');
 
 
-    emitEvent(`Refuel of ${amount}$ Success`, TxStatus.Confirmed, 10)
+    emitEvent(`Refuel of $${amount} Success`, TxStatus.Confirmed, 10)
     setTxId(signedTransaction.signature)
     // window.open(`https://solscan.io/tx/${txid}`)
     console.log(tx)

@@ -11,11 +11,10 @@ export async function withdrawEthereum(
   eclipseRpc: string,
   configAccount: string,
   relayer: string,
-  programId: string
+  programId: string,
+  amount: number
 ) {
   const signer = await wallet;
-  alert(eclipseRpc)
-  alert(programId)
   const connection = new Connection(eclipseRpc);
   const provider = new anchor.AnchorProvider(connection, signer, {
     preflightCommitment: "processed",
@@ -42,7 +41,7 @@ export async function withdrawEthereum(
       .withdraw(
         receiver,
         new anchor.BN(randomNonce), 
-        new anchor.BN(10**9 * 0.002)
+        new anchor.BN(10**9 * amount)
       )
       .accounts({
         withdrawer: signer.publicKey.toBase58(),

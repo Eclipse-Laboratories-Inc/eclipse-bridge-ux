@@ -131,13 +131,13 @@ export const WithdrawDetails: React.FC<TransactionDetailsProps> = ({
         eclipseRpc,
         configAccount,
         relayerAddress,
-        bridgeProgram 
+        bridgeProgram,
+        ethAmount as number
       )
       setInitiateStatus(InitiateTxStates.Confirming);
       setInitiateStatus(InitiateTxStates.Done);
       setTxHash(_txHash ?? null)
     } catch (error) {
-      alert("sicoo")
     }
   }
 
