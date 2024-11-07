@@ -804,11 +804,11 @@ input::placeholder {
 .max-button {
   color: rgba(161, 254, 160, 0.3);
   font-weight: 500;
-  transition: color 0.1s var(--ease-out-quad)
+  transition: color 0.1s var(--ease-out-quad);
 }
 
 .max-button:hover {
-  color: #A1FEA0;
+  color: #a1fea0;
 }
 
 .max-button:active {
@@ -818,4 +818,48 @@ input::placeholder {
 .green-mint-text {
   color: #a1fea0;
   font-weight: 500;
+}
+
+.redeem-summary-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0;
+  padding-left: 16px;
+  padding-right: 16px;
+}
+
+.redeem-summary-grid > span:last-child {
+  border-bottom: none;
+}
+
+.redeem-summary-item {
+  display: flex;
+  border-bottom: 1px solid #252525;
+  align-items: center;
+  gap: 6px;
+  padding-top: 12px;
+  padding-bottom: 12px;
+}
+
+.redeem-summary-item:nth-last-child(-n + 2) {
+  border-bottom: none;
+}
+
+.redeem-summary-item:nth-child(odd) {
+  justify-content: flex-start;
+}
+
+.redeem-summary-item:nth-child(even) {
+  justify-content: flex-end;
+}
+
+.standard-text {
+  font-weight: 500;
+  color: #ffffff99;
+  font-size: 14px;
+}
+
+.green-mint-text-sm {
+  color: #a1fea0;
+  font-size: 14px;
 }

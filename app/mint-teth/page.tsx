@@ -6,7 +6,7 @@ import { useState } from "react";
 import { SkeletonTheme } from "react-loading-skeleton";
 import { Footer } from "../components/Footer";
 import { Header } from "../components/Header";
-import Mint from "./components/Mint";
+import MintAndRedeem from "./components/MintAndRedeem";
 import { Sidebar } from "../components/Sidebar";
 import { TransactionProvider } from "../components/TransactionPool";
 import { EthereumDataContext, WalletClientContext } from "../context";
@@ -25,7 +25,7 @@ export default function Main() {
           <TransactionProvider>
             <SkeletonTheme baseColor="#FFFFFF0A" highlightColor="#FFFFFF26">
               <div
-                className="flex items-center text-white flex flex-col justify-between"
+                className="flex items-center text-white flex-col justify-between"
                 id="main-content"
                 style={{
                   background: "black",
@@ -38,7 +38,7 @@ export default function Main() {
                   <Sidebar isExtended={isSidebar} setIsExtended={setIsSidebar} />
                   <div className="flex flex-col items-center" style={{ gap: "13px", flexGrow: "1" }}>
                     <div className="main-content flex flex-col gap-2 items-center">
-                      <Mint />
+                      <MintAndRedeem />
                     </div>
                   </div>
                 </div>
