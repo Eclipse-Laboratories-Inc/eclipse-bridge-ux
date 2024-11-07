@@ -30,11 +30,13 @@ export default function Main() {
                 height: "100%"
               }}>
                 <Header isExtended={isSidebar} />
+                
                 <div className="flex flex-row w-full items-center" style={{height: "100%"}}>
                   <Sidebar isExtended={isSidebar} setIsExtended={setIsSidebar} />
                   <div className="flex flex-col items-center" style={{ gap: "13px", flexGrow: "1"}}>
                     <div className="main-content flex flex-col gap-2 items-center">
                       <Deposit amountEther={amountEther} setAmountEther={setAmountEther} />
+                      <br />
                     </div>
                   </div>
                 </div>

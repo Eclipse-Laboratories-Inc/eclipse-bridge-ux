@@ -27,9 +27,8 @@ export const NetworkSwitcher: React.FC<{isExtended: boolean}> = ({ isExtended })
     }
     
     const chainId = (localSelected === Options.Mainnet) ? 1 : 11155111; 
-    if ( (evmWallet?.id ?? 1) === chainId) return;
     switchChain(chainId);
-  }, [localSelected, evmWallet]);
+  }, [localSelected, evmWallet?.connected]);
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {

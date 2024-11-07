@@ -198,3 +198,15 @@ footer {
   z-index: 1;
   opacity: 1;
 }
+
+@media (max-height: 933px) {
+  .main-content, footer {
+    margin-top: 50px;
+  }
+}
+
+@media (max-height: 765px) {
+  .main-content, footer {
+    margin-top: 100px;
+  }
+}
