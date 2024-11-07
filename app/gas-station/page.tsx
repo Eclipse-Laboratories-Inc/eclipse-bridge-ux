@@ -29,7 +29,7 @@ export default function GasStationPage() {
                 <Header isExtended={isSidebar} />
                 <div className="flex flex-row w-full items-center" style={{height: "100%"}}>
                   <Sidebar isExtended={isSidebar} setIsExtended={setIsSidebar} />
-                  <div className="flex flex-col items-center gap-[13px] h-full" style={{ flexGrow: "1"}}>
+                  <div className="flex flex-col items-center gap-[13px]" style={{ flexGrow: "1"}}>
                     <div className="main-content flex flex-col gap-[65px] items-center h-full justify-center">
                       <GasStation />
                     </div>
@@ -43,4 +43,3 @@ export default function GasStationPage() {
     </EthereumDataContext.Provider>
   );
 }
-

@@ -34,7 +34,10 @@ export const GasStationNotification: React.FC<{ txState: string, txStatus: TxSta
       { txStatus === TxStatus.Confirmed && <DoneIcon /> }
       { txStatus === TxStatus.Failed && <FailedIcon /> }
       <span className="text-white text-[16px] font-medium">{ txState }</span>
-      { txId && <a className="text-[#ffffff4d] text-[16px] font-medium" href={`https://eclipsescan.xyz/tx/${txId}`}>View Txn</a> }
+      { txId && <a className="text-[#ffffff4d] text-[16px] font-medium transition-all hover:text-[#4779ff]" href={`https://eclipsescan.xyz/tx/${txId}`} target="_blank">
+          View Txn
+        </a> 
+      }
     </div>
   );
 }

@@ -1,12 +1,11 @@
 'use client';
-import "./globals.css";
+import "@/app/globals.css";
 import {
   DynamicContextProvider,
   EthereumWalletConnectors,
   SolanaWalletConnectors,
 } from "@/lib/dynamic";
 import { Providers } from "@/app/providers";
-import { usePathname } from 'next/navigation';
 import { IBM_Plex_Sans } from 'next/font/google';
 import { mergeNetworks } from '@dynamic-labs/sdk-react-core';
 
@@ -106,17 +105,6 @@ export default function ClientLayout({
   children: React.ReactNode;
 }) {
   // TODO
-  //
-  const pathname = usePathname();
-  const passGlobalLayout = pathname === "/gas-station" 
-
-  if (passGlobalLayout) {
-    return (
-      <Providers>
-        <body className={ibmPlexSans.className}>{children}</body>
-      </Providers>
-    );
-  }
   
   return (
     <html lang="en">
@@ -172,9 +160,6 @@ export default function ClientLayout({
           cssOverrides,
           bridgeChains: [
             {
-              chain: "EVM",
-            },
-            {
               chain: "SOL",
             },
           ],
@@ -187,4 +172,9 @@ export default function ClientLayout({
     </html>
   );
 
+  return (
+    <Providers>
+      <body className={ibmPlexSans.className}>{children}</body>
+    </Providers>
+  );
 }

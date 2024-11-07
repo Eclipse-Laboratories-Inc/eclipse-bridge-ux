@@ -66,7 +66,7 @@ export const GasStation: React.FC = () => {
       return "w-full h-[58px] bg-[#ffffff0d] rounded-[10px] text-[#ffffff4d] text-[20px] font-medium pointer-events-none"
     }
 
-    return "w-full h-[58px] bg-[#A1FEA0] rounded-[10px] text-black text-[20px] font-medium"
+    return "w-full h-[58px] bg-[#A1FEA0] rounded-[10px] text-black text-[20px] transition-all active:scale-95 font-medium hover:bg-[#74FF71]"
   }
 
   const moveCursorToEnd = (e: React.FocusEvent<HTMLInputElement>) => {
@@ -155,7 +155,8 @@ export const GasStation: React.FC = () => {
       txStatus={txStatus}
       txId={txId}
     /> }
-    <div className="deposit-container flex flex-col rounded-[30px] !w-[520px] p-[20px] gap-[20px] " style={{ border: "1px solid rgba(255, 255, 255, 0.10)" }}>
+    <div className="deposit-container flex flex-col rounded-[30px] !w-[520px] p-[20px] gap-[20px]" 
+         style={{ border: "1px solid rgba(255, 255, 255, 0.10)", background: "rgba(255, 255, 255, 0.02)" }}>
       { /* header text */ }
       <div className="flex flex-row w-full justify-center items-center gap-[8px]">
         <GasStationIcon size="19" stroke="#a1fea0" opacity="1"/>

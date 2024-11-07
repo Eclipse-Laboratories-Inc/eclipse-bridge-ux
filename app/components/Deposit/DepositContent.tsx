@@ -27,7 +27,7 @@ import { TransactionDetails } from "../TransactionDetails";
 import { WithdrawDetails } from "../WithdrawDetails";
 import { useTransaction } from "../TransactionPool";
 import { NetworkBox } from "./NetworkBox"
-import { CONTRACT_ABI, MIN_DEPOSIT_AMOUNT } from "../constants";
+import { CONTRACT_ABI, MIN_DEPOSIT_AMOUNT, MIN_WITHDRAWAL_AMOUNT } from "../constants";
 import { useWallets } from "@/app/hooks/useWallets";
 import useEthereumData from "@/lib/ethUtils";
 
@@ -63,6 +63,7 @@ export const DepositContent: React.FC<DepositContentProps> = ({ modalStuff, amou
   const isMainnet = (selectedOption === Options.Mainnet);
 
   const [action, setAction] = useState<Action>(Action.Deposit);
+  const MIN_ACTION_AMOUNT   = action === Action.Deposit ? MIN_DEPOSIT_AMOUNT : MIN_WITHDRAWAL_AMOUNT;
   
   function switchAction() {
     setAmountEther("");     
@@ -175,7 +176,7 @@ export const DepositContent: React.FC<DepositContentProps> = ({ modalStuff, amou
     if (!amountEther) {
       return 'submit-button disabled'
     }  
-    if (parseFloat(amountEther as string) < MIN_DEPOSIT_AMOUNT) {
+    if (parseFloat(amountEther as string) < MIN_ACTION_AMOUNT) {
       return 'submit-button disabled'
     }
 
@@ -198,8 +199,8 @@ export const DepositContent: React.FC<DepositContentProps> = ({ modalStuff, amou
     if (!amountEther) {
       return action
     }  
-    if (parseFloat(amountEther as string) < MIN_DEPOSIT_AMOUNT) {
-      return `Min amount ${MIN_DEPOSIT_AMOUNT} ETH`
+    if (parseFloat(amountEther as string) < MIN_ACTION_AMOUNT) {
+      return `Min amount ${MIN_ACTION_AMOUNT} ETH`
     }
 
     if (parseFloat(amountEther as string) > balanceEther) {
