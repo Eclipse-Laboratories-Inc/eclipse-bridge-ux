@@ -507,10 +507,6 @@ input::placeholder {
   margin: 0 4px;
 }
 
-.hidden {
-  display: none;
-}
-
 .connect-button-header {
   position: relative;
   display: inline-block;
