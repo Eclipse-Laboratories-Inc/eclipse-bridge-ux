@@ -1,8 +1,6 @@
-import Image from "next/image";
-import { useState, useEffect } from "react";
-import { formatUnits } from "viem";
-import { tokenOptions } from "../constants/tokens";
 import { Cross } from "@/app/components/icons";
+import Image from "next/image";
+import { formatUnits } from "viem";
 import { TokenOption, TokenSelect } from "./TokenSelect";
 
 interface MintValueCardProps {
@@ -22,6 +20,7 @@ interface MintValueCardProps {
   loadingTokenBalance?: boolean;
   usdValue: string;
   handleDisconnect: () => void;
+  tokenOptions: TokenOption[];
 }
 
 export function MintValueCard({
@@ -40,7 +39,8 @@ export function MintValueCard({
   onClickFiftyPercent,
   loadingTokenBalance,
   usdValue,
-  handleDisconnect
+  handleDisconnect,
+  tokenOptions,
 }: MintValueCardProps) {
   ///////////////////
   // Derived values
@@ -48,15 +48,6 @@ export function MintValueCard({
   const trimmedUserAddress = userAddress ? userAddress.slice(0, 5) + "•••" + userAddress.slice(-3) : "";
   const formattedTokenBalance = tokenBalance ? parseFloat(formatUnits(tokenBalance, 18)).toFixed(4) : "0.00";
   const formattedUsdValue = usdValue ? parseFloat(usdValue).toFixed(2) : "$0.00";
-  const [displayValue, setDisplayValue] = useState("0");
-
-  useEffect(() => {
-    
-    (inputValue.split(".").length > 1) && (inputValue.split(".")[1].length > 5) && setDisplayValue(parseFloat(inputValue).toLocaleString("en-US", {
-      maximumFractionDigits: 5,
-    }));
-    (inputValue.split(".").length > 1) && (inputValue.split(".")[1].length <= 5) && setDisplayValue(inputValue)
-  }, [inputValue])
 
   return (
     <div className="mint-card">
@@ -68,13 +59,12 @@ export function MintValueCard({
             <p className="font-medium text-base">{chainName}</p>
           </div>
         </div>
-        { trimmedUserAddress && <div onClick={handleDisconnect} className="disconnect gap-[8px]">
-          <span className="addr text-base">
-            {trimmedUserAddress}
-          </span>
-          <Cross crossClassName="deposit-cross" />
-        </div>
-        }
+        {trimmedUserAddress && (
+          <div onClick={handleDisconnect} className="disconnect gap-[8px]">
+            <span className="addr text-base">{trimmedUserAddress}</span>
+            <Cross crossClassName="deposit-cross" />
+          </div>
+        )}
       </div>
       <div className="px-6 pt-4 flex flex-col">
         <div className="flex justify-between items-center">
@@ -82,8 +72,8 @@ export function MintValueCard({
             className={`mint-input max-w-[250px] ${disabled ? "mint-input-disabled" : ""} ${
               isOverBalance ? "mint-input-error" : ""
             }`}
-            value={chainName === "Eclipse" ? displayValue : displayValue}
-            onChange={(e) => { 
+            value={inputValue}
+            onChange={(e) => {
               onChangeInput?.(e.target.value);
             }}
             placeholder="0"
@@ -93,7 +83,7 @@ export function MintValueCard({
           <TokenSelect
             options={tokenOptions}
             selected={depositAsset}
-            disabled={disabled}
+            disabled={tokenOptions.length <= 1}
             onChange={onChangeDepositAsset || (() => {})}
           />
         </div>

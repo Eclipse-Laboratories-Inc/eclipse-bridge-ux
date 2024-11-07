@@ -20,4 +20,5 @@ export const tokenOptions: TokenOption[] = [
 ];
 
 // tETH token address on Eclipse
-export const tEthTokenAddress = "GU7NS9xCwgNPiAdJ69iusFrRfawjDDPjeMBovhV1d4kn";
+export const tethSvmTokenAddress = "GU7NS9xCwgNPiAdJ69iusFrRfawjDDPjeMBovhV1d4kn";
+export const tethEvmTokenAddress = "0x19e099B7aEd41FA52718D780dDA74678113C0b32";
