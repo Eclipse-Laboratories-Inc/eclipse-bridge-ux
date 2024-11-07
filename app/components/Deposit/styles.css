@@ -78,6 +78,12 @@
   z-index: 1;
 }
 
+.arrow-container:hover {
+  svg circle {
+    fill: #0d0d0db3;
+  }
+}
+
 .network-section {
   display: flex;
   flex-direction: column;

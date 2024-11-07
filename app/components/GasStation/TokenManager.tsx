@@ -6,7 +6,7 @@ import { fetchOctaneConfig } from '@/lib/octaneUtils';
 
 export type Token = {
   icon: string,
-  symbol: "USDC" | "WIF" | "SOL",
+  symbol: "USDC" | "WIF" | "SOL" | "tETH",
   name: string,
   decimals: number,
   fee: BigInt,
@@ -48,6 +48,16 @@ const initialTokens: Record<string, Token> = {
     balance: BigInt(0),
     price: 180 
   },
+  tETH: {
+    name: "Turbo ETH", 
+    symbol: 'tETH', 
+    mint: "GU7NS9xCwgNPiAdJ69iusFrRfawjDDPjeMBovhV1d4kn",
+    icon: '/token-teth.svg',
+    decimals: 9,
+    fee: BigInt(0),
+    balance: BigInt(0),
+    price: 2850 
+  },
 };
 
 export interface TManagerType {
@@ -64,7 +74,8 @@ export const TMProvider = ({ children } : { children: ReactNode}) => {
     const getTokens = async () => {
       if (!solWallet?.address) return false;
       const balUsdc = await getTokenBalance(tokens.USDC.mint, solWallet?.address || "")
-      const balSol = await getTokenBalance(tokens.SOL.mint, solWallet?.address || "")
+      const balSol  = await getTokenBalance(tokens.SOL.mint , solWallet?.address || "")
+      const balTeth  = await getTokenBalance(tokens.tETH.mint , solWallet?.address || "")
 
       /*
       const connection = new Connection("https://eclipse.helius-rpc.com", "finalized");
@@ -80,6 +91,10 @@ export const TMProvider = ({ children } : { children: ReactNode}) => {
           SOL: {
             ...prevTokens.SOL,
             balance: BigInt(balSol || 0),
+          },
+          tETH: {
+            ...prevTokens.tETH,
+            balance: BigInt(balTeth || 0),
           }
         })); 
     }

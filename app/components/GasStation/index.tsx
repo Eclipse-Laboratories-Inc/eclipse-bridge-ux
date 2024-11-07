@@ -26,6 +26,9 @@ export const GasStation: React.FC = () => {
   const [txId, setTxId] = useState("");
   const [txStatus, setTxStatus] = useState<TxStatus>(TxStatus.None);
   const { solWallet } = useWallets(); 
+  useEffect(() => {
+    console.log(selectedToken, "selo")
+  }, [!selectedToken])
 
   function getInputClassName(): string {
     // insufficient funds
@@ -136,7 +139,6 @@ export const GasStation: React.FC = () => {
         signature: signedTransaction.signature
     }, 'confirmed');
 
-
     emitEvent(`Refuel of $${amount} Success`, TxStatus.Confirmed, 10)
     setTxId(signedTransaction.signature)
     // window.open(`https://solscan.io/tx/${txid}`)
@@ -145,7 +147,8 @@ export const GasStation: React.FC = () => {
   }
 
   useEffect(() => {
-    setSelectedToken(tokens[selectedToken.symbol])
+    const token = tokens[selectedToken.symbol]; 
+    setSelectedToken(token)
   }, [tokens])
 
   return (
