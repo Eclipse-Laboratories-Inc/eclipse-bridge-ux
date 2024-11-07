@@ -46,7 +46,7 @@ const initialTokens: Record<string, Token> = {
     decimals: 9,
     fee: BigInt(0),
     balance: BigInt(0),
-    price: 153 
+    price: 180 
   },
 };
 

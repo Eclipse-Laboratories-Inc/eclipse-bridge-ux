@@ -212,7 +212,7 @@ export const WithdrawDetails: React.FC<TransactionDetailsProps> = ({
                   "Done"
                 ) : (
                   <div className="flex flex-row gap-2 items-center justify-center">
-                    <p>Waiting</p> <p className="green-text">$DAYS_LEFT$</p>
+                    <p>Waiting</p> <p className="green-text">~7 days</p>
                   </div>
                 )}
               </span>

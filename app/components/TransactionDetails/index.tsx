@@ -159,7 +159,7 @@ export const TransactionDetails: React.FC<TransactionDetailsProps> = ({
             <div className="gray-text">
               {eclipseTx && (
                 <a
-                  href={`https://explorer.eclipse.xyz/tx/${eclipseTx}?cluster=${eclipseExplorer}`}
+                  href={`https://eclipsescan.xyz/tx/${eclipseTx}?cluster=${eclipseExplorer}`}
                   target="_blank"
                 >
                   View Txn
