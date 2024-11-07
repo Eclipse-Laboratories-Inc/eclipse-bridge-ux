@@ -509,7 +509,7 @@ input::placeholder {
   margin: 0 4px;
 }
 
-.hidden {
+.invisible {
   display: none;
 }
 
@@ -582,7 +582,7 @@ input::placeholder {
   background: rgba(161, 254, 160, 0.1);
   padding: 20px;
   height: 131px;
-  width: 480px;
+  width: 100%;
 
   position: relative;
   overflow: hidden;

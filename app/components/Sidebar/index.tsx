@@ -58,7 +58,7 @@ const SidebarItem: React.FC<{name: string, icon: ReactNode, isExtended: boolean}
 
 export const Sidebar: React.FC<{ isExtended: boolean, setIsExtended: React.Dispatch<React.SetStateAction<boolean>>}> = ({ isExtended, setIsExtended }) => {
   return (
-    <div className="sidebar flex flex-col justify-between" style={{ width: isExtended ? "215px" : "66px"}}>
+    <div className="sidebar flex flex-col justify-between sm:flex hidden sm:block" style={{ width: isExtended ? "215px" : "66px"}}>
       <div>
         <NetworkSwitcher isExtended={isExtended} />
         <div className="sidebar-tabs flex flex-col" style={{ marginTop: "14px", marginLeft: "14px" }}>

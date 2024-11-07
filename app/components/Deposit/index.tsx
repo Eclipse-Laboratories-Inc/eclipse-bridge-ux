@@ -45,7 +45,7 @@ const Deposit: React.FC<DepositProps> = ({ amountEther, setAmountEther }) => {
     <>
     <div className="deposit-container flex flex-col">
       <div className="deposit-card" style={{
-          width: isModalOpen ? "0px" : "inherit", 
+          width: isModalOpen ? "0px" : "", 
           paddingRight: activeTab === Tabs.Activity ? "8px" : "20px"
       }}>
         { !isModalOpen && <LrtPopup /> }

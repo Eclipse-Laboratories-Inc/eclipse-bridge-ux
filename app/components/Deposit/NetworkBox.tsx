@@ -142,7 +142,7 @@ export const NetworkBox: React.FC<NetworkBoxProps> = ({
                 <div className="token-name">ETH</div>
               </div>
             </div>
-            <div className={`${evmWallet && solWallet ? '' : 'hidden'} amount-input-bottom flex flex-row justify-between w-full items-center`}>
+            <div className={`${evmWallet && solWallet ? '' : 'invisible'} amount-input-bottom flex flex-row justify-between w-full items-center`}>
               {evmWallet && 
                 <div className="balance-info w-full">
                   {(balanceEther >= 0 && ethPrice)

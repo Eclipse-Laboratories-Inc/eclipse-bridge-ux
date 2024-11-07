@@ -105,10 +105,10 @@ const ConnectedWallets = forwardRef<HTMLDivElement, ConnectedWalletsProps>(({ cl
             </div>
             {isConnected ? (
               <div className="flex items-center" style={{gap: "8px"}}>
-                <div className={isCopied ? "hidden" : ""} onClick={() => handleCopy(wallet.address, setCopied)}>
+                <div className={isCopied ? "invisible" : ""} onClick={() => handleCopy(wallet.address, setCopied)}>
                   <Copy copyClassName="modal-copy" />
                 </div>
-                <div className={isCopied ? "visible" : "hidden"}>
+                <div className={isCopied ? "visible" : "invisible"}>
                   <CircleCheck circleClassName="modal-circle" />
                 </div>
                 <div onClick={() => currentWallet && handleUnlinkWallet(currentWallet.id) && close()}>
