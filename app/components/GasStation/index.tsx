@@ -18,7 +18,7 @@ const bs58 = require('bs58');
 
 export const GasStation: React.FC = () => {
   const { tokens } = useTransactionManager(); 
-  const [selectedToken, setSelectedToken] = useState<Token>(tokens.USDC);
+  const [selectedToken, setSelectedToken] = useState<Token>(tokens.SOL);
   const [selectModal, setSelectModal] = useState<boolean>(false);
   const inputRef = useRef<HTMLInputElement>(null);
   const [amount, setAmount] = useState("0");
