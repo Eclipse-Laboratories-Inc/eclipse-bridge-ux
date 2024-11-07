@@ -8,7 +8,7 @@ import { Abi, Address, erc20Abi, formatUnits, parseEther, parseUnits, PublicClie
 import { mainnet } from "viem/chains";
 import WarpRouteContract from "../abis/WarpRouteContract.json";
 import { warpRouteContractAddress } from "../constants/contracts";
-import { tethSvmTokenAddress, tokenAddresses, tokenOptions } from "../constants/tokens";
+import { tethEvmTokenAddress, tethSvmTokenAddress, tokenAddresses, tokenOptions } from "../constants/tokens";
 import { useTokenTransfer } from "../hooks/useTokenTransfer";
 import { useUpdateAtomicRequest } from "../hooks/useUpdateAtomicRequest";
 import { balanceOf } from "../lib/balanceOf";
@@ -16,29 +16,43 @@ import { getRate } from "../lib/getRate";
 import { getRateInQuote } from "../lib/getRateInQuote";
 import { latestRoundData } from "../lib/latestRoundData";
 import { quoteGasPayment } from "../lib/quoteGasPayment";
+import { getUserAtomicRequest } from "../lib/userAtomicRequest";
 import { calculateMinimumMint } from "../utils/calculateMinimumMint";
 import { getSolanaBalance } from "../utils/getSolanaBalance";
 import { sanitizeInput } from "../utils/sanitizeInput";
-import { MintSummaryCard } from "./MintSummaryCard";
 import { MintTransactionDetails, StepStatus } from "./MintTransactionDetails";
 import { MintValueCard } from "./MintValueCard";
+import { RedeemSummaryCard } from "./RedeemSummaryCard";
 import "./styles.css";
 import { TokenOption } from "./TokenSelect";
 
-export function Mint() {
+export function Redeem() {
+  ///////////////////////
+  // Constants
+  ///////////////////////
+  const slippage = 0.005;
+  const deadlineDaysFromNow = 7;
+  const bridgeFeeInTeth = BigInt(0); // TODO: Add actual bridge fee
+
   ///////////////////////
   // Hooks
   ///////////////////////
   const { walletConnector, handleUnlinkWallet, rpcProviders } = useDynamicContext();
   const { evmWallet, solWallet } = useWallets();
+  const {
+    updateAtomicRequest,
+    approvalState: atomicRequestApprovalState,
+    transactionState: atomicRequestState,
+  } = useUpdateAtomicRequest();
+  const { triggerTransactions, transactionState: tokenTransferState } = useTokenTransfer();
 
   ///////////////////////
   // State
   ///////////////////////
   const [walletClient, setWalletClient] = useState<WalletClient | null>(null);
   const [publicClient, setPublicClient] = useState<PublicClient | null>(null);
-  const [depositAmount, setDepositAmount] = useState<string>("");
-  const [depositAsset, setDepositAsset] = useState<`0x${string}`>(tokenAddresses[0]);
+  const [redeemAmount, setRedeemAmount] = useState<string>("");
+  const [receiveAsset, setReceiveAsset] = useState<`0x${string}`>(tokenAddresses[0]);
   const [assetPerTethRate, setAssetPerTethRate] = useState<string>("");
   const [ethPerAssetRate, setEthPerAssetRate] = useState("");
   const [ethPerTethRate, setEthPerTethRate] = useState("");
@@ -47,8 +61,6 @@ export function Mint() {
   const [loadingTokenBalance, setLoadingTokenBalance] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [currentTx, setCurrentTx] = useState<any>(null);
-  const [approveStatus, setApproveStatus] = useState<StepStatus>(StepStatus.NOT_STARTED);
-  const [depositStatus, setDepositStatus] = useState<StepStatus>(StepStatus.NOT_STARTED);
   const [depositTxHash, setDepositTxHash] = useState<string>("");
   const [svmBalance, setSvmBalance] = useState<string>("");
   const [ethPrice, setEthPrice] = useState<string>("");
@@ -56,19 +68,51 @@ export function Mint() {
   ///////////////////////
   // Derived values
   ///////////////////////
-  const formattedTokenBalance = formatUnits(tokenBalanceAsBigInt, 18);
-  const depositAmountAsBigInt = parseUnits(depositAmount, 18);
-  const exchangeRateAsBigInt = BigInt(assetPerTethRate);
-  const receiveAmountAsBigInt =
-    exchangeRateAsBigInt > BigInt(0)
-      ? (depositAmountAsBigInt * BigInt(1e18)) / exchangeRateAsBigInt
-      : depositAmountAsBigInt;
-  const formattedReceiveAmount = formatUnits(receiveAmountAsBigInt, 18);
+  const atomicPrice = (BigInt(assetPerTethRate) * BigInt(1e18)) / (BigInt(1e18) - parseUnits(slippage.toString(), 18));
 
-  const isOverBalance = tokenBalanceAsBigInt < depositAmountAsBigInt;
+  const formattedTokenBalance = formatUnits(BigInt(svmBalance), 18);
+  const atomicPriceAsBigInt = BigInt(atomicPrice);
+  const redeemAmountAsBigInt = parseUnits(redeemAmount, 18);
+
+  // Withdraw fee
+  const withdrawFeeInTeth = (redeemAmountAsBigInt * parseUnits(slippage.toString(), 18)) / BigInt(1e18);
+  const withdrawFeeInEth = (withdrawFeeInTeth * BigInt(ethPerTethRate)) / BigInt(1e18);
+  const withdrawFeeInUsdAsBigInt = (withdrawFeeInEth * BigInt(ethPrice)) / BigInt(1e8);
+  const withdrawFeeInUsd = Number(formatUnits(withdrawFeeInUsdAsBigInt, 18));
+  const formattedWithdrawFeeInUsd =
+    withdrawFeeInUsd > 0 && withdrawFeeInUsd < 0.01
+      ? "<$0.01"
+      : `$${new Intl.NumberFormat("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 }).format(
+          withdrawFeeInUsd
+        )}`;
+
+  // Bridge fee
+  const bridgeFeeInEth = (bridgeFeeInTeth * BigInt(ethPerTethRate)) / BigInt(1e18);
+  const bridgeFeeInUsdAsBigInt = (bridgeFeeInEth * BigInt(ethPrice)) / BigInt(1e8);
+  const bridgeFeeInUsd = Number(formatUnits(bridgeFeeInUsdAsBigInt, 18));
+  const formattedBridgeFeeInUsd =
+    bridgeFeeInUsd > 0 && bridgeFeeInUsd < 0.01
+      ? "<$0.01"
+      : `$${new Intl.NumberFormat("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 }).format(
+          bridgeFeeInUsd
+        )}`;
+
+  // Total fees
+  const totalFees = withdrawFeeInTeth + bridgeFeeInTeth;
+  const totalFeesInEth = (totalFees * BigInt(ethPerTethRate)) / BigInt(1e18);
+  const totalFeesInUsdAsBigInt = (totalFeesInEth * BigInt(ethPrice)) / BigInt(1e8);
+  const totalFeesInUsd = Number(formatUnits(totalFeesInUsdAsBigInt, 18));
+  const formattedTotalFeesInUsd =
+    totalFeesInUsd > 0 && totalFeesInUsd < 0.01
+      ? "<$0.01"
+      : `$${new Intl.NumberFormat("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 }).format(
+          totalFeesInUsd
+        )}`;
+
+  const isOverBalance = BigInt(svmBalance) < redeemAmountAsBigInt;
 
   const isMintDisabled =
-    depositPending || !depositAmount || !depositAsset || !evmWallet || isOverBalance || Number(depositAmount) === 0;
+    depositPending || !redeemAmount || !receiveAsset || !evmWallet || isOverBalance || Number(redeemAmount) === 0;
 
   const provider = rpcProviders.evmDefaultProvider;
 
@@ -77,16 +121,23 @@ export function Mint() {
 
   const ethPriceAsBigInt = ethPrice ? BigInt(ethPrice) : BigInt(0);
 
-  const depositAmountInEth = (depositAmountAsBigInt * BigInt(ethPerAssetRate)) / BigInt(1e18);
-  const depositAmountInUsd = (depositAmountInEth * ethPriceAsBigInt) / BigInt(1e8);
-  const depositAmountInUsdFormatted = Number(formatUnits(depositAmountInUsd, 18));
-  const formattedDepositAmountInUsd =
-    depositAmountInUsdFormatted > 0 && depositAmountInUsdFormatted < 0.01
+  // Redeem amount
+  const redeemtAmountInEth = (redeemAmountAsBigInt * BigInt(ethPerAssetRate)) / BigInt(1e18);
+  const redeemAmountInUsd = (redeemtAmountInEth * ethPriceAsBigInt) / BigInt(1e8);
+  const redeemAmountInUsdFormatted = Number(formatUnits(redeemAmountInUsd, 18));
+  const formattedRedeemAmountInUsd =
+    redeemAmountInUsdFormatted > 0 && redeemAmountInUsdFormatted < 0.01
       ? "<$0.01"
       : `$${new Intl.NumberFormat("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 }).format(
-          depositAmountInUsdFormatted
+          redeemAmountInUsdFormatted
         )}`;
 
+  // Receive amount
+  const receiveAmountAsBigInt =
+    atomicPriceAsBigInt > BigInt(0)
+      ? (redeemAmountAsBigInt * BigInt(1e18)) / atomicPriceAsBigInt
+      : redeemAmountAsBigInt;
+  const formattedReceiveAmount = formatUnits(receiveAmountAsBigInt, 18);
   const receiveAmountInEth = (receiveAmountAsBigInt * BigInt(ethPerTethRate)) / BigInt(1e18);
   const receiveAmountInUsd = (receiveAmountInEth * ethPriceAsBigInt) / BigInt(1e8);
   const receiveAmountInUsdFormatted = Number(formatUnits(receiveAmountInUsd, 18));
@@ -97,26 +148,30 @@ export function Mint() {
           receiveAmountInUsdFormatted
         )}`;
 
+  // Memoized because it iterates over an array
+  const { depositAssetLabel, depositAssetIcon } = useMemo(() => {
+    const tokenOption = tokenOptions.find((token) => token.value === receiveAsset);
+    return { depositAssetLabel: tokenOption?.label, depositAssetIcon: tokenOption?.imageSrc };
+  }, [receiveAsset]);
+
   // Memoized because it returns a new array on every render
   const steps = useMemo(() => {
     return [
       {
-        title: "1. Approving",
-        status: approveStatus,
+        title: "1. Approving tETH swap",
+        status: atomicRequestApprovalState,
       },
       {
-        title: "2. Depositing",
-        status: depositStatus,
+        title: `2. Queueing swap for tETH -> ${depositAssetLabel}`,
+        status: atomicRequestState,
         link: `https://etherscan.io/tx/${depositTxHash}`,
       },
+      {
+        title: "3. Bridging tETH to Ethereum",
+        status: tokenTransferState,
+      },
     ];
-  }, [approveStatus, depositStatus, depositTxHash]);
-
-  // Memoized because it iterates over an array
-  const { depositAssetLabel, depositAssetIcon } = useMemo(() => {
-    const tokenOption = tokenOptions.find((token) => token.value === depositAsset);
-    return { depositAssetLabel: tokenOption?.label, depositAssetIcon: tokenOption?.imageSrc };
-  }, [depositAsset]);
+  }, [atomicRequestApprovalState, atomicRequestState, depositAssetLabel, depositTxHash, tokenTransferState]);
 
   ///////////////////////
   // Use effects
@@ -175,7 +230,7 @@ export function Mint() {
       const _ethPrice = await latestRoundData({ publicClient });
 
       // Only update if the asset hasn't changed
-      if (!isCancelled && asset === depositAsset) {
+      if (!isCancelled && asset === receiveAsset) {
         setAssetPerTethRate(rate.toString());
         setEthPerAssetRate(_ethPerAssetRate.toString());
         setEthPerTethRate(_ethPerTethRate.toString());
@@ -183,18 +238,18 @@ export function Mint() {
       }
     }
 
-    getExchangeRate(depositAsset);
+    getExchangeRate(receiveAsset);
 
     // Get an updated exchange rate every 30 seconds
     const intervalId = setInterval(() => {
-      getExchangeRate(depositAsset);
+      getExchangeRate(receiveAsset);
     }, 30_000);
 
     return () => {
       isCancelled = true;
       clearInterval(intervalId);
     };
-  }, [depositAsset, publicClient]);
+  }, [receiveAsset, publicClient]);
 
   // Get the token balance
   useEffect(() => {
@@ -203,7 +258,7 @@ export function Mint() {
         if (!publicClient || !evmWallet) return;
         setLoadingTokenBalance(true);
         const tokenBalanceAsBigInt = await balanceOf({
-          tokenAddress: depositAsset,
+          tokenAddress: receiveAsset,
           userAddress: evmWallet.address as `0x${string}`,
           publicClient,
         });
@@ -216,150 +271,71 @@ export function Mint() {
     }
 
     getTokenBalance();
-  }, [depositAsset, evmWallet, publicClient]);
+  }, [receiveAsset, evmWallet, publicClient]);
 
   ///////////////////
   // Actions
   ///////////////////
-  async function handleMint() {
-    if (isMintDisabled) return;
 
-    if (!walletClient || !publicClient || !evmAddress || !svmAddress) {
-      throw new Error("There was an error during deposit");
-    }
-
-    setIsModalOpen(true);
-
-    const recipientBytes32 = solanaToBytes32(solWallet?.address || "");
-
-    const depositAmountAsBigInt = parseEther(depositAmount);
-
-    ////////////////////////////////
-    // Check Allowance
-    ////////////////////////////////
-    setApproveStatus(StepStatus.LOADING);
-    const allowanceAsBigInt = await publicClient.readContract({
-      abi: erc20Abi,
-      address: depositAsset,
-      functionName: "allowance",
-      args: [evmAddress, warpRouteContractAddress],
-    });
-
-    ////////////////////////////////
-    // Approve
-    ////////////////////////////////
-    try {
-      if (depositAmountAsBigInt > allowanceAsBigInt) {
-        // Simulate the transaction to catch any errors
-        const { request: approvalRequest } = await publicClient.simulateContract({
-          abi: erc20Abi,
-          address: depositAsset,
-          functionName: "approve",
-          args: [warpRouteContractAddress, depositAmountAsBigInt],
-          account: evmAddress,
-        });
-
-        // Execute the transaction
-        const approvalTxHash = await walletClient.writeContract(approvalRequest);
-
-        // Wait for the approval transaction to be confirmed
-        await publicClient.waitForTransactionReceipt({
-          hash: approvalTxHash,
-          timeout: 60_000,
-          confirmations: 1,
-          pollingInterval: 10_000,
-          retryCount: 5,
-          retryDelay: 5_000,
-        });
-      }
-      setApproveStatus(StepStatus.COMPLETED);
-    } catch (error) {
-      setApproveStatus(StepStatus.FAILED);
-      console.error(error);
-    }
-
-    try {
-      setDepositStatus(StepStatus.LOADING);
-      ////////////////////////////////
-      // Calculate Minimum Mint
-      ////////////////////////////////
-      const rate = await getRateInQuote({ quote: depositAsset }, { publicClient });
-      const minimumMint = calculateMinimumMint(depositAmountAsBigInt, rate);
-
-      ////////////////////////////////
-      // Deposit
-      ////////////////////////////////
-      // Get quote gas payment
-      const gasPayment = await quoteGasPayment(
-        { destinationDomain: 1408864445 },
-        { publicClient, contractAddress: "0xc2495f3183F043627CAECD56dAaa726e3B2D9c09" }
-      );
-      // Simulate the transaction to catch any errors
-      const { request: depositRequest } = await publicClient.simulateContract({
-        abi: WarpRouteContract.abi as Abi,
-        address: warpRouteContractAddress,
-        functionName: "depositAndBridge",
-        args: [depositAsset, depositAmountAsBigInt, minimumMint, recipientBytes32],
-        account: evmAddress,
-        value: gasPayment,
-      });
-
-      // Execute the transaction
-      const txHash = await walletClient.writeContract(depositRequest);
-
-      if (!txHash) {
-        setDepositStatus(StepStatus.FAILED);
-        throw new Error("Failed to determine trasaction hash for the deposit");
-      }
-
-      setDepositTxHash(txHash);
-
-      // Wait for the deposit transaction to be confirmed
-      await publicClient.waitForTransactionReceipt({
-        hash: txHash,
-        timeout: 60_000,
-        confirmations: 1,
-        pollingInterval: 10_000,
-        retryCount: 5,
-        retryDelay: 5_000,
-      });
-      setDepositStatus(StepStatus.COMPLETED);
-
-      const txData = await generateTxObjectForDetails(provider ? provider.provider : publicClient, txHash);
-
-      setCurrentTx(txData);
-    } catch (error) {
-      setDepositStatus(StepStatus.FAILED);
-      console.error(error);
-    }
+  function handleRedeemAmountChange(val: string) {
+    const sanitizedInput = sanitizeInput(val, redeemAmount);
+    setRedeemAmount(sanitizedInput);
   }
 
-  function handleDepositAmountChange(val: string) {
-    const sanitizedInput = sanitizeInput(val, depositAmount);
-    setDepositAmount(sanitizedInput);
-  }
-
-  function handleDepositAssetChange(val: TokenOption) {
-    setDepositAsset(val.value);
+  function handleReceiveAssetChange(val: TokenOption) {
+    setReceiveAsset(val.value);
   }
 
   function closeModal() {
     setTimeout(() => {
       setIsModalOpen(false);
-      setApproveStatus(StepStatus.NOT_STARTED);
-      setDepositStatus(StepStatus.NOT_STARTED);
-      setDepositAmount("");
+      setRedeemAmount("");
       setDepositTxHash("");
       setCurrentTx(null);
     }, 100);
   }
 
   function handleClickMax() {
-    setDepositAmount(formattedTokenBalance);
+    setRedeemAmount(formattedTokenBalance);
   }
 
   function handleClickFiftyPercent() {
-    setDepositAmount((parseFloat(formattedTokenBalance) / 2).toString());
+    setRedeemAmount((parseFloat(formattedTokenBalance) / 2).toString());
+  }
+
+  async function handleRedeem() {
+    setIsModalOpen(true);
+
+    // Make the swap (this step takes up to 24 hours)
+    const deadlineInSec = BigInt(Math.floor(Date.now() / 1000) + deadlineDaysFromNow * 24 * 60 * 60);
+    const offerAmount = parseUnits(redeemAmount, 18);
+
+    if (!evmAddress) throw new Error("No EVM address found");
+    if (!publicClient) throw new Error("No public client found");
+
+    // Check if the atomic request already exists.
+    // If it does, skip the updateAtomicRequest step.
+    // This is to prevent the user from triggering the request multiple times.
+    const pendingAtomicRequest = await getUserAtomicRequest(
+      { userAddress: evmAddress, offerAddress: tethEvmTokenAddress, wantAddress: receiveAsset },
+      { publicClient }
+    );
+    const { atomicPrice: pendingAtomicPrice, offerAmount: pendingOfferAmount } = pendingAtomicRequest;
+    const atomicRequestAlreadyExists = pendingAtomicPrice === atomicPrice && pendingOfferAmount === offerAmount;
+
+    if (!atomicRequestAlreadyExists) {
+      const txHash = await updateAtomicRequest(
+        {
+          offer: tethEvmTokenAddress,
+          want: receiveAsset,
+          userRequest: { deadline: deadlineInSec, atomicPrice, offerAmount, inSolve: false },
+        },
+        { publicClient, walletClient }
+      );
+    }
+
+    // Bridge tETH from Eclipse to Ethereum
+    await triggerTransactions(parseUnits(redeemAmount, 9).toString());
   }
 
   return (
@@ -371,55 +347,62 @@ export function Mint() {
           closeModal={closeModal}
           tx={currentTx}
           steps={steps}
-          depositAmountAsBigInt={depositAmountAsBigInt}
+          depositAmountAsBigInt={redeemAmountAsBigInt}
           depositAssetLabel={depositAssetLabel}
           depositAssetIcon={depositAssetIcon}
         />
       )}
       <div className="flex flex-col gap-3">
         <MintValueCard
-          title="Deposit from"
-          chainName="Ethereum"
-          chainIconImg="/eth.png"
-          userAddress={evmAddress}
-          inputValue={depositAmount}
-          loadingTokenBalance={loadingTokenBalance}
-          onChangeInput={handleDepositAmountChange}
-          depositAsset={tokenOptions.find((token) => token.value === depositAsset)}
-          onChangeDepositAsset={handleDepositAssetChange}
-          isOverBalance={isOverBalance}
-          tokenBalance={tokenBalanceAsBigInt}
-          onClickMax={handleClickMax}
-          onClickFiftyPercent={handleClickFiftyPercent}
-          usdValue={formattedDepositAmountInUsd}
-          handleDisconnect={() => evmWallet && handleUnlinkWallet(evmWallet.id)}
-          tokenOptions={tokenOptions}
-        />
-        <MintValueCard
-          title="Receive on"
+          title="Redeem from"
           chainName="Eclipse"
           chainIconImg="/eclipse.png"
           userAddress={svmAddress}
-          inputValue={formattedReceiveAmount}
-          disabled={true}
+          inputValue={redeemAmount}
+          disabled={false}
+          loadingTokenBalance={loadingTokenBalance}
+          onChangeInput={handleRedeemAmountChange}
           depositAsset={{
             value: "0xtETH-solana",
             label: "tETH",
             imageSrc: "/token-teth.svg",
           }}
+          isOverBalance={isOverBalance}
           tokenBalance={BigInt(svmBalance)}
-          usdValue={formattedReceiveAmountInUsd}
+          onClickMax={handleClickMax}
+          onClickFiftyPercent={handleClickFiftyPercent}
+          usdValue={formattedRedeemAmountInUsd}
           handleDisconnect={() => solWallet && handleUnlinkWallet(solWallet.id)}
           tokenOptions={[]}
         />
-        <MintSummaryCard depositAsset={depositAsset} exchangeRate={assetPerTethRate} />
+        <MintValueCard
+          title="Receive on"
+          chainName="Ethereum"
+          chainIconImg="/eth.png"
+          userAddress={evmAddress}
+          inputValue={formattedReceiveAmount}
+          disabled={true}
+          depositAsset={tokenOptions.find((token) => token.value === receiveAsset)}
+          tokenBalance={tokenBalanceAsBigInt}
+          usdValue={formattedReceiveAmountInUsd}
+          handleDisconnect={() => evmWallet && handleUnlinkWallet(evmWallet.id)}
+          onChangeDepositAsset={handleReceiveAssetChange}
+          tokenOptions={tokenOptions}
+        />
+        <RedeemSummaryCard
+          depositAsset={receiveAsset}
+          exchangeRate={atomicPrice.toString()}
+          withdrawFee={formattedWithdrawFeeInUsd}
+          bridgeFee={formattedBridgeFeeInUsd}
+          totalFees={formattedTotalFeesInUsd}
+        />
         {evmAddress && svmAddress && (
           <button
             className={classNames("mint-button mt-3", { "mint-button-disabled": isMintDisabled })}
-            onClick={handleMint}
+            onClick={handleRedeem}
             disabled={isMintDisabled}
           >
-            {depositPending ? "Minting..." : "Mint"}
+            {depositPending ? "Redeeming..." : "Redeem"}
           </button>
         )}
         {(!evmAddress || !svmAddress) && (
