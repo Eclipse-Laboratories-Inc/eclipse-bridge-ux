@@ -5,6 +5,7 @@ import { truncateWalletAddress } from "@/lib/stringUtils";
 import { ConnectIcon, Chevron } from "../icons";
 import ConnectedWallets from "../ConnectedWallets/index";
 import React, { useEffect, useRef, useState, useCallback, useMemo } from "react";
+import { usePathname } from 'next/navigation';
 import { useWallets } from "@/app/hooks/useWallets";
 
 export const ProfileAvatar: React.FC = () => {
@@ -13,8 +14,11 @@ export const ProfileAvatar: React.FC = () => {
   const modalRef = useRef<HTMLDivElement>(null);
   const openModalRef = useRef<HTMLDivElement>(null);
 
+  const pathname = usePathname();
+  const ignoreEvmWallet = pathname === "/gas-station" 
+
   const content = useMemo(() => {
-    if (!solWallet || !evmWallet) {
+    if (!solWallet || ( !evmWallet && !ignoreEvmWallet)) {
       return (
         <DynamicConnectButton buttonClassName="connect-button-header">
           {!solWallet && !evmWallet ? "Connect Wallets" : "Connect Wallet"}
@@ -26,7 +30,7 @@ export const ProfileAvatar: React.FC = () => {
 
   const toggleModal = useCallback((e?: React.MouseEvent) => {
     if (e) e.stopPropagation();
-    if ((evmWallet || isModalOpen) && solWallet) {
+    if ((evmWallet || ignoreEvmWallet || isModalOpen) && solWallet) {
       setIsModalOpen(prevState => !prevState);
     }
   }, [evmWallet, isModalOpen, solWallet]);
@@ -76,7 +80,7 @@ export const ProfileAvatar: React.FC = () => {
       > 
         <ConnectIcon connectClassName="connect-wallet-icon" /> 
         {content}
-        {(solWallet && evmWallet) && <Chevron />}
+        {(solWallet && ( evmWallet || ignoreEvmWallet)) && <Chevron />}
       </div>
       <ConnectedWallets 
         ref={modalRef} 
