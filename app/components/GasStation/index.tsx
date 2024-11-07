@@ -1,12 +1,21 @@
+import { useState, useRef, useEffect } from "react";
+import { Chevron, GasStationIcon, WalletIcon } from "../icons";
+import { useTransactionManager, Token } from "./TokenManager";
+import { DynamicConnectButton } from "@dynamic-labs/sdk-react-core";
+import {
+  Transaction,
+  Signer,
+  Keypair,
+  VersionedTransaction,
+  TransactionMessage,
+  PublicKey,
+  Connection,
+} from "@solana/web3.js";
+import { SelectToken } from "./SelectToken";
+import { GasStationNotification, TxStatus } from "./Notification";
 import { useWallets } from "@/app/hooks/useWallets";
 import { createOctaneSwapTransaction } from "@/lib/octaneUtils";
 import { ISolana } from "@dynamic-labs/solana";
-import { Connection, Transaction } from "@solana/web3.js";
-import { useEffect, useRef, useState } from "react";
-import { Chevron, GasStationIcon, WalletIcon } from "../icons";
-import { GasStationNotification, TxStatus } from "./Notification";
-import { SelectToken } from "./SelectToken";
-import { Token, useTransactionManager } from "./TokenManager";
 const bs58 = require("bs58");
 
 /*
@@ -23,10 +32,16 @@ export const GasStation: React.FC = () => {
   const [txId, setTxId] = useState("");
   const [txStatus, setTxStatus] = useState<TxStatus>(TxStatus.None);
   const { solWallet } = useWallets();
+  useEffect(() => {
+    console.log(selectedToken, "selo");
+  }, [!selectedToken]);
 
   function getInputClassName(): string {
     // insufficient funds
-    if (BigInt(Number(amount ?? "0") * 10 ** selectedToken.decimals) > (selectedToken.balance ?? BigInt(0))) {
+    if (
+      BigInt(Number(amount ?? "0") * 10 ** selectedToken.decimals) / BigInt(Math.floor(selectedToken.price ?? 0)) >
+      (selectedToken.balance ?? BigInt(0))
+    ) {
       return "flex flex-col border-[1px] border-[#eb4d4d80] items-center h-[235px] bg-[#eb4d4d08] rounded-b-[10px]";
     }
 
@@ -34,17 +49,33 @@ export const GasStation: React.FC = () => {
   }
 
   function getButtonText(): string {
+    // wallet not connected
+    if (!solWallet) {
+      return "Connect Wallet";
+    }
+
     // insufficient funds
-    if (BigInt(Number(amount ?? "0") * 10 ** selectedToken.decimals) > (selectedToken.balance ?? BigInt(0))) {
+    if (
+      BigInt(Number(amount ?? "0") * 10 ** selectedToken.decimals) / BigInt(Math.floor(selectedToken.price ?? 0)) >
+      (selectedToken.balance ?? BigInt(0))
+    ) {
       return "Insufficient Balance";
     }
 
-    return "Gas Me Daddy";
+    return "Gas Gas";
   }
 
   function getButtonClassName(): string {
+    // wallet not connected
+    if (!solWallet) {
+      return "w-full h-[62px] bg-[#A1FEA0] rounded-[10px] text-black text-[20px] font-medium";
+    }
+
     // insufficient funds
-    if (BigInt(Number(amount ?? "0") * 10 ** selectedToken.decimals) > (selectedToken.balance ?? BigInt(0))) {
+    if (
+      BigInt(Number(amount ?? "0") * 10 ** selectedToken.decimals) / BigInt(Math.floor(selectedToken.price ?? 0)) >
+      (selectedToken.balance ?? BigInt(0))
+    ) {
       return "w-full h-[58px] bg-[#ffffff0d] rounded-[10px] text-[#EB4D4D] bg-[#eb4d4d1a] text-[20px] font-medium pointer-events-none";
     }
 
@@ -53,7 +84,7 @@ export const GasStation: React.FC = () => {
       return "w-full h-[58px] bg-[#ffffff0d] rounded-[10px] text-[#ffffff4d] text-[20px] font-medium pointer-events-none";
     }
 
-    return "w-full h-[58px] bg-[#A1FEA0] rounded-[10px] text-black text-[20px] font-medium";
+    return "w-full h-[58px] bg-[#A1FEA0] rounded-[10px] text-black text-[20px] transition-all active:scale-95 font-medium hover:bg-[#74FF71]";
   }
 
   const moveCursorToEnd = (e: React.FocusEvent<HTMLInputElement>) => {
@@ -80,7 +111,7 @@ export const GasStation: React.FC = () => {
 
   const fetchOctane = async () => {
     // create transaction
-    const connection = new Connection("https://mainnet.helius-rpc.com/?api-key=e0dc13bd-8a5d-424c-8895-9d26bbb1ffdb");
+    const connection = new Connection("https://eclipse.helius-rpc.com");
     setTxState("Fetching transaction...");
     setTxStatus(TxStatus.Waiting);
     const octaneData = await createOctaneSwapTransaction(
@@ -110,11 +141,11 @@ export const GasStation: React.FC = () => {
       signedTransaction = await cli?.signAndSendTransaction(tx);
       console.log(signedTransaction);
     } catch {
-      emitEvent(`Refueling for ${amount}$ is failed.`, TxStatus.Failed, 5);
+      emitEvent(`Refueling for $${amount} is failed.`, TxStatus.Failed, 5);
       return 1;
     }
 
-    setTxState(`Refueling for ${amount}$ ...`);
+    setTxState(`Refueling for $${amount} ...`);
     const latestBlockHash = await connection.getLatestBlockhash();
 
     await connection.confirmTransaction(
@@ -126,7 +157,7 @@ export const GasStation: React.FC = () => {
       "confirmed"
     );
 
-    emitEvent(`Refuel of ${amount}$ Success`, TxStatus.Confirmed, 10);
+    emitEvent(`Refuel of $${amount} Success`, TxStatus.Confirmed, 10);
     setTxId(signedTransaction.signature);
     // window.open(`https://solscan.io/tx/${txid}`)
     console.log(tx);
@@ -134,15 +165,16 @@ export const GasStation: React.FC = () => {
   };
 
   useEffect(() => {
-    setSelectedToken(tokens[selectedToken.symbol]);
+    const token = tokens[selectedToken.symbol];
+    setSelectedToken(token);
   }, [tokens]);
 
   return (
     <>
       {txState && <GasStationNotification txState={txState} txStatus={txStatus} txId={txId} />}
       <div
-        className="flex flex-col rounded-[30px] w-[520px] p-[20px] gap-[20px]"
-        style={{ border: "1px solid rgba(255, 255, 255, 0.10)" }}
+        className="deposit-container flex flex-col rounded-[30px] !w-[520px] p-[20px] gap-[20px]"
+        style={{ border: "1px solid rgba(255, 255, 255, 0.10)", background: "rgba(255, 255, 255, 0.02)" }}
       >
         {/* header text */}
         <div className="flex flex-row w-full justify-center items-center gap-[8px]">
@@ -249,7 +281,7 @@ export const GasStation: React.FC = () => {
             <span className="text-[#ffffff99] font-medium text-[14px]">Cost</span>
             {amount && parseFloat(amount) > 0 ? (
               <span className="text-[#A1FEA0] font-medium text-[14px]">
-                ${Number(selectedToken.fee) / 10 ** selectedToken.decimals}
+                ${(selectedToken.price ?? 1) * (Number(selectedToken.fee) / 10 ** selectedToken.decimals)}
               </span>
             ) : (
               <span className="text-[#ffffff4d] font-medium text-[14px]">$0</span>
@@ -258,9 +290,18 @@ export const GasStation: React.FC = () => {
         </div>
 
         {/* button */}
-        <button className={getButtonClassName()} onClick={fetchOctane}>
-          {getButtonText()}
-        </button>
+        {!solWallet ? (
+          <DynamicConnectButton
+            buttonClassName={getButtonClassName()}
+            buttonContainerClassName="submit-button connect-btn"
+          >
+            <span style={{ width: "100%" }}> {getButtonText()}</span>
+          </DynamicConnectButton>
+        ) : (
+          <button className={getButtonClassName()} onClick={fetchOctane}>
+            {getButtonText()}
+          </button>
+        )}
 
         {/* select token modal */}
         {selectModal && setSelectModal && (
