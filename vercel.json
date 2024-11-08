@@ -1,0 +1,15 @@
+{
+  "redirects": [
+    {
+      "source": "/",
+      "has": [
+        {
+          "type": "host",
+          "value": "bridge.eclipse.xyz"
+        }
+      ],
+      "destination": "https://app.eclipse.xyz/bridge",
+      "permanent": true
+    }
+  ]
+}
