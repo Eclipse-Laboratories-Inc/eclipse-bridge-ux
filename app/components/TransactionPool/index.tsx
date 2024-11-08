@@ -43,7 +43,9 @@ export const TransactionProvider = ({ children } : { children: ReactNode}) => {
     console.log("isMainnet", isMainnet)
     const client = createPublicClient({
       chain    : isMainnet ? mainnet : sepolia,
-      transport: isMainnet ? http() : http("https://sepolia.drpc.org"),
+      transport: isMainnet 
+        ? http("https://empty-responsive-patron.quiknode.pro/91dfa8475605dcdec9afdc8273578c9f349774a1/") 
+        : http("https://sepolia.drpc.org"),
       cacheTime: 0
     })
     setClient(client);

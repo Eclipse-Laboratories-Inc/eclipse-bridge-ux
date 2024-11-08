@@ -31,7 +31,9 @@ const useWalletData = () => {
     const isMainnet = (selectedOption === Options.Mainnet);
     const client = createPublicClient({
       chain: isMainnet ? mainnet : sepolia,
-      transport: isMainnet ? http() : http("https://ethereum-sepolia.publicnode.com/"),
+      transport: isMainnet 
+        ? http("https://empty-responsive-patron.quiknode.pro/91dfa8475605dcdec9afdc8273578c9f349774a1/") 
+        : http("https://ethereum-sepolia.publicnode.com/"),
     });
     userWallets.forEach(async (wallet) => {
       if (!wallet) return;

@@ -4,6 +4,7 @@ import Deposit from "./components/Deposit";
 import { Header } from './components/Header';
 import { Sidebar } from './components/Sidebar';
 import { Footer } from './components/Footer';
+import { TosClickwrap } from './components/TosClickwrap';
 import useEthereumData from "@/lib/ethUtils";
 import { NetworkProvider } from "@/app/contexts/NetworkContext";
 import { useWalletClient } from "./hooks"
@@ -30,6 +31,7 @@ export default function Main() {
                 height: "100%"
               }}>
                 <Header isExtended={isSidebar} />
+                <TosClickwrap />
                 
                 <div className="flex flex-row w-full items-center" style={{height: "100%"}}>
                   <Sidebar isExtended={isSidebar} setIsExtended={setIsSidebar} />

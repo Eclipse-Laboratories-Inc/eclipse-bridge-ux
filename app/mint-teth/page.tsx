@@ -6,6 +6,7 @@ import { useState } from "react";
 import { SkeletonTheme } from "react-loading-skeleton";
 import { Footer } from "../components/Footer";
 import { Header } from "../components/Header";
+import { TosClickwrap } from "../components/TosClickwrap";
 import Mint from "./components/Mint";
 import { Sidebar } from "../components/Sidebar";
 import { TransactionProvider } from "../components/TransactionPool";
@@ -34,6 +35,7 @@ export default function Main() {
                 }}
               >
                 <Header isExtended={isSidebar} />
+                <TosClickwrap /> 
                 <div className="flex flex-row w-full items-center" style={{ height: "100%" }}>
                   <Sidebar isExtended={isSidebar} setIsExtended={setIsSidebar} />
                   <div className="flex flex-col items-center" style={{ gap: "13px", flexGrow: "1" }}>
