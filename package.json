@@ -1,5 +1,5 @@
 {
-  "name": "@dynamic-labs/next-ethers-wagmi",
+  "name": "eclipse-bridge",
   "version": "0.1.0",
   "private": true,
   "scripts": {
@@ -9,12 +9,23 @@
     "lint": "next lint"
   },
   "dependencies": {
-    "@dynamic-labs/ethereum": "^2.0.0",
-    "@dynamic-labs/ethers-v5": "2.4.0",
-    "@dynamic-labs/rpc-provider-ethereum": "^2.0.0",
-    "@dynamic-labs/sdk-react-core": "^2.0.0",
-    "@dynamic-labs/solana": "2.4.0",
+    "@dynamic-labs/bitcoin": "4.0.0-alpha.21",
+    "@dynamic-labs/eclipse": "4.0.0-alpha.21",
+    "@dynamic-labs/ethereum": "4.0.0-alpha.21",
+    "@dynamic-labs/sdk-react-core": "4.0.0-alpha.21",
+    "@dynamic-labs/solana": "4.0.0-alpha.21",
+    "@dynamic-labs/utils": "4.0.0-alpha.21",
+    "@dynamic-labs/wagmi-connector": "4.0.0-alpha.21",
+    "@dynamic-labs/ethereum-core": "4.0.0-alpha.21",
+    "@dynamic-labs/ethers-v5": "3.0.0-alpha.48",
+    "@dynamic-labs/wallet-book": "4.0.0-alpha.21",
+    "@dynamic-labs/wallet-connector-core": "4.0.0-alpha.21",
     "@project-serum/anchor": "^0.26.0",
+    "@reservoir0x/relay-bitcoin-wallet-adapter": "^1.0.6",
+    "@reservoir0x/relay-kit-hooks": "1.4.7",
+    "@reservoir0x/relay-kit-ui": "2.2.15",
+    "@reservoir0x/relay-sdk": "1.4.6",
+    "@reservoir0x/relay-svm-wallet-adapter": "^2.0.6",
     "@solana/web3.js": "^1.95.2",
     "@tanstack/react-query": "^5.51.21",
     "@types/node": "20.8.7",
@@ -34,6 +45,7 @@
     "react-loading-skeleton": "^3.4.0",
     "tailwindcss": "3.3.3",
     "typescript": "5.2.2",
-    "viem": "^2.21.10"
+    "viem": "^2.21.10",
+    "wagmi": "^2.9.8"
   }
 }
