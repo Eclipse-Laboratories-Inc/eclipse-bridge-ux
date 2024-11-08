@@ -4,7 +4,7 @@ import { Arrow } from "@/app/components/icons";
 import { TransactionIcon, ActivityBoxIcon } from "../icons";
 import { timeAgo } from "@/lib/activityUtils";
 import Skeleton from 'react-loading-skeleton'; 
-import { TransactionDetails } from "./TransactionDetails";  
+import { TransactionDetails } from "../TransactionDetails";  
 import { useTransaction } from "../TransactionPool"
 import { Tabs } from "./index";
 import "./activity.css";  
@@ -73,7 +73,7 @@ export const ActivityContent = ({ setActiveTab }: {setActiveTab: React.Dispatch<
         </div>
     )}
     </div> 
-    { isModalOpen && <TransactionDetails fromDeposit={false} tx={currentTx} closeModal={() => setTimeout(() => setIsModalOpen(false), 100)} /> }
+    { isModalOpen && <TransactionDetails from={""} tx={currentTx} closeModal={() => setTimeout(() => setIsModalOpen(false), 100)} /> }
     </>
   )
 }

@@ -1,0 +1,596 @@
+{
+  "address": "br1xwubggTiEZ6b7iNZUwfA3psygFfaXGfZ1heaN9AW",
+  "metadata": {
+    "name": "canonical_bridge",
+    "version": "0.1.14",
+    "spec": "0.1.0",
+    "description": "Created with Anchor"
+  },
+  "instructions": [
+    {
+      "name": "deposit",
+      "discriminator": [
+        242,
+        35,
+        198,
+        137,
+        82,
+        225,
+        242,
+        182
+      ],
+      "accounts": [
+        {
+          "name": "relayer",
+          "writable": true,
+          "signer": true,
+          "address": "E3gVbwzKYgTxgrPZGhq9TF5YGtTjBurR5zqx2kAPKa7P"
+        },
+        {
+          "name": "deposit_receipt",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  100,
+                  101,
+                  112,
+                  111,
+                  115,
+                  105,
+                  116
+                ]
+              },
+              {
+                "kind": "arg",
+                "path": "eth_deposit_nonce"
+              }
+            ]
+          }
+        },
+        {
+          "name": "to",
+          "writable": true
+        },
+        {
+          "name": "config",
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  99,
+                  111,
+                  110,
+                  102,
+                  105,
+                  103,
+                  117,
+                  114,
+                  101
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "name": "rent",
+          "address": "SysvarRent111111111111111111111111111111111"
+        },
+        {
+          "name": "system_program",
+          "address": "11111111111111111111111111111111"
+        }
+      ],
+      "args": [
+        {
+          "name": "eth_deposit_nonce",
+          "type": "u64"
+        },
+        {
+          "name": "amount",
+          "type": "u64"
+        }
+      ]
+    },
+    {
+      "name": "init_config",
+      "discriminator": [
+        23,
+        235,
+        115,
+        232,
+        168,
+        96,
+        1,
+        231
+      ],
+      "accounts": [
+        {
+          "name": "authority",
+          "writable": true,
+          "signer": true,
+          "address": "pCGzyPdy94qpbZAv1JgbNGHgCbMm9vCS6Fe4SHTVMWx"
+        },
+        {
+          "name": "configuration",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  99,
+                  111,
+                  110,
+                  102,
+                  105,
+                  103,
+                  117,
+                  114,
+                  101
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "name": "system_program",
+          "address": "11111111111111111111111111111111"
+        }
+      ],
+      "args": []
+    },
+    {
+      "name": "pause_deposits",
+      "discriminator": [
+        206,
+        186,
+        203,
+        153,
+        253,
+        61,
+        206,
+        122
+      ],
+      "accounts": [
+        {
+          "name": "authority",
+          "writable": true,
+          "signer": true,
+          "address": "pCGzyPdy94qpbZAv1JgbNGHgCbMm9vCS6Fe4SHTVMWx"
+        },
+        {
+          "name": "configuration",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  99,
+                  111,
+                  110,
+                  102,
+                  105,
+                  103,
+                  117,
+                  114,
+                  101
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "name": "system_program",
+          "address": "11111111111111111111111111111111"
+        }
+      ],
+      "args": []
+    },
+    {
+      "name": "pause_withdrawals",
+      "discriminator": [
+        91,
+        80,
+        49,
+        92,
+        10,
+        224,
+        203,
+        1
+      ],
+      "accounts": [
+        {
+          "name": "authority",
+          "writable": true,
+          "signer": true,
+          "address": "pCGzyPdy94qpbZAv1JgbNGHgCbMm9vCS6Fe4SHTVMWx"
+        },
+        {
+          "name": "configuration",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  99,
+                  111,
+                  110,
+                  102,
+                  105,
+                  103,
+                  117,
+                  114,
+                  101
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "name": "system_program",
+          "address": "11111111111111111111111111111111"
+        }
+      ],
+      "args": []
+    },
+    {
+      "name": "resume_deposits",
+      "discriminator": [
+        208,
+        78,
+        64,
+        241,
+        58,
+        181,
+        167,
+        66
+      ],
+      "accounts": [
+        {
+          "name": "authority",
+          "writable": true,
+          "signer": true,
+          "address": "pCGzyPdy94qpbZAv1JgbNGHgCbMm9vCS6Fe4SHTVMWx"
+        },
+        {
+          "name": "configuration",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  99,
+                  111,
+                  110,
+                  102,
+                  105,
+                  103,
+                  117,
+                  114,
+                  101
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "name": "system_program",
+          "address": "11111111111111111111111111111111"
+        }
+      ],
+      "args": []
+    },
+    {
+      "name": "resume_withdrawals",
+      "discriminator": [
+        100,
+        246,
+        189,
+        251,
+        155,
+        172,
+        2,
+        56
+      ],
+      "accounts": [
+        {
+          "name": "authority",
+          "writable": true,
+          "signer": true,
+          "address": "pCGzyPdy94qpbZAv1JgbNGHgCbMm9vCS6Fe4SHTVMWx"
+        },
+        {
+          "name": "configuration",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  99,
+                  111,
+                  110,
+                  102,
+                  105,
+                  103,
+                  117,
+                  114,
+                  101
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "name": "system_program",
+          "address": "11111111111111111111111111111111"
+        }
+      ],
+      "args": []
+    },
+    {
+      "name": "withdraw",
+      "discriminator": [
+        183,
+        18,
+        70,
+        156,
+        148,
+        109,
+        161,
+        34
+      ],
+      "accounts": [
+        {
+          "name": "withdrawer",
+          "writable": true,
+          "signer": true
+        },
+        {
+          "name": "config",
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  99,
+                  111,
+                  110,
+                  102,
+                  105,
+                  103,
+                  117,
+                  114,
+                  101
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "name": "withdrawal_receipt",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  119,
+                  105,
+                  116,
+                  104,
+                  100,
+                  114,
+                  97,
+                  119,
+                  97,
+                  108
+                ]
+              },
+              {
+                "kind": "arg",
+                "path": "withdrawal_nonce"
+              }
+            ]
+          }
+        },
+        {
+          "name": "relayer",
+          "writable": true,
+          "address": "E3gVbwzKYgTxgrPZGhq9TF5YGtTjBurR5zqx2kAPKa7P"
+        },
+        {
+          "name": "rent",
+          "address": "SysvarRent111111111111111111111111111111111"
+        },
+        {
+          "name": "system_program",
+          "address": "11111111111111111111111111111111"
+        }
+      ],
+      "args": [
+        {
+          "name": "destination_address",
+          "type": "string"
+        },
+        {
+          "name": "withdrawal_nonce",
+          "type": "u64"
+        },
+        {
+          "name": "amount",
+          "type": "u64"
+        }
+      ]
+    }
+  ],
+  "accounts": [
+    {
+      "name": "Configuration",
+      "discriminator": [
+        192,
+        79,
+        172,
+        30,
+        21,
+        173,
+        25,
+        43
+      ]
+    },
+    {
+      "name": "DepositReceipt",
+      "discriminator": [
+        64,
+        175,
+        24,
+        183,
+        138,
+        109,
+        70,
+        78
+      ]
+    },
+    {
+      "name": "WithdrawalReceipt",
+      "discriminator": [
+        167,
+        235,
+        84,
+        7,
+        210,
+        55,
+        67,
+        114
+      ]
+    }
+  ],
+  "events": [
+    {
+      "name": "WithdrawEvent",
+      "discriminator": [
+        22,
+        9,
+        133,
+        26,
+        160,
+        44,
+        71,
+        192
+      ]
+    }
+  ],
+  "errors": [
+    {
+      "code": 6000,
+      "name": "DepositPaused",
+      "msg": "Deposit is currently paused."
+    },
+    {
+      "code": 6001,
+      "name": "WithdrawalPaused",
+      "msg": "Withdrawal is currently paused."
+    }
+  ],
+  "types": [
+    {
+      "name": "Configuration",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "bump",
+            "type": "u8"
+          },
+          {
+            "name": "deposits_paused",
+            "type": "bool"
+          },
+          {
+            "name": "withdrawals_paused",
+            "type": "bool"
+          }
+        ]
+      }
+    },
+    {
+      "name": "DepositReceipt",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "bump",
+            "type": "u8"
+          },
+          {
+            "name": "to",
+            "type": "pubkey"
+          },
+          {
+            "name": "eth_deposit_nonce",
+            "type": "u64"
+          }
+        ]
+      }
+    },
+    {
+      "name": "WithdrawEvent",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "from",
+            "type": "pubkey"
+          },
+          {
+            "name": "destination_address",
+            "type": "string"
+          },
+          {
+            "name": "amount",
+            "type": "u64"
+          },
+          {
+            "name": "withdrawal_nonce",
+            "type": "u64"
+          }
+        ]
+      }
+    },
+    {
+      "name": "WithdrawalReceipt",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "withdrawal_nonce",
+            "type": "u64"
+          },
+          {
+            "name": "destination_address",
+            "type": "string"
+          },
+          {
+            "name": "amount",
+            "type": "u64"
+          },
+          {
+            "name": "bump",
+            "type": "u8"
+          },
+          {
+            "name": "from",
+            "type": "pubkey"
+          }
+        ]
+      }
+    }
+  ]
+}

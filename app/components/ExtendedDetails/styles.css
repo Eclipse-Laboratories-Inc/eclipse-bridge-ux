@@ -1,17 +1,9 @@
-.extended-details {
-  max-width: 520px;
-  width: inherit;
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  background: rgba(255, 255, 255, 0.02);
-  border-radius: 30px;
-}
-
-.white-text {
-  color: white;
+.tgreen { color: rgba(161, 254, 160, 1); }
+.gray-text {
   font-size: 16px;
-  font-weight: 500;
+  line-height: 19.2px;
+  color: rgba(255, 255, 255, 0.3);
 }
-
 .green-text {
   color: rgba(161, 254, 160, 1);
   font-size: 16px;
@@ -19,17 +11,33 @@
   line-height: 20.8px;
 }
 
-.gray-text {
-  font-size: 16px;
-  line-height: 19.2px; 
-  color: rgba(255, 255, 255, 0.3);
+.tx-sum {
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 10px;
+
+  background: rgba(13, 13, 13, 1);
+  font-size: 14px;
+  font-weight: 500;
+
+  width: 480px;
+  height: 88px;
 }
 
-.single-line {
-  padding: 10px 20px 10px 20px;
+.route-box {
   border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  height: 44px;
+  padding: 8px 16px;
 }
 
-.single-line:nth-child(3) {
-  border-bottom: none;
+.route-text {
+  background: rgba(255, 255, 255, 0.05);
+  color: rgba(255, 255, 255, 0.3);
+  width: 62px;
+  border-radius: 100px;
+  padding: 4px 8px;
 }
+
+.amount-sum {
+  padding: 8px 16px;
+}
+

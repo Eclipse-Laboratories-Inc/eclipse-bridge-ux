@@ -72,6 +72,14 @@ input:focus {
   box-shadow: none;
 }
 
+.ecl-logo {
+  border-right: 1px solid rgba(255, 255, 255, 0.1); 
+  overflow: hidden;
+  transition: width 0.3s var(--ease-out-quad);
+  width: 215px;
+  height: 100%;
+}
+
 .header .connect-wallet {
   display: flex;
   align-items: center;
@@ -131,15 +139,16 @@ footer {
   */
 }
 
-.mobile-logo { display: none; }
 .legal-footer a:hover {
   color: #A1FEA0; 
 }
 
+/*
 @media (max-width: 768px ){
   .desktop-logo { display: none; }
   .mobile-logo { display: inline; }
 }
+*/
 
 @media (max-width: 900px) {
   footer {
@@ -192,4 +201,16 @@ footer {
 .status-overlay.active {
   z-index: 1;
   opacity: 1;
+}
+
+@media (max-height: 933px) {
+  .main-content, footer {
+    margin-top: 50px;
+  }
+}
+
+@media (max-height: 765px) {
+  .main-content, footer {
+    margin-top: 100px;
+  }
 }

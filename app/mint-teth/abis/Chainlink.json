@@ -1,0 +1,350 @@
+{
+  "abi": [
+    {
+      "type": "function",
+      "name": "latestRoundData",
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "roundId",
+          "type": "uint80",
+          "internalType": "uint80"
+        },
+        {
+          "name": "answer",
+          "type": "int256",
+          "internalType": "int256"
+        },
+        {
+          "name": "startedAt",
+          "type": "uint256",
+          "internalType": "uint256"
+        },
+        {
+          "name": "updatedAt",
+          "type": "uint256",
+          "internalType": "uint256"
+        },
+        {
+          "name": "answeredInRound",
+          "type": "uint80",
+          "internalType": "uint80"
+        }
+      ],
+      "stateMutability": "view"
+    }
+  ],
+  "bytecode": {
+    "object": "0x",
+    "sourceMap": "",
+    "linkReferences": {}
+  },
+  "deployedBytecode": {
+    "object": "0x",
+    "sourceMap": "",
+    "linkReferences": {}
+  },
+  "methodIdentifiers": {
+    "latestRoundData()": "feaf968c"
+  },
+  "rawMetadata": "{\"compiler\":{\"version\":\"0.8.21+commit.d9974bed\"},\"language\":\"Solidity\",\"output\":{\"abi\":[{\"inputs\":[],\"name\":\"latestRoundData\",\"outputs\":[{\"internalType\":\"uint80\",\"name\":\"roundId\",\"type\":\"uint80\"},{\"internalType\":\"int256\",\"name\":\"answer\",\"type\":\"int256\"},{\"internalType\":\"uint256\",\"name\":\"startedAt\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"updatedAt\",\"type\":\"uint256\"},{\"internalType\":\"uint80\",\"name\":\"answeredInRound\",\"type\":\"uint80\"}],\"stateMutability\":\"view\",\"type\":\"function\"}],\"devdoc\":{\"kind\":\"dev\",\"methods\":{},\"version\":1},\"userdoc\":{\"kind\":\"user\",\"methods\":{},\"version\":1}},\"settings\":{\"compilationTarget\":{\"src/interfaces/IChainlink.sol\":\"IChainlink\"},\"evmVersion\":\"paris\",\"libraries\":{},\"metadata\":{\"bytecodeHash\":\"ipfs\"},\"optimizer\":{\"enabled\":true,\"runs\":200},\"remappings\":[\":@balancer-labs/v2-interfaces/=lib/balancer-v2-monorepo/pkg/interfaces/\",\":@balancer-labs/v2-pool-stable/=lib/balancer-v2-monorepo/pkg/pool-stable/\",\":@chainlink/contracts/=lib/chainlink/contracts/\",\":@openzeppelin/contracts-upgradeable/=lib/openzeppelin-contracts-upgradeable/contracts/\",\":@openzeppelin/contracts/=lib/openzeppelin-contracts/contracts/\",\":@uniswap/v3-core/=lib/v3-core/\",\":@uniswap/v3-periphery/=lib/v3-periphery/\",\":balancer-v2-monorepo/=lib/balancer-v2-monorepo/\",\":chainlink/=lib/chainlink/\",\":ds-test/=lib/forge-std/lib/ds-test/src/\",\":erc4626-tests/=lib/openzeppelin-contracts-upgradeable/lib/erc4626-tests/\",\":forge-std/=lib/forge-std/src/\",\":openzeppelin-contracts-upgradeable/=lib/openzeppelin-contracts-upgradeable/\",\":openzeppelin-contracts/=lib/openzeppelin-contracts/\",\":solady/=lib/solady/\",\":v3-core/=lib/v3-core/\",\":v3-periphery/=lib/v3-periphery/contracts/\"]},\"sources\":{\"src/interfaces/IChainlink.sol\":{\"keccak256\":\"0x86df556af26a6554582e0965d73536651c4d85f79e99af56b30f5d24168d68f2\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://08a49936d93afdf6fcbd914afb1f7bd3622058c9ad1c2d90948234ff3b4b7e84\",\"dweb:/ipfs/QmRENUjx8By1mV18oWNK9Jj9GWZ3X51DLJVeVrmbugVqAv\"]}},\"version\":1}",
+  "metadata": {
+    "compiler": {
+      "version": "0.8.21+commit.d9974bed"
+    },
+    "language": "Solidity",
+    "output": {
+      "abi": [
+        {
+          "inputs": [],
+          "stateMutability": "view",
+          "type": "function",
+          "name": "latestRoundData",
+          "outputs": [
+            {
+              "internalType": "uint80",
+              "name": "roundId",
+              "type": "uint80"
+            },
+            {
+              "internalType": "int256",
+              "name": "answer",
+              "type": "int256"
+            },
+            {
+              "internalType": "uint256",
+              "name": "startedAt",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint256",
+              "name": "updatedAt",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint80",
+              "name": "answeredInRound",
+              "type": "uint80"
+            }
+          ]
+        }
+      ],
+      "devdoc": {
+        "kind": "dev",
+        "methods": {},
+        "version": 1
+      },
+      "userdoc": {
+        "kind": "user",
+        "methods": {},
+        "version": 1
+      }
+    },
+    "settings": {
+      "remappings": [
+        "@balancer-labs/v2-interfaces/=lib/balancer-v2-monorepo/pkg/interfaces/",
+        "@balancer-labs/v2-pool-stable/=lib/balancer-v2-monorepo/pkg/pool-stable/",
+        "@chainlink/contracts/=lib/chainlink/contracts/",
+        "@openzeppelin/contracts-upgradeable/=lib/openzeppelin-contracts-upgradeable/contracts/",
+        "@openzeppelin/contracts/=lib/openzeppelin-contracts/contracts/",
+        "@uniswap/v3-core/=lib/v3-core/",
+        "@uniswap/v3-periphery/=lib/v3-periphery/",
+        "balancer-v2-monorepo/=lib/balancer-v2-monorepo/",
+        "chainlink/=lib/chainlink/",
+        "ds-test/=lib/forge-std/lib/ds-test/src/",
+        "erc4626-tests/=lib/openzeppelin-contracts-upgradeable/lib/erc4626-tests/",
+        "forge-std/=lib/forge-std/src/",
+        "openzeppelin-contracts-upgradeable/=lib/openzeppelin-contracts-upgradeable/",
+        "openzeppelin-contracts/=lib/openzeppelin-contracts/",
+        "solady/=lib/solady/",
+        "v3-core/=lib/v3-core/",
+        "v3-periphery/=lib/v3-periphery/contracts/"
+      ],
+      "optimizer": {
+        "enabled": true,
+        "runs": 200
+      },
+      "metadata": {
+        "bytecodeHash": "ipfs"
+      },
+      "compilationTarget": {
+        "src/interfaces/IChainlink.sol": "IChainlink"
+      },
+      "libraries": {}
+    },
+    "sources": {
+      "src/interfaces/IChainlink.sol": {
+        "keccak256": "0x86df556af26a6554582e0965d73536651c4d85f79e99af56b30f5d24168d68f2",
+        "urls": [
+          "bzz-raw://08a49936d93afdf6fcbd914afb1f7bd3622058c9ad1c2d90948234ff3b4b7e84",
+          "dweb:/ipfs/QmRENUjx8By1mV18oWNK9Jj9GWZ3X51DLJVeVrmbugVqAv"
+        ],
+        "license": "MIT"
+      }
+    },
+    "version": 1
+  },
+  "ast": {
+    "absolutePath": "src/interfaces/IChainlink.sol",
+    "id": 67891,
+    "exportedSymbols": {
+      "IChainlink": [67890]
+    },
+    "nodeType": "SourceUnit",
+    "src": "32:222:117",
+    "nodes": [
+      {
+        "id": 67876,
+        "nodeType": "PragmaDirective",
+        "src": "32:23:117",
+        "nodes": [],
+        "literals": ["solidity", "0.8", ".21"]
+      },
+      {
+        "id": 67890,
+        "nodeType": "ContractDefinition",
+        "src": "57:196:117",
+        "nodes": [
+          {
+            "id": 67889,
+            "nodeType": "FunctionDefinition",
+            "src": "84:167:117",
+            "nodes": [],
+            "functionSelector": "feaf968c",
+            "implemented": false,
+            "kind": "function",
+            "modifiers": [],
+            "name": "latestRoundData",
+            "nameLocation": "93:15:117",
+            "parameters": {
+              "id": 67877,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "108:2:117"
+            },
+            "returnParameters": {
+              "id": 67888,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 67879,
+                  "mutability": "mutable",
+                  "name": "roundId",
+                  "nameLocation": "165:7:117",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 67889,
+                  "src": "158:14:117",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint80",
+                    "typeString": "uint80"
+                  },
+                  "typeName": {
+                    "id": 67878,
+                    "name": "uint80",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "158:6:117",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint80",
+                      "typeString": "uint80"
+                    }
+                  },
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 67881,
+                  "mutability": "mutable",
+                  "name": "answer",
+                  "nameLocation": "181:6:117",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 67889,
+                  "src": "174:13:117",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_int256",
+                    "typeString": "int256"
+                  },
+                  "typeName": {
+                    "id": 67880,
+                    "name": "int256",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "174:6:117",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_int256",
+                      "typeString": "int256"
+                    }
+                  },
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 67883,
+                  "mutability": "mutable",
+                  "name": "startedAt",
+                  "nameLocation": "197:9:117",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 67889,
+                  "src": "189:17:117",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 67882,
+                    "name": "uint256",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "189:7:117",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 67885,
+                  "mutability": "mutable",
+                  "name": "updatedAt",
+                  "nameLocation": "216:9:117",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 67889,
+                  "src": "208:17:117",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 67884,
+                    "name": "uint256",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "208:7:117",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 67887,
+                  "mutability": "mutable",
+                  "name": "answeredInRound",
+                  "nameLocation": "234:15:117",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 67889,
+                  "src": "227:22:117",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint80",
+                    "typeString": "uint80"
+                  },
+                  "typeName": {
+                    "id": 67886,
+                    "name": "uint80",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "227:6:117",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint80",
+                      "typeString": "uint80"
+                    }
+                  },
+                  "visibility": "internal"
+                }
+              ],
+              "src": "157:93:117"
+            },
+            "scope": 67890,
+            "stateMutability": "view",
+            "virtual": false,
+            "visibility": "external"
+          }
+        ],
+        "abstract": false,
+        "baseContracts": [],
+        "canonicalName": "IChainlink",
+        "contractDependencies": [],
+        "contractKind": "interface",
+        "fullyImplemented": false,
+        "linearizedBaseContracts": [67890],
+        "name": "IChainlink",
+        "nameLocation": "67:10:117",
+        "scope": 67891,
+        "usedErrors": [],
+        "usedEvents": []
+      }
+    ],
+    "license": "MIT"
+  },
+  "id": 117
+}

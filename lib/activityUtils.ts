@@ -1,6 +1,6 @@
 import { decodeAbiParameters } from 'viem'
-const solanaWeb3 = require('@solana/web3.js');
 import { PublicKey } from '@solana/web3.js';
+const solanaWeb3 = require('@solana/web3.js');
 import * as anchor from '@project-serum/anchor';
 
 function low64(value: bigint): bigint {
@@ -41,29 +41,11 @@ export async function generateTxObjectForDetails(walletClient: any, txHash: stri
   };
 }
 
-export async function getNonce(walletClient: any, transactionHash: string): Promise<PublicKey | null> {
+export async function getNonce(walletClient: any, transactionHash: string, bridgeProgram: string): Promise<PublicKey | null> {
   try {
-    /*
-    const data = await walletClient.request({
-      method: "eth_getTransactionReceipt",
-      params: [transactionHash]
-    });
-    if (!data) return null;
-    if (!data.logs[0]) return null; 
-
-    const values = decodeAbiParameters([
-      { name: 'to', type: 'bytes' },
-      { name: 'toChainId', type: 'bytes' },
-      { name: 'message', type: 'bytes' },
-      { name: 'extraData', type: 'bytes' }
-    ], data.logs[0].data);
-
-    const ethDepositNonceBN = new anchor.BN(values[3].replace("0x", ""), 16);
-    */
-
     const txHashLowU64 = low64(BigInt(transactionHash))
     const ethDepositNonceBN = new anchor.BN(txHashLowU64, 10);
-    const programPublicKey = new PublicKey(process.env.NEXT_PUBLIC_BRIDGE_PROGRAM || '');
+    const programPublicKey = new PublicKey(bridgeProgram);
 
     const [depositReceiptPda, _] = PublicKey.findProgramAddressSync(
       [
@@ -82,10 +64,10 @@ export async function getNonce(walletClient: any, transactionHash: string): Prom
 
 
 // fix
-export async function getEclipseTransaction(address: PublicKey | null) {
+export async function getEclipseTransaction(address: PublicKey | null, eclipseRpc: string) {
   if (!address) {return null;} 
   const connection = new solanaWeb3.Connection(
-    process.env.NEXT_PUBLIC_ECLIPSE_RPC,
+    eclipseRpc,
     'confirmed'
   );
 
@@ -96,10 +78,10 @@ export async function getEclipseTransaction(address: PublicKey | null) {
 
 
 // fix
-export async function checkDepositWithPDA(address: PublicKey | null ) {
+export async function checkDepositWithPDA(address: PublicKey | null, eclipseRpc: string) {
   if (!address) {return null;} 
   const connection = new solanaWeb3.Connection(
-    process.env.NEXT_PUBLIC_ECLIPSE_RPC,
+    eclipseRpc,
     'confirmed'
   );
 
@@ -109,9 +91,9 @@ export async function checkDepositWithPDA(address: PublicKey | null ) {
 }
 
 
-export async function getLastDeposits(address: string) {
+export async function getLastDeposits(address: string, chain: string) {
   if (!address) return [];
-  const response = await fetch(`/api/get-transactions?address=${address}`)
+  const response = await fetch(`/api/get-transactions?address=${address}&chain=${chain}`)
   const deposits = await response.json();
 
   return deposits;
@@ -140,3 +122,4 @@ export const timeAgo = (timestamp: number): string => {
     return years === 1 ? `1 Year ago` : `${years} Years ago`;
   }
 };
+

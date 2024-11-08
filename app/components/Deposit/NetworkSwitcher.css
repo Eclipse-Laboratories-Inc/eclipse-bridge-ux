@@ -1,0 +1,55 @@
+.switcher-main {
+  position: relative;
+  width: 90%;
+  margin-left: 14px;
+  margin-top: 14px;
+  transition: width 0.3s var(--ease-out-quad);
+}
+
+.net-switcher {
+  border-radius: 12px;
+  padding-right: 10px;
+  padding-left: 8px;
+  cursor: pointer;
+  background: rgba(161, 254, 160, 0.05);
+
+  height: 38px;
+  width: 100%;
+  gap: 8px;
+  span {
+    font-size: 16px;
+    color: rgba(161, 254, 160, 1);
+    font-weight: 500;
+  }
+
+  path {
+    stroke: rgba(161, 254, 160, 1);
+  }
+}
+
+.network-options {
+  position: absolute;
+  margin-top: 56px;
+  z-index: 500;
+
+  border-radius: 15px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: rgba(0, 0, 0, 0.05);
+  backdrop-filter: blur(54px);
+  width: 100%;
+  padding: 8px;
+
+  div {
+    color: rgba(255, 255, 255, 0.6);
+    padding: 10px 9px;
+    font-size: 16px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-weight: 500;
+  }
+
+  div:hover {
+    background: rgba(255, 255, 255, 0.03);
+    color: white;
+  }
+}
