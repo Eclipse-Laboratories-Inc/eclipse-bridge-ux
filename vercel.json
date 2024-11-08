@@ -1,0 +1,15 @@
+{
+  "redirects": [
+    {
+      "source": "/",
+      "has": [
+        {
+          "type": "host",
+          "value": "teth.eclipse.xyz"
+        }
+      ],
+      "destination": "https://app.eclipse.xyz/mint-teth",
+      "permanent": true
+    }
+  ]
+}
