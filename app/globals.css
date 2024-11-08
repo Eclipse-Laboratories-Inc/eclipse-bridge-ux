@@ -203,6 +203,10 @@ footer {
   opacity: 1;
 }
 
+.relay-kit-reset > div {
+  max-width: 100% !important;
+}
+
 @media (max-height: 933px) {
   .main-content, footer {
     margin-top: 50px;

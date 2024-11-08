@@ -1,17 +1,31 @@
 import { useWallets } from "@/app/hooks";
 import { generateTxObjectForDetails } from "@/lib/activityUtils";
-import useEthereumData from "@/lib/ethUtils";
-import { createPublicClient, formatEther, http } from 'viem';
 import { solanaToBytes32 } from "@/lib/solanaUtils";
-import { Transport, Chain, Account } from 'viem';
-import { DynamicConnectButton, useDynamicContext } from "@dynamic-labs/sdk-react-core";
+import {
+  DynamicConnectButton,
+  useDynamicContext,
+  useRpcProviders,
+} from "@dynamic-labs/sdk-react-core";
 import classNames from "classnames";
 import { useEffect, useMemo, useState } from "react";
-import { Abi, Address, erc20Abi, formatUnits, parseEther, parseUnits, PublicClient, WalletClient } from "viem";
+import {
+  Abi,
+  Address,
+  erc20Abi,
+  formatUnits,
+  parseEther,
+  parseUnits,
+  PublicClient,
+  WalletClient,
+} from "viem";
 import { mainnet } from "viem/chains";
 import WarpRouteContract from "../abis/WarpRouteContract.json";
 import { warpRouteContractAddress } from "../constants/contracts";
-import { tEthTokenAddress, tokenAddresses, tokenOptions } from "../constants/tokens";
+import {
+  tEthTokenAddress,
+  tokenAddresses,
+  tokenOptions,
+} from "../constants/tokens";
 import { balanceOf } from "../lib/balanceOf";
 import { getRateInQuote } from "../lib/getRateInQuote";
 import { calculateMinimumMint } from "../utils/calculateMinimumMint";
@@ -25,6 +39,10 @@ import { TokenOption } from "./TokenSelect";
 import { getRate } from "../lib/getRate";
 import { latestRoundData } from "../lib/latestRoundData";
 import { quoteGasPayment } from "../lib/quoteGasPayment";
+import {
+  evmProvidersSelector,
+  isEthereumWallet,
+} from "@dynamic-labs/ethereum-core";
 
 export enum Tabs {
   Mint,
@@ -35,9 +53,10 @@ function Mint() {
   ///////////////////////
   // Hooks
   ///////////////////////
-  const { walletConnector, accountSwitchState, handleUnlinkWallet } = useDynamicContext();
+  const { primaryWallet, accountSwitchState, handleUnlinkWallet } =
+    useDynamicContext();
   const { evmWallet, solWallet } = useWallets();
-  const { rpcProviders } = useDynamicContext();
+  const evmRpcProvider = useRpcProviders(evmProvidersSelector);
 
   ///////////////////////
   // State
@@ -45,17 +64,25 @@ function Mint() {
   const [walletClient, setWalletClient] = useState<WalletClient | null>(null);
   const [publicClient, setPublicClient] = useState<PublicClient | null>(null);
   const [depositAmount, setDepositAmount] = useState<string>("");
-  const [depositAsset, setDepositAsset] = useState<`0x${string}`>(tokenAddresses[0]);
+  const [depositAsset, setDepositAsset] = useState<`0x${string}`>(
+    tokenAddresses[0]
+  );
   const [tethPerAssetRate, setTethPerAssetRate] = useState<string>("");
   const [ethPerAssetRate, setEthPerAssetRate] = useState("");
   const [ethPerTethRate, setEthPerTethRate] = useState("");
   const [depositPending, setDepositPending] = useState<boolean>(false);
-  const [tokenBalanceAsBigInt, setTokenBalanceAsBigInt] = useState<bigint>(BigInt(0));
+  const [tokenBalanceAsBigInt, setTokenBalanceAsBigInt] = useState<bigint>(
+    BigInt(0)
+  );
   const [loadingTokenBalance, setLoadingTokenBalance] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [currentTx, setCurrentTx] = useState<any>(null);
-  const [approveStatus, setApproveStatus] = useState<StepStatus>(StepStatus.NOT_STARTED);
-  const [depositStatus, setDepositStatus] = useState<StepStatus>(StepStatus.NOT_STARTED);
+  const [approveStatus, setApproveStatus] = useState<StepStatus>(
+    StepStatus.NOT_STARTED
+  );
+  const [depositStatus, setDepositStatus] = useState<StepStatus>(
+    StepStatus.NOT_STARTED
+  );
   const [activeTab, setActiveTab] = useState<Tabs>(Tabs.Mint);
   const [depositTxHash, setDepositTxHash] = useState<string>("");
   const [svmBalance, setSvmBalance] = useState<string>("");
@@ -76,34 +103,49 @@ function Mint() {
   const isOverBalance = tokenBalanceAsBigInt < depositAmountAsBigInt;
 
   const isMintDisabled =
-    depositPending || !depositAmount || !depositAsset || !evmWallet || isOverBalance || Number(depositAmount) === 0;
+    depositPending ||
+    !depositAmount ||
+    !depositAsset ||
+    !evmWallet ||
+    isOverBalance ||
+    Number(depositAmount) === 0;
 
-  const provider = rpcProviders.evmDefaultProvider;
+  const provider = evmRpcProvider.defaultProvider;
 
   const evmAddress = evmWallet?.address as `0x${string}` | undefined;
   const svmAddress = solWallet?.address as `0x${string}` | undefined;
 
   const ethPriceAsBigInt = ethPrice ? BigInt(ethPrice) : BigInt(0);
 
-  const depositAmountInEth = (depositAmountAsBigInt * BigInt(ethPerAssetRate)) / BigInt(1e18);
-  const depositAmountInUsd = (depositAmountInEth * ethPriceAsBigInt) / BigInt(1e8);
-  const depositAmountInUsdFormatted = Number(formatUnits(depositAmountInUsd, 18));
+  const depositAmountInEth =
+    (depositAmountAsBigInt * BigInt(ethPerAssetRate)) / BigInt(1e18);
+  const depositAmountInUsd =
+    (depositAmountInEth * ethPriceAsBigInt) / BigInt(1e8);
+  const depositAmountInUsdFormatted = Number(
+    formatUnits(depositAmountInUsd, 18)
+  );
   const formattedDepositAmountInUsd =
     depositAmountInUsdFormatted > 0 && depositAmountInUsdFormatted < 0.01
       ? "<$0.01"
-      : `$${new Intl.NumberFormat("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 }).format(
-          depositAmountInUsdFormatted
-        )}`;
+      : `$${new Intl.NumberFormat("en-US", {
+          minimumFractionDigits: 2,
+          maximumFractionDigits: 2,
+        }).format(depositAmountInUsdFormatted)}`;
 
-  const receiveAmountInEth = (receiveAmountAsBigInt * BigInt(ethPerTethRate)) / BigInt(1e18);
-  const receiveAmountInUsd = (receiveAmountInEth * ethPriceAsBigInt) / BigInt(1e8);
-  const receiveAmountInUsdFormatted = Number(formatUnits(receiveAmountInUsd, 18));
+  const receiveAmountInEth =
+    (receiveAmountAsBigInt * BigInt(ethPerTethRate)) / BigInt(1e18);
+  const receiveAmountInUsd =
+    (receiveAmountInEth * ethPriceAsBigInt) / BigInt(1e8);
+  const receiveAmountInUsdFormatted = Number(
+    formatUnits(receiveAmountInUsd, 18)
+  );
   const formattedReceiveAmountInUsd =
     receiveAmountInUsdFormatted > 0 && receiveAmountInUsdFormatted < 0.01
       ? "<$0.01"
-      : `$${new Intl.NumberFormat("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 }).format(
-          receiveAmountInUsdFormatted
-        )}`;
+      : `$${new Intl.NumberFormat("en-US", {
+          minimumFractionDigits: 2,
+          maximumFractionDigits: 2,
+        }).format(receiveAmountInUsdFormatted)}`;
 
   // Memoized because it returns a new array on every render
   const steps = useMemo(() => {
@@ -122,8 +164,13 @@ function Mint() {
 
   // Memoized because it iterates over an array
   const { depositAssetLabel, depositAssetIcon } = useMemo(() => {
-    const tokenOption = tokenOptions.find((token) => token.value === depositAsset);
-    return { depositAssetLabel: tokenOption?.label, depositAssetIcon: tokenOption?.imageSrc };
+    const tokenOption = tokenOptions.find(
+      (token) => token.value === depositAsset
+    );
+    return {
+      depositAssetLabel: tokenOption?.label,
+      depositAssetIcon: tokenOption?.imageSrc,
+    };
   }, [depositAsset]);
 
   ///////////////////////
@@ -151,24 +198,27 @@ function Mint() {
   // Set up the public and wallet clients
   useEffect(() => {
     async function loadClients() {
-      if (!walletConnector) return;
+      if (!primaryWallet || !isEthereumWallet(primaryWallet)) return;
 
-      const fetchedWalletClient = walletConnector.getWalletClient(mainnet.id.toString()) as WalletClient;
+      const fetchedWalletClient = (await primaryWallet.getWalletClient(
+        mainnet.id.toString()
+      )) as WalletClient;
       // const fetchedWalletClient = evmWallet?.connector.getWalletClient<WalletClient<Transport, Chain, Account>>() as WalletClient;
       //
       // const mclient = createPublicClient({
       //  chain: mainnet,
-      //  transport: http("https://empty-responsive-patron.quiknode.pro/91dfa8475605dcdec9afdc8273578c9f349774a1/"), 
+      //  transport: http("https://empty-responsive-patron.quiknode.pro/91dfa8475605dcdec9afdc8273578c9f349774a1/"),
       //  cacheTime: 0
       //})
-      const fetchedPublicClient = (await walletConnector.getPublicClient()) as PublicClient;
+      const fetchedPublicClient =
+        (await primaryWallet?.getPublicClient()) as PublicClient;
 
       setWalletClient(fetchedWalletClient);
       setPublicClient(fetchedPublicClient);
     }
 
     loadClients();
-  }, [walletConnector]);
+  }, [primaryWallet]);
 
   // Get an updated exchange rate every time the deposit asset changes and every 30 seconds after that.
   useEffect(() => {
@@ -181,7 +231,10 @@ function Mint() {
       if (asset === "0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2") {
         _ethPerAssetRate = BigInt(1e18);
       } else {
-        _ethPerAssetRate = await getRate({ tokenAddress: asset }, { publicClient });
+        _ethPerAssetRate = await getRate(
+          { tokenAddress: asset },
+          { publicClient }
+        );
       }
       const _ethPerTethRate = await getRateInQuote(
         { quote: "0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2" }, // WETH
@@ -267,16 +320,18 @@ function Mint() {
     try {
       if (depositAmountAsBigInt > allowanceAsBigInt) {
         // Simulate the transaction to catch any errors
-        const { request: approvalRequest } = await publicClient.simulateContract({
-          abi: erc20Abi,
-          address: depositAsset,
-          functionName: "approve",
-          args: [warpRouteContractAddress, depositAmountAsBigInt],
-          account: evmAddress,
-        });
+        const { request: approvalRequest } =
+          await publicClient.simulateContract({
+            abi: erc20Abi,
+            address: depositAsset,
+            functionName: "approve",
+            args: [warpRouteContractAddress, depositAmountAsBigInt],
+            account: evmAddress,
+          });
 
         // Execute the transaction
-        const approvalTxHash = await walletClient.writeContract(approvalRequest);
+        const approvalTxHash =
+          await walletClient.writeContract(approvalRequest);
 
         // Wait for the approval transaction to be confirmed
         await publicClient.waitForTransactionReceipt({
@@ -299,7 +354,10 @@ function Mint() {
       ////////////////////////////////
       // Calculate Minimum Mint
       ////////////////////////////////
-      const rate = await getRateInQuote({ quote: depositAsset }, { publicClient });
+      const rate = await getRateInQuote(
+        { quote: depositAsset },
+        { publicClient }
+      );
       const minimumMint = calculateMinimumMint(depositAmountAsBigInt, rate);
 
       ////////////////////////////////
@@ -308,14 +366,22 @@ function Mint() {
       // Get quote gas payment
       const gasPayment = await quoteGasPayment(
         { destinationDomain: 1408864445 },
-        { publicClient, contractAddress: "0xc2495f3183F043627CAECD56dAaa726e3B2D9c09" }
+        {
+          publicClient,
+          contractAddress: "0xc2495f3183F043627CAECD56dAaa726e3B2D9c09",
+        }
       );
       // Simulate the transaction to catch any errors
       const { request: depositRequest } = await publicClient.simulateContract({
         abi: WarpRouteContract.abi as Abi,
         address: warpRouteContractAddress,
         functionName: "depositAndBridge",
-        args: [depositAsset, depositAmountAsBigInt, minimumMint, recipientBytes32],
+        args: [
+          depositAsset,
+          depositAmountAsBigInt,
+          minimumMint,
+          recipientBytes32,
+        ],
         account: evmAddress,
         value: gasPayment,
       });
@@ -341,7 +407,10 @@ function Mint() {
       });
       setDepositStatus(StepStatus.COMPLETED);
 
-      const txData = await generateTxObjectForDetails(provider ? provider.provider : publicClient, txHash);
+      const txData = await generateTxObjectForDetails(
+        provider ? provider.provider : publicClient,
+        txHash
+      );
 
       setCurrentTx(txData);
     } catch (error) {
@@ -378,21 +447,16 @@ function Mint() {
     setDepositAmount((parseFloat(formattedTokenBalance) / 2).toString());
   }
 
-  async function handleConnect() {
-    if (!walletConnector) return;
-    try {
-      await walletConnector.connect();
-    } catch (error) {
-      console.error("Error connecting wallet:", error);
-    }
-  }
-
   ///////////////////
   // Render
   ///////////////////
   return (
     <>
-      <div className={isModalOpen ? "mint-status-overlay active" : "mint-status-overlay"}></div>
+      <div
+        className={
+          isModalOpen ? "mint-status-overlay active" : "mint-status-overlay"
+        }
+      ></div>
       <div>
         {isModalOpen && (
           <MintTransactionDetails
@@ -409,14 +473,21 @@ function Mint() {
           <div className="deposit-card">
             <div className="header-tabs">
               <div
-                className={classNames("header-tab", activeTab === Tabs.Mint ? "active" : "inactive")}
+                className={classNames(
+                  "header-tab",
+                  activeTab === Tabs.Mint ? "active" : "inactive"
+                )}
                 style={{ width: "100%" }}
                 onClick={() => setActiveTab(Tabs.Mint)}
               >
                 Mint
               </div>
               <div
-                className={classNames("header-tab", "disabled", activeTab === Tabs.Redeem ? "active" : "inactive")}
+                className={classNames(
+                  "header-tab",
+                  "disabled",
+                  activeTab === Tabs.Redeem ? "active" : "inactive"
+                )}
                 style={{ width: "100%" }}
               >
                 Redeem
@@ -432,14 +503,18 @@ function Mint() {
                   inputValue={depositAmount}
                   loadingTokenBalance={loadingTokenBalance}
                   onChangeInput={handleDepositAmountChange}
-                  depositAsset={tokenOptions.find((token) => token.value === depositAsset)}
+                  depositAsset={tokenOptions.find(
+                    (token) => token.value === depositAsset
+                  )}
                   onChangeDepositAsset={handleDepositAssetChange}
                   isOverBalance={isOverBalance}
                   tokenBalance={tokenBalanceAsBigInt}
                   onClickMax={handleClickMax}
                   onClickFiftyPercent={handleClickFiftyPercent}
                   usdValue={formattedDepositAmountInUsd}
-                  handleDisconnect={() => evmWallet && handleUnlinkWallet(evmWallet.id)}
+                  handleDisconnect={() =>
+                    evmWallet && handleUnlinkWallet(evmWallet.id)
+                  }
                 />
                 <MintValueCard
                   title="Receive on"
@@ -455,15 +530,22 @@ function Mint() {
                   }}
                   tokenBalance={BigInt(svmBalance)}
                   usdValue={formattedReceiveAmountInUsd}
-                  handleDisconnect={() => solWallet && handleUnlinkWallet(solWallet.id)}
+                  handleDisconnect={() =>
+                    solWallet && handleUnlinkWallet(solWallet.id)
+                  }
                 />
-                <MintSummaryCard depositAsset={depositAsset} exchangeRate={tethPerAssetRate} />
+                <MintSummaryCard
+                  depositAsset={depositAsset}
+                  exchangeRate={tethPerAssetRate}
+                />
               </div>
             )}
             {activeTab === Tabs.Redeem && <div>Redeem</div>}
             {evmAddress && svmAddress && (
               <button
-                className={classNames("mint-button mt-3", { "mint-button-disabled": isMintDisabled })}
+                className={classNames("mint-button mt-3", {
+                  "mint-button-disabled": isMintDisabled,
+                })}
                 onClick={handleMint}
                 disabled={isMintDisabled}
               >
@@ -475,11 +557,12 @@ function Mint() {
                 buttonClassName="wallet-connect-button w-full"
                 buttonContainerClassName="submit-button connect-btn"
               >
-                <span style={{ width: "100%" }}> {
-                 (!evmAddress && !svmAddress)
-                  ? "Connect Wallets"
-                  : "Connect Wallet"
-                }</span>
+                <span style={{ width: "100%" }}>
+                  {" "}
+                  {!evmAddress && !svmAddress
+                    ? "Connect Wallets"
+                    : "Connect Wallet"}
+                </span>
               </DynamicConnectButton>
             )}
           </div>

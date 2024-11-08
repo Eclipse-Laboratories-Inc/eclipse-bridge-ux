@@ -22,6 +22,17 @@ const theme: RelayKitTheme = {
         background: "rgba(161, 254, 160, 0.1)",
       },
     },
+    secondary: {
+      color: "rgb(161, 254, 160)",
+      background: "rgba(161, 254, 160, 0.1)",
+      hover: {
+        color: "rgb(161, 254, 160)",
+        background: "rgba(161, 254, 160, 0.1)",
+      },
+    },
+  },
+  widget: {
+    swapCurrencyButtonBorderColor: "rgba(255, 255, 255, 0.1)",
   },
 };
 export const RelayKitProvider = (props: {

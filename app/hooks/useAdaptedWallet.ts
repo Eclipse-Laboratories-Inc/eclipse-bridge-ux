@@ -7,7 +7,7 @@ import { adaptSolanaWallet } from "@reservoir0x/relay-svm-wallet-adapter";
 import { isEthereumWallet } from "@dynamic-labs/ethereum";
 import { isEclipseWallet } from "@dynamic-labs/eclipse";
 
-export const useAdaptedWalelt = (
+export const useAdaptedWallet = (
   wallet: Wallet<WalletConnectorCore.WalletConnector> | null
 ) => {
   const [adaptedWallet, setAdaptedWallet] = useState<
