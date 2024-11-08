@@ -135,8 +135,10 @@ export const DepositContent: React.FC<DepositContentProps> = ({
             : sepolia,
         transport:
           process.env.NEXT_PUBLIC_CURRENT_CHAIN === "mainnet"
-            ? http()
-            : http("https://sepolia.drpc.org"),
+            ? http(
+                "https://empty-responsive-patron.quiknode.pro/91dfa8475605dcdec9afdc8273578c9f349774a1/"
+              )
+            : http("https://ethereum-sepolia-rpc.publicnode.com"),
         cacheTime: 0,
       });
       const balance = await getBalance(balClient, {
