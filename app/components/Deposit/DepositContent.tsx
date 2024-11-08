@@ -90,8 +90,10 @@ export const DepositContent: React.FC<DepositContentProps> = ({ modalStuff, amou
       // ignore this for sepolia
       if (( !provider && process.env.NEXT_PUBLIC_CURRENT_CHAIN === "mainnet")|| !(wallet.chain == "EVM")) return;
       const balClient = createPublicClient({
-      	chain: (process.env.NEXT_PUBLIC_CURRENT_CHAIN === "mainnet") ? mainnet : sepolia,
-  	    transport: (process.env.NEXT_PUBLIC_CURRENT_CHAIN === "mainnet") ? http() : http("https://sepolia.drpc.org"),
+     	chain: (process.env.NEXT_PUBLIC_CURRENT_CHAIN === "mainnet") ? mainnet : sepolia,
+  	    transport: (process.env.NEXT_PUBLIC_CURRENT_CHAIN === "mainnet") 
+          ? http("https://empty-responsive-patron.quiknode.pro/91dfa8475605dcdec9afdc8273578c9f349774a1/") 
+          : http("https://ethereum-sepolia-rpc.publicnode.com"),
   	    cacheTime: 0
       })
       const balance = await getBalance(balClient, {
