@@ -5,8 +5,8 @@ import { useState, type ReactNode } from "react";
 import { NetworkProvider } from "@/app/contexts/NetworkContext";
 import { SidebarProvider } from "@/app/contexts/SidebarContext";
 import { RelayKitProvider } from "@/app/providers/RelayKitProvider";
-import { WagmiProvider } from "@/app/providers/wagmiProvider";
 import { RelayChain } from "@reservoir0x/relay-sdk";
+import { WalletFilterProvider } from "@/app/providers/WalletFilterProvider";
 
 export function Providers(props: {
   chains: RelayChain[];
@@ -17,7 +17,9 @@ export function Providers(props: {
     <RelayKitProvider chains={props.chains}>
       <QueryClientProvider client={queryClient}>
         <NetworkProvider>
-          <SidebarProvider>{props.children}</SidebarProvider>
+          <WalletFilterProvider>
+            <SidebarProvider>{props.children}</SidebarProvider>
+          </WalletFilterProvider>
         </NetworkProvider>
       </QueryClientProvider>
     </RelayKitProvider>

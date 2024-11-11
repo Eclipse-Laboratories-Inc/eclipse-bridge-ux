@@ -1,3 +1,5 @@
+import { useWalletFilter } from "@/app/hooks/useWalletContext";
+import { convertToLinkedWallet } from "@/lib/relay";
 import {
   useDynamicEvents,
   useDynamicModals,
@@ -6,11 +8,9 @@ import { LinkedWallet } from "@reservoir0x/relay-kit-ui";
 import { RelayChain } from "@reservoir0x/relay-sdk";
 import { useState } from "react";
 
-const dynamicStaticAssetUrl =
-  "https://iconic.dynamic-static-assets.com/icons/sprite.svg";
-
 export const useOnLinkNewWallet = () => {
   const { setShowLinkNewWalletModal } = useDynamicModals();
+  const { setWalletFilter } = useWalletFilter();
   const [linkWalletPromise, setLinkWalletPromise] = useState<
     | {
         resolve: (value: LinkedWallet) => void;
@@ -22,19 +22,7 @@ export const useOnLinkNewWallet = () => {
 
   useDynamicEvents("walletAdded", (newWallet) => {
     if (linkWalletPromise) {
-      const walletLogoId =
-        // @ts-ignore
-        newWallet?.connector?.wallet?.brand?.spriteId ?? newWallet.key;
-      const linkedWallet = {
-        address: newWallet.address,
-        walletLogoUrl: `${dynamicStaticAssetUrl}#${walletLogoId}`,
-        vmType:
-          newWallet.chain.toLowerCase() === "evm"
-            ? "evm"
-            : ("svm" as "evm" | "svm"),
-        connector: newWallet.key,
-      };
-      linkWalletPromise.resolve(linkedWallet);
+      linkWalletPromise.resolve(convertToLinkedWallet(newWallet));
       setLinkWalletPromise(undefined);
     }
   });
@@ -49,6 +37,17 @@ export const useOnLinkNewWallet = () => {
     if (linkWalletPromise) {
       linkWalletPromise.reject();
       setLinkWalletPromise(undefined);
+    }
+    if (chain?.vmType === "evm") {
+      setWalletFilter("EVM");
+    } else if (chain?.id === 792703809) {
+      setWalletFilter("SOL");
+    } else if (chain?.id === 8253038) {
+      setWalletFilter("BTC");
+    } else if (chain?.id === 9286185) {
+      setWalletFilter("ECLIPSE");
+    } else {
+      setWalletFilter(undefined);
     }
     const promise = new Promise<LinkedWallet>((resolve, reject) => {
       setLinkWalletPromise({

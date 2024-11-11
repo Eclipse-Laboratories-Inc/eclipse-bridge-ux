@@ -21,7 +21,10 @@ export const WagmiProvider = (props: WagmiProviderProps) => {
   useEffect(() => {
     queryRelayChains(MAINNET_RELAY_API, {}).then((data) => {
       const apiChains =
-        data.chains?.map((chain) => configureViemChain(chain as any)) ?? [];
+        data.chains
+          ?.map((chain) => configureViemChain(chain as any))
+          //filter out solana temporarily
+          .filter((chain) => chain.id !== 792703809) ?? [];
       const { wagmiConfig } = createWagmiConfig(
         apiChains
           .filter(({ viemChain }) => viemChain !== undefined)
