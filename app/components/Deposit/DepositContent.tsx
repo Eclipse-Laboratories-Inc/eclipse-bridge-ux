@@ -18,7 +18,6 @@ import { getBalance } from 'viem/actions';
 import { Options, useNetwork } from "@/app/contexts/NetworkContext"; 
 import ExtendedDetails from '../ExtendedDetails'
 import { getWalletBalance } from "@/lib/solanaUtils";
-import { withdrawEthereum } from "@/lib/withdrawUtils"
 
 import { solanaToBytes32 } from '@/lib/solanaUtils';
 import { generateTxObjectForDetails } from "@/lib/activityUtils";
@@ -263,7 +262,7 @@ export const DepositContent: React.FC<DepositContentProps> = ({ modalStuff, amou
 
         { action === Action.Withdraw && <ExtendedDetails 
            amountEther={amountEther}
-           target="Eclipse"
+           target="Ethereum"
            feeInEth={0.0000005}
         /> }
         { (!evmWallet || !solWallet) 

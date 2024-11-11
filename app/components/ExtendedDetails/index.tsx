@@ -1,6 +1,5 @@
 import React, { useContext } from 'react';
 import  { EthereumDataContext } from "@/app/context";
-import { GasStationIcon } from "@/app/components/icons"
 import Skeleton from 'react-loading-skeleton'
 import 'react-loading-skeleton/dist/skeleton.css'
 import "./styles.css"
@@ -62,7 +61,9 @@ const ExtendedDetails: React.FC<ExtendedDetailsProps> = ({ amountEther, target, 
         <div className="flex flex-row items-center" style={{ gap: "8px" }}>
           <div className="flex items-center gap-[4px]">
             <TimeIcon />
-            <span className="tgreen">~5 mins</span>
+            <span className="tgreen">
+              { target === "Eclipse" ? "~5 mins" : "~7 days" }
+            </span>
           </div>
           <span style={{ color: "rgba(255, 255, 255, 0.3)"}}>•</span>
           <div className="flex items-center gap-[4px]">
