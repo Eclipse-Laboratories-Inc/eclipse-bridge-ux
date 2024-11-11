@@ -232,7 +232,7 @@ export const GasStation: React.FC = () => {
           <span className="text-[#ffffff99] font-medium text-[14px]">Cost</span>
           { amount && parseFloat(amount) > 0 
             ? <span className="text-[#A1FEA0] font-medium text-[14px]">
-                ${ (selectedToken.price ?? 1) * (Number(selectedToken.fee) / 10 ** selectedToken.decimals) }
+                ${ ((selectedToken.price ?? 1) * (Number(selectedToken.fee) / 10 ** selectedToken.decimals)).toFixed(5) }
               </span>
             : <span className="text-[#ffffff4d] font-medium text-[14px]">$0</span> 
           }
