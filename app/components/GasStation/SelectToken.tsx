@@ -5,7 +5,7 @@ import { useTransactionManager, Token } from "./TokenManager"
 
 const TokenItem: React.FC<{ token: Token, selectedToken: Token, onClick: () => void}> = ({ token, selectedToken, onClick }) => {
   return (
-    <div className="cursor-pointer flex flex-row justify-between w-full py-[12px] px-[14px] rounded-[10px] bg-[#ffffff0d]" onClick={onClick}>
+    <div className="cursor-pointer flex flex-row justify-between w-full py-[12px] px-[14px] rounded-[10px] bg-[#ffffff0d] hover:bg-[#ffffff14]" onClick={onClick}>
       <div className="flex flex-row items-center">
         <img src={ token.icon } alt="" className="w-[33px] h-[33px]" />
         <div className="flex flex-col ml-[10px]">

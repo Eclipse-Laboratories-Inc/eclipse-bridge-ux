@@ -73,7 +73,16 @@
   border-top: 10px solid #f6f6f6;
   border-right: 20px solid #77c;
   border-bottom: 10px solid #f6f6f6;
-  
+}
+
+.close-sidebar-icon path {
+  transition: stroke-opacity 0.1s var(--ease-out-quad);
+}
+
+.close-sidebar-icon:hover {
+  path {
+    stroke-opacity: 0.8;
+  }
 }
 
 .highlight-icon {
