@@ -71,7 +71,8 @@ export const Sidebar: React.FC<{ isExtended: boolean, setIsExtended: React.Dispa
       </div>
       <div className="flex w-[31px] mb-[20px] h-[31px] rounded-full cursor-pointer 
             border-[#ffffff1a] bg-black border-[1.35px] items-center 
-            justify-center ml-[calc(100%-15.5px)] transition-all hover:bg-[#ffffff08]
+            justify-center ml-[calc(100%-15.5px)] transition-all 
+            close-sidebar-icon
       "
            onClick={() => {setIsExtended((current) => !current)}}>
         <ToggleIcon isExtended={ isExtended }/>

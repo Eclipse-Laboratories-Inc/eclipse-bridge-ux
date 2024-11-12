@@ -76,11 +76,15 @@
   top: 69%;
   transform: translateY(-50%);
   z-index: 1;
+
+  svg path {
+    transition: fill-opacity 0.1s var(--ease-out-quad);
+  }
 }
 
 .arrow-container:hover {
-  svg circle {
-    fill: #0d0d0db3;
+  svg path {
+    fill-opacity: 0.8;
   }
 }
 
