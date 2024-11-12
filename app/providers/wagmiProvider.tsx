@@ -6,6 +6,7 @@ import { Chain, mainnet } from "wagmi/chains";
 import { queryRelayChains } from "@reservoir0x/relay-kit-hooks";
 import {
   configureViemChain,
+  convertViemChainToRelayChain,
   MAINNET_RELAY_API,
   RelayChain,
 } from "@reservoir0x/relay-sdk";
@@ -15,9 +16,14 @@ export type ChildrenProps = {
 type WagmiProviderProps = {
   children: (props: ChildrenProps) => ReactNode;
 };
+
+const { wagmiConfig: defaultConfig } = createWagmiConfig([mainnet]);
+
 export const WagmiProvider = (props: WagmiProviderProps) => {
-  const [config, setConfig] = useState<Config | null>(null);
-  const [chains, setChains] = useState<RelayChain[] | null>(null);
+  const [config, setConfig] = useState<Config>(defaultConfig);
+  const [chains, setChains] = useState<RelayChain[]>([
+    convertViemChainToRelayChain(mainnet),
+  ]);
   useEffect(() => {
     queryRelayChains(MAINNET_RELAY_API, {}).then((data) => {
       const apiChains =
@@ -34,9 +40,7 @@ export const WagmiProvider = (props: WagmiProviderProps) => {
       setChains(apiChains);
     });
   }, []);
-  if (!config) {
-    return null;
-  }
+
   return (
     <_WagmiProvider config={config}>
       {props.children({ chains: chains ?? [] })}

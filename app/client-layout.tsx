@@ -7,6 +7,7 @@ import { IBM_Plex_Sans } from "next/font/google";
 import { WagmiProvider } from "@/app/providers/wagmiProvider";
 import { DynamicProvider } from "@/app/providers/DynamicProvider";
 import { WalletFilterProvider } from "@/app/providers/WalletFilterProvider";
+import { GasProviders } from "@/app/providers/GasProviders";
 
 const ibmPlexSans = IBM_Plex_Sans({
   subsets: ["latin"],
@@ -20,15 +21,14 @@ export default function ClientLayout({
 }) {
   const pathname = usePathname();
   const passGlobalLayout = pathname === "/gas-station";
-
   if (passGlobalLayout) {
     return (
       <WagmiProvider>
-        {({ chains }) => {
+        {() => {
           return (
-            <Providers chains={chains}>
+            <GasProviders>
               <body className={ibmPlexSans.className}>{children}</body>
-            </Providers>
+            </GasProviders>
           );
         }}
       </WagmiProvider>

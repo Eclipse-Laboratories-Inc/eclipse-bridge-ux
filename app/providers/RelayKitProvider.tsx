@@ -10,25 +10,31 @@ const theme: RelayKitTheme = {
   primaryColor: "rgb(161, 254, 160)",
   focusColor: "rgb(161, 254, 160)",
   text: {
-    default: "rgb(161, 254, 160)",
+    default: "#fff",
     subtle: "rgba(255, 255, 255, 0.3)",
   },
   buttons: {
     primary: {
-      color: "rgb(161, 254, 160)",
-      background: "rgba(161, 254, 160, 0.05)",
+      color: "#000",
+      background: "rgb(163, 255, 165)",
       hover: {
-        color: "rgb(161, 254, 160)",
-        background: "rgba(161, 254, 160, 0.1)",
+        color: "#000",
+        background: "rgb(116, 255, 113)",
       },
     },
     secondary: {
-      color: "rgb(161, 254, 160)",
-      background: "rgba(161, 254, 160, 0.1)",
+      color: "#fff",
+      background: "rgb(28, 28, 28)",
       hover: {
-        color: "rgb(161, 254, 160)",
-        background: "rgba(161, 254, 160, 0.1)",
+        color: "#fff",
+        background: "rgb(35, 35, 35)",
       },
+    },
+  },
+  anchor: {
+    color: "rgba(161, 254, 160, 0.3)",
+    hover: {
+      color: "rgba(161, 254, 160, 1)",
     },
   },
   widget: {
