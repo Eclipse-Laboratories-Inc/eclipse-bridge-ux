@@ -71,6 +71,11 @@ export const NetworkBox: React.FC<NetworkBoxProps> = ({
     adjustInputWidth();
   })
 
+  // TODO
+  // 1. if max amount minus gas is less than the cost of gas for the tx, restrict it
+  // 2. set constant for gas price to be shared around the app
+
+
   // remove bottom border for ethereum box
   const css = direction === "From" ? "!border-b-0 !rounded-bl-none !rounded-br-none" : ""; 
 
@@ -126,7 +131,7 @@ export const NetworkBox: React.FC<NetworkBoxProps> = ({
                     if (/^[-+]?(\d+([.,]\d*)?|[.,]\d+)$/.test(value) || value === "" || value === ".") {
                       const [_, dp] = value.split(".");
                       if (!dp || dp.length <= 9) {
-                        setAmountEther(value);
+                        setAmountEther(parseFloat(value) - 113200 * gasPrice! / 10**9);
                         adjustInputWidth();
                       }
                     } 
@@ -163,7 +168,7 @@ export const NetworkBox: React.FC<NetworkBoxProps> = ({
                 </div>
                 <span>•</span>
                 <button onClick={() => { setAmountEther(balanceEther * 0.50); setTimeout(adjustInputWidth, 0) }} className="percentage-button">50%</button>
-                <button onClick={() => { setAmountEther(balanceEther); setTimeout(adjustInputWidth, 0) }} className="percentage-button">Max</button>
+                <button onClick={() => { gasPrice && ethPrice && setAmountEther(balanceEther - (113200 * gasPrice / 10**9)); setTimeout(adjustInputWidth, 0) }} className="percentage-button">Max</button>
               </div>
             </div>
           </div>
