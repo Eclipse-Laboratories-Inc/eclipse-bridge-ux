@@ -26,7 +26,7 @@ import { TransactionDetails } from "../TransactionDetails";
 import { WithdrawDetails } from "../WithdrawDetails";
 import { useTransaction } from "../TransactionPool";
 import { NetworkBox } from "./NetworkBox"
-import { CONTRACT_ABI, MIN_DEPOSIT_AMOUNT, MIN_WITHDRAWAL_AMOUNT } from "../constants";
+import { CONTRACT_ABI, DEPOSIT_TX_GAS_COST, MIN_DEPOSIT_AMOUNT, MIN_WITHDRAWAL_AMOUNT } from "../constants";
 import { useWallets } from "@/app/hooks/useWallets";
 import useEthereumData from "@/lib/ethUtils";
 
@@ -253,7 +253,7 @@ export const DepositContent: React.FC<DepositContentProps> = ({ modalStuff, amou
         { action === Action.Deposit && <ExtendedDetails 
            amountEther={amountEther}
            target="Eclipse"
-           feeInEth={gasPrice && 113200 * (gasPrice) / 10**9}
+           feeInEth={gasPrice && DEPOSIT_TX_GAS_COST * (gasPrice) / 10**9}
         /> }
 
         { action === Action.Withdraw && <ExtendedDetails 
