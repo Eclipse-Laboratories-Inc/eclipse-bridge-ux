@@ -1,4 +1,5 @@
-import { NextResponse } from 'next/server';
+import { OptionsLower } from '@/lib/networkUtils';
+import { NextRequest, NextResponse } from 'next/server';
 
 const CACHE_EXPIRATION_MS = 10000; // 10 seconds cache
 
@@ -18,13 +19,24 @@ let cache: ICache = {
 
 let isFetching = false;
 
-export async function GET() {
+const ETHERSCAN_API_URLS: Record<OptionsLower, string> = {
+    'mainnet': "https://api.etherscan.io/api",
+    'testnet': "https://api-sepolia.etherscan.io/api"
+}
+
+function isValidChain(c: string): c is OptionsLower {
+    return c in ETHERSCAN_API_URLS
+}
+
+export async function GET(request: NextRequest) {
     const apiKey = process.env.ETHERSCAN_API_KEY || "";
-    const etherscanAddress = process.env.NEXT_PUBLIC_ETHERSCAN_ADDRESS;
     
     if (!apiKey) {
         return NextResponse.json({ error: 'API key is not configured' }, { status: 500 });
     }
+
+    const chain = request.nextUrl.searchParams.get('chain')?.toLowerCase()
+    const etherscanAddress = !!chain && isValidChain(chain) ? ETHERSCAN_API_URLS[chain] : ETHERSCAN_API_URLS['mainnet'];
 
     const now = new Date().getTime();
     if (cache.timestamp && (now - cache.timestamp) < CACHE_EXPIRATION_MS) {

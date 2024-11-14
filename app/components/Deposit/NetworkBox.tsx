@@ -11,6 +11,7 @@ import { truncateWalletAddress } from '@/lib/stringUtils';
 import { useWallets } from "@/app/hooks/useWallets";
 import useEthereumData from "@/lib/ethUtils";
 import { DEPOSIT_TX_GAS_LIMIT, WITHDRAW_TX_FEE } from '../constants';
+import { useNetwork } from '@/app/contexts/NetworkContext';
 
 export interface NetworkBoxProps {
   imageSrc: string;
@@ -60,7 +61,8 @@ export const NetworkBox: React.FC<NetworkBoxProps> = ({
   maxPriorityFeePerGasWei
 }) => {
   const { userWallets, evmWallet, solWallet } = useWallets();
-  const { blockNumber, gasPrice, ethPrice } = useEthereumData();
+  const { selectedOption } = useNetwork()
+  const { blockNumber, gasPrice, ethPrice } = useEthereumData(selectedOption);
   const inputRef = useRef<HTMLInputElement>(null);
 
   function determineInputClass(): string {

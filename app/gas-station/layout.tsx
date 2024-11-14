@@ -171,10 +171,4 @@ export default function ClientLayout({
       </DynamicContextProvider>
     </html>
   );
-
-  return (
-    <Providers>
-      <body className={ibmPlexSans.className}>{children}</body>
-    </Providers>
-  );
 }

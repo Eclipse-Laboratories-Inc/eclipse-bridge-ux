@@ -1,11 +1,5 @@
-"use client"
-
-import React, { createContext, useState, ReactNode, useContext } from 'react';
-
-export enum Options {
-  Mainnet = 'Mainnet',
-  Testnet = 'Testnet',
-}
+import { Options } from '@/lib/networkUtils';
+import React, { createContext, useState, ReactNode, useContext, PropsWithChildren } from 'react';
 
 type NetworkContextType = {
   selectedOption: Options;
@@ -23,8 +17,12 @@ type NetworkContextType = {
 
 export const NetworkContext = createContext<NetworkContextType | undefined>(undefined);
 
-export const NetworkProvider = ({ children }: { children: ReactNode }) => {
-  const [selectedOption, setSelectedOption] = useState<Options>(Options.Mainnet);
+interface NetworkProviderProps extends PropsWithChildren {
+  selectedOption: Options;
+  setSelectedOption: (network: Options) => void;
+}
+
+export const NetworkProvider = ({ selectedOption, setSelectedOption, children }: NetworkProviderProps) => {
   const isMainnet = (selectedOption === Options.Mainnet);
   const bridgeProgram   = isMainnet ? "br1xwubggTiEZ6b7iNZUwfA3psygFfaXGfZ1heaN9AW" : "br1t2MBNdtVRZk3taADwNLt142cVNkekXe1hn3qJVYb"
   const eclipseRpc      = isMainnet ? "https://eclipse.helius-rpc.com" : "https://testnet.dev2.eclipsenetwork.xyz"

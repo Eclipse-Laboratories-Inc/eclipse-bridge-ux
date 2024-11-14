@@ -12,16 +12,17 @@ import { Sidebar } from "../components/Sidebar";
 import { TransactionProvider } from "../components/TransactionPool";
 import { EthereumDataContext, WalletClientContext } from "../context";
 import { useWalletClient } from "../hooks";
+import { Options } from "@/lib/networkUtils";
 
 export default function Main() {
   const { isSidebar, setIsSidebar } = useSidebar();
-  const { gasPrice, ethPrice } = useEthereumData();
-  const [amountEther, setAmountEther] = useState<number | string | undefined>(undefined);
+  const [selectedOption, setSelectedOption] = useState(Options.Mainnet)
+  const { gasPrice, ethPrice } = useEthereumData(selectedOption);
   const walletClient = useWalletClient();
 
   return (
     <EthereumDataContext.Provider value={[gasPrice, ethPrice]}>
-      <NetworkProvider>
+      <NetworkProvider selectedOption={selectedOption} setSelectedOption={setSelectedOption}>
         <WalletClientContext.Provider value={walletClient}>
           <TransactionProvider>
             <SkeletonTheme baseColor="#FFFFFF0A" highlightColor="#FFFFFF26">
