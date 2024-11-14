@@ -24,6 +24,7 @@ export const TransactionProvider = ({ children } : { children: ReactNode}) => {
   const fetchDeposits = async () => {
     try {
       setDeposits([]);
+      setWithdrawals([]);
       // fix
       let data: any[] = [];
       try {
@@ -156,7 +157,8 @@ export const TransactionProvider = ({ children } : { children: ReactNode}) => {
         pendingTransactions,
         deposits,
         addNewDeposit,
-        withdrawTransactions
+        withdrawTransactions,
+        setWithdrawals
       }}>
       {children}
     </TransactionContext.Provider>

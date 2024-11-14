@@ -9,7 +9,7 @@ import { createPublicClient, formatEther, http, parseEther, WalletClient } from 
 import { mainnet, sepolia } from "viem/chains";
 import { CONTRACT_ABI } from "../constants";
 import { useNetwork, Options } from "@/app/contexts/NetworkContext"; 
-import { withdrawEthereum, byteArrayToHex, convertLosslessToNumbers } from "@/lib/withdrawUtils"
+import { withdrawEthereum, byteArrayToHex, convertLosslessToNumbers, WithdrawObject } from "@/lib/withdrawUtils"
 import { useWallets } from "@/app/hooks/useWallets";
 
 interface TransactionDetailsProps {
@@ -93,12 +93,14 @@ export const WithdrawDetails: React.FC<TransactionDetailsProps> = ({
   ethAmount
 }) => {
   const [_, ethPrice] = useContext(EthereumDataContext) ?? [0, 0];
-  const { transactions, deposits, withdrawals, withdrawTransactions } = useTransaction();
+  const { transactions, deposits, withdrawals, setWithdrawals, withdrawTransactions } = useTransaction();
   const { waitingPeriod, eclipseExplorer, relayerAddress, configAccount, eclipseRpc, bridgeProgram, selectedOption, contractAddress } = useNetwork();
   const { userWallets, evmWallet, solWallet } = useWallets();
   const [txHash, setTxHash] = useState<string | null>(null);
   const [checkbox, setCheckbox] = useState<boolean>(false);
   const [withdrawAmount, setWithdrawAmount] = useState<number>(ethAmount as number); 
+  const [isClaimFlowOpen, setIsClaimFlowOpen] = useState<boolean>(false);
+  const [buttonText, setButtonText] = useState<string>("Claim Now");
 
   const [initiateStatus, setInitiateStatus] = useState<InitiateTxStates>(InitiateTxStates.NotReady);
   const [waitingPeriodStatus, setWaitingPeriodStatus] = useState<WaitingPeriodState>(WaitingPeriodState.Waiting);
@@ -120,6 +122,8 @@ export const WithdrawDetails: React.FC<TransactionDetailsProps> = ({
   }, [])
 
   const submitClaim = async () => {
+    setIsClaimFlowOpen(true);
+    setButtonText("Approve Transaction");
     const isMainnet = (selectedOption === Options.Mainnet);
     let walletClient = evmWallet?.connector.getWalletClient<WalletClient<Transport, Chain, Account>>();
     const client = createPublicClient({
@@ -152,20 +156,31 @@ export const WithdrawDetails: React.FC<TransactionDetailsProps> = ({
         chain: isMainnet ? mainnet : sepolia
       })
       let txResponse = await walletClient!.writeContract(request);
+      if (!txResponse.startsWith("0x"))
+        txResponse = `0x${txResponse}`
+
+      setButtonText("Confirming Transaction");
+      await client.waitForTransactionReceipt({ hash: txResponse, retryCount: 150, retryDelay: 2_000, confirmations: 1 }); 
+      setWaitingPeriodStatus(WaitingPeriodState.Closed);
+
+      const updatedWithdrawals = withdrawals!.map((item) =>
+        item[0].message.withdraw_id === tx[0].message.withdraw_id 
+          ? [item[0], "Closed"] as WithdrawObject
+          : item 
+      );
+      setWithdrawals(updatedWithdrawals);
+
     } catch (error) {
       console.log(error, "claim error")
     }
+    setIsClaimFlowOpen(false);
+    setButtonText("Claim Now");
   }
 
   const transaction = tx && transactions.get(tx.hash);
 
   const eclipseTx = transaction?.eclipseTxHash ?? null;
   const totalFee = 0.00000005;
-
-  const depositStatus: TxStatus = transaction?.pdaData ? TxStatus.Completed : TxStatus.Loading;
-  const ethTxStatus = tx 
-      ? (tx.txreceipt_status === "0" ? TxStatus.Failed : TxStatus.Completed) 
-      : TxStatus.Loading;
 
   const handleInitiate = async () => {
     if (!checkbox) { return; }
@@ -383,8 +398,8 @@ export const WithdrawDetails: React.FC<TransactionDetailsProps> = ({
         </button>
       }
       { waitingPeriodStatus === WaitingPeriodState.Ready && 
-        <button className="initiate-button !mt-[25px]" onClick={() => submitClaim()}>
-          Claim Now
+        <button className="initiate-button !mt-[25px]" onClick={ isClaimFlowOpen ? () => {}: submitClaim }>
+          { buttonText }
         </button>
       }
     </div>

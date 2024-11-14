@@ -1,7 +1,7 @@
 import { useState } from 'react';  
 import { ethers } from 'ethers';
 import { Arrow } from "@/app/components/icons"; 
-import { TransactionIcon, ActivityBoxIcon } from "../icons";
+import { TransactionIcon, ActivityBoxIcon, Activity } from "../icons";
 import { timeAgo, timeLeft } from "@/lib/activityUtils";
 import Skeleton from 'react-loading-skeleton'; 
 import { TransactionDetails } from "../TransactionDetails";  
@@ -50,8 +50,8 @@ export const ActivityContent = ({ setActiveTab }: {setActiveTab: React.Dispatch<
                   </div>
                 }
                 {
-                  (wStatus === 'Processing') && <div className="flex flex-row items-center text-[12px] rounded-[13px] bg-[#ffffff0d] p-[3px] pr-[8px] gap-[6px]">
-                    <TransactionIcon iconType="loading" className="w-[14px]" />
+                  (wStatus === 'Processing') && <div className="flex flex-row items-center text-[12px] rounded-[13px] bg-[#ffffff0d] p-[3px] pr-[8px] pl-[4px] gap-[6px]">
+                    <Activity activityClassName="w-[14px]" />
                     <span className="text-[#ffffff4d]">Processing</span>
                     <span className="text-[#A1FEA0]">~ {timeLeft(parseInt(w[0].start_time, 16) * 1000)}</span>
                   </div>
@@ -129,8 +129,8 @@ export const ActivityContent = ({ setActiveTab }: {setActiveTab: React.Dispatch<
         </div>
     )}
     </div> 
-    { isModalOpen && <TransactionDetails from={""} tx={currentTx} closeModal={() => setTimeout(() => setIsModalOpen(false), 100)} /> }
-    { isWithdrawModalOpen && <WithdrawDetails from='withdraw' tx={currentTx} ethAmount={0} closeModal={() => setTimeout(() => setIsWithdrawModalOpen(false), 100)} /> }
+      { isModalOpen && <TransactionDetails from={""} tx={currentTx} closeModal={() => setTimeout(() => setIsModalOpen(false), 100)} /> }
+      { isWithdrawModalOpen && <WithdrawDetails from='withdraw' tx={currentTx} ethAmount={0} closeModal={() => setTimeout(() => setIsWithdrawModalOpen(false), 100)} /> }
     </>
   )
 }

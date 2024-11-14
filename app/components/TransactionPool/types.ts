@@ -33,4 +33,5 @@ export interface TransactionContextType {
   deposits: any[] | null
   withdrawals: WithdrawObject[] | null;
   addNewDeposit: (txData: any) => void;
+  setWithdrawals: React.Dispatch<React.SetStateAction<any[]>>;
 }
