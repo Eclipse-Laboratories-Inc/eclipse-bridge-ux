@@ -1,17 +1,15 @@
 "use client";
-import React, { useCallback, useRef, useEffect } from 'react';
+import React, { useCallback, useRef, useEffect, useContext } from 'react';
 import './styles.css';
 import 'react-loading-skeleton/dist/skeleton.css';
 import { WalletIcon } from "@/app/components/icons"
 import { Cross, ConnectIcon } from "../icons";
-import ExtendedDetails from '../ExtendedDetails'
 import { DynamicConnectButton } from "@dynamic-labs/sdk-react-core";
 import Skeleton from 'react-loading-skeleton';
 import { truncateWalletAddress } from '@/lib/stringUtils';
 import { useWallets } from "@/app/hooks/useWallets";
-import useEthereumData from "@/lib/ethUtils";
 import { DEPOSIT_TX_GAS_LIMIT, WITHDRAW_TX_FEE } from '../constants';
-import { useNetwork } from '@/app/contexts/NetworkContext';
+import { EthereumDataContext } from '@/app/context';
 
 export interface NetworkBoxProps {
   imageSrc: string;
@@ -61,8 +59,7 @@ export const NetworkBox: React.FC<NetworkBoxProps> = ({
   maxPriorityFeePerGasWei
 }) => {
   const { userWallets, evmWallet, solWallet } = useWallets();
-  const { selectedOption } = useNetwork()
-  const { blockNumber, gasPrice, ethPrice } = useEthereumData(selectedOption);
+  const [gasPrice, ethPrice, blockNumber] = useContext(EthereumDataContext) ?? [null, null, null];
   const inputRef = useRef<HTMLInputElement>(null);
 
   function determineInputClass(): string {

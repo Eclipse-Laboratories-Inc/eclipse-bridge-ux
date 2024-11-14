@@ -1,12 +1,12 @@
 import Skeleton from 'react-loading-skeleton'
-import useEthereumData from "@/lib/ethUtils";
 import MotionNumber from 'motion-number'
 import { Block, Eth, Gas } from "../icons";
-import { useNetwork } from '@/app/contexts/NetworkContext';
+import { EthereumDataContext } from '@/app/context';
+import { useContext } from 'react';
 
 export function Footer() {
-  const { selectedOption } = useNetwork()
-  const { blockNumber, gasPrice, ethPrice } = useEthereumData(selectedOption);
+  const [gasPrice, ethPrice, blockNumber] = useContext(EthereumDataContext) ?? [null, null, null];
+
   return (
     <footer className="flex items-center" style={{ height: "auto" }}>
       <div className="flex flex-row legal-footer justify-center">

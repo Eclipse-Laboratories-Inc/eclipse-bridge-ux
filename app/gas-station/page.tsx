@@ -16,12 +16,12 @@ import { NetworkProvider } from "../contexts/NetworkContext";
 
 export default function GasStationPage() {
   const [selectedOption, setSelectedOption] = useState(Options.Mainnet)
-  const { gasPrice, ethPrice } = useEthereumData(selectedOption);
+  const { gasPrice, ethPrice, blockNumber } = useEthereumData(selectedOption);
   const { isSidebar, setIsSidebar } = useSidebar();
   const walletClient = useWalletClient();
 
   return (
-    <EthereumDataContext.Provider value={[gasPrice, ethPrice]}>
+    <EthereumDataContext.Provider value={[gasPrice, ethPrice, blockNumber]}>
         <NetworkProvider selectedOption={selectedOption} setSelectedOption={setSelectedOption}>
           <WalletClientContext.Provider value={walletClient}>
             <TMProvider>

@@ -1,6 +1,5 @@
 import { useWallets } from "@/app/hooks";
 import { generateTxObjectForDetails } from "@/lib/activityUtils";
-import useEthereumData from "@/lib/ethUtils";
 import { createPublicClient, formatEther, http } from 'viem';
 import { solanaToBytes32 } from "@/lib/solanaUtils";
 import { Transport, Chain, Account } from 'viem';

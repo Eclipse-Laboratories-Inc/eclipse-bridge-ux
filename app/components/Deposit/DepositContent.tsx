@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 
 import './styles.css';
 import 'react-loading-skeleton/dist/skeleton.css';
@@ -28,8 +28,8 @@ import { useTransaction } from "../TransactionPool";
 import { NetworkBox } from "./NetworkBox"
 import { CONTRACT_ABI, DEPOSIT_TX_GAS_LIMIT, MIN_DEPOSIT_AMOUNT, MIN_WITHDRAWAL_AMOUNT } from "../constants";
 import { useWallets } from "@/app/hooks/useWallets";
-import useEthereumData from "@/lib/ethUtils";
 import { Options } from '@/lib/networkUtils';
+import { EthereumDataContext } from '@/app/context';
 
 export interface DepositContentProps {
   modalStuff: [boolean, React.Dispatch<React.SetStateAction<boolean>>];
@@ -45,7 +45,7 @@ enum Action {
 export const DepositContent: React.FC<DepositContentProps> = ({ modalStuff, amountEther, setAmountEther }) => {
   const [walletClient, setWalletClient] = useState<WalletClient<Transport, Chain, Account> | null>(null);
   const { selectedOption, contractAddress, eclipseRpc } = useNetwork();
-  const { gasPrice } = useEthereumData(selectedOption);
+  const [gasPrice, ethPrice, blockNumber] = useContext(EthereumDataContext) ?? [null, null, null];
   const [balanceEther, setAmountBalanceEther] = useState<number>(-1);
   const [isEvmDisconnected, setIsEvmDisconnected] = useState(false);
   const [isSolDisconnected, setIsSolDisconnected] = useState(false);
