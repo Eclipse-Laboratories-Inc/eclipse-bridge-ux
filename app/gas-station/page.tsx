@@ -5,6 +5,7 @@ import { Sidebar } from '../components/Sidebar';
 import { GasStation } from '../components/GasStation';
 import { Footer } from '../components/Footer';
 import useEthereumData from "@/lib/ethUtils";
+import { TosClickwrap } from "../components/TosClickwrap";
 import { useWalletClient } from "../hooks"
 import { EthereumDataContext, WalletClientContext } from "../context"
 import { useTransactionManager, TMProvider } from "../components/GasStation/TokenManager";
@@ -27,6 +28,8 @@ export default function GasStationPage() {
                 height: "100%"
               }}>
                 <Header isExtended={isSidebar} />
+                <TosClickwrap />
+
                 <div className="flex flex-row w-full items-center" style={{height: "100%"}}>
                   <Sidebar isExtended={isSidebar} setIsExtended={setIsSidebar} />
                   <div className="flex flex-col items-center gap-[13px]" style={{ flexGrow: "1"}}>

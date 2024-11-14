@@ -18,7 +18,6 @@ import { getBalance } from 'viem/actions';
 import { Options, useNetwork } from "@/app/contexts/NetworkContext"; 
 import ExtendedDetails from '../ExtendedDetails'
 import { getWalletBalance } from "@/lib/solanaUtils";
-import { withdrawEthereum } from "@/lib/withdrawUtils"
 
 import { solanaToBytes32 } from '@/lib/solanaUtils';
 import { generateTxObjectForDetails } from "@/lib/activityUtils";
@@ -95,7 +94,6 @@ export const DepositContent: React.FC<DepositContentProps> = ({ modalStuff, amou
     setWalletClient(lWalletClient ?? null);
   }, [evmWallet?.connector])
 
-
   useEffect(() => {
     // if action is withdraw fetch eclipse balance
     const fetchEclipse = async () => {
@@ -113,7 +111,6 @@ export const DepositContent: React.FC<DepositContentProps> = ({ modalStuff, amou
       if (!wallet) return;
       // ignore this for sepolia
       if (( !provider && process.env.NEXT_PUBLIC_CURRENT_CHAIN === "mainnet") || !(wallet.chain == "EVM")) return;
-      console.log(client, "gbcli")
       const balance = await getBalance(client, {
         //@ts-ignore
         address: wallet.address
@@ -138,8 +135,6 @@ export const DepositContent: React.FC<DepositContentProps> = ({ modalStuff, amou
     const weiValue = parseEther(amountEther?.toString() || '');
 
     try {
-      console.log("zzzzoo", contractAddress);
-      console.log("prio", provider)
       const { request } = await client.simulateContract({
         //@ts-ignore
         address: contractAddress,
@@ -285,9 +280,10 @@ export const DepositContent: React.FC<DepositContentProps> = ({ modalStuff, amou
         setTimeout(() => { setIsModalOpen(false), setCurrentTx(null) }, 100);
     }} /> }
 
-    { isWithdrawFlowOpen && action === Action.Withdraw && <WithdrawDetails ethStatus="completed" from="withdraw" tx={currentTx} closeModal={() => {
+    { ((isWithdrawFlowOpen && action === Action.Withdraw) || isWithdrawFlowOpen) && <WithdrawDetails ethStatus="completed" from="withdraw" tx={currentTx} closeModal={() => {
         setTimeout(() => { setIsWithdrawFlowOpen(false), setCurrentTx(null) }, 100);
     }} ethAmount={Number(parseEther(amountEther?.toString() || '')) / 10**18} /> }
+
     </>
   );
-};
+}

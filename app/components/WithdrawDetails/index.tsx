@@ -1,14 +1,16 @@
 import "./transaction-details.css";
 import { useContext, useEffect, useState } from "react";
 import { Cross, Arrow, TransactionIcon } from "../icons";
-import { timeAgo } from "@/lib/activityUtils";
-import { ethers } from "ethers";
+import { timeAgo, timeLeft } from "@/lib/activityUtils";
 import { EthereumDataContext } from "@/app/context";
+import { Transport, Chain, Account } from 'viem';
 import { useTransaction } from "../TransactionPool";
-import { useNetwork } from "@/app/contexts/NetworkContext"; 
-import { withdrawEthereum } from "@/lib/withdrawUtils"
+import { createPublicClient, formatEther, http, parseEther, WalletClient } from 'viem';
+import { mainnet, sepolia } from "viem/chains";
+import { CONTRACT_ABI } from "../constants";
+import { useNetwork, Options } from "@/app/contexts/NetworkContext"; 
+import { withdrawEthereum, byteArrayToHex, convertLosslessToNumbers } from "@/lib/withdrawUtils"
 import { useWallets } from "@/app/hooks/useWallets";
-import { setCoinbase } from "viem/actions";
 
 interface TransactionDetailsProps {
   from: "deposit" | "withdraw" | "";
@@ -33,7 +35,8 @@ enum InitiateTxStates {
 
 enum WaitingPeriodState {
   Waiting = "Waiting",
-  Ready = "Done"
+  Ready = "Done",
+  Closed = "Closed"
 }
 
 // we will have 3 states
@@ -43,13 +46,6 @@ enum WaitingPeriodState {
 // 3 claim 
 //
 //
-
-const calculateFee = (gasPrice: string, gasUsed: string) => {
-  const gasPriceBN = ethers.BigNumber.from(gasPrice);
-  const gasUsedBN = ethers.BigNumber.from(gasUsed);
-  const gasFee = gasPriceBN.mul(gasUsedBN);
-  return ethers.utils.formatEther(gasFee);
-};
 
 const TransactionDirection: React.FC<{from: string}> = ({ from }) => { 
   const chains = [
@@ -97,14 +93,72 @@ export const WithdrawDetails: React.FC<TransactionDetailsProps> = ({
   ethAmount
 }) => {
   const [_, ethPrice] = useContext(EthereumDataContext) ?? [0, 0];
-  const { transactions, addTransactionListener } = useTransaction();
-  const { evmExplorer, eclipseExplorer, relayerAddress, configAccount, eclipseRpc, bridgeProgram } = useNetwork();
+  const { transactions, deposits, withdrawals, withdrawTransactions } = useTransaction();
+  const { evmExplorer, eclipseExplorer, relayerAddress, configAccount, eclipseRpc, bridgeProgram, selectedOption, contractAddress } = useNetwork();
   const { userWallets, evmWallet, solWallet } = useWallets();
   const [txHash, setTxHash] = useState<string | null>(null);
   const [checkbox, setCheckbox] = useState<boolean>(false);
+  const [withdrawAmount, setWithdrawAmount] = useState<number>(ethAmount as number); 
 
   const [initiateStatus, setInitiateStatus] = useState<InitiateTxStates>(InitiateTxStates.NotReady);
   const [waitingPeriodStatus, setWaitingPeriodStatus] = useState<WaitingPeriodState>(WaitingPeriodState.Waiting);
+
+  useEffect(() => {
+    if (!tx) return;
+    const withdrawal = withdrawTransactions.get(tx[0].message.withdraw_id);
+    setTxHash(withdrawal?.transaction.signature)
+
+    const hexAmount = tx[0].message.amount_wei;
+    setWithdrawAmount(Number(parseInt(hexAmount, 16)) / 10**18);
+  }, [tx])
+
+  useEffect(() => {
+    if (!tx) return;
+    if (tx[1] === 'Processing') setWaitingPeriodStatus(WaitingPeriodState.Waiting);
+    if (tx[1] === 'Pending') setWaitingPeriodStatus(WaitingPeriodState.Ready);
+    if (tx[1] === 'Closed') setWaitingPeriodStatus(WaitingPeriodState.Closed);
+  }, [])
+
+  const submitClaim = async () => {
+    const isMainnet = (selectedOption === Options.Mainnet);
+    let walletClient = evmWallet?.connector.getWalletClient<WalletClient<Transport, Chain, Account>>();
+    const client = createPublicClient({
+      chain: isMainnet ? mainnet : sepolia,
+      transport: isMainnet 
+        ? http("https://empty-responsive-patron.quiknode.pro/91dfa8475605dcdec9afdc8273578c9f349774a1/") 
+        : http("https://ethereum-sepolia-rpc.publicnode.com"),
+      cacheTime: 0
+    })
+    const [account] = await walletClient!.getAddresses()
+    console.log(tx[0], "ramam")
+    console.log(tx[0].message, "ramam")
+    const message = {
+      from: '0x' + byteArrayToHex(convertLosslessToNumbers(tx[0].message.from)), 
+      destination: tx[0].message.destination, 
+      amountWei: tx[0].message.amount_wei, 
+      withdrawId: tx[0].message.withdraw_id, 
+      feeReceiver: tx[0].message.fee_receiver, 
+      feeWei: tx[0].message.fee_wei
+    }
+    alert("gecensi")
+    try {
+      const { request } = await client.simulateContract({
+        //@ts-ignore
+        address: contractAddress,
+        abi: CONTRACT_ABI,
+        functionName: 'claimWithdraw',
+        args: [message],
+        account,
+        value: BigInt(0),
+        chain: isMainnet ? mainnet : sepolia
+      })
+      let txResponse = await walletClient!.writeContract(request);
+      alert(txResponse)
+    } catch (error) {
+      alert(error)
+      alert("sicanzii")
+    }
+  }
 
   const transaction = tx && transactions.get(tx.hash);
 
@@ -115,10 +169,6 @@ export const WithdrawDetails: React.FC<TransactionDetailsProps> = ({
   const ethTxStatus = tx 
       ? (tx.txreceipt_status === "0" ? TxStatus.Failed : TxStatus.Completed) 
       : TxStatus.Loading;
-
-  useEffect(() => {
-    tx && addTransactionListener(tx.hash, tx.txreceipt_status);
-  }, [tx]);
 
   const handleInitiate = async () => {
     if (!checkbox) { return; }
@@ -164,7 +214,7 @@ export const WithdrawDetails: React.FC<TransactionDetailsProps> = ({
       <div className="status-panel">
         <div className="panel-elem flex flex-row items-center justify-between">
           <div className="left-side flex flex-row items-center">
-            <div className={ initiateStatus !== InitiateTxStates.NotReady ? "white-text" : "gray-text" } style={{ fontSize: "16px" }}>
+            <div className={ initiateStatus !== InitiateTxStates.NotReady || txHash ? "white-text" : "gray-text" } style={{ fontSize: "16px" }}>
               1. Initiate Withdraw
             </div>
             {txHash && (
@@ -178,27 +228,27 @@ export const WithdrawDetails: React.FC<TransactionDetailsProps> = ({
               </div>
             )}
           </div>
-          { initiateStatus !== InitiateTxStates.NotReady && <div
-            className={`flex flex-row items-center gap-1 ${ initiateStatus === InitiateTxStates.Done ? "completed" : "loading" }-item status-item`}
+          { (initiateStatus !== InitiateTxStates.NotReady || txHash) && <div
+            className={`flex flex-row items-center gap-1 ${ txHash ? "completed" : "loading" }-item status-item`}
           >
             <TransactionIcon
-              iconType={ initiateStatus === InitiateTxStates.Done ? "completed" : "loading" }
+              iconType={ txHash ? "completed" : "loading" }
               className="tx-done-icon"
               isGreen={true}
             />
             <span>
-              { initiateStatus }
+              { txHash ? "Done" : initiateStatus }
             </span>
           </div> }
         </div> 
 
         <div className="panel-elem flex flex-row items-center justify-between">
           <div className="left-side flex flex-row">
-            <div className={initiateStatus === InitiateTxStates.Done ? "white-text" : "gray-text"}>
+            <div className={initiateStatus === InitiateTxStates.Done || txHash ? "white-text" : "gray-text"}>
               2. Wait 7 days
             </div>
           </div>
-          {initiateStatus === InitiateTxStates.Done && (
+          {(initiateStatus === InitiateTxStates.Done || txHash) && (
             <div
               className={`flex flex-row items-center gap-1 ${waitingPeriodStatus === WaitingPeriodState.Waiting ? "loading" : "completed"}-item status-item`}
             >
@@ -208,11 +258,11 @@ export const WithdrawDetails: React.FC<TransactionDetailsProps> = ({
                 isGreen={true}
               />
               <span>
-                {waitingPeriodStatus === WaitingPeriodState.Ready ? (
+                {waitingPeriodStatus === WaitingPeriodState.Ready || waitingPeriodStatus === WaitingPeriodState.Closed ? (
                   "Done"
                 ) : (
                   <div className="flex flex-row gap-2 items-center justify-center">
-                    <p>Waiting</p> <p className="green-text">~7 days</p>
+                    <p>Waiting</p> <p className="green-text">~ {tx ? (timeLeft(parseInt(tx[0].start_time, 16) * 1000)) : "7 days"}</p>
                   </div>
                 )}
               </span>
@@ -226,7 +276,7 @@ export const WithdrawDetails: React.FC<TransactionDetailsProps> = ({
               3. Ready for Claim 
             </div>
             <div className="gray-text">
-              {eclipseTx && (
+              {false && (
                 <a
                   href={`https://explorer.eclipse.xyz/tx/${eclipseTx}?cluster=${eclipseExplorer}`}
                   target="_blank"
@@ -236,16 +286,16 @@ export const WithdrawDetails: React.FC<TransactionDetailsProps> = ({
               )}
             </div>
           </div>
-          {tx && transaction?.pdaData && (
+          {(waitingPeriodStatus === WaitingPeriodState.Ready || waitingPeriodStatus === WaitingPeriodState.Closed) && (
             <div
-              className={`flex flex-row items-center gap-1 ${depositStatus}-item status-item`}
+              className={`flex flex-row items-center gap-1 completed-item status-item`}
             >
               <TransactionIcon
-                iconType={depositStatus}
+                iconType={"completed"}
                 className="tx-done-icon"
               />
               <span>
-                {depositStatus === "completed" ? "Done" : "Processing"}
+                Done
               </span>
             </div>
           )}
@@ -260,13 +310,13 @@ export const WithdrawDetails: React.FC<TransactionDetailsProps> = ({
           <TxInfo 
             name="Withdraw Amount" 
             grayText={`$${ethPrice && (Number(ethAmount) * ethPrice).toFixed(2)}`}
-            greenText={`${Number(ethAmount).toFixed(3)} ETH`}
+            greenText={`${Number(ethAmount ? ethAmount : withdrawAmount).toFixed(3)} ETH`}
           />
 
           <TxInfo 
             name="Waiting Period" 
             grayText={``}
-            greenText={`~7 Days`}
+            greenText={ `~7 Days` }
           />
 
           <TxInfo 
@@ -301,7 +351,7 @@ export const WithdrawDetails: React.FC<TransactionDetailsProps> = ({
         </div>
       }
 
-      {txHash && (
+      {txHash && (waitingPeriodStatus !== WaitingPeriodState.Ready) && (
         <div className="flex w-full items-center justify-center modal-info-withdraw mb-[20px]">
           {" "}
           You may close this window anytime
@@ -328,11 +378,16 @@ export const WithdrawDetails: React.FC<TransactionDetailsProps> = ({
       </div> }
 
       {
-        <button 
+        waitingPeriodStatus !== WaitingPeriodState.Ready && <button 
           onClick={txHash ? closeModal : handleInitiate } 
           className={ `initiate-button ${ txHash && "!text-white !bg-[#ffffff0d]"} ${ !checkbox && "!text-white cursor-not-allowed !bg-[#ffffff0d]" }` }
         >
           { getButtonText() }
+        </button>
+      }
+      { waitingPeriodStatus === WaitingPeriodState.Ready && 
+        <button className="initiate-button !mt-[25px]" onClick={() => submitClaim()}>
+          Claim Now
         </button>
       }
     </div>
