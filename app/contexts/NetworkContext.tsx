@@ -18,6 +18,7 @@ type NetworkContextType = {
   relayerAddress: string;
   configAccount: string;
   withdrawApi: string;
+  waitingPeriod: string;
 };
 
 export const NetworkContext = createContext<NetworkContextType | undefined>(undefined);
@@ -33,6 +34,7 @@ export const NetworkProvider = ({ children }: { children: ReactNode }) => {
   const relayerAddress  = isMainnet ? "CrfbABN2sSvmoZLu9eDDfXpaC2nHg42R7AXbHs9eg4S9" : "ec1vCnQKsQSnTbcTyc3SH2azcDXZquiFB3QqtRvm3Px"
   const configAccount   = isMainnet ? "B6UA9rd6Qrx9chsrcMWPV3EFnSb1cbnf7AA2wdkhkpqw" : "A3jHKVwNvrvTjnUPGKYei9jbPn7NcraD6H94ewWyfVMY"
   const withdrawApi     = isMainnet ? "" : "https://withdraw.api.dev2.eclipsenetwork.xyz"
+  const waitingPeriod   = isMainnet ? "7 days" : "1 day"
 
   return (
     <NetworkContext.Provider value={{ 
@@ -45,7 +47,8 @@ export const NetworkProvider = ({ children }: { children: ReactNode }) => {
         contractAddress, 
         relayerAddress, 
         configAccount,
-        withdrawApi
+        withdrawApi,
+        waitingPeriod
     }}>
       {children}
     </NetworkContext.Provider>

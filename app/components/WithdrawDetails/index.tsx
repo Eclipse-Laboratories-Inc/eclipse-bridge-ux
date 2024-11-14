@@ -94,7 +94,7 @@ export const WithdrawDetails: React.FC<TransactionDetailsProps> = ({
 }) => {
   const [_, ethPrice] = useContext(EthereumDataContext) ?? [0, 0];
   const { transactions, deposits, withdrawals, withdrawTransactions } = useTransaction();
-  const { evmExplorer, eclipseExplorer, relayerAddress, configAccount, eclipseRpc, bridgeProgram, selectedOption, contractAddress } = useNetwork();
+  const { waitingPeriod, eclipseExplorer, relayerAddress, configAccount, eclipseRpc, bridgeProgram, selectedOption, contractAddress } = useNetwork();
   const { userWallets, evmWallet, solWallet } = useWallets();
   const [txHash, setTxHash] = useState<string | null>(null);
   const [checkbox, setCheckbox] = useState<boolean>(false);
@@ -242,7 +242,7 @@ export const WithdrawDetails: React.FC<TransactionDetailsProps> = ({
         <div className="panel-elem flex flex-row items-center justify-between">
           <div className="left-side flex flex-row">
             <div className={initiateStatus === InitiateTxStates.Done || txHash ? "white-text" : "gray-text"}>
-              2. Wait 7 days
+              2. Wait { waitingPeriod } 
             </div>
           </div>
           {(initiateStatus === InitiateTxStates.Done || txHash) && (
@@ -259,7 +259,7 @@ export const WithdrawDetails: React.FC<TransactionDetailsProps> = ({
                   "Done"
                 ) : (
                   <div className="flex flex-row gap-2 items-center justify-center">
-                    <p>Waiting</p> <p className="green-text">~ {tx ? (timeLeft(parseInt(tx[0].start_time, 16) * 1000)) : "7 days"}</p>
+                    <p>Waiting</p> <p className="green-text">~ {tx ? (timeLeft(parseInt(tx[0].start_time, 16) * 1000)) : waitingPeriod}</p>
                   </div>
                 )}
               </span>
@@ -313,7 +313,7 @@ export const WithdrawDetails: React.FC<TransactionDetailsProps> = ({
           <TxInfo 
             name="Waiting Period" 
             grayText={``}
-            greenText={ `~7 Days` }
+            greenText={ `~ ${waitingPeriod}` }
           />
 
           <TxInfo 
@@ -370,7 +370,7 @@ export const WithdrawDetails: React.FC<TransactionDetailsProps> = ({
             : <span className="w-[18px] h-[18px] border-[2px] rounded-[50%] border-[#a1fea099] ml-[7px]"></span>
           }
           <span className="w-[396px]">
-            I understand that  it will take 7 days until my funds are ready to claim on Ethereum Mainnet.
+            I understand that  it will take { waitingPeriod } until my funds are ready to claim on Ethereum Mainnet.
           </span>
       </div> }
 

@@ -280,7 +280,7 @@ export const DepositContent: React.FC<DepositContentProps> = ({ modalStuff, amou
         setTimeout(() => { setIsModalOpen(false), setCurrentTx(null) }, 100);
     }} /> }
 
-    { ((isWithdrawFlowOpen && action === Action.Withdraw) || isWithdrawFlowOpen) && <WithdrawDetails ethStatus="completed" from="withdraw" tx={currentTx} closeModal={() => {
+    { (isWithdrawFlowOpen && action === Action.Withdraw) && <WithdrawDetails ethStatus="completed" from="withdraw" tx={currentTx} closeModal={() => {
         setTimeout(() => { setIsWithdrawFlowOpen(false), setCurrentTx(null) }, 100);
     }} ethAmount={Number(parseEther(amountEther?.toString() || '')) / 10**18} /> }
 
