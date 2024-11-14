@@ -140,7 +140,6 @@ export const WithdrawDetails: React.FC<TransactionDetailsProps> = ({
       feeReceiver: tx[0].message.fee_receiver, 
       feeWei: tx[0].message.fee_wei
     }
-    alert("gecensi")
     try {
       const { request } = await client.simulateContract({
         //@ts-ignore
@@ -153,10 +152,8 @@ export const WithdrawDetails: React.FC<TransactionDetailsProps> = ({
         chain: isMainnet ? mainnet : sepolia
       })
       let txResponse = await walletClient!.writeContract(request);
-      alert(txResponse)
     } catch (error) {
-      alert(error)
-      alert("sicanzii")
+      console.log(error, "claim error")
     }
   }
 
