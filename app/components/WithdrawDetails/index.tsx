@@ -306,7 +306,7 @@ export const WithdrawDetails: React.FC<TransactionDetailsProps> = ({
 
           <TxInfo 
             name="Withdraw Amount" 
-            grayText={`$${ethPrice && (Number(ethAmount) * ethPrice).toFixed(2)}`}
+            grayText={`$${ethPrice && (Number(ethAmount ? ethAmount : withdrawAmount) * ethPrice).toFixed(2)}`}
             greenText={`${Number(ethAmount ? ethAmount : withdrawAmount).toFixed(3)} ETH`}
           />
 
