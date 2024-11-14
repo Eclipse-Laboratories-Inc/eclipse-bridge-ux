@@ -72,14 +72,7 @@ export const NetworkBox: React.FC<NetworkBoxProps> = ({
     adjustInputWidth();
   })
 
-  // TODO
-  // 1. if max amount minus gas is less than the cost of gas for the tx, restrict it
-  // 2. set constant for gas price to be shared around the app
-
   const txGasFeeEther = DEPOSIT_TX_GAS_COST * (gasPrice! / 10**9)
-
-  console.log("max", balanceEther, amountEther, txGasFeeEther)
-
 
   // remove bottom border for ethereum box
   const css = direction === "From" ? "!border-b-0 !rounded-bl-none !rounded-br-none" : ""; 
@@ -136,7 +129,7 @@ export const NetworkBox: React.FC<NetworkBoxProps> = ({
                     if (/^[-+]?(\d+([.,]\d*)?|[.,]\d+)$/.test(value) || value === "" || value === ".") {
                       const [_, dp] = value.split(".");
                       if (!dp || dp.length <= 9) {
-                        setAmountEther(parseFloat(value) - DEPOSIT_TX_GAS_COST * gasPrice! / 10**9);
+                        setAmountEther(parseFloat(value) - txGasFeeEther);
                         adjustInputWidth();
                       }
                     } 
@@ -173,7 +166,15 @@ export const NetworkBox: React.FC<NetworkBoxProps> = ({
                 </div>
                 <span>•</span>
                 <button onClick={() => { setAmountEther(balanceEther * 0.50); setTimeout(adjustInputWidth, 0) }} className="percentage-button">50%</button>
-                <button onClick={() => { gasPrice && ethPrice && setAmountEther(balanceEther - txGasFeeEther); setTimeout(adjustInputWidth, 0) }} className="percentage-button">Max</button>
+                <button 
+                  disabled={balanceEther - txGasFeeEther <= 0}
+                  onClick={() => { 
+                    setAmountEther(balanceEther - txGasFeeEther);
+                    setTimeout(adjustInputWidth, 0)
+                  }}
+                  className="percentage-button disabled:text-gray-700 disabled:hover:text-gray-700 disabled:hover:cursor-not-allowed">
+                    Max
+                </button>
               </div>
             </div>
           </div>

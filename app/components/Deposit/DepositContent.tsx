@@ -253,7 +253,7 @@ export const DepositContent: React.FC<DepositContentProps> = ({ modalStuff, amou
         { action === Action.Deposit && <ExtendedDetails 
            amountEther={amountEther}
            target="Eclipse"
-           feeInEth={gasPrice && DEPOSIT_TX_GAS_COST * (gasPrice) / 10**9}
+           feeInEth={gasPrice && DEPOSIT_TX_GAS_COST * ((gasPrice) / 10**9)}
         /> }
 
         { action === Action.Withdraw && <ExtendedDetails 
