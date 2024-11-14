@@ -12,7 +12,7 @@ import { mergeNetworks } from '@dynamic-labs/sdk-react-core';
 
 const ibmPlexSans = IBM_Plex_Sans({
   subsets: ['latin'],
-  weight: ['400', '500', '600', '700'],
+  weight: ['400', '500', '700'],
 });
 
 // TODO: maybe we can read it from a file

@@ -31,7 +31,11 @@ export async function GET(request: Request) {
     }
 
     const deposits = data.result
-      .filter((tx: any) => tx.to.toLowerCase() === bridgeContract.toLowerCase());
+      .filter(
+        (tx: any) => 
+          tx.to.toLowerCase() === bridgeContract.toLowerCase() &&
+          tx.methodId	=== '0x1de26e16'
+      );
 
     // TODO: remove this
     return NextResponse.json(deposits.slice(0, 5));
