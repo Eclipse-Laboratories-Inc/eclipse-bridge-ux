@@ -10,7 +10,7 @@ import Skeleton from 'react-loading-skeleton';
 import { truncateWalletAddress } from '@/lib/stringUtils';
 import { useWallets } from "@/app/hooks/useWallets";
 import useEthereumData from "@/lib/ethUtils";
-import { DEPOSIT_TX_GAS_COST } from '../constants';
+import { DEPOSIT_TX_GAS_PRICE, WITHDRAW_TX_FEE } from '../constants';
 
 export interface NetworkBoxProps {
   imageSrc: string;
@@ -72,7 +72,7 @@ export const NetworkBox: React.FC<NetworkBoxProps> = ({
     adjustInputWidth();
   })
 
-  const txGasFeeEther = Math.floor((DEPOSIT_TX_GAS_COST * (gasPrice! / 10**9) * 10**5)) / 10**5 // round down to 5 decimals
+  const txGasFeeEther = walletChain === "SOL" ? WITHDRAW_TX_FEE : Math.floor((DEPOSIT_TX_GAS_PRICE * (gasPrice! / 10**9) * 10**5)) / 10**5 // round down to 5 decimals
 
   // remove bottom border for ethereum box
   const css = direction === "From" ? "!border-b-0 !rounded-bl-none !rounded-br-none" : ""; 

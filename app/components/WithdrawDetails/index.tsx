@@ -7,7 +7,7 @@ import { Transport, Chain, Account } from 'viem';
 import { useTransaction } from "../TransactionPool";
 import { createPublicClient, formatEther, http, parseEther, WalletClient } from 'viem';
 import { mainnet, sepolia } from "viem/chains";
-import { CONTRACT_ABI } from "../constants";
+import { CONTRACT_ABI, WITHDRAW_TX_FEE } from "../constants";
 import { useNetwork, Options } from "@/app/contexts/NetworkContext"; 
 import { withdrawEthereum, byteArrayToHex, convertLosslessToNumbers, WithdrawObject } from "@/lib/withdrawUtils"
 import { useWallets } from "@/app/hooks/useWallets";
@@ -180,7 +180,6 @@ export const WithdrawDetails: React.FC<TransactionDetailsProps> = ({
   const transaction = tx && transactions.get(tx.hash);
 
   const eclipseTx = transaction?.eclipseTxHash ?? null;
-  const totalFee = 0.00000005;
 
   const handleInitiate = async () => {
     if (!checkbox) { return; }
@@ -333,8 +332,8 @@ export const WithdrawDetails: React.FC<TransactionDetailsProps> = ({
 
           <TxInfo 
             name="Transaction Fee" 
-            grayText={`$${ethPrice && (Number(totalFee) * ethPrice).toFixed(5)}`}
-            greenText={`${Number(totalFee).toFixed(4)} ETH`}
+            grayText={`$${ethPrice && (Number(WITHDRAW_TX_FEE) * ethPrice).toFixed(5)}`}
+            greenText={`${Number(WITHDRAW_TX_FEE).toFixed(4)} ETH`}
           />
 
           <div className="flex flex-row justify-between items-center">
