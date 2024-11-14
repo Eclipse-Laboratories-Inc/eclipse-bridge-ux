@@ -23,14 +23,6 @@ export const ActivityContent = ({ setActiveTab }: {setActiveTab: React.Dispatch<
     setActiveTab(Tabs.Deposit); 
     return <></>
   }
-
-  const submitClaim = async () => {
-    try {
-      
-    } catch {
-    }
-
-  }
      
   return ( 
     <>
@@ -130,7 +122,7 @@ export const ActivityContent = ({ setActiveTab }: {setActiveTab: React.Dispatch<
     )})}
     {(!evmWallet) 
       ? <span>Connect your evm wallet first.</span> 
-      : (!(deposits?.length)
+      : (!(deposits?.length) && !(withdrawals?.length) 
         && <div className="flex flex-col items-center justify-center" style={{height: "90%", gap: "21px"}}>
           <ActivityBoxIcon activityBoxClassName="" />
           <span style={{fontSize: "18px", color: "rgba(255, 255, 255, 0.3)", fontWeight: "500", width: "266px"}}>You don’t have any transactions to show</span> 

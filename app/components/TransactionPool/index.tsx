@@ -24,14 +24,24 @@ export const TransactionProvider = ({ children } : { children: ReactNode}) => {
   const fetchDeposits = async () => {
     try {
       setDeposits([]);
-      const data = await getLastDeposits(evmWallet?.address || '', (selectedOption === Options.Mainnet) ? "mainnet" : "testnet");
-      setDeposits(data.reverse());
+      // fix
+      let data: any[] = [];
+      try {
+        const data = await getLastDeposits(evmWallet?.address || '', (selectedOption === Options.Mainnet) ? "mainnet" : "testnet");
+        setDeposits(data.reverse());
+      } catch (error) {
+        console.log("failed to fetch deposits", error)
+      }
 
-      const withdrawalsData = await getWithdrawalsByAddress(evmWallet?.address || '', withdrawApi); 
-      setWithdrawals(withdrawalsData)
-      withdrawalsData.forEach((item) => {
-        addNewWithdrawal(item)
-      });
+      try {
+        const withdrawalsData = await getWithdrawalsByAddress(evmWallet?.address || '', withdrawApi); 
+        setWithdrawals(withdrawalsData)
+        withdrawalsData.forEach((item) => {
+          addNewWithdrawal(item)
+        });
+      } catch (error) {
+        console.log("failed to fetch withdrawals", error)
+      }
       
      const delay = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
   

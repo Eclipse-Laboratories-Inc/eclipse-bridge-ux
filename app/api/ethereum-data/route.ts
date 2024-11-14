@@ -50,7 +50,6 @@ export async function GET() {
         const blockData = await blockResponse.json();
         const gasData = await gasResponse.json();
         const priceData = await priceResponse.json();
-        console.log(blockData, gasData, priceData)
 
         const newBlockNumber = parseInt(blockData.result, 16);
         const newGasPrice = Math.round((parseInt(gasData.result, 16) / 1e9) * 100) / 100; 
