@@ -72,7 +72,7 @@ export const NetworkBox: React.FC<NetworkBoxProps> = ({
     adjustInputWidth();
   })
 
-  const txGasFeeEther = DEPOSIT_TX_GAS_COST * (gasPrice! / 10**9)
+  const txGasFeeEther = Math.floor((DEPOSIT_TX_GAS_COST * (gasPrice! / 10**9) * 10**5)) / 10**5 // round down to 5 decimals
 
   // remove bottom border for ethereum box
   const css = direction === "From" ? "!border-b-0 !rounded-bl-none !rounded-br-none" : ""; 
@@ -129,7 +129,7 @@ export const NetworkBox: React.FC<NetworkBoxProps> = ({
                     if (/^[-+]?(\d+([.,]\d*)?|[.,]\d+)$/.test(value) || value === "" || value === ".") {
                       const [_, dp] = value.split(".");
                       if (!dp || dp.length <= 9) {
-                        setAmountEther(parseFloat(value) - txGasFeeEther);
+                        setAmountEther(value);
                         adjustInputWidth();
                       }
                     } 
@@ -165,14 +165,24 @@ export const NetworkBox: React.FC<NetworkBoxProps> = ({
                   }
                 </div>
                 <span>•</span>
-                <button onClick={() => { setAmountEther(balanceEther * 0.50); setTimeout(adjustInputWidth, 0) }} className="percentage-button">50%</button>
+                <button
+                  className="percentage-button disabled:text-neutral-800 disabled:hover:text-neutral-800 disabled:hover:cursor-not-allowed"
+                  disabled={balanceEther * .5 <= txGasFeeEther}
+                  onClick={() => {
+                    setAmountEther(balanceEther * 0.50)
+                    setTimeout(adjustInputWidth, 0)
+                  }}
+                >
+                    50%
+                </button>
                 <button 
-                  disabled={balanceEther - txGasFeeEther <= 0}
+                  className="percentage-button disabled:text-neutral-800 disabled:hover:text-neutral-800 disabled:hover:cursor-not-allowed"
+                  disabled={balanceEther <= txGasFeeEther}
                   onClick={() => { 
                     setAmountEther(balanceEther - txGasFeeEther);
                     setTimeout(adjustInputWidth, 0)
                   }}
-                  className="percentage-button disabled:text-gray-700 disabled:hover:text-gray-700 disabled:hover:cursor-not-allowed">
+                >
                     Max
                 </button>
               </div>
