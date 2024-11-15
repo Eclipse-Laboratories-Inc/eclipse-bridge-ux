@@ -48,9 +48,12 @@ enum WaitingPeriodState {
 //
 
 const TransactionDirection: React.FC<{from: string}> = ({ from }) => { 
+  const { selectedOption } = useNetwork();
+  const isMainnet = (selectedOption === Options.Mainnet);
+
   const chains = [
     { src: "eth.png", name: "Ethereum" },
-    { src: "eclipse.png", name: "Eclipse" },
+    { src: isMainnet ? "eclipse.png" : "eclipse-testnet.png", name: "Eclipse" },
   ];
   from === "withdraw" && chains.reverse();
   const [fromChain, toChain] = chains;
@@ -134,8 +137,6 @@ export const WithdrawDetails: React.FC<TransactionDetailsProps> = ({
       cacheTime: 0
     })
     const [account] = await walletClient!.getAddresses()
-    console.log(tx[0], "ramam")
-    console.log(tx[0].message, "ramam")
     const message = {
       from: '0x' + byteArrayToHex(convertLosslessToNumbers(tx[0].message.from)), 
       destination: tx[0].message.destination, 
