@@ -131,13 +131,13 @@ export const timeLeft = (timestamp: number): string => {
   if (secondsLeft < 60) {
     return `${secondsLeft} secs`;
   } else if (secondsLeft < 3600) {
-    const minutes = Math.floor(secondsLeft / 60);
+    const minutes = Math.ceil(secondsLeft / 60);
     return minutes === 1 ? `1 min` : `${minutes} mins`;
   } else if (secondsLeft < 86400) {
-    const hours = Math.floor(secondsLeft / 3600);
+    const hours = Math.ceil(secondsLeft / 3600);
     return hours === 1 ? `1 hour` : `${hours} hours`;
   } else if (secondsLeft < 2592000) { 
-    const days = Math.floor(secondsLeft / 86400);
+    const days = Math.ceil(secondsLeft / 86400);
     return days === 1 ? `1 day` : `${days} days`;
   } else {
     return ""

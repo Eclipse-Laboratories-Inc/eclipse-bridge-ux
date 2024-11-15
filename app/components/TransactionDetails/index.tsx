@@ -6,7 +6,7 @@ import { timeAgo } from "@/lib/activityUtils";
 import { ethers } from "ethers";
 import { EthereumDataContext } from "@/app/context";
 import { useTransaction } from "../TransactionPool";
-import { useNetwork } from "@/app/contexts/NetworkContext"; 
+import { useNetwork, Options } from "@/app/contexts/NetworkContext"; 
 
 interface TransactionDetailsProps {
   from: "deposit" | "withdraw" | "";
@@ -29,9 +29,12 @@ const calculateFee = (gasPrice: string, gasUsed: string) => {
 };
 
 const TransactionDirection: React.FC<{from: string}> = ({ from }) => { 
+  const { selectedOption } = useNetwork();
+  const isMainnet = (selectedOption === Options.Mainnet);
+
   const chains = [
     { src: "eth.png", name: "Ethereum" },
-    { src: "eclipse.png", name: "Eclipse" },
+    { src: isMainnet ? "eclipse.png" : "eclipse-testnet.png", name: "Eclipse" },
   ];
   from === "withdraw" && chains.reverse();
   const [fromChain, toChain] = chains;
