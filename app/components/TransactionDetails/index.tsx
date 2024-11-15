@@ -7,6 +7,7 @@ import { ethers } from "ethers";
 import { EthereumDataContext } from "@/app/context";
 import { useTransaction } from "../TransactionPool";
 import { useNetwork, Options } from "@/app/contexts/NetworkContext"; 
+import { useSidebar } from "@/app/contexts/SidebarContext";
 
 interface TransactionDetailsProps {
   from: "deposit" | "withdraw" | "";
@@ -69,6 +70,7 @@ export const TransactionDetails: React.FC<TransactionDetailsProps> = ({
   const [_, ethPrice] = useContext(EthereumDataContext) ?? [0, 0];
   const { transactions, addTransactionListener } = useTransaction();
   const { evmExplorer, eclipseExplorer } = useNetwork();
+  const { isSidebar } = useSidebar();
 
   const transaction = tx && transactions.get(tx.hash);
 
@@ -86,7 +88,7 @@ export const TransactionDetails: React.FC<TransactionDetailsProps> = ({
   }, [tx]);
 
   return (
-    <div className="transaction-details-modal flex flex-col items-center">
+    <div className={ `transaction-details-modal flex flex-col items-center ${ isSidebar ? 'ml-[110px]' : 'ml-[34px]' }` }>
       <div className="transaction-details-header flex flex-row items-center justify-between">
         <div></div>
         <span>Deposit</span>

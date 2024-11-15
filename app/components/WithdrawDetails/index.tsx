@@ -4,6 +4,7 @@ import { Cross, Arrow, TransactionIcon } from "../icons";
 import { timeAgo, timeLeft } from "@/lib/activityUtils";
 import { EthereumDataContext } from "@/app/context";
 import { Transport, Chain, Account } from 'viem';
+import { useSidebar } from "@/app/contexts/SidebarContext";
 import { useTransaction } from "../TransactionPool";
 import { createPublicClient, formatEther, http, parseEther, WalletClient } from 'viem';
 import { mainnet, sepolia } from "viem/chains";
@@ -104,6 +105,7 @@ export const WithdrawDetails: React.FC<TransactionDetailsProps> = ({
   const [withdrawAmount, setWithdrawAmount] = useState<number>(ethAmount as number); 
   const [isClaimFlowOpen, setIsClaimFlowOpen] = useState<boolean>(false);
   const [buttonText, setButtonText] = useState<string>("Claim Now");
+  const { isSidebar } = useSidebar();
 
   const [initiateStatus, setInitiateStatus] = useState<InitiateTxStates>(InitiateTxStates.NotReady);
   const [waitingPeriodStatus, setWaitingPeriodStatus] = useState<WaitingPeriodState>(WaitingPeriodState.Waiting);
@@ -213,7 +215,7 @@ export const WithdrawDetails: React.FC<TransactionDetailsProps> = ({
   }
 
   return (
-    <div className="transaction-details-modal flex flex-col items-center">
+    <div className={`transaction-details-modal flex flex-col items-center ${ isSidebar ? 'ml-[110px]' : 'ml-[34px]' }` }>
       <div className="transaction-details-header flex flex-row items-center justify-between">
         <div></div>
         <span>Withdraw</span>

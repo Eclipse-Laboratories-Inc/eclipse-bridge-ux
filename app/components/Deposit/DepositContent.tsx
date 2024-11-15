@@ -243,7 +243,7 @@ export const DepositContent: React.FC<DepositContentProps> = ({ modalStuff, amou
     <div className={isModalOpen ? "status-overlay active" : "status-overlay"}></div>
     { !isModalOpen && <div>
         <div className="network-section">
-          <div className="arrow-container cursor-pointer" onClick={switchAction}>
+          <div className={`arrow-container cursor-pointer ${ (solWallet && evmWallet) ? "" : "!top-[66%]"}`} onClick={switchAction}>
             <TransferArrow />
           </div>
 

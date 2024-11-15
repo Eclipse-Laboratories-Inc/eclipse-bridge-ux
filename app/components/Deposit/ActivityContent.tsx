@@ -37,7 +37,7 @@ export const ActivityContent = ({ setActiveTab }: {setActiveTab: React.Dispatch<
        <div key={i} className="deposit-transaction flex flex-row items-center" onClick={() => { setCurrentTx(w); setIsWithdrawModalOpen(true) }}>
             <img src="swap.png" alt="Swap" className="swap-image" style={{position: "absolute", width: "22px"}} hidden />
             <img src="eth.png" alt="Ethereum" style={{ objectFit: "cover", height: "53px", width: "53px", marginLeft: "5px", marginRight: "16px"}} />
-          <div className="flex flex-col justify-center" style={{width: "85%"}}>
+          <div className="flex flex-col justify-center w-[85%] gap-[4px]">
             <div className="transaction-top flex justify-between">
               <div className="flex tx-age" style={{ gap: "7px"}}>
                 <span className="gray-in">Withdraw</span>
@@ -94,7 +94,7 @@ export const ActivityContent = ({ setActiveTab }: {setActiveTab: React.Dispatch<
        <div key={index} className="deposit-transaction flex flex-row items-center" onClick={() => { setIsModalOpen(true); setCurrentTx(tx)}}>
             <img src="swap.png" alt="Swap" className="swap-image" style={{position: "absolute", width: "22px"}} hidden />
             <img src="eth.png" alt="Ethereum" style={{ objectFit: "cover", height: "53px", width: "53px", marginLeft: "5px", marginRight: "16px"}} />
-          <div className="flex flex-col justify-center" style={{width: "85%"}}>
+          <div className="flex flex-col justify-center w-[85%] gap-[4px]">
             <div className="transaction-top flex justify-between">
               <div className="flex tx-age" style={{ gap: "7px"}}>
                 <span className="gray-in">Deposit</span>

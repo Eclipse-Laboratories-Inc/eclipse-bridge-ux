@@ -4,8 +4,8 @@ import { useTransactionManager, Token } from "./TokenManager";
 import {
   DynamicConnectButton,
 } from "@dynamic-labs/sdk-react-core";
-import { Transaction, Signer, Keypair, VersionedTransaction, TransactionMessage, PublicKey, Connection } from '@solana/web3.js';
-import { SelectToken} from "./SelectToken"
+import { Transaction, Connection } from '@solana/web3.js';
+import { SelectToken } from "./SelectToken"
 import { GasStationNotification, TxStatus } from "./Notification"
 import { useWallets } from "@/app/hooks/useWallets";
 import { createOctaneSwapTransaction } from "@/lib/octaneUtils"
@@ -26,6 +26,7 @@ export const GasStation: React.FC = () => {
   const [txId, setTxId] = useState("");
   const [txStatus, setTxStatus] = useState<TxStatus>(TxStatus.None);
   const { solWallet } = useWallets(); 
+
   useEffect(() => {
     console.log(selectedToken, "selo")
   }, [!selectedToken])
@@ -185,7 +186,7 @@ export const GasStation: React.FC = () => {
             <div className="flex flex-row items-center">
               <span className={`font-semibold text-[44px] ${amount.includes('.') ? "mr-[-7px]" : ""}`}>$</span>
               <input type="string" 
-                     className="bg-transparent font-semibold text-[44px] text-center w-[1ch]" 
+                     className="bg-transparent font-medium text-[44px] text-center w-[1ch]" 
                      value={amount} 
                      onChange={() => {setAmount(inputRef.current?.value || "")}}
                      ref={inputRef}

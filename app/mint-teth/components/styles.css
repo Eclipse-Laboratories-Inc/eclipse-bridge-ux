@@ -241,7 +241,7 @@ div.disabled {
   pointer-events: none;
   transition: opacity 0.1s var(--ease-out-quad);
   border-radius: 0px 0px 10px 10px;
-  background: rgba(34, 34, 34, 0.5);
+  background: rgba(34, 34, 34, 0.35);
   opacity: 1;
   z-index: 1;
 }

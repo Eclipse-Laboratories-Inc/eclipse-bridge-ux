@@ -95,18 +95,16 @@ const evmNetworks = [{
       symbol: 'ETH',
     },
     networkId: 11155111,
-    rpcUrls: ['https://sepolia.drpc.org'],
+    rpcUrls: ['https://ethereum-sepolia.publicnode.com'],
     vanityName: 'Sepolia',
 }];
-const eclipseWallets = ["backpacksol", "nightlysol" ]
+const eclipseWallets = ["backpacksol", "nightlysol"]
 
 export default function ClientLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
-  // TODO
-  //
   const pathname = usePathname();
   const passGlobalLayout = pathname === "/gas-station" 
 
@@ -157,6 +155,9 @@ export default function ClientLayout({
           environmentId: process.env.NEXT_PUBLIC_ENVIRONMENT_ID || '',
           walletConnectors: [EthereumWalletConnectors, SolanaWalletConnectors],
           mobileExperience: "redirect",
+          recommendedWallets: [
+            { walletKey: 'backpacksol', label: 'Recommended' }
+          ],
           initialAuthenticationMode: 'connect-only',
           displaySiweStatement: true,
           privacyPolicyUrl: "https://www.eclipse.xyz/privacy-policy",
