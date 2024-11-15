@@ -72,7 +72,7 @@ export const NetworkBox: React.FC<NetworkBoxProps> = ({
     adjustInputWidth();
   })
 
-  const txGasFeeEther = walletChain === "SOL" ? WITHDRAW_TX_FEE : Math.floor((DEPOSIT_TX_GAS_PRICE * (gasPrice! / 10**9) * 10**5)) / 10**5 // round down to 5 decimals
+  const txGasFeeEther = walletChain === "SOL" ? WITHDRAW_TX_FEE : Math.ceil((DEPOSIT_TX_GAS_PRICE * (gasPrice! / 10**9) * 10**5)) / 10**5 // round down to 5 decimals
 
   // remove bottom border for ethereum box
   const css = direction === "From" ? "!border-b-0 !rounded-bl-none !rounded-br-none" : ""; 
