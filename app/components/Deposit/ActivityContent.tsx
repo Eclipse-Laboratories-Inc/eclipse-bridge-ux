@@ -36,7 +36,7 @@ export const ActivityContent = ({ setActiveTab }: {setActiveTab: React.Dispatch<
            : "loading";
      return (
        <div key={index} className="deposit-transaction flex flex-row items-center" onClick={() => { setIsModalOpen(true); setCurrentTx(tx)}}>
-            <img src="swap.png" alt="Swap" className="swap-image" style={{position: "absolute", width: "22px"}} hidden />
+            <img src="swap.png" alt="Swap" className="swap-image" style={{ position: "absolute", width: "22px", display: "none" }} />
             <img src="eth.png" alt="Ethereum" style={{ objectFit: "cover", height: "53px", width: "53px", marginLeft: "5px", marginRight: "16px"}} />
           <div className="flex flex-col justify-center" style={{width: "85%"}}>
             <div className="transaction-top flex justify-between">
