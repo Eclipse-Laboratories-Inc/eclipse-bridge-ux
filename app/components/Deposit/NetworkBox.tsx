@@ -10,7 +10,7 @@ import Skeleton from 'react-loading-skeleton';
 import { truncateWalletAddress } from '@/lib/stringUtils';
 import { useWallets } from "@/app/hooks/useWallets";
 import useEthereumData from "@/lib/ethUtils";
-import { DEPOSIT_TX_GAS_PRICE, WITHDRAW_TX_FEE } from '../constants';
+import { DEPOSIT_TX_GAS_LIMIT, WITHDRAW_TX_FEE } from '../constants';
 
 export interface NetworkBoxProps {
   imageSrc: string;
@@ -23,6 +23,26 @@ export interface NetworkBoxProps {
   balanceEther: number;
   amountEther: string | number | undefined;
   setAmountEther: React.Dispatch<React.SetStateAction<string | number | undefined>>;
+  gasPriceWei: bigint | undefined
+  maxPriorityFeePerGasWei: bigint | undefined
+}
+
+function roundUpToFiveDecimals(value: number): number {
+  return Math.ceil(value * 10**5) / 10**5
+}
+
+// NB: rounds up to 5 decimals
+function calculateMaxTxFeeEther(gasPriceWei: bigint, maxPriorityFeePerGasWei: bigint): number {
+  const maxFeeWei: bigint = (gasPriceWei * BigInt(DEPOSIT_TX_GAS_LIMIT)) + (maxPriorityFeePerGasWei * BigInt(DEPOSIT_TX_GAS_LIMIT));
+  // add 12.5% to base fee to assume last block was 100% full
+  // we also add it to the priority fee just in case; the fee estimate from the wallet provider can differ significantly
+  // e.g. at times viem suggested 1.5gwei vs 1.6 - 1.7 gwei from metamask; other times metamask was the same
+  // we could use a static guess of 2gwei based on docs like https://www.blocknative.com/blog/eip-1559-fees
+  const maxFeeEther: number = (Number(maxFeeWei) / 10**18) * 1.125
+
+  const fiveDecimalRounded = roundUpToFiveDecimals(maxFeeEther)
+
+  return fiveDecimalRounded
 }
 
 export const NetworkBox: React.FC<NetworkBoxProps> = ({ 
@@ -35,7 +55,9 @@ export const NetworkBox: React.FC<NetworkBoxProps> = ({
   wallet,
   balanceEther,
   amountEther,
-  setAmountEther
+  setAmountEther,
+  gasPriceWei,
+  maxPriorityFeePerGasWei
 }) => {
   const { userWallets, evmWallet, solWallet } = useWallets();
   const { blockNumber, gasPrice, ethPrice } = useEthereumData();
@@ -72,8 +94,7 @@ export const NetworkBox: React.FC<NetworkBoxProps> = ({
     adjustInputWidth();
   })
 
-  const txGasFeeEther = walletChain === "SOL" ? WITHDRAW_TX_FEE : Math.ceil((DEPOSIT_TX_GAS_PRICE * (gasPrice! / 10**9) * 10**5)) / 10**5 // round down to 5 decimals
-
+  const maxTxFeeEther = walletChain === "SOL" ? WITHDRAW_TX_FEE : calculateMaxTxFeeEther(gasPriceWei ?? BigInt(0), maxPriorityFeePerGasWei ?? BigInt(0))
   // remove bottom border for ethereum box
   const css = direction === "From" ? "!border-b-0 !rounded-bl-none !rounded-br-none" : ""; 
 
@@ -167,7 +188,7 @@ export const NetworkBox: React.FC<NetworkBoxProps> = ({
                 <span>•</span>
                 <button
                   className="percentage-button disabled:text-neutral-800 disabled:hover:text-neutral-800 disabled:hover:cursor-not-allowed"
-                  disabled={balanceEther * .5 <= txGasFeeEther}
+                  disabled={balanceEther * .5 <= maxTxFeeEther}
                   onClick={() => {
                     setAmountEther(balanceEther * 0.50)
                     setTimeout(adjustInputWidth, 0)
@@ -177,9 +198,9 @@ export const NetworkBox: React.FC<NetworkBoxProps> = ({
                 </button>
                 <button 
                   className="percentage-button disabled:text-neutral-800 disabled:hover:text-neutral-800 disabled:hover:cursor-not-allowed"
-                  disabled={balanceEther <= txGasFeeEther}
-                  onClick={() => { 
-                    setAmountEther(balanceEther - txGasFeeEther);
+                  disabled={balanceEther <= maxTxFeeEther}
+                  onClick={() => {
+                    setAmountEther(roundUpToFiveDecimals(balanceEther - maxTxFeeEther))
                     setTimeout(adjustInputWidth, 0)
                   }}
                 >

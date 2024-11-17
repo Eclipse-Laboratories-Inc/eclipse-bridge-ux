@@ -14,7 +14,7 @@ import {
 import { mainnet, sepolia } from "viem/chains";
 import { createPublicClient, formatEther, http, parseEther, WalletClient } from 'viem';
 import { Transport, Chain, Account } from 'viem';
-import { getBalance } from 'viem/actions';
+import { estimateMaxPriorityFeePerGas, getBalance, getGasPrice } from 'viem/actions';
 import { Options, useNetwork } from "@/app/contexts/NetworkContext"; 
 import ExtendedDetails from '../ExtendedDetails'
 import { getWalletBalance } from "@/lib/solanaUtils";
@@ -26,7 +26,7 @@ import { TransactionDetails } from "../TransactionDetails";
 import { WithdrawDetails } from "../WithdrawDetails";
 import { useTransaction } from "../TransactionPool";
 import { NetworkBox } from "./NetworkBox"
-import { CONTRACT_ABI, DEPOSIT_TX_GAS_PRICE, MIN_DEPOSIT_AMOUNT, MIN_WITHDRAWAL_AMOUNT } from "../constants";
+import { CONTRACT_ABI, DEPOSIT_TX_GAS_LIMIT, MIN_DEPOSIT_AMOUNT, MIN_WITHDRAWAL_AMOUNT } from "../constants";
 import { useWallets } from "@/app/hooks/useWallets";
 import useEthereumData from "@/lib/ethUtils";
 
@@ -54,6 +54,8 @@ export const DepositContent: React.FC<DepositContentProps> = ({ modalStuff, amou
   const { selectedOption, contractAddress, eclipseRpc } = useNetwork();
   const [client, setClient] = useState<any>(null);
   const [provider, setProvider] = useState<any>(null);
+  const [gasPriceWei, setGasPriceWei] = useState<bigint>()
+  const [maxPriorityFeePerGasWei, setMaxPriorityFeePerGasWei] = useState<bigint>()
 
   const { handleUnlinkWallet, rpcProviders } = useDynamicContext();
   const { addNewDeposit } = useTransaction();
@@ -86,6 +88,12 @@ export const DepositContent: React.FC<DepositContentProps> = ({ modalStuff, amou
       cacheTime: 0
     })
     setClient(mclient);
+    
+    Promise.all([getGasPrice(mclient), estimateMaxPriorityFeePerGas(mclient)]).then(([gp, mpf]) => {
+      setGasPriceWei(gp)
+      setMaxPriorityFeePerGasWei(mpf)
+    })
+
   }, [selectedOption])
 
   useEffect(() => {
@@ -218,6 +226,8 @@ export const DepositContent: React.FC<DepositContentProps> = ({ modalStuff, amou
        balanceEther={balanceEther}
        amountEther={amountEther}
        setAmountEther={setAmountEther}
+       gasPriceWei={gasPriceWei}
+       maxPriorityFeePerGasWei={maxPriorityFeePerGasWei}
      />,
      <NetworkBox 
        key="eclipse"
@@ -231,6 +241,8 @@ export const DepositContent: React.FC<DepositContentProps> = ({ modalStuff, amou
        balanceEther={balanceEther}
        amountEther={amountEther}
        setAmountEther={setAmountEther}
+       gasPriceWei={gasPriceWei}
+       maxPriorityFeePerGasWei={maxPriorityFeePerGasWei}
      />
   ]
 
@@ -253,7 +265,7 @@ export const DepositContent: React.FC<DepositContentProps> = ({ modalStuff, amou
         { action === Action.Deposit && <ExtendedDetails 
            amountEther={amountEther}
            target="Eclipse"
-           feeInEth={gasPrice && DEPOSIT_TX_GAS_PRICE * ((gasPrice) / 10**9)}
+           feeInEth={gasPrice && DEPOSIT_TX_GAS_LIMIT * ((gasPrice) / 10**9)}
         /> }
 
         { action === Action.Withdraw && <ExtendedDetails 
