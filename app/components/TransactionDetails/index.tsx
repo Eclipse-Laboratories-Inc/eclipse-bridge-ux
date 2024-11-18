@@ -6,7 +6,8 @@ import { timeAgo } from "@/lib/activityUtils";
 import { ethers } from "ethers";
 import { EthereumDataContext } from "@/app/context";
 import { useTransaction } from "../TransactionPool";
-import { useNetwork, Options } from "@/app/contexts/NetworkContext"; 
+import { useNetwork } from "@/app/contexts/NetworkContext"; 
+import { Options } from "@/lib/networkUtils";
 
 interface TransactionDetailsProps {
   from: "deposit" | "withdraw" | "";

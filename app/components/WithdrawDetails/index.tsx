@@ -8,9 +8,10 @@ import { useTransaction } from "../TransactionPool";
 import { createPublicClient, formatEther, http, parseEther, WalletClient } from 'viem';
 import { mainnet, sepolia } from "viem/chains";
 import { CONTRACT_ABI, WITHDRAW_TX_FEE } from "../constants";
-import { useNetwork, Options } from "@/app/contexts/NetworkContext"; 
+import { useNetwork } from "@/app/contexts/NetworkContext"; 
 import { withdrawEthereum, byteArrayToHex, convertLosslessToNumbers, WithdrawObject } from "@/lib/withdrawUtils"
 import { useWallets } from "@/app/hooks/useWallets";
+import { Options } from "@/lib/networkUtils";
 
 interface TransactionDetailsProps {
   from: "deposit" | "withdraw" | "";
