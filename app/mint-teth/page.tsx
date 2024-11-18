@@ -13,6 +13,9 @@ import { TransactionProvider } from "../components/TransactionPool";
 import { EthereumDataContext, WalletClientContext } from "../context";
 import { useWalletClient } from "../hooks";
 import { Options } from "@/lib/networkUtils";
+import { ToastContainer } from "react-toastify";
+
+import "react-toastify/dist/ReactToastify.min.css";
 
 export default function Main() {
   const { isSidebar, setIsSidebar } = useSidebar();
@@ -47,6 +50,15 @@ export default function Main() {
                 </div>
                 <Footer />
               </div>
+              <ToastContainer
+                autoClose={3000}
+                closeOnClick={true}
+                hideProgressBar={true}
+                position={'top-center'}
+                toastStyle={{backgroundColor: 'transparent'}}
+                className={'!w-auto'}
+                limit={3}
+              />
             </SkeletonTheme>
           </TransactionProvider>
         </WalletClientContext.Provider>

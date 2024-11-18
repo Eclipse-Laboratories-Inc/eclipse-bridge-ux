@@ -13,6 +13,9 @@ import { useSidebar } from "@/app/contexts/SidebarContext";
 import { SkeletonTheme } from 'react-loading-skeleton'
 import { Options } from "@/lib/networkUtils";
 import { NetworkProvider } from "../contexts/NetworkContext";
+import {ToastContainer} from 'react-toastify'
+
+import "react-toastify/dist/ReactToastify.min.css";
 
 export default function GasStationPage() {
   const [selectedOption, setSelectedOption] = useState(Options.Mainnet)
@@ -44,6 +47,15 @@ export default function GasStationPage() {
                   </div>
                   <Footer />
                 </div>
+                <ToastContainer
+                  autoClose={3000}
+                  closeOnClick={true}
+                  hideProgressBar={true}
+                  position={'top-center'}
+                  toastStyle={{backgroundColor: 'transparent'}}
+                  className={'!w-auto'}
+                  limit={3}
+                />
               </SkeletonTheme>
             </TMProvider>
           </WalletClientContext.Provider >
