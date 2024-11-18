@@ -24,6 +24,7 @@ import { TokenOption } from "./TokenSelect";
 import { getRate } from "../lib/getRate";
 import { latestRoundData } from "../lib/latestRoundData";
 import { quoteGasPayment } from "../lib/quoteGasPayment";
+import { composeEtherscanCompatibleTxPath, composeEtherscanUrl, useNetwork } from "@/app/contexts/NetworkContext";
 
 export enum Tabs {
   Mint,
@@ -37,6 +38,7 @@ function Mint() {
   const { walletConnector, accountSwitchState, handleUnlinkWallet } = useDynamicContext();
   const { evmWallet, solWallet } = useWallets();
   const { rpcProviders } = useDynamicContext();
+  const { selectedOption } = useNetwork();
 
   ///////////////////////
   // State
@@ -114,7 +116,7 @@ function Mint() {
       {
         title: "2. Depositing",
         status: depositStatus,
-        link: `https://etherscan.io/tx/${depositTxHash}`,
+        link: composeEtherscanUrl(selectedOption, composeEtherscanCompatibleTxPath(depositTxHash)),
       },
     ];
   }, [approveStatus, depositStatus, depositTxHash]);

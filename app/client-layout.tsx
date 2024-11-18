@@ -9,6 +9,7 @@ import { Providers } from "@/app/providers";
 import { usePathname } from 'next/navigation';
 import { IBM_Plex_Sans } from 'next/font/google';
 import { mergeNetworks } from '@dynamic-labs/sdk-react-core';
+import { ETHERSCAN_TESTNET_URL } from "./components/constants";
 
 const ibmPlexSans = IBM_Plex_Sans({
   subsets: ['latin'],
@@ -84,7 +85,7 @@ const cssOverrides = `
 
 // sepolia
 const evmNetworks = [{
-    blockExplorerUrls: ['https://sepolia.etherscan.io/'],
+    blockExplorerUrls: [ETHERSCAN_TESTNET_URL],
     chainId: 11155111,
     chainName: 'Ethereum Sepolia',
     iconUrls: ['https://app.dynamic.xyz/assets/networks/eth.svg'],

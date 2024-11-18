@@ -8,7 +8,7 @@ import { useTransaction } from "../TransactionPool";
 import { createPublicClient, formatEther, http, parseEther, WalletClient } from 'viem';
 import { mainnet, sepolia } from "viem/chains";
 import { CONTRACT_ABI, WITHDRAW_TX_FEE } from "../constants";
-import { useNetwork } from "@/app/contexts/NetworkContext"; 
+import { composeEclipsescanUrl, composeEtherscanCompatibleTxPath, useNetwork } from "@/app/contexts/NetworkContext"; 
 import { withdrawEthereum, byteArrayToHex, convertLosslessToNumbers, WithdrawObject } from "@/lib/withdrawUtils"
 import { useWallets } from "@/app/hooks/useWallets";
 import { Options } from "@/lib/networkUtils";
@@ -98,7 +98,7 @@ export const WithdrawDetails: React.FC<TransactionDetailsProps> = ({
 }) => {
   const [_, ethPrice] = useContext(EthereumDataContext) ?? [0, 0];
   const { transactions, deposits, withdrawals, setWithdrawals, withdrawTransactions } = useTransaction();
-  const { waitingPeriod, eclipseExplorer, relayerAddress, configAccount, eclipseRpc, bridgeProgram, selectedOption, contractAddress } = useNetwork();
+  const { waitingPeriod, relayerAddress, configAccount, eclipseRpc, bridgeProgram, selectedOption, contractAddress } = useNetwork();
   const { userWallets, evmWallet, solWallet } = useWallets();
   const [txHash, setTxHash] = useState<string | null>(null);
   const [checkbox, setCheckbox] = useState<boolean>(false);
@@ -233,7 +233,7 @@ export const WithdrawDetails: React.FC<TransactionDetailsProps> = ({
             {txHash && (
               <div className="gray-text">
                 <a
-                  href={`https://eclipsescan.xyz/tx/${txHash}?cluster=${eclipseExplorer}`}
+                  href={composeEclipsescanUrl(selectedOption, composeEtherscanCompatibleTxPath(txHash))}
                   target="_blank"
                 >
                   View Txn
@@ -291,7 +291,7 @@ export const WithdrawDetails: React.FC<TransactionDetailsProps> = ({
             <div className="gray-text">
               {false && (
                 <a
-                  href={`https://explorer.eclipse.xyz/tx/${eclipseTx}?cluster=${eclipseExplorer}`}
+                  href={composeEclipsescanUrl(selectedOption, composeEtherscanCompatibleTxPath(eclipseTx))}
                   target="_blank"
                 >
                   View Txn

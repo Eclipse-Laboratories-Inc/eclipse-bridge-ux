@@ -1,4 +1,5 @@
 import { Loading } from "@/app/components/icons";
+import { composeEclipsescanUrl, composeEtherscanCompatibleTxPath, useNetwork } from "@/app/contexts/NetworkContext";
 
 export enum TxStatus {
   Waiting,
@@ -24,6 +25,8 @@ const FailedIcon: React.FC = () => {
 }
 
 export const GasStationNotification: React.FC<{ txState: string, txStatus: TxStatus, txId: string}> = ({ txState, txStatus, txId }) => {
+  const { selectedOption } = useNetwork()
+  
   return (
     <div className="
           flex rounded-[70px] h-[46px] items-center gap-[10px] 
@@ -34,7 +37,7 @@ export const GasStationNotification: React.FC<{ txState: string, txStatus: TxSta
       { txStatus === TxStatus.Confirmed && <DoneIcon /> }
       { txStatus === TxStatus.Failed && <FailedIcon /> }
       <span className="text-white text-[16px] font-medium">{ txState }</span>
-      { txId && <a className="text-[#ffffff4d] text-[16px] font-medium transition-all hover:text-[#4779ff]" href={`https://eclipsescan.xyz/tx/${txId}`} target="_blank">
+      { txId && <a className="text-[#ffffff4d] text-[16px] font-medium transition-all hover:text-[#4779ff]" href={composeEclipsescanUrl(selectedOption, composeEtherscanCompatibleTxPath(txId))} target="_blank">
           View Txn
         </a> 
       }
