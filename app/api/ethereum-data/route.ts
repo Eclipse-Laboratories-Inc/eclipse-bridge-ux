@@ -63,12 +63,13 @@ export async function GET(request: NextRequest) {
         const gasData = await gasResponse.json();
         const priceData = await priceResponse.json();
 
+        const parsedGasPrice = parseInt(gasData.result, 16) / 10**9
+        const gasDecimals  = parsedGasPrice < 1 ? 10**4 : 10**2 // if gas price is less than 1 gwei, read 4 decimals; testnet edge case
+        const newGasPrice = Math.round((parseInt(gasData.result, 16) / 1e9) * gasDecimals) / gasDecimals; 
         const newBlockNumber = parseInt(blockData.result, 16);
-        const newGasPrice = Math.round((parseInt(gasData.result, 16) / 1e9) * 100) / 100; 
         const newEthPrice = Math.round(parseFloat(priceData.result.ethusd) * 100) / 100;
 
         if (!newBlockNumber || !newGasPrice || !newEthPrice) {
-            console.log("Failed to fetch new data, returning last known data");
             return NextResponse.json(cache);
         }
 
