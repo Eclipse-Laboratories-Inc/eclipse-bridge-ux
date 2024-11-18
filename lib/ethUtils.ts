@@ -34,7 +34,8 @@ const useEthereumData = (chain: Options) => {
             const fetchData = async () => {
                 try {
                     const now = new Date().getTime();
-                    if (cache.timestamp && now - cache.timestamp < CACHE_EXPIRATION_MS) {
+                    // only use the cache if chain matches what interval is stored for
+                    if (cache.timestamp && now - cache.timestamp < CACHE_EXPIRATION_MS && chain === intervalOption) {
                         setBlockNumber(cache.blockNumber);
                         setGasPrice(cache.gasPrice);
                         setEthPrice(cache.ethPrice);
@@ -74,7 +75,7 @@ const useEthereumData = (chain: Options) => {
 
         // return () => {
         //     clearInterval(intervalId)
-        //     setIntervalMeta([chain, undefined])
+        //     // setIntervalMeta([chain, undefined])
         // }
     }, [chain, intervalOption, intervalId]);
 

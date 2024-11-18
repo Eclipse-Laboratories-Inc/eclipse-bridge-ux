@@ -8,6 +8,7 @@ interface ICache  {
     gasPrice: number | null;
     ethPrice: number | null;
     timestamp: number | null;
+    network: OptionsLower | null
 }
 
 let cache: ICache = {
@@ -15,6 +16,7 @@ let cache: ICache = {
     gasPrice: null,
     ethPrice: null,
     timestamp: null,
+    network: null
 };
 
 let isFetching = false;
@@ -36,10 +38,11 @@ export async function GET(request: NextRequest) {
     }
 
     const chain = request.nextUrl.searchParams.get('chain')?.toLowerCase()
-    const etherscanAddress = !!chain && isValidChain(chain) ? ETHERSCAN_API_URLS[chain] : ETHERSCAN_API_URLS['mainnet'];
+    const parsedChain: OptionsLower = !!chain && isValidChain(chain) ? chain : 'mainnet'
+    const etherscanAddress = ETHERSCAN_API_URLS[parsedChain]
 
     const now = new Date().getTime();
-    if (cache.timestamp && (now - cache.timestamp) < CACHE_EXPIRATION_MS) {
+    if (cache.timestamp && (now - cache.timestamp) < CACHE_EXPIRATION_MS && cache.network === parsedChain) {
         console.log("Using cached data");
         return NextResponse.json(cache);
     }
@@ -78,6 +81,7 @@ export async function GET(request: NextRequest) {
             gasPrice: newGasPrice,
             ethPrice: newEthPrice,
             timestamp: now,
+            network: parsedChain
         };
 
         return NextResponse.json(cache);
