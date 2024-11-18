@@ -97,9 +97,9 @@ export const WithdrawDetails: React.FC<TransactionDetailsProps> = ({
   ethAmount
 }) => {
   const [_, ethPrice] = useContext(EthereumDataContext) ?? [0, 0];
-  const { transactions, deposits, withdrawals, setWithdrawals, withdrawTransactions } = useTransaction();
+  const { transactions, withdrawals, setWithdrawals, withdrawTransactions } = useTransaction();
   const { waitingPeriod, eclipseExplorer, relayerAddress, configAccount, eclipseRpc, bridgeProgram, selectedOption, contractAddress } = useNetwork();
-  const { userWallets, evmWallet, solWallet } = useWallets();
+  const { evmWallet, solWallet } = useWallets();
   const [txHash, setTxHash] = useState<string | null>(null);
   const [checkbox, setCheckbox] = useState<boolean>(false);
   const [withdrawAmount, setWithdrawAmount] = useState<number>(ethAmount as number); 
@@ -113,7 +113,7 @@ export const WithdrawDetails: React.FC<TransactionDetailsProps> = ({
   useEffect(() => {
     if (!tx) return;
     const withdrawal = withdrawTransactions.get(tx[0].message.withdraw_id);
-    setTxHash(withdrawal?.transaction.signature)
+    setTxHash(withdrawal?.transaction ? withdrawal?.transaction.signature : '0xhash')
 
     const hexAmount = tx[0].message.amount_wei;
     setWithdrawAmount(Number(parseInt(hexAmount, 16)) / 10**18);
@@ -232,7 +232,7 @@ export const WithdrawDetails: React.FC<TransactionDetailsProps> = ({
             <div className={ initiateStatus !== InitiateTxStates.NotReady || txHash ? "white-text" : "gray-text" } style={{ fontSize: "16px" }}>
               1. Initiate Withdraw
             </div>
-            {txHash && (
+            {txHash && (txHash !== '0xhash') && (
               <div className="gray-text">
                 <a
                   href={`https://eclipsescan.xyz/tx/${txHash}?cluster=${eclipseExplorer}`}
