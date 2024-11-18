@@ -4,6 +4,8 @@ import { Chevron, Ellipse, Loading } from "../icons";
 import "./NetworkSwitcher.css";
 import { useWallets } from "@/app/hooks/useWallets";
 import { Options } from '@/lib/networkUtils';
+import { toast } from 'react-toastify';
+import { Notification } from '../GasStation/Notification';
 
 export const NetworkSwitcher: React.FC<{isExtended: boolean}> = ({ isExtended }) => {
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
@@ -15,7 +17,6 @@ export const NetworkSwitcher: React.FC<{isExtended: boolean}> = ({ isExtended })
     ? {}
     : { marginLeft: "240px", marginTop: "0px", width: "150px" }
 
-
   const switchChain = async (o: Options) => {
     const cid = o === Options.Mainnet ? 1 : 11155111
 
@@ -25,13 +26,15 @@ export const NetworkSwitcher: React.FC<{isExtended: boolean}> = ({ isExtended })
         await evmWallet?.connector.switchNetwork({ networkChainId: cid });
         setSelectedOption(o);
       } catch { 
-        console.error('Failed to switch network. Please ensure you approve network switch requests in your wallet.')
+        toast(<Notification type={'error'} title={'Failed to switch network. Approve the prompt in your wallet.'} classNames="bg-black"/>)
       } finally {
         setIsSwitching(false)
       }
-    } else {
-      // TODO probably should commmunicate this to user via alert
-    };
+    } else if (!evmWallet || evmWallet.connected === false) {
+      // wallet doesn't exist / isn't connected; switching is OK since it's just metadata changing
+      // wallet metadata will be updated when connected
+      setSelectedOption(o)
+    }
   }
 
 
