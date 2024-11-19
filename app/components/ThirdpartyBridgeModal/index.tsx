@@ -66,7 +66,7 @@ export const ThirdpartyBridgesModal = () => {
         className={`
           relative bg-black rounded-[30px] border-[1px] border-[#FFFFFF1A]
           transition-[transform,opacity] duration-[400ms] ease-in-out
-          ${isSidebar ? 'ml-[212px]' : 'ml-[34px]'}
+          ${isSidebar ? 'ml-[212px]' : 'ml-[70px]'}
           ${isThirdpartyBridgeModalOpen 
             ? "translate-y-0 opacity-100" 
             : "translate-y-full opacity-0"}
