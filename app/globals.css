@@ -210,3 +210,16 @@ footer {
     margin-top: 100px;
   }
 }
+
+.thirdparty-bridge-pill {
+  svg path {
+    transition: stroke-opacity 0.3s var(--ease-out-quad), stroke 0.3s var(--ease-out-quad);
+  }
+}
+
+.thirdparty-bridge-pill:hover {
+  svg path {
+    stroke: #A1FEA0;
+    stroke-opacity: 1;
+  }
+}

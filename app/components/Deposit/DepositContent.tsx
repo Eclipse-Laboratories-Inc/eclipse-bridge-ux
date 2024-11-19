@@ -27,6 +27,7 @@ import { WithdrawDetails } from "../WithdrawDetails";
 import { useTransaction } from "../TransactionPool";
 import { NetworkBox } from "./NetworkBox"
 import { CONTRACT_ABI, MIN_DEPOSIT_AMOUNT, MIN_WITHDRAWAL_AMOUNT } from "../constants";
+import { useThirdpartyBridgeModalContext } from '../ThirdpartyBridgeModal/ThirdpartyBridgeModalContext';
 import { useWallets } from "@/app/hooks/useWallets";
 import useEthereumData from "@/lib/ethUtils";
 
@@ -43,6 +44,7 @@ enum Action {
 
 export const DepositContent: React.FC<DepositContentProps> = ({ modalStuff, amountEther, setAmountEther }) => {
   const [walletClient, setWalletClient] = useState<WalletClient<Transport, Chain, Account> | null>(null);
+  const { isThirdpartyBridgeModalOpen } = useThirdpartyBridgeModalContext(); 
   const { gasPrice, ethPrice } = useEthereumData();
   const [balanceEther, setAmountBalanceEther] = useState<number>(-1);
   const [isEvmDisconnected, setIsEvmDisconnected] = useState(false);
@@ -165,6 +167,10 @@ export const DepositContent: React.FC<DepositContentProps> = ({ modalStuff, amou
   };
 
   function determineButtonClass(): string {
+    if (isThirdpartyBridgeModalOpen) {
+      'submit-button disabled'
+    }
+
     if (!evmWallet || !solWallet) {
       return 'submit-button disabled'
     }
@@ -263,7 +269,9 @@ export const DepositContent: React.FC<DepositContentProps> = ({ modalStuff, amou
         /> }
         { (!evmWallet || !solWallet) 
         ?
-            <DynamicConnectButton buttonClassName="wallet-connect-button w-full" buttonContainerClassName="submit-button connect-btn">
+            <DynamicConnectButton 
+                buttonClassName={`wallet-connect-button w-full`}  
+                buttonContainerClassName={`submit-button connect-btn ${ isThirdpartyBridgeModalOpen ? 'disabled' : ''}`}>
               <span style={{ width: '100%' }}> {determineButtonText()}</span>
             </DynamicConnectButton>
         : 
