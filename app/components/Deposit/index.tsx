@@ -35,7 +35,6 @@ const InstantIcon: React.FC = () => {
 }
 
 const Deposit: React.FC<DepositProps> = ({ amountEther, setAmountEther }) => {
-  const [gasPrice, ethPrice] = useContext(EthereumDataContext) ?? [null, null];
   const [activeTab, setActiveTab] = useState<Tabs>(Tabs.Deposit);
   const [isModalOpen, setIsModalOpen] = useState(false); 
   const { pendingTransactions } = useTransaction();
@@ -44,7 +43,7 @@ const Deposit: React.FC<DepositProps> = ({ amountEther, setAmountEther }) => {
 
   return (
     <>
-    <div className="deposit-container flex flex-col" style={{ transform: isThirdpartyBridgeModalOpen ? "scale(0.95)" : "" }}>
+    <div className="deposit-container flex flex-col" style={{ transform: isThirdpartyBridgeModalOpen ? "scale(0.9)" : "" }}>
       <div className="deposit-card" style={{
           width: isModalOpen ? "0px" : "", 
           paddingRight: activeTab === Tabs.Activity ? "8px" : "20px"
