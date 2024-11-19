@@ -19,7 +19,7 @@ export function Footer() {
           <Gas gasClassName="gas" />  
           <span>Gas</span>
           {gasPrice 
-            ? <span style={{color: "rgba(161, 254, 160, 0.5)"}}> ${gasPrice}</span>
+            ? <span style={{color: "rgba(161, 254, 160, 0.5)"}}> {gasPrice} Gwei</span>
             : <Skeleton height={15} width={58} />
           }
         </div>
