@@ -43,7 +43,7 @@ const Deposit: React.FC<DepositProps> = ({ amountEther, setAmountEther }) => {
 
   return (
     <>
-    <div className="deposit-container flex flex-col" style={{ transform: isThirdpartyBridgeModalOpen ? "scale(0.9)" : "" }}>
+    <div className="deposit-container flex flex-col" style={{ transform: isThirdpartyBridgeModalOpen ? "scale(0.9)" : ""}}>
       <div className="deposit-card" style={{
           width: isModalOpen ? "0px" : "", 
           paddingRight: activeTab === Tabs.Activity ? "8px" : "20px"

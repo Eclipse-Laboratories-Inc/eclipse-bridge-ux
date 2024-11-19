@@ -16,6 +16,12 @@ const ibmPlexSans = IBM_Plex_Sans({
 
 // TODO: maybe we can read it from a file
 const cssOverrides = `
+  @media (min-width: 640px) { 
+    .modal {
+      margin-left: var(--sidebar-width);
+    }
+  }
+
   div { font-family: 'IBM Plex Sans', sans-serif; }
   img[data-testid='iconic-solana'] {
     content: url('/eclipse.png');

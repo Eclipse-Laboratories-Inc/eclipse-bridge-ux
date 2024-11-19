@@ -88,11 +88,11 @@ export const TransactionDetails: React.FC<TransactionDetailsProps> = ({
   }, [tx]);
 
   return (
-    <div className={ `transaction-details-modal flex flex-col items-center ${ isSidebar ? 'ml-[110px]' : 'ml-[34px]' }` }>
+    <div className={ `transaction-details-modal flex flex-col items-center ${ isSidebar ? 'sm:ml-[110px]' : 'sm:ml-[34px]' }` }>
       <div className="transaction-details-header flex flex-row items-center justify-between">
         <div></div>
         <span>Deposit</span>
-        <div onClick={closeModal}>
+        <div onClick={ closeModal }>
           <Cross crossClassName="modal-cross" />
         </div>
       </div>

@@ -17,8 +17,10 @@ const ibmPlexSans = IBM_Plex_Sans({
 
 // TODO: maybe we can read it from a file
 const cssOverrides = `
-  .modal {
-    margin-left: var(--sidebar-width);
+  @media (min-width: 640px) { 
+    .modal {
+      margin-left: var(--sidebar-width);
+    }
   }
 
   div { font-family: 'IBM Plex Sans', sans-serif; }

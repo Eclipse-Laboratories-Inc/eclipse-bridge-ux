@@ -155,7 +155,7 @@ export const GasStation: React.FC = () => {
       txId={txId}
     /> }
     <div className="deposit-container flex flex-col rounded-[30px] !w-[520px] p-[20px] gap-[20px]" 
-         style={{ border: "1px solid rgba(255, 255, 255, 0.10)", background: "rgba(255, 255, 255, 0.02)" }}>
+         style={{ border: "1px solid rgba(255, 255, 255, 0.10)", background: "rgba(255, 255, 255, 0.02)", transition: "transform 0.3s var(--ease-out-quad)" }}>
       { /* header text */ }
       <div className="flex flex-row w-full justify-center items-center gap-[8px]">
         <GasStationIcon size="19" stroke="#a1fea0" opacity="1"/>
@@ -237,11 +237,14 @@ export const GasStation: React.FC = () => {
 
       { /* button */ }
       { !solWallet
-        ? <DynamicConnectButton buttonClassName={`${getButtonClassName()} ${ selectModal ? 'bg-[#ffffff0d] text-white' : '' }`} buttonContainerClassName="submit-button connect-btn">
+        ? <DynamicConnectButton 
+              buttonClassName={`${getButtonClassName()} ${ selectModal ? 'bg-[#ffffff0d] text-white' : '' }`} 
+              buttonContainerClassName="submit-button connect-btn"
+          >
             <span style={{ width: '100%' }}> { getButtonText() }</span>
           </DynamicConnectButton>
 
-        : <button className={`${getButtonClassName()} ${ selectModal ? 'bg-[#ffffff0d] text-white' : '' }`} onClick={fetchOctane}>
+        : <button className={`${ getButtonClassName() } ${ selectModal ? 'bg-[#ffffff0d] text-white' : '' }`} onClick={fetchOctane}>
             { getButtonText() }
           </button>
       }
