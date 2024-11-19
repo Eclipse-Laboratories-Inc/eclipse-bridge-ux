@@ -395,7 +395,7 @@ export const WithdrawDetails: React.FC<TransactionDetailsProps> = ({
       {
         waitingPeriodStatus !== WaitingPeriodState.Ready && <button 
           onClick={txHash ? closeModal : handleInitiate } 
-          className={ `initiate-button ${ txHash && "!text-white !bg-[#ffffff0d]"} ${ !checkbox && "!text-white cursor-not-allowed !bg-[#ffffff0d]" }` }
+          className={ `initiate-button ${ txHash && "!text-white !bg-[#ffffff0d] !cursor-pointer"} ${ !checkbox && "!text-white cursor-not-allowed !bg-[#ffffff0d]" }` }
         >
           { getButtonText() }
         </button>

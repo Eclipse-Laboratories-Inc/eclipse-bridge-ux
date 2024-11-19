@@ -121,6 +121,7 @@ export default function ClientLayout({
       <head>
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
       </head>
+      <Providers>
       <DynamicContextProvider
         settings={{
           events: {
@@ -181,10 +182,9 @@ export default function ClientLayout({
           ],
         }}
       >
-        <Providers>
             <body className={ibmPlexSans.className}>{children}</body>
-        </Providers>
       </DynamicContextProvider>
+      </Providers>
     </html>
   );
 

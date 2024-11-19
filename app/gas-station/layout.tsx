@@ -145,6 +145,9 @@ export default function ClientLayout({
           environmentId: process.env.NEXT_PUBLIC_ENVIRONMENT_ID || '',
           walletConnectors: [EthereumWalletConnectors, SolanaWalletConnectors],
           mobileExperience: "redirect",
+          recommendedWallets: [
+            { walletKey: 'backpacksol', label: 'Recommended' }
+          ],
           initialAuthenticationMode: 'connect-only',
           displaySiweStatement: true,
           privacyPolicyUrl: "https://www.eclipse.xyz/privacy-policy",

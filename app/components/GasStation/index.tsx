@@ -27,10 +27,6 @@ export const GasStation: React.FC = () => {
   const [txStatus, setTxStatus] = useState<TxStatus>(TxStatus.None);
   const { solWallet } = useWallets(); 
 
-  useEffect(() => {
-    console.log(selectedToken, "selo")
-  }, [!selectedToken])
-
   function getInputClassName(): string {
     // insufficient funds
     if (BigInt(Number(amount ?? "0") * (10 ** selectedToken.decimals)) / BigInt(Math.floor(selectedToken.price ?? 0))> (selectedToken.balance ?? BigInt(0))) {
@@ -142,8 +138,7 @@ export const GasStation: React.FC = () => {
 
     emitEvent(`Refuel of $${amount} Success`, TxStatus.Confirmed, 10)
     setTxId(signedTransaction.signature)
-    // window.open(`https://solscan.io/tx/${txid}`)
-    console.log(tx)
+
     console.log(signedTransaction.signature)
   }
 
@@ -241,12 +236,12 @@ export const GasStation: React.FC = () => {
       </div>
 
       { /* button */ }
-      { !solWallet 
-        ? <DynamicConnectButton buttonClassName={getButtonClassName()} buttonContainerClassName="submit-button connect-btn">
+      { !solWallet
+        ? <DynamicConnectButton buttonClassName={`${getButtonClassName()} ${ selectModal ? 'bg-[#ffffff0d] text-white' : '' }`} buttonContainerClassName="submit-button connect-btn">
             <span style={{ width: '100%' }}> { getButtonText() }</span>
           </DynamicConnectButton>
 
-        : <button className={getButtonClassName()} onClick={fetchOctane}>
+        : <button className={`${getButtonClassName()} ${ selectModal ? 'bg-[#ffffff0d] text-white' : '' }`} onClick={fetchOctane}>
             { getButtonText() }
           </button>
       }
