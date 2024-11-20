@@ -1,6 +1,5 @@
 import { useWallets } from "@/app/hooks";
 import { generateTxObjectForDetails } from "@/lib/activityUtils";
-import useEthereumData from "@/lib/ethUtils";
 import { createPublicClient, formatEther, http } from 'viem';
 import { solanaToBytes32 } from "@/lib/solanaUtils";
 import { Transport, Chain, Account } from 'viem';
@@ -25,6 +24,7 @@ import { TokenOption } from "./TokenSelect";
 import { getRate } from "../lib/getRate";
 import { latestRoundData } from "../lib/latestRoundData";
 import { quoteGasPayment } from "../lib/quoteGasPayment";
+import { composeEtherscanCompatibleTxPath, composeEtherscanUrl, useNetwork } from "@/app/contexts/NetworkContext";
 
 export enum Tabs {
   Mint,
@@ -38,6 +38,7 @@ function Mint() {
   const { walletConnector, accountSwitchState, handleUnlinkWallet } = useDynamicContext();
   const { evmWallet, solWallet } = useWallets();
   const { rpcProviders } = useDynamicContext();
+  const { selectedOption } = useNetwork();
 
   ///////////////////////
   // State
@@ -115,7 +116,7 @@ function Mint() {
       {
         title: "2. Depositing",
         status: depositStatus,
-        link: `https://etherscan.io/tx/${depositTxHash}`,
+        link: composeEtherscanUrl(selectedOption, composeEtherscanCompatibleTxPath(depositTxHash)),
       },
     ];
   }, [approveStatus, depositStatus, depositTxHash]);

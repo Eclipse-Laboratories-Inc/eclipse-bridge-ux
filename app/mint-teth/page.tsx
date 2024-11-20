@@ -12,16 +12,20 @@ import { Sidebar } from "../components/Sidebar";
 import { TransactionProvider } from "../components/TransactionPool";
 import { EthereumDataContext, WalletClientContext } from "../context";
 import { useWalletClient } from "../hooks";
+import { Options } from "@/lib/networkUtils";
+import { ToastContainer } from "react-toastify";
+
+import "react-toastify/dist/ReactToastify.min.css";
 
 export default function Main() {
   const { isSidebar, setIsSidebar } = useSidebar();
-  const { gasPrice, ethPrice } = useEthereumData();
-  const [amountEther, setAmountEther] = useState<number | string | undefined>(undefined);
+  const [selectedOption, setSelectedOption] = useState(Options.Mainnet)
+  const { gasPrice, ethPrice, blockNumber } = useEthereumData(selectedOption);
   const walletClient = useWalletClient();
 
   return (
-    <EthereumDataContext.Provider value={[gasPrice, ethPrice]}>
-      <NetworkProvider>
+    <EthereumDataContext.Provider value={[gasPrice, ethPrice, blockNumber]}>
+      <NetworkProvider selectedOption={selectedOption} setSelectedOption={setSelectedOption}>
         <WalletClientContext.Provider value={walletClient}>
           <TransactionProvider>
             <SkeletonTheme baseColor="#FFFFFF0A" highlightColor="#FFFFFF26">
@@ -46,6 +50,15 @@ export default function Main() {
                 </div>
                 <Footer />
               </div>
+              <ToastContainer
+                autoClose={3000}
+                closeOnClick={true}
+                hideProgressBar={true}
+                position={'top-center'}
+                toastStyle={{backgroundColor: 'transparent'}}
+                className={'!w-auto'}
+                limit={3}
+              />
             </SkeletonTheme>
           </TransactionProvider>
         </WalletClientContext.Provider>

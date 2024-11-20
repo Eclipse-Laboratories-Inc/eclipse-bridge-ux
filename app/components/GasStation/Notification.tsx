@@ -1,4 +1,7 @@
 import { Loading } from "@/app/components/icons";
+import { composeEclipsescanUrl, composeEtherscanCompatibleTxPath, useNetwork } from "@/app/contexts/NetworkContext";
+import { assertNever } from "@/lib/typeUtils";
+import { PropsWithChildren } from "react";
 
 export enum TxStatus {
   Waiting,
@@ -23,21 +26,61 @@ const FailedIcon: React.FC = () => {
   );
 }
 
-export const GasStationNotification: React.FC<{ txState: string, txStatus: TxStatus, txId: string}> = ({ txState, txStatus, txId }) => {
+interface NotificationProps extends PropsWithChildren {
+  type: 'pending' | 'success' | 'error' | undefined
+  title: string
+  classNames?: string
+}
+
+const NOTIFICATION_TYPE_TO_ICON: Record<Exclude<NotificationProps['type'], undefined>, React.ReactNode> = {
+  'pending': <Loading style={{color: "rgba(161, 254, 160, 1)"}} loadingClassName="" />,
+  'error': <FailedIcon />,
+  'success':  <DoneIcon />
+}
+
+export const Notification: React.FC<NotificationProps> = ({type, title, children, classNames = ''}) => {
   return (
-    <div className="
-          flex rounded-[70px] h-[46px] items-center gap-[10px] 
-          border-[1px] border-[#ffffff1a] bg-[#ffffff0d] mt-[-111px]
-          pr-[24px] pl-[12px] py-[11px]
-    ">
-      { txStatus === TxStatus.Waiting && <Loading style={{color: "rgba(161, 254, 160, 1)"}} loadingClassName="" /> }
-      { txStatus === TxStatus.Confirmed && <DoneIcon /> }
-      { txStatus === TxStatus.Failed && <FailedIcon /> }
-      <span className="text-white text-[16px] font-medium">{ txState }</span>
-      { txId && <a className="text-[#ffffff4d] text-[16px] font-medium transition-all hover:text-[#4779ff]" href={`https://eclipsescan.xyz/tx/${txId}`} target="_blank">
-          View Txn
-        </a> 
-      }
+    <div className={"flex rounded-[70px] items-center gap-[10px] border-[1px] border-[#ffffff1a] px-[15px] py-[10px] " + classNames}>
+      {type && NOTIFICATION_TYPE_TO_ICON[type]}
+      <span className="text-white text-[16px] font-medium">{ title }</span>
+      {children}
     </div>
-  );
+  )
+}
+
+export const GasStationNotification: React.FC<{ txState: string, txStatus: TxStatus, txId: string}> = ({ txState, txStatus, txId }) => {
+  const { selectedOption } = useNetwork()
+
+  let type: NotificationProps['type']
+  switch (txStatus) {
+    case TxStatus.Waiting: {
+      type = 'pending'
+      break
+    }
+    case TxStatus.Confirmed: {
+      type = 'success'
+      break
+    }
+    case TxStatus.Failed: {
+      type = 'error'
+      break
+    }
+    case TxStatus.None: {
+      type = undefined
+      break
+    }
+    default: {
+      assertNever(txStatus)
+    }
+  }
+
+  return (
+    <Notification type={type} title={txState} classNames="mt-[-111px] bg-[#ffffff0d] h-[46px]">
+    { txId &&
+      <a className="text-[#ffffff4d] text-[16px] font-medium transition-all hover:text-[#4779ff]" href={composeEclipsescanUrl(selectedOption, composeEtherscanCompatibleTxPath(txId))} target="_blank">
+        View Txn
+      </a>
+    }
+    </Notification>
+  )
 }

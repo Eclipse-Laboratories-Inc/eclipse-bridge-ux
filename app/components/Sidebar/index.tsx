@@ -6,6 +6,7 @@ import { useState, type ReactNode } from "react";
 import { toKebabCase } from "@/lib/stringUtils";
 import { useRouter } from "next/navigation";
 import { usePathname } from 'next/navigation'
+import { composeEclipsescanUrl, useNetwork } from "@/app/contexts/NetworkContext";
 
 
 const ToggleIcon: React.FC<{ isExtended: boolean }> = ({ isExtended }) => {
@@ -22,12 +23,13 @@ const ToggleIcon: React.FC<{ isExtended: boolean }> = ({ isExtended }) => {
 }
 
 const SidebarItem: React.FC<{name: string, icon: ReactNode, isExtended: boolean}> = ({ name, icon, isExtended }) => {  
+  const { selectedOption } = useNetwork()
   const [hover, setHover] = useState(false);
   const router = useRouter();
   const pathName = usePathname();
   let targetHref = toKebabCase(name)
-  if (targetHref === "eclipsescan") { targetHref = "https://eclipsescan.xyz"}
-  if (targetHref === "ecosystem")   { targetHref = "https://www.eclipse.xyz/ecosystem"}
+  if (targetHref === "eclipsescan") { targetHref = composeEclipsescanUrl(selectedOption) }
+  if (targetHref === "ecosystem")   { targetHref = "https://www.eclipse.xyz/ecosystem" }
 
   return (
     <Link href={targetHref} target={targetHref.includes("https") ? "_blank" : ""}>

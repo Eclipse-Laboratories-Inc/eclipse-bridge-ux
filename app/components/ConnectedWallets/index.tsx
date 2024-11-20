@@ -5,10 +5,11 @@ import { createPublicClient, formatEther, http } from 'viem';
 import { getBalance } from 'viem/actions';
 import './styles.css';
 import { Cross, Copy, ConnectIcon, CircleCheck, Disconnect } from "../icons";
-import { Options, useNetwork } from "@/app/contexts/NetworkContext"; 
+import { useNetwork } from "@/app/contexts/NetworkContext"; 
 import { truncateWalletAddress } from '@/lib/stringUtils';
 import { getWalletBalance } from '@/lib/solanaUtils';
 import { useWallets } from '@/app/hooks/useWallets';
+import { Options } from '@/lib/networkUtils';
 
 interface ConnectedWalletsProps {
   close: (e?: React.MouseEvent<HTMLDivElement>) => void;
