@@ -34,7 +34,6 @@ const ExtendedDetails: React.FC<ExtendedDetailsProps> = ({ amountEther, target, 
   const amountEth = (typeof amountEther === "string" ? parseFloat(amountEther) : amountEther)
   const { evmWallet, solWallet } = useWallets(); 
 
-  if (!solWallet || !evmWallet) return null;
 
   return (
     <>

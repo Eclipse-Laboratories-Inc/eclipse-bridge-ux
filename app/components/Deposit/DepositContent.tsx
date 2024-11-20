@@ -9,6 +9,7 @@ import TransferArrow from '../icons/transferArrow';
 import {
   DynamicConnectButton,
   useDynamicContext,
+  useWalletConnectorEvent
 } from "@dynamic-labs/sdk-react-core";
 
 import { mainnet, sepolia } from "viem/chains";
@@ -102,7 +103,12 @@ export const DepositContent: React.FC<DepositContentProps> = ({ modalStuff, amou
     let lWalletClient = evmWallet?.connector.getWalletClient<WalletClient<Transport, Chain, Account>>();
     lWalletClient && (lWalletClient.cacheTime = 0);
     setWalletClient(lWalletClient ?? null);
+
   }, [evmWallet?.connector])
+
+  useEffect(() => {
+    if (!evmWallet) { setAmountBalanceEther(-1) }
+  }, [evmWallet])
 
   useEffect(() => {
     // if action is withdraw fetch eclipse balance
@@ -261,7 +267,7 @@ export const DepositContent: React.FC<DepositContentProps> = ({ modalStuff, amou
     <div className={isModalOpen ? "status-overlay active" : "status-overlay"}></div>
     { !isModalOpen && <div>
         <div className="network-section">
-          <div className={`arrow-container cursor-pointer ${ (solWallet && evmWallet) ? "" : "!top-[65%]"}`} 
+          <div className="arrow-container cursor-pointer" 
                onClick={switchAction}
           >
             <TransferArrow />
