@@ -11,11 +11,9 @@ export function Providers(props: { children: ReactNode }) {
 
   return (
       <QueryClientProvider client={queryClient}>
-        <NetworkProvider>
           <SidebarProvider>
             {props.children}
           </SidebarProvider>
-        </NetworkProvider>
       </QueryClientProvider>
   );
 }

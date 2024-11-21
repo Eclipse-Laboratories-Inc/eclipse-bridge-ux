@@ -1,12 +1,13 @@
 "use client"
 import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 import { getLastDeposits, getNonce, getEclipseTransaction, checkDepositWithPDA } from "@/lib/activityUtils"
-import { Options, useNetwork } from "@/app/contexts/NetworkContext"; 
+import { useNetwork } from "@/app/contexts/NetworkContext"; 
 import { createPublicClient, PublicClient, http } from 'viem'
 import { mainnet, sepolia } from "viem/chains";
 import { Transaction, defaultTransaction, TransactionContextType, WithdrawActivity } from "./types"
 import { useWallets } from '@/app/hooks/useWallets';
 import { getWithdrawalsByAddress, WithdrawObject, getWithdrawalPda} from "@/lib/withdrawUtils"
+import { Options } from '@/lib/networkUtils';
 
 export const TransactionContext = createContext<TransactionContextType | undefined>(undefined);
 

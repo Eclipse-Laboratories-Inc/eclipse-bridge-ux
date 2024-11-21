@@ -6,8 +6,9 @@ import { timeAgo } from "@/lib/activityUtils";
 import { ethers } from "ethers";
 import { EthereumDataContext } from "@/app/context";
 import { useTransaction } from "../TransactionPool";
-import { useNetwork, Options } from "@/app/contexts/NetworkContext"; 
 import { useSidebar } from "@/app/contexts/SidebarContext";
+import { composeEclipsescanUrl, composeEtherscanCompatibleTxPath, composeEtherscanUrl, useNetwork } from "@/app/contexts/NetworkContext"; 
+import { Options } from "@/lib/networkUtils";
 
 interface TransactionDetailsProps {
   from: "deposit" | "withdraw" | "";
@@ -71,6 +72,7 @@ export const TransactionDetails: React.FC<TransactionDetailsProps> = ({
   const { transactions, addTransactionListener } = useTransaction();
   const { evmExplorer, eclipseExplorer } = useNetwork();
   const { isSidebar } = useSidebar();
+  const { selectedOption } = useNetwork();
 
   const transaction = tx && transactions.get(tx.hash);
 
@@ -108,7 +110,7 @@ export const TransactionDetails: React.FC<TransactionDetailsProps> = ({
             {tx && (
               <div className="gray-text">
                 <a
-                  href={`${evmExplorer}/tx/${tx.hash}`}
+                  href={composeEtherscanUrl(selectedOption, composeEtherscanCompatibleTxPath(tx.hash))}
                   target="_blank"
                 >
                   View Txn
@@ -164,7 +166,7 @@ export const TransactionDetails: React.FC<TransactionDetailsProps> = ({
             <div className="gray-text">
               {eclipseTx && (
                 <a
-                  href={`https://eclipsescan.xyz/tx/${eclipseTx}?cluster=${eclipseExplorer}`}
+                  href={composeEclipsescanUrl(selectedOption, composeEtherscanCompatibleTxPath(eclipseTx))}
                   target="_blank"
                 >
                   View Txn

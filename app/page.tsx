@@ -1,5 +1,5 @@
 'use client';
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Deposit from "./components/Deposit";
 import { Header } from './components/Header';
 import { Sidebar } from './components/Sidebar';
@@ -13,16 +13,21 @@ import { useSidebar } from "@/app/contexts/SidebarContext";
 import { ThirdpartyBridgeModalProvider } from '@/app/components/ThirdpartyBridgeModal/ThirdpartyBridgeModalContext';
 import { TransactionProvider } from './components/TransactionPool';
 import { SkeletonTheme } from 'react-loading-skeleton'
+import { Options } from "@/lib/networkUtils";
+import {ToastContainer} from 'react-toastify'
+
+import "react-toastify/dist/ReactToastify.min.css";
 
 export default function Main() {
   const { isSidebar, setIsSidebar } = useSidebar();
-  const { gasPrice, ethPrice } = useEthereumData();
+  const [selectedOption, setSelectedOption] = useState(Options.Mainnet)
+  const { gasPrice, ethPrice, blockNumber } = useEthereumData(selectedOption);
   const [amountEther, setAmountEther] = useState<number | string | undefined>(undefined);
   const walletClient = useWalletClient();
 
   return (
-    <EthereumDataContext.Provider value={[gasPrice, ethPrice]}>
-      <NetworkProvider>
+    <EthereumDataContext.Provider value={[gasPrice, ethPrice, blockNumber]}>
+      <NetworkProvider selectedOption={selectedOption} setSelectedOption={setSelectedOption}>
         <WalletClientContext.Provider value={walletClient}>
           <TransactionProvider>
           <ThirdpartyBridgeModalProvider>
@@ -46,6 +51,15 @@ export default function Main() {
                 </div>
                 <Footer />
               </div>
+              <ToastContainer
+                autoClose={3000}
+                closeOnClick={true}
+                hideProgressBar={true}
+                position={'top-center'}
+                toastStyle={{backgroundColor: 'transparent'}}
+                className={'!w-auto'}
+                limit={3}
+              />
             </SkeletonTheme>
             </ThirdpartyBridgeModalProvider>
           </TransactionProvider>

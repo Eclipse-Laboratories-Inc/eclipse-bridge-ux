@@ -1,7 +1,8 @@
 import { useMemo, useContext } from "react";
 import { mainnet, sepolia } from "viem/chains";
 import { createWalletClient, WalletClient, custom } from 'viem';
-import { Options, NetworkContext } from "@/app/contexts/NetworkContext"; 
+import { NetworkContext } from "@/app/contexts/NetworkContext"; 
+import { Options } from "@/lib/networkUtils";
 
 export const useWalletClient = (): WalletClient | null => {
   const context = useContext(NetworkContext);

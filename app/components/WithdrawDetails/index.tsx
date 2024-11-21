@@ -9,9 +9,10 @@ import { useTransaction } from "../TransactionPool";
 import { createPublicClient, formatEther, http, parseEther, WalletClient } from 'viem';
 import { mainnet, sepolia } from "viem/chains";
 import { CONTRACT_ABI, WITHDRAW_TX_FEE } from "../constants";
-import { useNetwork, Options } from "@/app/contexts/NetworkContext"; 
+import { composeEclipsescanUrl, composeEtherscanCompatibleTxPath, useNetwork } from "@/app/contexts/NetworkContext"; 
 import { withdrawEthereum, byteArrayToHex, convertLosslessToNumbers, WithdrawObject } from "@/lib/withdrawUtils"
 import { useWallets } from "@/app/hooks/useWallets";
+import { Options } from "@/lib/networkUtils";
 
 interface TransactionDetailsProps {
   from: "deposit" | "withdraw" | "";
@@ -97,9 +98,9 @@ export const WithdrawDetails: React.FC<TransactionDetailsProps> = ({
   ethAmount
 }) => {
   const [_, ethPrice] = useContext(EthereumDataContext) ?? [0, 0];
-  const { transactions, withdrawals, setWithdrawals, withdrawTransactions } = useTransaction();
   const { waitingPeriod, eclipseExplorer, relayerAddress, configAccount, eclipseRpc, bridgeProgram, selectedOption, contractAddress } = useNetwork();
-  const { evmWallet, solWallet } = useWallets();
+  const { transactions, deposits, withdrawals, setWithdrawals, withdrawTransactions } = useTransaction();
+  const { userWallets, evmWallet, solWallet } = useWallets();
   const [txHash, setTxHash] = useState<string | null>(null);
   const [checkbox, setCheckbox] = useState<boolean>(false);
   const [withdrawAmount, setWithdrawAmount] = useState<number>(ethAmount as number); 
@@ -234,7 +235,7 @@ export const WithdrawDetails: React.FC<TransactionDetailsProps> = ({
             {txHash && (txHash !== '0xhash') && (
               <div className="gray-text">
                 <a
-                  href={`https://eclipsescan.xyz/tx/${txHash}?cluster=${eclipseExplorer}`}
+                  href={composeEclipsescanUrl(selectedOption, composeEtherscanCompatibleTxPath(txHash))}
                   target="_blank"
                 >
                   View Txn
@@ -292,7 +293,7 @@ export const WithdrawDetails: React.FC<TransactionDetailsProps> = ({
             <div className="gray-text">
               {false && (
                 <a
-                  href={`https://explorer.eclipse.xyz/tx/${eclipseTx}?cluster=${eclipseExplorer}`}
+                  href={composeEclipsescanUrl(selectedOption, composeEtherscanCompatibleTxPath(eclipseTx))}
                   target="_blank"
                 >
                   View Txn

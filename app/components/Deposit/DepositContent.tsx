@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 
 import './styles.css';
 import 'react-loading-skeleton/dist/skeleton.css';
@@ -16,7 +16,7 @@ import { mainnet, sepolia } from "viem/chains";
 import { createPublicClient, formatEther, http, parseEther, WalletClient } from 'viem';
 import { Transport, Chain, Account } from 'viem';
 import { estimateMaxPriorityFeePerGas, getBalance, getGasPrice } from 'viem/actions';
-import { Options, useNetwork } from "@/app/contexts/NetworkContext"; 
+import { useNetwork } from "@/app/contexts/NetworkContext"; 
 import ExtendedDetails from '../ExtendedDetails'
 import { getWalletBalance } from "@/lib/solanaUtils";
 
@@ -30,7 +30,8 @@ import { NetworkBox } from "./NetworkBox"
 import { useThirdpartyBridgeModalContext } from '../ThirdpartyBridgeModal/ThirdpartyBridgeModalContext';
 import { CONTRACT_ABI, DEPOSIT_TX_GAS_LIMIT, MIN_DEPOSIT_AMOUNT, MIN_WITHDRAWAL_AMOUNT } from "../constants";
 import { useWallets } from "@/app/hooks/useWallets";
-import useEthereumData from "@/lib/ethUtils";
+import { Options } from '@/lib/networkUtils';
+import { EthereumDataContext } from '@/app/context';
 
 export interface DepositContentProps {
   modalStuff: [boolean, React.Dispatch<React.SetStateAction<boolean>>];
@@ -47,6 +48,7 @@ export const DepositContent: React.FC<DepositContentProps> = ({ modalStuff, amou
   const [walletClient, setWalletClient] = useState<WalletClient<Transport, Chain, Account> | null>(null);
   const { isThirdpartyBridgeModalOpen } = useThirdpartyBridgeModalContext(); 
   const { gasPrice, ethPrice } = useEthereumData();
+  const { selectedOption, contractAddress, eclipseRpc } = useNetwork();
   const [balanceEther, setAmountBalanceEther] = useState<number>(-1);
   const [isEvmDisconnected, setIsEvmDisconnected] = useState(false);
   const [isSolDisconnected, setIsSolDisconnected] = useState(false);
@@ -54,7 +56,6 @@ export const DepositContent: React.FC<DepositContentProps> = ({ modalStuff, amou
   const [ethTxStatus, setEthTxStatus] = useState("");
   const [isModalOpen, setIsModalOpen] = modalStuff; 
   const [isWithdrawFlowOpen, setIsWithdrawFlowOpen] = modalStuff; 
-  const { selectedOption, contractAddress, eclipseRpc } = useNetwork();
   const [client, setClient] = useState<any>(null);
   const [provider, setProvider] = useState<any>(null);
   const [gasPriceWei, setGasPriceWei] = useState<bigint>()
