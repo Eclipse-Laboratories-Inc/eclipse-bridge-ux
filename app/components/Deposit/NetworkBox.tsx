@@ -9,7 +9,7 @@ import Skeleton from 'react-loading-skeleton';
 import { truncateWalletAddress } from '@/lib/stringUtils';
 import { useWallets } from "@/app/hooks/useWallets";
 import { DEPOSIT_TX_GAS_LIMIT, WITHDRAW_TX_FEE } from '../constants';
-import { EthereumDataContext } from '@/app/context';
+import useEthereumData from "@/lib/ethUtils";
 
 export interface NetworkBoxProps {
   imageSrc: string;

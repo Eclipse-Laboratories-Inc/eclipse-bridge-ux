@@ -15,6 +15,7 @@ import {
 import { mainnet, sepolia } from "viem/chains";
 import { createPublicClient, formatEther, http, parseEther, WalletClient } from 'viem';
 import { Transport, Chain, Account } from 'viem';
+import useEthereumData from "@/lib/ethUtils";
 import { estimateMaxPriorityFeePerGas, getBalance, getGasPrice } from 'viem/actions';
 import { useNetwork } from "@/app/contexts/NetworkContext"; 
 import ExtendedDetails from '../ExtendedDetails'
