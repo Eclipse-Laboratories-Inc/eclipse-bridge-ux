@@ -4,8 +4,8 @@ import { useTransactionManager, Token } from "./TokenManager";
 import {
   DynamicConnectButton,
 } from "@dynamic-labs/sdk-react-core";
-import { Transaction, Signer, Keypair, VersionedTransaction, TransactionMessage, PublicKey, Connection } from '@solana/web3.js';
-import { SelectToken} from "./SelectToken"
+import { Transaction, Connection } from '@solana/web3.js';
+import { SelectToken } from "./SelectToken"
 import { GasStationNotification, TxStatus } from "./Notification"
 import { useWallets } from "@/app/hooks/useWallets";
 import { createOctaneSwapTransaction } from "@/lib/octaneUtils"
@@ -26,9 +26,6 @@ export const GasStation: React.FC = () => {
   const [txId, setTxId] = useState("");
   const [txStatus, setTxStatus] = useState<TxStatus>(TxStatus.None);
   const { solWallet } = useWallets(); 
-  useEffect(() => {
-    console.log(selectedToken, "selo")
-  }, [!selectedToken])
 
   function getInputClassName(): string {
     // insufficient funds
@@ -141,8 +138,7 @@ export const GasStation: React.FC = () => {
 
     emitEvent(`Refuel of $${amount} Success`, TxStatus.Confirmed, 10)
     setTxId(signedTransaction.signature)
-    // window.open(`https://solscan.io/tx/${txid}`)
-    console.log(tx)
+
     console.log(signedTransaction.signature)
   }
 
@@ -159,7 +155,7 @@ export const GasStation: React.FC = () => {
       txId={txId}
     /> }
     <div className="deposit-container flex flex-col rounded-[30px] !w-[520px] p-[20px] gap-[20px]" 
-         style={{ border: "1px solid rgba(255, 255, 255, 0.10)", background: "rgba(255, 255, 255, 0.02)" }}>
+         style={{ border: "1px solid rgba(255, 255, 255, 0.10)", background: "rgba(255, 255, 255, 0.02)", transition: "transform 0.3s var(--ease-out-quad)" }}>
       { /* header text */ }
       <div className="flex flex-row w-full justify-center items-center gap-[8px]">
         <GasStationIcon size="19" stroke="#a1fea0" opacity="1"/>
@@ -185,7 +181,7 @@ export const GasStation: React.FC = () => {
             <div className="flex flex-row items-center">
               <span className={`font-semibold text-[44px] ${amount.includes('.') ? "mr-[-7px]" : ""}`}>$</span>
               <input type="string" 
-                     className="bg-transparent font-semibold text-[44px] text-center w-[1ch]" 
+                     className="bg-transparent font-medium text-[44px] text-center w-[1ch]" 
                      value={amount} 
                      onChange={() => {setAmount(inputRef.current?.value || "")}}
                      ref={inputRef}
@@ -240,12 +236,15 @@ export const GasStation: React.FC = () => {
       </div>
 
       { /* button */ }
-      { !solWallet 
-        ? <DynamicConnectButton buttonClassName={getButtonClassName()} buttonContainerClassName="submit-button connect-btn">
+      { !solWallet
+        ? <DynamicConnectButton 
+              buttonClassName={`${getButtonClassName()} ${ selectModal ? 'bg-[#ffffff0d] text-white' : '' }`} 
+              buttonContainerClassName="submit-button connect-btn"
+          >
             <span style={{ width: '100%' }}> { getButtonText() }</span>
           </DynamicConnectButton>
 
-        : <button className={getButtonClassName()} onClick={fetchOctane}>
+        : <button className={`${ getButtonClassName() } ${ selectModal ? 'bg-[#ffffff0d] text-white' : '' }`} onClick={fetchOctane}>
             { getButtonText() }
           </button>
       }

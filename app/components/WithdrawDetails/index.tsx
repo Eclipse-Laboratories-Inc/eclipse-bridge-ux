@@ -5,7 +5,7 @@ import { timeAgo, timeLeft } from "@/lib/activityUtils";
 import { EthereumDataContext } from "@/app/context";
 import { Transport, Chain, Account } from 'viem';
 import { useTransaction } from "../TransactionPool";
-import { createPublicClient, formatEther, http, parseEther, WalletClient } from 'viem';
+import { createPublicClient, http, WalletClient } from 'viem';
 import { mainnet, sepolia } from "viem/chains";
 import { CONTRACT_ABI, WITHDRAW_TX_FEE } from "../constants";
 import { composeEclipsescanUrl, composeEtherscanCompatibleTxPath, useNetwork } from "@/app/contexts/NetworkContext"; 
@@ -406,4 +406,3 @@ export const WithdrawDetails: React.FC<TransactionDetailsProps> = ({
     </div>
   );
 };
-

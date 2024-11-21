@@ -10,6 +10,7 @@ import { NetworkProvider } from "@/app/contexts/NetworkContext";
 import { useWalletClient } from "./hooks"
 import { EthereumDataContext, WalletClientContext } from "./context"
 import { useSidebar } from "@/app/contexts/SidebarContext";
+import { ThirdpartyBridgeModalProvider } from '@/app/components/ThirdpartyBridgeModal/ThirdpartyBridgeModalContext';
 import { TransactionProvider } from './components/TransactionPool';
 import { SkeletonTheme } from 'react-loading-skeleton'
 import { Options } from "@/lib/networkUtils";
@@ -29,6 +30,7 @@ export default function Main() {
       <NetworkProvider selectedOption={selectedOption} setSelectedOption={setSelectedOption}>
         <WalletClientContext.Provider value={walletClient}>
           <TransactionProvider>
+          <ThirdpartyBridgeModalProvider>
             <SkeletonTheme baseColor="#FFFFFF0A" highlightColor="#FFFFFF26">
               <div className="flex items-center text-white flex flex-col justify-between" id="main-content" style={{
                 background: "black",
@@ -59,6 +61,7 @@ export default function Main() {
                 limit={3}
               />
             </SkeletonTheme>
+            </ThirdpartyBridgeModalProvider>
           </TransactionProvider>
         </WalletClientContext.Provider >
       </NetworkProvider>

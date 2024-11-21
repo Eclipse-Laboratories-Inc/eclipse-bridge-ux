@@ -6,6 +6,7 @@ import { timeAgo } from "@/lib/activityUtils";
 import { ethers } from "ethers";
 import { EthereumDataContext } from "@/app/context";
 import { useTransaction } from "../TransactionPool";
+import { useSidebar } from "@/app/contexts/SidebarContext";
 import { composeEclipsescanUrl, composeEtherscanCompatibleTxPath, composeEtherscanUrl, useNetwork } from "@/app/contexts/NetworkContext"; 
 import { Options } from "@/lib/networkUtils";
 
@@ -69,6 +70,7 @@ export const TransactionDetails: React.FC<TransactionDetailsProps> = ({
 }) => {
   const [_, ethPrice] = useContext(EthereumDataContext) ?? [0, 0];
   const { transactions, addTransactionListener } = useTransaction();
+  const { isSidebar } = useSidebar();
   const { selectedOption } = useNetwork();
 
   const transaction = tx && transactions.get(tx.hash);
@@ -87,11 +89,11 @@ export const TransactionDetails: React.FC<TransactionDetailsProps> = ({
   }, [tx]);
 
   return (
-    <div className="transaction-details-modal flex flex-col items-center">
+    <div className={ `transaction-details-modal flex flex-col items-center ${ isSidebar ? 'sm:ml-[110px]' : 'sm:ml-[34px]' }` }>
       <div className="transaction-details-header flex flex-row items-center justify-between">
         <div></div>
         <span>Deposit</span>
-        <div onClick={closeModal}>
+        <div onClick={ closeModal }>
           <Cross crossClassName="modal-cross" />
         </div>
       </div>

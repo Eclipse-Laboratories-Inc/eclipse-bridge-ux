@@ -60,10 +60,11 @@ export const NetworkBox: React.FC<NetworkBoxProps> = ({
 }) => {
   const { userWallets, evmWallet, solWallet } = useWallets();
   const [gasPrice, ethPrice, blockNumber] = useContext(EthereumDataContext) ?? [null, null, null];
+  const ignoreDisabledState = !evmWallet;
   const inputRef = useRef<HTMLInputElement>(null);
 
   function determineInputClass(): string {
-    if (!evmWallet || !solWallet) return 'disabled';
+    if (ignoreDisabledState) return "";
     if (parseFloat(amountEther as string) > balanceEther) {
       return 'alarm'
     }
@@ -136,7 +137,6 @@ export const NetworkBox: React.FC<NetworkBoxProps> = ({
             <div className="input-wrapper"> 
             { (!evmWallet || evmWallet && (balanceEther >= 0))
               ? <><input
-                  disabled={!evmWallet || !solWallet}
                   step="0.01"
                   min="0"
                   placeholder="0 ETH"
@@ -165,10 +165,10 @@ export const NetworkBox: React.FC<NetworkBoxProps> = ({
                 <div className="token-name">ETH</div>
               </div>
             </div>
-            <div className={`${evmWallet && solWallet ? '' : 'invisible'} amount-input-bottom flex flex-row justify-between w-full items-center`}>
-              {evmWallet && 
+            <div className={`${evmWallet && solWallet ? '' : ''} amount-input-bottom flex flex-row justify-between w-full items-center`}>
+              { 
                 <div className="balance-info w-full">
-                  {(balanceEther >= 0 && ethPrice)
+                  {(ethPrice)
                     ? (amountEther && amountEther != ".") 
                       ? <span className="font-medium">${(parseFloat(amountEther.toString()) * ethPrice).toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",")} </span> 
                       : <span className="font-medium">$0.00</span>
@@ -176,11 +176,15 @@ export const NetworkBox: React.FC<NetworkBoxProps> = ({
                   }
                 </div>
               }
-              <div className={evmWallet && solWallet ? "percentage-buttons" : "invisible"}>
+              <div className={
+                  (chainName.includes('Ethereum') && evmWallet) || (chainName.includes('Eclipse') && solWallet) 
+                    ? "percentage-buttons" 
+                    : "invisible"
+              }>
                 <div className="flex flex-row items-center gap-2 mr-1">
                   <WalletIcon width="12" />
-                  { balanceEther >= 0 
-                    ? <span className="font-medium">{ balanceEther }</span>
+                  { (balanceEther >= 0 || ignoreDisabledState) 
+                    ? <span className="font-medium">{ balanceEther >= 0 ? balanceEther : '0'}</span>
                     : <Skeleton height={18} width={52} style={{ borderRadius: "20px"}} />
                   }
                 </div>

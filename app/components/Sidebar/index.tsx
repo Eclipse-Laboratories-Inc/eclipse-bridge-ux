@@ -1,10 +1,9 @@
 import "./sidebar.css";
 import Link from 'next/link';
-import { BridgeIcon, WalletIcon, TethIcon, ScanIcon, GasStationIcon, FaucetIcon, EcosystemIcon } from "@/app/components/icons"
+import { BridgeIcon, TethIcon, ScanIcon, GasStationIcon, EcosystemIcon } from "@/app/components/icons"
 import { NetworkSwitcher } from "../Deposit/NetworkSwitcher";
 import { useState, type ReactNode } from "react";
 import { toKebabCase } from "@/lib/stringUtils";
-import { useRouter } from "next/navigation";
 import { usePathname } from 'next/navigation'
 import { composeEclipsescanUrl, useNetwork } from "@/app/contexts/NetworkContext";
 
@@ -25,7 +24,6 @@ const ToggleIcon: React.FC<{ isExtended: boolean }> = ({ isExtended }) => {
 const SidebarItem: React.FC<{name: string, icon: ReactNode, isExtended: boolean}> = ({ name, icon, isExtended }) => {  
   const { selectedOption } = useNetwork()
   const [hover, setHover] = useState(false);
-  const router = useRouter();
   const pathName = usePathname();
   let targetHref = toKebabCase(name)
   if (targetHref === "eclipsescan") { targetHref = composeEclipsescanUrl(selectedOption) }

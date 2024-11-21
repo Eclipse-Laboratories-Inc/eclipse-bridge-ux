@@ -9,6 +9,7 @@ import TransferArrow from '../icons/transferArrow';
 import {
   DynamicConnectButton,
   useDynamicContext,
+  useWalletConnectorEvent
 } from "@dynamic-labs/sdk-react-core";
 
 import { mainnet, sepolia } from "viem/chains";
@@ -26,6 +27,7 @@ import { TransactionDetails } from "../TransactionDetails";
 import { WithdrawDetails } from "../WithdrawDetails";
 import { useTransaction } from "../TransactionPool";
 import { NetworkBox } from "./NetworkBox"
+import { useThirdpartyBridgeModalContext } from '../ThirdpartyBridgeModal/ThirdpartyBridgeModalContext';
 import { CONTRACT_ABI, DEPOSIT_TX_GAS_LIMIT, MIN_DEPOSIT_AMOUNT, MIN_WITHDRAWAL_AMOUNT } from "../constants";
 import { useWallets } from "@/app/hooks/useWallets";
 import { Options } from '@/lib/networkUtils';
@@ -44,8 +46,9 @@ enum Action {
 
 export const DepositContent: React.FC<DepositContentProps> = ({ modalStuff, amountEther, setAmountEther }) => {
   const [walletClient, setWalletClient] = useState<WalletClient<Transport, Chain, Account> | null>(null);
-  const { selectedOption, contractAddress, eclipseRpc } = useNetwork();
+  const { isThirdpartyBridgeModalOpen } = useThirdpartyBridgeModalContext(); 
   const [gasPrice, ethPrice, blockNumber] = useContext(EthereumDataContext) ?? [null, null, null];
+  const { selectedOption, contractAddress, eclipseRpc } = useNetwork();
   const [balanceEther, setAmountBalanceEther] = useState<number>(-1);
   const [isEvmDisconnected, setIsEvmDisconnected] = useState(false);
   const [isSolDisconnected, setIsSolDisconnected] = useState(false);
@@ -101,7 +104,12 @@ export const DepositContent: React.FC<DepositContentProps> = ({ modalStuff, amou
     let lWalletClient = evmWallet?.connector.getWalletClient<WalletClient<Transport, Chain, Account>>();
     lWalletClient && (lWalletClient.cacheTime = 0);
     setWalletClient(lWalletClient ?? null);
+
   }, [evmWallet?.connector])
+
+  useEffect(() => {
+    if (!evmWallet) { setAmountBalanceEther(-1) }
+  }, [evmWallet])
 
   useEffect(() => {
     // if action is withdraw fetch eclipse balance
@@ -174,6 +182,10 @@ export const DepositContent: React.FC<DepositContentProps> = ({ modalStuff, amou
   };
 
   function determineButtonClass(): string {
+    if (isThirdpartyBridgeModalOpen) {
+      'submit-button disabled'
+    }
+
     if (!evmWallet || !solWallet) {
       return 'submit-button disabled'
     }
@@ -256,7 +268,9 @@ export const DepositContent: React.FC<DepositContentProps> = ({ modalStuff, amou
     <div className={isModalOpen ? "status-overlay active" : "status-overlay"}></div>
     { !isModalOpen && <div>
         <div className="network-section">
-          <div className="arrow-container cursor-pointer" onClick={switchAction}>
+          <div className="arrow-container cursor-pointer" 
+               onClick={switchAction}
+          >
             <TransferArrow />
           </div>
 
@@ -276,7 +290,9 @@ export const DepositContent: React.FC<DepositContentProps> = ({ modalStuff, amou
         /> }
         { (!evmWallet || !solWallet) 
         ?
-            <DynamicConnectButton buttonClassName="wallet-connect-button w-full" buttonContainerClassName="submit-button connect-btn">
+            <DynamicConnectButton 
+                buttonClassName={`wallet-connect-button w-full`}  
+                buttonContainerClassName={`submit-button connect-btn ${ isThirdpartyBridgeModalOpen ? 'disabled' : ''}`}>
               <span style={{ width: '100%' }}> {determineButtonText()}</span>
             </DynamicConnectButton>
         : 

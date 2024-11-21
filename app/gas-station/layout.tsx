@@ -17,6 +17,12 @@ const ibmPlexSans = IBM_Plex_Sans({
 
 // TODO: maybe we can read it from a file
 const cssOverrides = `
+  @media (min-width: 640px) { 
+    .modal {
+      margin-left: var(--sidebar-width);
+    }
+  }
+
   div { font-family: 'IBM Plex Sans', sans-serif; }
   img[data-testid='iconic-solana'] {
     content: url('/eclipse.png');
@@ -146,6 +152,9 @@ export default function ClientLayout({
           environmentId: process.env.NEXT_PUBLIC_ENVIRONMENT_ID || '',
           walletConnectors: [EthereumWalletConnectors, SolanaWalletConnectors],
           mobileExperience: "redirect",
+          recommendedWallets: [
+            { walletKey: 'backpacksol', label: 'Recommended' }
+          ],
           initialAuthenticationMode: 'connect-only',
           displaySiweStatement: true,
           privacyPolicyUrl: "https://www.eclipse.xyz/privacy-policy",
