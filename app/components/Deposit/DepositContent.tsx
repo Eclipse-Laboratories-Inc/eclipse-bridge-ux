@@ -15,7 +15,6 @@ import {
 import { mainnet, sepolia } from "viem/chains";
 import { createPublicClient, formatEther, http, parseEther, WalletClient } from 'viem';
 import { Transport, Chain, Account } from 'viem';
-import useEthereumData from "@/lib/ethUtils";
 import { estimateMaxPriorityFeePerGas, getBalance, getGasPrice } from 'viem/actions';
 import { useNetwork } from "@/app/contexts/NetworkContext"; 
 import ExtendedDetails from '../ExtendedDetails'
@@ -48,7 +47,7 @@ enum Action {
 export const DepositContent: React.FC<DepositContentProps> = ({ modalStuff, amountEther, setAmountEther }) => {
   const [walletClient, setWalletClient] = useState<WalletClient<Transport, Chain, Account> | null>(null);
   const { isThirdpartyBridgeModalOpen } = useThirdpartyBridgeModalContext(); 
-  const { gasPrice, ethPrice } = useEthereumData();
+  const [gasPrice, ethPrice, blockNumber] = useContext(EthereumDataContext) ?? [null, null, null];
   const { selectedOption, contractAddress, eclipseRpc } = useNetwork();
   const [balanceEther, setAmountBalanceEther] = useState<number>(-1);
   const [isEvmDisconnected, setIsEvmDisconnected] = useState(false);

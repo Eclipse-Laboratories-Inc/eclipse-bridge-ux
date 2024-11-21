@@ -9,7 +9,7 @@ import Skeleton from 'react-loading-skeleton';
 import { truncateWalletAddress } from '@/lib/stringUtils';
 import { useWallets } from "@/app/hooks/useWallets";
 import { DEPOSIT_TX_GAS_LIMIT, WITHDRAW_TX_FEE } from '../constants';
-import useEthereumData from "@/lib/ethUtils";
+import { EthereumDataContext } from '@/app/context';
 
 export interface NetworkBoxProps {
   imageSrc: string;
@@ -59,7 +59,7 @@ export const NetworkBox: React.FC<NetworkBoxProps> = ({
   maxPriorityFeePerGasWei
 }) => {
   const { userWallets, evmWallet, solWallet } = useWallets();
-  const { blockNumber, gasPrice, ethPrice } = useEthereumData();
+  const [gasPrice, ethPrice, blockNumber] = useContext(EthereumDataContext) ?? [null, null, null];
   const ignoreDisabledState = !evmWallet;
   const inputRef = useRef<HTMLInputElement>(null);
 

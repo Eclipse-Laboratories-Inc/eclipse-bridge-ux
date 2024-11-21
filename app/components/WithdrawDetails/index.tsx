@@ -4,9 +4,8 @@ import { Cross, Arrow, TransactionIcon } from "../icons";
 import { timeAgo, timeLeft } from "@/lib/activityUtils";
 import { EthereumDataContext } from "@/app/context";
 import { Transport, Chain, Account } from 'viem';
-import { useSidebar } from "@/app/contexts/SidebarContext";
 import { useTransaction } from "../TransactionPool";
-import { createPublicClient, formatEther, http, parseEther, WalletClient } from 'viem';
+import { createPublicClient, http, WalletClient } from 'viem';
 import { mainnet, sepolia } from "viem/chains";
 import { CONTRACT_ABI, WITHDRAW_TX_FEE } from "../constants";
 import { composeEclipsescanUrl, composeEtherscanCompatibleTxPath, useNetwork } from "@/app/contexts/NetworkContext"; 
@@ -98,15 +97,14 @@ export const WithdrawDetails: React.FC<TransactionDetailsProps> = ({
   ethAmount
 }) => {
   const [_, ethPrice] = useContext(EthereumDataContext) ?? [0, 0];
-  const { waitingPeriod, eclipseExplorer, relayerAddress, configAccount, eclipseRpc, bridgeProgram, selectedOption, contractAddress } = useNetwork();
   const { transactions, deposits, withdrawals, setWithdrawals, withdrawTransactions } = useTransaction();
+  const { waitingPeriod, relayerAddress, configAccount, eclipseRpc, bridgeProgram, selectedOption, contractAddress } = useNetwork();
   const { userWallets, evmWallet, solWallet } = useWallets();
   const [txHash, setTxHash] = useState<string | null>(null);
   const [checkbox, setCheckbox] = useState<boolean>(false);
   const [withdrawAmount, setWithdrawAmount] = useState<number>(ethAmount as number); 
   const [isClaimFlowOpen, setIsClaimFlowOpen] = useState<boolean>(false);
   const [buttonText, setButtonText] = useState<string>("Claim Now");
-  const { isSidebar } = useSidebar();
 
   const [initiateStatus, setInitiateStatus] = useState<InitiateTxStates>(InitiateTxStates.NotReady);
   const [waitingPeriodStatus, setWaitingPeriodStatus] = useState<WaitingPeriodState>(WaitingPeriodState.Waiting);
@@ -114,7 +112,7 @@ export const WithdrawDetails: React.FC<TransactionDetailsProps> = ({
   useEffect(() => {
     if (!tx) return;
     const withdrawal = withdrawTransactions.get(tx[0].message.withdraw_id);
-    setTxHash(withdrawal?.transaction ? withdrawal?.transaction.signature : '0xhash')
+    setTxHash(withdrawal?.transaction.signature)
 
     const hexAmount = tx[0].message.amount_wei;
     setWithdrawAmount(Number(parseInt(hexAmount, 16)) / 10**18);
@@ -215,7 +213,7 @@ export const WithdrawDetails: React.FC<TransactionDetailsProps> = ({
   }
 
   return (
-    <div className={`transaction-details-modal flex flex-col items-center ${ isSidebar ? 'sm:ml-[110px]' : 'sm:ml-[34px]' }` }>
+    <div className="transaction-details-modal flex flex-col items-center">
       <div className="transaction-details-header flex flex-row items-center justify-between">
         <div></div>
         <span>Withdraw</span>
@@ -232,7 +230,7 @@ export const WithdrawDetails: React.FC<TransactionDetailsProps> = ({
             <div className={ initiateStatus !== InitiateTxStates.NotReady || txHash ? "white-text" : "gray-text" } style={{ fontSize: "16px" }}>
               1. Initiate Withdraw
             </div>
-            {txHash && (txHash !== '0xhash') && (
+            {txHash && (
               <div className="gray-text">
                 <a
                   href={composeEclipsescanUrl(selectedOption, composeEtherscanCompatibleTxPath(txHash))}
@@ -395,7 +393,7 @@ export const WithdrawDetails: React.FC<TransactionDetailsProps> = ({
       {
         waitingPeriodStatus !== WaitingPeriodState.Ready && <button 
           onClick={txHash ? closeModal : handleInitiate } 
-          className={ `initiate-button ${ txHash && "!text-white !bg-[#ffffff0d] !cursor-pointer"} ${ !checkbox && "!text-white cursor-not-allowed !bg-[#ffffff0d]" }` }
+          className={ `initiate-button ${ txHash && "!text-white !bg-[#ffffff0d]"} ${ !checkbox && "!text-white cursor-not-allowed !bg-[#ffffff0d]" }` }
         >
           { getButtonText() }
         </button>
@@ -408,4 +406,3 @@ export const WithdrawDetails: React.FC<TransactionDetailsProps> = ({
     </div>
   );
 };
-

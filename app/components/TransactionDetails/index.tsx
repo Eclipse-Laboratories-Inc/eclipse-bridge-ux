@@ -70,7 +70,6 @@ export const TransactionDetails: React.FC<TransactionDetailsProps> = ({
 }) => {
   const [_, ethPrice] = useContext(EthereumDataContext) ?? [0, 0];
   const { transactions, addTransactionListener } = useTransaction();
-  const { evmExplorer, eclipseExplorer } = useNetwork();
   const { isSidebar } = useSidebar();
   const { selectedOption } = useNetwork();
 
