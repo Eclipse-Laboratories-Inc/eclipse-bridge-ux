@@ -20,7 +20,7 @@ export const ThirdpartyBridgesPill: React.FC = () => {
     ">
       <span className="
               font-medium text-[#FFFFFF99] text-[16px]
-      ">Use thirdparty Bridge</span>
+      ">Use Third-Party Bridges</span>
       <ThirdpartyBridgesIcon bridgesClassName='' />
     </div>
       <ThirdpartyBridgesModal />
@@ -76,7 +76,7 @@ export const ThirdpartyBridgesModal = () => {
         <div className="flex items-center flex-row justify-between h-[64px] p-[20px]">
           <span></span>
           <span className="text-[18px] font-medium tracking-[-0.18px] leading-6">
-            Thirdparty Bridges
+            Third-Party Bridges
           </span>
           <button 
             onClick={ toggleThirdpartyBridgeModal }
