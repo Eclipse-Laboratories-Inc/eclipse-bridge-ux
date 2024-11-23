@@ -25,7 +25,9 @@ export const ThirdpartyBridgeItem: React.FC<{ thirdpartyBridge: ThirdpartyBridge
         <img src={thirdpartyBridge.iconAddr} className="w-[33px] h-[33px]" />
         <div className="flex flex-col">
           <span className="text-white font-medium tracking-[-0.14px] text-[14px]">{thirdpartyBridge.name}</span>
-          <span className="text-[#FFFFFF4D] font-medium text-[14px]">{thirdpartyBridge.address}</span>
+          <span className="text-[#FFFFFF4D] font-medium text-[14px]">
+            { thirdpartyBridge.address.split("/")[0] }
+          </span>
         </div>
       </div>
       <SquareArrowTopRight className="" />
