@@ -1,4 +1,6 @@
-.tgreen { color: rgba(161, 254, 160, 1); }
+.tgreen {
+  color: rgba(161, 254, 160, 1);
+}
 .gray-text {
   font-size: 16px;
   line-height: 19.2px;
@@ -19,7 +21,6 @@
   font-size: 14px;
   font-weight: 500;
 
-  width: 480px;
   height: 88px;
 }
 
@@ -40,4 +41,3 @@
 .amount-sum {
   padding: 8px 16px;
 }
-
