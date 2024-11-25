@@ -32,13 +32,22 @@ const theme: RelayKitTheme = {
     },
   },
   anchor: {
-    color: "rgba(161, 254, 160, 0.3)",
+    color: "rgba(255, 255, 255, 0.3)",
     hover: {
-      color: "rgba(161, 254, 160, 1)",
+      color: "rgba(255, 255, 255, 0.6)",
     },
   },
   widget: {
-    swapCurrencyButtonBorderColor: "rgba(255, 255, 255, 0.1)",
+    swapCurrencyButtonBorderColor: "rgba(30, 30, 30, 1)",
+    swapCurrencyButtonBorderRadius: "100%",
+    swapCurrencyButtonBorderWidth: "1px",
+    background: "rgba(13, 13, 13, 1)",
+    borderRadius: "10",
+    card: {
+      border: "1px solid rgba(255, 255, 255, 0.1)",
+      borderRadius: "10px",
+      gutter: "20px",
+    },
   },
 };
 export const RelayKitProvider = (props: {

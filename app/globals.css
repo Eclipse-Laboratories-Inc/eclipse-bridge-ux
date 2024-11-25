@@ -207,6 +207,38 @@ footer {
   max-width: 100% !important;
 }
 
+:root {
+  --relay-colors-green-9: rgb(163, 255, 165) !important;
+}
+
+button[aria-label="Multi wallet dropdown"]:not(:hover) {
+  background: none !important;
+}
+button[aria-label="Multi wallet dropdown"]:not(:hover) .relay-text_secondary-button-color {
+color: rgba(255, 255, 255, 0.3) !important;
+}
+
+button[aria-label="Multi wallet dropdown"] img {
+  display: none;
+}
+
+button[aria-label="Multi wallet dropdown"] .fa-chevron-down {
+  transition: 0.2s width ease-in-out;
+}
+
+button[aria-label="Multi wallet dropdown"]:not(:hover) .fa-chevron-down {
+  width: 0;
+}
+
+#fee-breakdown-section .relay-text_text-default,
+#swap-route-selection-section .relay-text_text-default {
+  color: rgba(255, 255, 255, 0.6) !important;
+}
+
+#fee-breakdown-section .relay-h_1 {
+  background: rgba(255, 255, 255, 0.1) !important;
+}
+
 @media (max-height: 933px) {
   .main-content, footer {
     margin-top: 50px;
