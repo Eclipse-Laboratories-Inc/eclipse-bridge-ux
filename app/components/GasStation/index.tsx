@@ -10,6 +10,7 @@ import { GasStationNotification, TxStatus } from "./Notification"
 import { useWallets } from "@/app/hooks/useWallets";
 import { createOctaneSwapTransaction } from "@/lib/octaneUtils"
 import { ISolana } from '@dynamic-labs/solana';
+import { TransactionStatus } from "@solana/web3.js";
 const bs58 = require('bs58');
 
 /*
@@ -61,8 +62,8 @@ export const GasStation: React.FC = () => {
       return "w-full h-[58px] bg-[#ffffff0d] rounded-[10px] text-[#EB4D4D] bg-[#eb4d4d1a] text-[20px] font-medium pointer-events-none"
     }
 
-    // amount is empty
-    if (amount === "" || Number(amount) === 0) {
+    // amount is empty or have an active transaction
+    if (amount === "" || Number(amount) === 0 || txStatus === TxStatus.Waiting) {
       return "w-full h-[58px] bg-[#ffffff0d] rounded-[10px] text-[#ffffff4d] text-[20px] font-medium pointer-events-none"
     }
 
@@ -101,6 +102,12 @@ export const GasStation: React.FC = () => {
       selectedToken.mint,
       Number(amount) * (10 ** selectedToken.decimals) / (selectedToken.price ?? 1)
     );
+
+    if (!octaneData || octaneData.status === "error") {
+      emitEvent(`Failed to fetch transaction.`, TxStatus.Failed, 5)
+      return -1;
+    }
+
     setTxState("Continue in your wallet...");
     // deserialize transaction
     const tx = Transaction.from(bs58.decode(octaneData.transaction));
@@ -117,7 +124,7 @@ export const GasStation: React.FC = () => {
       console.log(signedTransaction)
     } catch {
       emitEvent(`Refueling for $${amount} is failed.`, TxStatus.Failed, 5)
-      return 1;
+      return -1;
     } 
 
     setTxState(`Refueling for $${amount} ...`);
