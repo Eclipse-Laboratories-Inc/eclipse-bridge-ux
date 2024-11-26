@@ -13,6 +13,7 @@ export function Providers(props: {
   children: ReactNode;
 }) {
   const [queryClient] = useState(() => new QueryClient());
+
   return (
     <RelayKitProvider chains={props.chains}>
       <QueryClientProvider client={queryClient}>

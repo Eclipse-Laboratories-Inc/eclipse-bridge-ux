@@ -29,7 +29,7 @@ export const RelaySwapWidget: React.FC<RelaySwapWidgetContentProps> = ({}) => {
         chainId: 9286185,
         symbol: "ETH",
         name: "ETH",
-        decimals: 18,
+        decimals: 9,
         logoURI: "https://assets.relay.link/icons/currencies/eth.png",
       }}
       wallet={wallet}
