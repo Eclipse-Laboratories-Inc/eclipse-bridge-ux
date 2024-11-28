@@ -23,7 +23,7 @@ import { MintSummaryCard } from "./MintSummaryCard";
 import { MintTransactionDetails, StepStatus } from "./MintTransactionDetails";
 import { MintValueCard } from "./MintValueCard";
 import "./styles.css";
-import { TokenOption } from "./TokenSelect";
+import { SelectOption } from "./EcSelect";
 
 export function Mint() {
   ///////////////////////
@@ -339,8 +339,8 @@ export function Mint() {
     setDepositAmount(sanitizedInput);
   }
 
-  function handleDepositAssetChange(val: TokenOption) {
-    setDepositAsset(val.value);
+  function handleDepositAssetChange(val: SelectOption) {
+    setDepositAsset(val.value as `0x${string}`);
   }
 
   function closeModal() {
@@ -394,6 +394,13 @@ export function Mint() {
           usdValue={formattedDepositAmountInUsd}
           handleDisconnect={() => evmWallet && handleUnlinkWallet(evmWallet.id)}
           tokenOptions={tokenOptions}
+          chainOptions={[]}
+          selectedChain={{
+            value: "ethereum",
+            label: "Ethereum",
+            imageSrc: "/eth.png",
+          }}
+          chainSelectDisabled
         />
         <MintValueCard
           title="Receive on"
@@ -411,6 +418,13 @@ export function Mint() {
           usdValue={formattedReceiveAmountInUsd}
           handleDisconnect={() => solWallet && handleUnlinkWallet(solWallet.id)}
           tokenOptions={[]}
+          chainOptions={[]}
+          selectedChain={{
+            value: "eclipse",
+            label: "Eclipse",
+            imageSrc: "/eclipse.png",
+          }}
+          chainSelectDisabled
         />
         <MintSummaryCard depositAsset={depositAsset} exchangeRate={assetPerTethRate} />
         {evmAddress && svmAddress && (

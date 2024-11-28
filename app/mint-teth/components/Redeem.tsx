@@ -1,30 +1,30 @@
 import { useWallets } from "@/app/hooks";
-import { generateTxObjectForDetails } from "@/lib/activityUtils";
-import { solanaToBytes32 } from "@/lib/solanaUtils";
 import { DynamicConnectButton, useDynamicContext } from "@dynamic-labs/sdk-react-core";
 import classNames from "classnames";
 import { useEffect, useMemo, useState } from "react";
-import { Abi, Address, erc20Abi, formatUnits, parseEther, parseUnits, PublicClient, WalletClient } from "viem";
+import { Address, formatUnits, parseUnits, PublicClient, WalletClient } from "viem";
 import { mainnet } from "viem/chains";
-import WarpRouteContract from "../abis/WarpRouteContract.json";
-import { warpRouteContractAddress } from "../constants/contracts";
-import { tethEvmTokenAddress, tethSvmTokenAddress, tokenAddresses, tokenOptions } from "../constants/tokens";
+import {
+  chainOptions,
+  tethEvmTokenAddress,
+  tethSvmTokenAddress,
+  tokenAddresses,
+  tokenOptions,
+} from "../constants/tokens";
 import { useTokenTransfer } from "../hooks/useTokenTransfer";
 import { useUpdateAtomicRequest } from "../hooks/useUpdateAtomicRequest";
 import { balanceOf } from "../lib/balanceOf";
 import { getRate } from "../lib/getRate";
 import { getRateInQuote } from "../lib/getRateInQuote";
 import { latestRoundData } from "../lib/latestRoundData";
-import { quoteGasPayment } from "../lib/quoteGasPayment";
 import { getUserAtomicRequest } from "../lib/userAtomicRequest";
-import { calculateMinimumMint } from "../utils/calculateMinimumMint";
 import { getSolanaBalance } from "../utils/getSolanaBalance";
 import { sanitizeInput } from "../utils/sanitizeInput";
 import { MintTransactionDetails, StepStatus } from "./MintTransactionDetails";
 import { MintValueCard } from "./MintValueCard";
 import { RedeemSummaryCard } from "./RedeemSummaryCard";
 import "./styles.css";
-import { TokenOption } from "./TokenSelect";
+import { SelectOption } from "./EcSelect";
 
 export function Redeem() {
   ///////////////////////
@@ -44,7 +44,7 @@ export function Redeem() {
     approvalState: atomicRequestApprovalState,
     transactionState: atomicRequestState,
   } = useUpdateAtomicRequest();
-  const { triggerTransactions, transactionState: tokenTransferState } = useTokenTransfer();
+  const { triggerTransactions, transactionState: tokenTransferState, setTransactionState } = useTokenTransfer();
 
   ///////////////////////
   // State
@@ -52,25 +52,27 @@ export function Redeem() {
   const [walletClient, setWalletClient] = useState<WalletClient | null>(null);
   const [publicClient, setPublicClient] = useState<PublicClient | null>(null);
   const [redeemAmount, setRedeemAmount] = useState<string>("");
-  const [receiveAsset, setReceiveAsset] = useState<`0x${string}`>(tokenAddresses[0]);
+  const [receiveAsset, setReceiveAsset] = useState<string>(tokenAddresses[0]);
   const [assetPerTethRate, setAssetPerTethRate] = useState<string>("");
   const [ethPerAssetRate, setEthPerAssetRate] = useState("");
   const [ethPerTethRate, setEthPerTethRate] = useState("");
   const [depositPending, setDepositPending] = useState<boolean>(false);
   const [tokenBalanceAsBigInt, setTokenBalanceAsBigInt] = useState<bigint>(BigInt(0));
-  const [loadingTokenBalance, setLoadingTokenBalance] = useState(false);
+  const [isLoadingTokenBalance, setIsLoadingTokenBalance] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [currentTx, setCurrentTx] = useState<any>(null);
   const [depositTxHash, setDepositTxHash] = useState<string>("");
-  const [svmBalance, setSvmBalance] = useState<string>("");
+  const [tethBalance, setTethBalance] = useState<string>("");
+  const [tethBalanceLoading, setTethBalanceLoading] = useState(false);
   const [ethPrice, setEthPrice] = useState<string>("");
+  const [sourceChain, setSourceChain] = useState<SelectOption | undefined>(chainOptions[0]);
 
   ///////////////////////
   // Derived values
   ///////////////////////
   const atomicPrice = (BigInt(assetPerTethRate) * BigInt(1e18)) / (BigInt(1e18) - parseUnits(slippage.toString(), 18));
 
-  const formattedTokenBalance = formatUnits(BigInt(svmBalance), 18);
+  const formattedTokenBalance = formatUnits(BigInt(tethBalance), 18);
   const atomicPriceAsBigInt = BigInt(atomicPrice);
   const redeemAmountAsBigInt = parseUnits(redeemAmount, 18);
 
@@ -109,7 +111,7 @@ export function Redeem() {
           totalFeesInUsd
         )}`;
 
-  const isOverBalance = BigInt(svmBalance) < redeemAmountAsBigInt;
+  const isOverBalance = BigInt(tethBalance) < redeemAmountAsBigInt;
 
   const isMintDisabled =
     depositPending || !redeemAmount || !receiveAsset || !evmWallet || isOverBalance || Number(redeemAmount) === 0;
@@ -158,17 +160,17 @@ export function Redeem() {
   const steps = useMemo(() => {
     return [
       {
-        title: "1. Approving tETH swap",
+        title: "1. Bridging tETH to Ethereum",
+        status: tokenTransferState,
+      },
+      {
+        title: "2. Approving tETH swap",
         status: atomicRequestApprovalState,
       },
       {
-        title: `2. Queueing swap for tETH -> ${depositAssetLabel}`,
+        title: `3. Queueing swap for tETH -> ${depositAssetLabel}`,
         status: atomicRequestState,
         link: `https://etherscan.io/tx/${depositTxHash}`,
-      },
-      {
-        title: "3. Bridging tETH to Ethereum",
-        status: tokenTransferState,
       },
     ];
   }, [atomicRequestApprovalState, atomicRequestState, depositAssetLabel, depositTxHash, tokenTransferState]);
@@ -180,13 +182,28 @@ export function Redeem() {
   // Set the balance of the SVM wallet
   useEffect(() => {
     async function getSvmBalance() {
-      if (!svmAddress) return;
-      const balance = await getSolanaBalance(svmAddress, tethSvmTokenAddress);
-      setSvmBalance(balance.toString());
+      try {
+        setTethBalanceLoading(true);
+        if (sourceChain?.value === "eclipse" && svmAddress) {
+          const balance = await getSolanaBalance(svmAddress, tethSvmTokenAddress);
+          setTethBalance(balance.toString());
+        } else if (sourceChain?.value === "ethereum" && evmAddress && publicClient) {
+          const balance = await balanceOf({
+            tokenAddress: tethEvmTokenAddress,
+            userAddress: evmAddress,
+            publicClient,
+          });
+          setTethBalance(balance.toString());
+        }
+      } catch (error) {
+        console.error(error);
+      } finally {
+        setTethBalanceLoading(false);
+      }
     }
 
     getSvmBalance();
-  }, [svmAddress]);
+  }, [evmAddress, publicClient, sourceChain?.value, svmAddress]);
 
   // Clear token balance when the wallet disconnects
   useEffect(() => {
@@ -238,11 +255,11 @@ export function Redeem() {
       }
     }
 
-    getExchangeRate(receiveAsset);
+    getExchangeRate(receiveAsset as `0x${string}`);
 
     // Get an updated exchange rate every 30 seconds
     const intervalId = setInterval(() => {
-      getExchangeRate(receiveAsset);
+      getExchangeRate(receiveAsset as `0x${string}`);
     }, 30_000);
 
     return () => {
@@ -256,9 +273,9 @@ export function Redeem() {
     async function getTokenBalance() {
       try {
         if (!publicClient || !evmWallet) return;
-        setLoadingTokenBalance(true);
+        setIsLoadingTokenBalance(true);
         const tokenBalanceAsBigInt = await balanceOf({
-          tokenAddress: receiveAsset,
+          tokenAddress: receiveAsset as `0x${string}`,
           userAddress: evmWallet.address as `0x${string}`,
           publicClient,
         });
@@ -266,7 +283,7 @@ export function Redeem() {
       } catch (error) {
         console.error(error);
       } finally {
-        setLoadingTokenBalance(false);
+        setIsLoadingTokenBalance(false);
       }
     }
 
@@ -282,8 +299,12 @@ export function Redeem() {
     setRedeemAmount(sanitizedInput);
   }
 
-  function handleReceiveAssetChange(val: TokenOption) {
+  function handleReceiveAssetChange(val: SelectOption) {
     setReceiveAsset(val.value);
+  }
+
+  function handleSourceChainChange(val: SelectOption) {
+    setSourceChain(val);
   }
 
   function closeModal() {
@@ -313,11 +334,23 @@ export function Redeem() {
     if (!evmAddress) throw new Error("No EVM address found");
     if (!publicClient) throw new Error("No public client found");
 
+    // Bridge tETH from Eclipse to Ethereum.
+    // Skip this step if the source chain is Ethereum and mark as complete.
+    // It may make more sense to just not show this step instead of marking it
+    // as complete but this would be hard to track in the transaction modal
+    // which doesn't always have the proper context to do that, so we'll just
+    // mark it as complete.
+    if (sourceChain?.value === "eclipse") {
+      await triggerTransactions(parseUnits(redeemAmount, 9).toString());
+    } else {
+      setTransactionState(StepStatus.COMPLETED);
+    }
+
     // Check if the atomic request already exists.
     // If it does, skip the updateAtomicRequest step.
     // This is to prevent the user from triggering the request multiple times.
     const pendingAtomicRequest = await getUserAtomicRequest(
-      { userAddress: evmAddress, offerAddress: tethEvmTokenAddress, wantAddress: receiveAsset },
+      { userAddress: evmAddress, offerAddress: tethEvmTokenAddress, wantAddress: receiveAsset as `0x${string}` },
       { publicClient }
     );
     const { atomicPrice: pendingAtomicPrice, offerAmount: pendingOfferAmount } = pendingAtomicRequest;
@@ -327,15 +360,12 @@ export function Redeem() {
       const txHash = await updateAtomicRequest(
         {
           offer: tethEvmTokenAddress,
-          want: receiveAsset,
+          want: receiveAsset as `0x${string}`,
           userRequest: { deadline: deadlineInSec, atomicPrice, offerAmount, inSolve: false },
         },
         { publicClient, walletClient }
       );
     }
-
-    // Bridge tETH from Eclipse to Ethereum
-    await triggerTransactions(parseUnits(redeemAmount, 9).toString());
   }
 
   return (
@@ -360,7 +390,7 @@ export function Redeem() {
           userAddress={svmAddress}
           inputValue={redeemAmount}
           disabled={false}
-          loadingTokenBalance={loadingTokenBalance}
+          loadingTokenBalance={isLoadingTokenBalance}
           onChangeInput={handleRedeemAmountChange}
           depositAsset={{
             value: "0xtETH-solana",
@@ -368,12 +398,16 @@ export function Redeem() {
             imageSrc: "/token-teth.svg",
           }}
           isOverBalance={isOverBalance}
-          tokenBalance={BigInt(svmBalance)}
+          tokenBalance={BigInt(tethBalance)}
           onClickMax={handleClickMax}
           onClickFiftyPercent={handleClickFiftyPercent}
           usdValue={formattedRedeemAmountInUsd}
           handleDisconnect={() => solWallet && handleUnlinkWallet(solWallet.id)}
           tokenOptions={[]}
+          selectedChain={sourceChain}
+          onChangeChain={handleSourceChainChange}
+          chainOptions={chainOptions}
+          loadingTethBalance={tethBalanceLoading}
         />
         <MintValueCard
           title="Receive on"
@@ -388,6 +422,9 @@ export function Redeem() {
           handleDisconnect={() => evmWallet && handleUnlinkWallet(evmWallet.id)}
           onChangeDepositAsset={handleReceiveAssetChange}
           tokenOptions={tokenOptions}
+          chainOptions={[]}
+          selectedChain={chainOptions[1]}
+          chainSelectDisabled
         />
         <RedeemSummaryCard
           depositAsset={receiveAsset}

@@ -734,6 +734,10 @@ input::placeholder {
   background-color: #15151588;
 }
 
+.dropdown-button.text-sm {
+  font-size: 14px;
+}
+
 .dropdown-menu {
   position: absolute;
   margin-top: 0.5rem;
