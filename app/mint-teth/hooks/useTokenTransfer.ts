@@ -46,13 +46,12 @@ export function useTokenTransfer() {
             const confirmation = await connection.confirmTransaction(txId, "confirmed");
           }
         }
+        setTransactionState(StepStatus.COMPLETED);
       } catch (e) {
         const error = e as Error;
         console.error("Error during transfer:", error);
         setError(error.message);
         setTransactionState(StepStatus.FAILED);
-      } finally {
-        setTransactionState(StepStatus.COMPLETED);
       }
     },
     [evmWallet, solWallet]
@@ -62,5 +61,6 @@ export function useTokenTransfer() {
     triggerTransactions,
     transactionState,
     error,
+    setTransactionState,
   };
 }

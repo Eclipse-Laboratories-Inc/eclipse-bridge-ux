@@ -361,8 +361,8 @@ export function Mint() {
     setDepositAmount(sanitizedInput);
   }
 
-  function handleDepositAssetChange(val: TokenOption) {
-    setDepositAsset(val.value);
+  function handleDepositAssetChange(val: SelectOption) {
+    setDepositAsset(val.value as `0x${string}`);
   }
 
   function closeModal() {

@@ -3,14 +3,17 @@ import { useState } from "react";
 import { Mint } from "./Mint";
 import { Redeem } from "./Redeem";
 import "./styles.css";
+import { NucleusActivityContent } from "./NucleusActivityContent";
+import { Activity } from "@/app/components/icons";
 
 export enum Tabs {
   Mint,
   Redeem,
+  Activity,
 }
 
 function MintAndRedeem() {
-  const [activeTab, setActiveTab] = useState<Tabs>(Tabs.Mint);
+  const [activeTab, setActiveTab] = useState<Tabs>(Tabs.Activity);
 
   return (
     <>
@@ -32,9 +35,25 @@ function MintAndRedeem() {
               >
                 Redeem
               </div>
+              <div
+                className={classNames(
+                  "header-tab",
+                  "flex",
+                  "items-center",
+                  "justify-center",
+                  activeTab === Tabs.Activity ? "active" : "inactive"
+                )}
+                style={{ width: "131px" }}
+                onClick={() => {
+                  setActiveTab(Tabs.Activity);
+                }}
+              >
+                <Activity activityClassName="" />
+              </div>
             </div>
             {activeTab === Tabs.Mint && <Mint />}
             {activeTab === Tabs.Redeem && <Redeem />}
+            {activeTab === Tabs.Activity && <NucleusActivityContent />}
           </div>
         </div>
       </div>

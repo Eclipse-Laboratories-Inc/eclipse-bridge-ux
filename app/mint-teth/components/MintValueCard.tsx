@@ -1,18 +1,21 @@
 import { Cross } from "@/app/components/icons";
+import "react-loading-skeleton/dist/skeleton.css";
 import Image from "next/image";
 import { formatUnits } from "viem";
-import { TokenOption, TokenSelect } from "./TokenSelect";
+import { SelectOption, EcSelect } from "./EcSelect";
+import Skeleton from "react-loading-skeleton";
 
 interface MintValueCardProps {
   title: string;
   chainName: string;
   chainIconImg: string;
   userAddress: string | undefined; // evm address or svm address
-  depositAsset: TokenOption | undefined;
+  depositAsset: SelectOption | undefined;
   inputValue: string;
   onChangeInput?: (val: string) => void;
-  onChangeDepositAsset?: (val: TokenOption) => void;
+  onChangeDepositAsset?: (val: SelectOption) => void;
   disabled?: boolean;
+  chainSelectDisabled?: boolean;
   isOverBalance?: boolean;
   tokenBalance?: bigint;
   onClickMax?: () => void;
@@ -20,7 +23,11 @@ interface MintValueCardProps {
   loadingTokenBalance?: boolean;
   usdValue: string;
   handleDisconnect: () => void;
-  tokenOptions: TokenOption[];
+  tokenOptions: SelectOption[];
+  onChangeChain?: (val: SelectOption) => void;
+  selectedChain?: SelectOption;
+  chainOptions?: SelectOption[];
+  loadingTethBalance?: boolean;
 }
 
 export function MintValueCard({
@@ -41,6 +48,11 @@ export function MintValueCard({
   usdValue,
   handleDisconnect,
   tokenOptions,
+  selectedChain,
+  onChangeChain,
+  chainOptions,
+  chainSelectDisabled,
+  loadingTethBalance,
 }: MintValueCardProps) {
   ///////////////////
   // Derived values
@@ -54,10 +66,13 @@ export function MintValueCard({
       <div className="mint-card-header">
         <div className="flex items-center gap-3">
           <p className="font-medium text-base text-white/30">{title}</p>
-          <div className="mint-chip">
-            <Image src={chainIconImg} alt={chainName} width={21} height={21} />
-            <p className="font-medium text-base">{chainName}</p>
-          </div>
+          <EcSelect
+            disabled={chainSelectDisabled}
+            smallText
+            options={chainOptions}
+            selected={selectedChain}
+            onChange={onChangeChain || (() => {})}
+          />
         </div>
         {trimmedUserAddress && (
           <div onClick={handleDisconnect} className="disconnect gap-[8px]">
@@ -80,7 +95,7 @@ export function MintValueCard({
             disabled={disabled}
           />
           {/* token selector */}
-          <TokenSelect
+          <EcSelect
             options={tokenOptions}
             selected={depositAsset}
             disabled={tokenOptions.length <= 1}
@@ -94,7 +109,11 @@ export function MintValueCard({
           <div className="flex gap-2">
             <div className="flex gap-2">
               <Image src="/wallet.svg" alt="wallet" width={18} height={18} />
-              <p className="token-balance self-start">{formattedTokenBalance}</p>
+              {loadingTethBalance ? (
+                <Skeleton width={75} height={18} />
+              ) : (
+                <p className="token-balance self-start">{formattedTokenBalance}</p>
+              )}
             </div>
             {(onClickMax || onClickFiftyPercent) && <p className="text-white/30">•</p>}
             {onClickFiftyPercent !== undefined && (
