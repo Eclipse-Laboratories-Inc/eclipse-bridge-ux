@@ -19,7 +19,7 @@
   font-size: 14px;
   font-weight: 500;
 
-  width: 480px;
+  max-width: 480px;
   height: 88px;
 }
 

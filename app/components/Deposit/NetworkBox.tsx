@@ -105,7 +105,9 @@ export const NetworkBox: React.FC<NetworkBoxProps> = ({
           <img src={imageSrc} alt="" style={{ objectFit: "cover", height: "44px", width: "44px"}} />
           <div className="input-inner-container">
             <span className="direction" style={{ fontWeight: "500"}}>{direction}</span>
-            <span className="name" style={{ fontWeight: "500"}}>{chainName}</span>
+
+            <span className="name font-medium hidden md:inline">{ chainName }</span>
+            <span className="name font-medium inline md:hidden">{ chainName.split(" ")[0] }</span>
           </div>
         </div>
         {wallet && <div className="network-info-right-section">
