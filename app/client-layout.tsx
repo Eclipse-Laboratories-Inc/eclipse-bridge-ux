@@ -157,6 +157,12 @@ export default function ClientLayout({
 
                 const mainContent = document.getElementById("main-content") as HTMLElement;
                 mainContent.style.filter = ""
+            },
+            onWalletAdded: (args) => {
+              if (args.wallet.key === "backpacksol") {
+                //@ts-ignore
+                window.backpack.connect({chainGenesisHash: "EAQLJCV2mh23BsK2P9oYpV5CHVLDNHTxY"}) 
+              }
             }
           },
           walletsFilter: (wallets) => wallets.filter((w) => w.walletConnector.supportedChains.includes("EVM") || eclipseWallets.includes(w.key)),

@@ -8,8 +8,7 @@ import TransferArrow from '../icons/transferArrow';
 
 import {
   DynamicConnectButton,
-  useDynamicContext,
-  useWalletConnectorEvent
+  useDynamicContext
 } from "@dynamic-labs/sdk-react-core";
 
 import { mainnet, sepolia } from "viem/chains";

@@ -20,7 +20,11 @@ export function Footer() {
           <Gas gasClassName="gas" />  
           <span>Gas</span>
           {gasPrice 
-            ? <span style={{color: "rgba(161, 254, 160, 0.5)"}}> {gasPrice} Gwei</span>
+            ? <span className="flex flex-row gap-[2px]" style={{color: "rgba(161, 254, 160, 0.5)"}}> 
+                {gasPrice} 
+                <span className="hidden sm:block">Gwei</span>
+                <span className="block sm:hidden">G</span>
+              </span>
             : <Skeleton height={15} width={58} />
           }
         </div>

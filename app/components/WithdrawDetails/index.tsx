@@ -13,6 +13,7 @@ import { composeEclipsescanUrl, composeEtherscanCompatibleTxPath, useNetwork } f
 import { withdrawEthereum, byteArrayToHex, convertLosslessToNumbers, WithdrawObject } from "@/lib/withdrawUtils"
 import { useWallets } from "@/app/hooks/useWallets";
 import { Options } from "@/lib/networkUtils";
+import { Loading } from "@/app/components/icons"
 
 interface TransactionDetailsProps {
   from: "deposit" | "withdraw" | "";
@@ -20,12 +21,6 @@ interface TransactionDetailsProps {
   tx: any;
   ethStatus?: string;
   ethAmount: Number; 
-}
-
-enum TxStatus {
-  Completed = "completed",
-  Loading = "loading",
-  Failed = "failed"
 }
 
 enum InitiateTxStates {
@@ -163,7 +158,7 @@ export const WithdrawDetails: React.FC<TransactionDetailsProps> = ({
       if (!txResponse.startsWith("0x"))
         txResponse = `0x${txResponse}`
 
-      setButtonText("Confirming Transaction");
+      setButtonText("Confirming");
       await client.waitForTransactionReceipt({ hash: txResponse, retryCount: 150, retryDelay: 2_000, confirmations: 1 }); 
       setWaitingPeriodStatus(WaitingPeriodState.Closed);
 
@@ -211,11 +206,19 @@ export const WithdrawDetails: React.FC<TransactionDetailsProps> = ({
       return "Close"
     }
 
+    if (initiateStatus === InitiateTxStates.Confirming) {
+      return "Confirming"
+    }
+
+    if (initiateStatus === InitiateTxStates.InWallet) {
+      return "Approve in Wallet"
+    }
+
     return "Initiate Withdrawal"
   }
 
   return (
-    <div className={`transaction-details-modal flex flex-col items-center ${ isSidebar ? 'ml-[110px]' : 'ml-[34px]' }` }>
+    <div className={`transaction-details-modal flex flex-col items-center ml-[0px] ${ isSidebar ? 'sm:ml-[110px]' : 'sm:ml-[34px]' }` }>
       <div className="transaction-details-header flex flex-row items-center justify-between">
         <div></div>
         <span>Withdraw</span>
@@ -392,16 +395,26 @@ export const WithdrawDetails: React.FC<TransactionDetailsProps> = ({
           </span>
       </div> }
 
-      {
-        waitingPeriodStatus !== WaitingPeriodState.Ready && <button 
-          onClick={txHash ? closeModal : handleInitiate } 
-          className={ `initiate-button ${ txHash && "!text-white !bg-[#ffffff0d]"} ${ !checkbox && "!text-white cursor-not-allowed !bg-[#ffffff0d]" }` }
+      { waitingPeriodStatus !== WaitingPeriodState.Ready && <button 
+          onClick={ txHash ? closeModal : handleInitiate } 
+          className={ 
+            `initiate-button flex items-center justify-center gap-[8px] 
+            ${ (txHash || initiateStatus === InitiateTxStates.InWallet ) && "!text-[#ffffff4d] !bg-[#ffffff0d] cursor-pointer"} 
+            ${ !checkbox && "!text-[#ffffff4d] cursor-not-allowed !bg-[#ffffff0d]" }` 
+          }
         >
+          { initiateStatus === InitiateTxStates.InWallet && <Loading loadingClassName="" style={{}}/> } 
           { getButtonText() }
         </button>
       }
       { waitingPeriodStatus === WaitingPeriodState.Ready && 
-        <button className="initiate-button !mt-[25px]" onClick={ isClaimFlowOpen ? () => {}: submitClaim }>
+        <button className={ 
+            `initiate-button flex items-center justify-center gap-[8px] !mt-[25px] 
+            ${ buttonText != "Claim Now" && "!text-[#ffffff4d] cursor-not-allowed !bg-[#ffffff0d]" }` 
+      } 
+          onClick={ isClaimFlowOpen ? () => {} : submitClaim }
+        >
+          { buttonText != "Claim Now" && <Loading loadingClassName="" style={{}} /> } 
           { buttonText }
         </button>
       }
