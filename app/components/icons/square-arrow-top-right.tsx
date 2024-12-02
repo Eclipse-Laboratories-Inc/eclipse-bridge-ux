@@ -1,0 +1,11 @@
+import React from 'react';
+
+const SquareArrowTopRight = ({ className }: { className: string}) => {
+  return (
+    <svg className={className} width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M7.4987 4.99992H7.33203C5.9319 4.99992 5.23183 4.99992 4.69706 5.2724C4.22665 5.51209 3.8442 5.89454 3.60451 6.36494C3.33203 6.89972 3.33203 7.59979 3.33203 8.99992V12.6666C3.33203 14.0668 3.33203 14.7668 3.60451 15.3016C3.8442 15.772 4.22665 16.1544 4.69706 16.3941C5.23183 16.6666 5.9319 16.6666 7.33203 16.6666H10.9987C12.3989 16.6666 13.0989 16.6666 13.6337 16.3941C14.1041 16.1544 14.4865 15.772 14.7262 15.3016C14.9987 14.7668 14.9987 14.0668 14.9987 12.6666V12.4999M11.6654 3.33325H16.6654M16.6654 3.33325V8.33325M16.6654 3.33325L9.16536 10.8333" stroke="white" stroke-opacity="0.3" stroke-width="1.66667" stroke-linecap="round" stroke-linejoin="round"/>
+    </svg>
+  );
+}
+
+export default SquareArrowTopRight;

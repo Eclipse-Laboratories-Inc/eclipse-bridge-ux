@@ -1,11 +1,11 @@
-import {} from "react";
 import { Cross, WalletIcon, CircleCheck } from "../icons";
 import { useTransactionManager, Token } from "./TokenManager"
+import { useSidebar } from "@/app/contexts/SidebarContext";
 
 
 const TokenItem: React.FC<{ token: Token, selectedToken: Token, onClick: () => void}> = ({ token, selectedToken, onClick }) => {
   return (
-    <div className="cursor-pointer flex flex-row justify-between w-full py-[12px] px-[14px] rounded-[10px] bg-[#ffffff0d]" onClick={onClick}>
+    <div className="cursor-pointer flex flex-row justify-between w-full py-[12px] px-[14px] rounded-[10px] bg-[#ffffff0d] hover:bg-[#ffffff14]" onClick={onClick}>
       <div className="flex flex-row items-center">
         <img src={ token.icon } alt="" className="w-[33px] h-[33px]" />
         <div className="flex flex-col ml-[10px]">
@@ -33,10 +33,11 @@ export const SelectToken: React.FC<{
   selectedToken: Token 
 }> = ({ setSelectModal, setSelectedToken, selectedToken }) => {
   const { tokens } = useTransactionManager(); 
+  const { isSidebar } = useSidebar();
 
   return (
-    <div className="fixed top-0 left-0 w-screen h-screen backdrop-blur-[2px] flex justify-center items-center z-[999]">
-      <div className="flex flex-col absolute w-[375px] rounded-[30px] bg-black" style={{ border: "1px solid rgba(255, 255, 255, 0.10)"}}>
+    <div className={`fixed top-0 left-0 w-screen h-screen backdrop-blur-[2px] flex justify-center items-center z-[999]`}>
+      <div className={`flex flex-col absolute w-[375px] rounded-[30px] bg-black ${ isSidebar ? 'sm:ml-[212px]' : 'sm:ml-[70px]'}`} style={{ border: "1px solid rgba(255, 255, 255, 0.10)"}}>
         <div className="flex flex-row justify-between items-center p-[20px]">
           <span></span>
           <span className="font-medium text-[18px] tracking-[-0.18px]">Choose token to pay with</span>

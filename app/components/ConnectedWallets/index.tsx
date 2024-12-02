@@ -5,10 +5,11 @@ import { createPublicClient, formatEther, http } from 'viem';
 import { getBalance } from 'viem/actions';
 import './styles.css';
 import { Cross, Copy, ConnectIcon, CircleCheck, Disconnect } from "../icons";
-import { Options, useNetwork } from "@/app/contexts/NetworkContext"; 
+import { useNetwork } from "@/app/contexts/NetworkContext"; 
 import { truncateWalletAddress } from '@/lib/stringUtils';
 import { getWalletBalance } from '@/lib/solanaUtils';
 import { useWallets } from '@/app/hooks/useWallets';
+import { Options } from '@/lib/networkUtils';
 
 interface ConnectedWalletsProps {
   close: (e?: React.MouseEvent<HTMLDivElement>) => void;
@@ -31,7 +32,9 @@ const useWalletData = () => {
     const isMainnet = (selectedOption === Options.Mainnet);
     const client = createPublicClient({
       chain: isMainnet ? mainnet : sepolia,
-      transport: isMainnet ? http() : http("https://ethereum-sepolia.publicnode.com/"),
+      transport: isMainnet 
+        ? http("https://empty-responsive-patron.quiknode.pro/91dfa8475605dcdec9afdc8273578c9f349774a1/") 
+        : http("https://ethereum-sepolia.publicnode.com/"),
     });
     userWallets.forEach(async (wallet) => {
       if (!wallet) return;

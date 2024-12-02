@@ -1,5 +1,6 @@
 import { useWallets } from "@/app/hooks";
 import { generateTxObjectForDetails } from "@/lib/activityUtils";
+import { createPublicClient, formatEther, http } from "viem";
 import { solanaToBytes32 } from "@/lib/solanaUtils";
 import {
   DynamicConnectButton,
@@ -40,6 +41,11 @@ import { getRate } from "../lib/getRate";
 import { latestRoundData } from "../lib/latestRoundData";
 import { quoteGasPayment } from "../lib/quoteGasPayment";
 import {
+  composeEtherscanCompatibleTxPath,
+  composeEtherscanUrl,
+  useNetwork,
+} from "@/app/contexts/NetworkContext";
+import {
   evmProvidersSelector,
   isEthereumWallet,
 } from "@dynamic-labs/ethereum-core";
@@ -57,6 +63,7 @@ function Mint() {
     useDynamicContext();
   const { evmWallet, solWallet } = useWallets();
   const evmRpcProvider = useRpcProviders(evmProvidersSelector);
+  const { selectedOption } = useNetwork();
 
   ///////////////////////
   // State
@@ -157,7 +164,10 @@ function Mint() {
       {
         title: "2. Depositing",
         status: depositStatus,
-        link: `https://etherscan.io/tx/${depositTxHash}`,
+        link: composeEtherscanUrl(
+          selectedOption,
+          composeEtherscanCompatibleTxPath(depositTxHash)
+        ),
       },
     ];
   }, [approveStatus, depositStatus, depositTxHash]);

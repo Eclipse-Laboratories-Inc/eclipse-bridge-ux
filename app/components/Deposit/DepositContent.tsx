@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 
 import "./styles.css";
 import "react-loading-skeleton/dist/skeleton.css";
@@ -21,11 +21,14 @@ import {
   WalletClient,
 } from "viem";
 import { Transport, Chain, Account } from "viem";
-import { getBalance } from "viem/actions";
-import { Options, useNetwork } from "@/app/contexts/NetworkContext";
+import {
+  estimateMaxPriorityFeePerGas,
+  getBalance,
+  getGasPrice,
+} from "viem/actions";
+import { useNetwork } from "@/app/contexts/NetworkContext";
 import ExtendedDetails from "../ExtendedDetails";
 import { getWalletBalance } from "@/lib/solanaUtils";
-import { withdrawEthereum } from "@/lib/withdrawUtils";
 
 import { solanaToBytes32 } from "@/lib/solanaUtils";
 import { generateTxObjectForDetails } from "@/lib/activityUtils";
@@ -34,13 +37,16 @@ import { TransactionDetails } from "../TransactionDetails";
 import { WithdrawDetails } from "../WithdrawDetails";
 import { useTransaction } from "../TransactionPool";
 import { NetworkBox } from "./NetworkBox";
+import { useThirdpartyBridgeModalContext } from "../ThirdpartyBridgeModal/ThirdpartyBridgeModalContext";
 import {
   CONTRACT_ABI,
+  DEPOSIT_TX_GAS_LIMIT,
   MIN_DEPOSIT_AMOUNT,
   MIN_WITHDRAWAL_AMOUNT,
 } from "../constants";
 import { useWallets } from "@/app/hooks/useWallets";
-import useEthereumData from "@/lib/ethUtils";
+import { Options } from "@/lib/networkUtils";
+import { EthereumDataContext } from "@/app/context";
 import { evmProvidersSelector } from "@dynamic-labs/ethereum-core";
 
 export interface DepositContentProps {
@@ -66,7 +72,13 @@ export const DepositContent: React.FC<DepositContentProps> = ({
     Chain,
     Account
   > | null>(null);
-  const { gasPrice, ethPrice } = useEthereumData();
+  const { isThirdpartyBridgeModalOpen } = useThirdpartyBridgeModalContext();
+  const [gasPrice, ethPrice, blockNumber] = useContext(EthereumDataContext) ?? [
+    null,
+    null,
+    null,
+  ];
+  const { selectedOption, contractAddress, eclipseRpc } = useNetwork();
   const [balanceEther, setAmountBalanceEther] = useState<number>(-1);
   const [isEvmDisconnected, setIsEvmDisconnected] = useState(false);
   const [isSolDisconnected, setIsSolDisconnected] = useState(false);
@@ -74,12 +86,14 @@ export const DepositContent: React.FC<DepositContentProps> = ({
   const [ethTxStatus, setEthTxStatus] = useState("");
   const [isModalOpen, setIsModalOpen] = modalStuff;
   const [isWithdrawFlowOpen, setIsWithdrawFlowOpen] = modalStuff;
-  const { selectedOption, contractAddress, eclipseRpc } = useNetwork();
   const [client, setClient] = useState<any>(null);
   const [provider, setProvider] = useState<any>(null);
+  const [gasPriceWei, setGasPriceWei] = useState<bigint>();
+  const [maxPriorityFeePerGasWei, setMaxPriorityFeePerGasWei] =
+    useState<bigint>();
 
-  const evmRpcProvider = useRpcProviders(evmProvidersSelector);
   const { handleUnlinkWallet } = useDynamicContext();
+  const evmRpcProvider = useRpcProviders(evmProvidersSelector);
   const { addNewDeposit } = useTransaction();
 
   const { userWallets, evmWallet, solWallet } = useWallets();
@@ -98,7 +112,6 @@ export const DepositContent: React.FC<DepositContentProps> = ({
     const cid = isMainnet ? 1 : 11155111;
     const lprovider = evmRpcProvider.getProviderByChainId(cid);
     setProvider(lprovider);
-    console.log("new providoo", cid);
   }, [evmWallet?.chain, isMainnet]);
 
   useEffect(() => {
@@ -113,6 +126,14 @@ export const DepositContent: React.FC<DepositContentProps> = ({
       cacheTime: 0,
     });
     setClient(mclient);
+
+    Promise.all([
+      getGasPrice(mclient),
+      estimateMaxPriorityFeePerGas(mclient),
+    ]).then(([gp, mpf]) => {
+      setGasPriceWei(gp);
+      setMaxPriorityFeePerGasWei(mpf);
+    });
   }, [selectedOption]);
 
   useEffect(() => {
@@ -124,6 +145,12 @@ export const DepositContent: React.FC<DepositContentProps> = ({
     lWalletClient && (lWalletClient.cacheTime = 0);
     setWalletClient(lWalletClient ?? null);
   }, [evmWallet?.connector]);
+
+  useEffect(() => {
+    if (!evmWallet) {
+      setAmountBalanceEther(-1);
+    }
+  }, [evmWallet]);
 
   useEffect(() => {
     // if action is withdraw fetch eclipse balance
@@ -151,7 +178,6 @@ export const DepositContent: React.FC<DepositContentProps> = ({
         !(wallet.chain == "EVM")
       )
         return;
-      console.log(client, "gbcli");
       const balance = await getBalance(client, {
         //@ts-ignore
         address: wallet.address,
@@ -178,8 +204,6 @@ export const DepositContent: React.FC<DepositContentProps> = ({
     const weiValue = parseEther(amountEther?.toString() || "");
 
     try {
-      console.log("zzzzoo", contractAddress);
-      console.log("prio", provider);
       const { request } = await client.simulateContract({
         //@ts-ignore
         address: contractAddress,
@@ -216,6 +240,10 @@ export const DepositContent: React.FC<DepositContentProps> = ({
   };
 
   function determineButtonClass(): string {
+    if (isThirdpartyBridgeModalOpen) {
+      ("submit-button disabled");
+    }
+
     if (!evmWallet || !solWallet) {
       return "submit-button disabled";
     }
@@ -273,6 +301,8 @@ export const DepositContent: React.FC<DepositContentProps> = ({
       balanceEther={balanceEther}
       amountEther={amountEther}
       setAmountEther={setAmountEther}
+      gasPriceWei={gasPriceWei}
+      maxPriorityFeePerGasWei={maxPriorityFeePerGasWei}
     />,
     <NetworkBox
       key="eclipse"
@@ -290,6 +320,8 @@ export const DepositContent: React.FC<DepositContentProps> = ({
       balanceEther={balanceEther}
       amountEther={amountEther}
       setAmountEther={setAmountEther}
+      gasPriceWei={gasPriceWei}
+      maxPriorityFeePerGasWei={maxPriorityFeePerGasWei}
     />,
   ];
 
@@ -319,21 +351,21 @@ export const DepositContent: React.FC<DepositContentProps> = ({
             <ExtendedDetails
               amountEther={amountEther}
               target="Eclipse"
-              feeInEth={gasPrice && (113200 * gasPrice) / 10 ** 9}
+              feeInEth={gasPrice && DEPOSIT_TX_GAS_LIMIT * (gasPrice / 10 ** 9)}
             />
           )}
 
           {action === Action.Withdraw && (
             <ExtendedDetails
               amountEther={amountEther}
-              target="Eclipse"
+              target="Ethereum"
               feeInEth={0.0000005}
             />
           )}
           {!evmWallet || !solWallet ? (
             <DynamicConnectButton
-              buttonClassName="wallet-connect-button w-full"
-              buttonContainerClassName="submit-button connect-btn"
+              buttonClassName={`wallet-connect-button w-full`}
+              buttonContainerClassName={`submit-button connect-btn ${isThirdpartyBridgeModalOpen ? "disabled" : ""}`}
             >
               <span style={{ width: "100%" }}> {determineButtonText()}</span>
             </DynamicConnectButton>

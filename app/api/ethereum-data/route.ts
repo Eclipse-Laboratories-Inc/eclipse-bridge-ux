@@ -1,4 +1,5 @@
-import { NextResponse } from 'next/server';
+import { OptionsLower } from '@/lib/networkUtils';
+import { NextRequest, NextResponse } from 'next/server';
 
 const CACHE_EXPIRATION_MS = 10000; // 10 seconds cache
 
@@ -7,6 +8,7 @@ interface ICache  {
     gasPrice: number | null;
     ethPrice: number | null;
     timestamp: number | null;
+    network: OptionsLower | null
 }
 
 let cache: ICache = {
@@ -14,20 +16,33 @@ let cache: ICache = {
     gasPrice: null,
     ethPrice: null,
     timestamp: null,
+    network: null
 };
 
 let isFetching = false;
 
-export async function GET() {
+const ETHERSCAN_API_URLS: Record<OptionsLower, string> = {
+    'mainnet': "https://api.etherscan.io/api",
+    'testnet': "https://api-sepolia.etherscan.io/api"
+}
+
+function isValidChain(c: string): c is OptionsLower {
+    return c in ETHERSCAN_API_URLS
+}
+
+export async function GET(request: NextRequest) {
     const apiKey = process.env.ETHERSCAN_API_KEY || "";
-    const etherscanAddress = process.env.NEXT_PUBLIC_ETHERSCAN_ADDRESS;
     
     if (!apiKey) {
         return NextResponse.json({ error: 'API key is not configured' }, { status: 500 });
     }
 
+    const chain = request.nextUrl.searchParams.get('chain')?.toLowerCase()
+    const parsedChain: OptionsLower = !!chain && isValidChain(chain) ? chain : 'mainnet'
+    const etherscanAddress = ETHERSCAN_API_URLS[parsedChain]
+
     const now = new Date().getTime();
-    if (cache.timestamp && (now - cache.timestamp) < CACHE_EXPIRATION_MS) {
+    if (cache.timestamp && (now - cache.timestamp) < CACHE_EXPIRATION_MS && cache.network === parsedChain) {
         console.log("Using cached data");
         return NextResponse.json(cache);
     }
@@ -51,12 +66,13 @@ export async function GET() {
         const gasData = await gasResponse.json();
         const priceData = await priceResponse.json();
 
+        const parsedGasPrice = parseInt(gasData.result, 16) / 10**9
+        const gasDecimals  = parsedGasPrice < 1 ? 10**4 : 10**2 // if gas price is less than 1 gwei, read 4 decimals; testnet edge case
+        const newGasPrice = Math.round((parseInt(gasData.result, 16) / 1e9) * gasDecimals) / gasDecimals; 
         const newBlockNumber = parseInt(blockData.result, 16);
-        const newGasPrice = Math.round((parseInt(gasData.result, 16) / 1e9) * 100) / 100; 
         const newEthPrice = Math.round(parseFloat(priceData.result.ethusd) * 100) / 100;
 
         if (!newBlockNumber || !newGasPrice || !newEthPrice) {
-            console.log("Failed to fetch new data, returning last known data");
             return NextResponse.json(cache);
         }
 
@@ -65,6 +81,7 @@ export async function GET() {
             gasPrice: newGasPrice,
             ethPrice: newEthPrice,
             timestamp: now,
+            network: parsedChain
         };
 
         return NextResponse.json(cache);

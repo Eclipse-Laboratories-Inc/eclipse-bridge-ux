@@ -1,15 +1,15 @@
 "use client";
-import React, { useCallback, useRef, useEffect } from "react";
+import React, { useCallback, useRef, useEffect, useContext } from "react";
 import "./styles.css";
 import "react-loading-skeleton/dist/skeleton.css";
 import { WalletIcon } from "@/app/components/icons";
 import { Cross, ConnectIcon } from "../icons";
-import ExtendedDetails from "../ExtendedDetails";
 import { DynamicConnectButton } from "@dynamic-labs/sdk-react-core";
 import Skeleton from "react-loading-skeleton";
 import { truncateWalletAddress } from "@/lib/stringUtils";
 import { useWallets } from "@/app/hooks/useWallets";
-import useEthereumData from "@/lib/ethUtils";
+import { DEPOSIT_TX_GAS_LIMIT, WITHDRAW_TX_FEE } from "../constants";
+import { EthereumDataContext } from "@/app/context";
 
 export interface NetworkBoxProps {
   imageSrc: string;
@@ -24,6 +24,31 @@ export interface NetworkBoxProps {
   setAmountEther: React.Dispatch<
     React.SetStateAction<string | number | undefined>
   >;
+  gasPriceWei: bigint | undefined;
+  maxPriorityFeePerGasWei: bigint | undefined;
+}
+
+function roundUpToFiveDecimals(value: number): number {
+  return Math.ceil(value * 10 ** 5) / 10 ** 5;
+}
+
+// NB: rounds up to 5 decimals
+function calculateMaxTxFeeEther(
+  gasPriceWei: bigint,
+  maxPriorityFeePerGasWei: bigint
+): number {
+  const maxFeeWei: bigint =
+    gasPriceWei * BigInt(DEPOSIT_TX_GAS_LIMIT) +
+    maxPriorityFeePerGasWei * BigInt(DEPOSIT_TX_GAS_LIMIT);
+  // add 12.5% to base fee to assume last block was 100% full
+  // we also add it to the priority fee just in case; the fee estimate from the wallet provider can differ significantly
+  // e.g. at times viem suggested 1.5gwei vs 1.6 - 1.7 gwei from metamask; other times metamask was the same
+  // we could use a static guess of 2gwei based on docs like https://www.blocknative.com/blog/eip-1559-fees
+  const maxFeeEther: number = (Number(maxFeeWei) / 10 ** 18) * 1.125;
+
+  const fiveDecimalRounded = roundUpToFiveDecimals(maxFeeEther);
+
+  return fiveDecimalRounded;
 }
 
 export const NetworkBox: React.FC<NetworkBoxProps> = ({
@@ -37,13 +62,20 @@ export const NetworkBox: React.FC<NetworkBoxProps> = ({
   balanceEther,
   amountEther,
   setAmountEther,
+  gasPriceWei,
+  maxPriorityFeePerGasWei,
 }) => {
   const { userWallets, evmWallet, solWallet } = useWallets();
-  const { blockNumber, gasPrice, ethPrice } = useEthereumData();
+  const [gasPrice, ethPrice, blockNumber] = useContext(EthereumDataContext) ?? [
+    null,
+    null,
+    null,
+  ];
+  const ignoreDisabledState = !evmWallet;
   const inputRef = useRef<HTMLInputElement>(null);
 
   function determineInputClass(): string {
-    if (!evmWallet || !solWallet) return "disabled";
+    if (ignoreDisabledState) return "";
     if (parseFloat(amountEther as string) > balanceEther) {
       return "alarm";
     }
@@ -76,6 +108,13 @@ export const NetworkBox: React.FC<NetworkBoxProps> = ({
     adjustInputWidth();
   });
 
+  const maxTxFeeEther =
+    walletChain === "SOL"
+      ? WITHDRAW_TX_FEE
+      : calculateMaxTxFeeEther(
+          gasPriceWei ?? BigInt(0),
+          maxPriorityFeePerGasWei ?? BigInt(0)
+        );
   // remove bottom border for ethereum box
   const css =
     direction === "From" ? "!border-b-0 !rounded-bl-none !rounded-br-none" : "";
@@ -96,8 +135,12 @@ export const NetworkBox: React.FC<NetworkBoxProps> = ({
             <span className="direction" style={{ fontWeight: "500" }}>
               {direction}
             </span>
-            <span className="name" style={{ fontWeight: "500" }}>
+
+            <span className="name font-medium hidden md:inline">
               {chainName}
+            </span>
+            <span className="name font-medium inline md:hidden">
+              {chainName.split(" ")[0]}
             </span>
           </div>
         </div>
@@ -137,7 +180,6 @@ export const NetworkBox: React.FC<NetworkBoxProps> = ({
                 {!evmWallet || (evmWallet && balanceEther >= 0) ? (
                   <>
                     <input
-                      disabled={!evmWallet || !solWallet}
                       step="0.01"
                       min="0"
                       placeholder="0 ETH"
@@ -178,11 +220,11 @@ export const NetworkBox: React.FC<NetworkBoxProps> = ({
               </div>
             </div>
             <div
-              className={`${evmWallet && solWallet ? "" : "invisible"} amount-input-bottom flex flex-row justify-between w-full items-center`}
+              className={`${evmWallet && solWallet ? "" : ""} amount-input-bottom flex flex-row justify-between w-full items-center`}
             >
-              {evmWallet && (
+              {
                 <div className="balance-info w-full">
-                  {balanceEther >= 0 && ethPrice ? (
+                  {ethPrice ? (
                     amountEther && amountEther != "." ? (
                       <span className="font-medium">
                         $
@@ -202,16 +244,21 @@ export const NetworkBox: React.FC<NetworkBoxProps> = ({
                     </span>
                   )}
                 </div>
-              )}
+              }
               <div
                 className={
-                  evmWallet && solWallet ? "percentage-buttons" : "invisible"
+                  (chainName.includes("Ethereum") && evmWallet) ||
+                  (chainName.includes("Eclipse") && solWallet)
+                    ? "percentage-buttons"
+                    : "invisible"
                 }
               >
                 <div className="flex flex-row items-center gap-2 mr-1">
                   <WalletIcon width="12" />
-                  {balanceEther >= 0 ? (
-                    <span className="font-medium">{balanceEther}</span>
+                  {balanceEther >= 0 || ignoreDisabledState ? (
+                    <span className="font-medium">
+                      {balanceEther >= 0 ? balanceEther : "0"}
+                    </span>
                   ) : (
                     <Skeleton
                       height={18}
@@ -222,20 +269,24 @@ export const NetworkBox: React.FC<NetworkBoxProps> = ({
                 </div>
                 <span>•</span>
                 <button
+                  className="percentage-button disabled:text-neutral-800 disabled:hover:text-neutral-800 disabled:hover:cursor-not-allowed"
+                  disabled={balanceEther * 0.5 <= maxTxFeeEther}
                   onClick={() => {
                     setAmountEther(balanceEther * 0.5);
                     setTimeout(adjustInputWidth, 0);
                   }}
-                  className="percentage-button"
                 >
                   50%
                 </button>
                 <button
+                  className="percentage-button disabled:text-neutral-800 disabled:hover:text-neutral-800 disabled:hover:cursor-not-allowed"
+                  disabled={balanceEther <= maxTxFeeEther}
                   onClick={() => {
-                    setAmountEther(balanceEther);
+                    setAmountEther(
+                      roundUpToFiveDecimals(balanceEther - maxTxFeeEther)
+                    );
                     setTimeout(adjustInputWidth, 0);
                   }}
-                  className="percentage-button"
                 >
                   Max
                 </button>

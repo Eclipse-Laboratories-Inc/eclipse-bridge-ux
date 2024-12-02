@@ -6,7 +6,9 @@ import { timeAgo } from "@/lib/activityUtils";
 import { ethers } from "ethers";
 import { EthereumDataContext } from "@/app/context";
 import { useTransaction } from "../TransactionPool";
-import { useNetwork } from "@/app/contexts/NetworkContext"; 
+import { useSidebar } from "@/app/contexts/SidebarContext";
+import { composeEclipsescanUrl, composeEtherscanCompatibleTxPath, composeEtherscanUrl, useNetwork } from "@/app/contexts/NetworkContext"; 
+import { Options } from "@/lib/networkUtils";
 
 interface TransactionDetailsProps {
   from: "deposit" | "withdraw" | "";
@@ -29,9 +31,12 @@ const calculateFee = (gasPrice: string, gasUsed: string) => {
 };
 
 const TransactionDirection: React.FC<{from: string}> = ({ from }) => { 
+  const { selectedOption } = useNetwork();
+  const isMainnet = (selectedOption === Options.Mainnet);
+
   const chains = [
     { src: "eth.png", name: "Ethereum" },
-    { src: "eclipse.png", name: "Eclipse" },
+    { src: isMainnet ? "eclipse.png" : "eclipse-testnet.png", name: "Eclipse" },
   ];
   from === "withdraw" && chains.reverse();
   const [fromChain, toChain] = chains;
@@ -65,7 +70,8 @@ export const TransactionDetails: React.FC<TransactionDetailsProps> = ({
 }) => {
   const [_, ethPrice] = useContext(EthereumDataContext) ?? [0, 0];
   const { transactions, addTransactionListener } = useTransaction();
-  const { evmExplorer, eclipseExplorer } = useNetwork();
+  const { isSidebar } = useSidebar();
+  const { selectedOption } = useNetwork();
 
   const transaction = tx && transactions.get(tx.hash);
 
@@ -83,11 +89,11 @@ export const TransactionDetails: React.FC<TransactionDetailsProps> = ({
   }, [tx]);
 
   return (
-    <div className="transaction-details-modal flex flex-col items-center">
+    <div className={ `transaction-details-modal flex flex-col items-center ${ isSidebar ? 'sm:ml-[110px]' : 'sm:ml-[34px]' }` }>
       <div className="transaction-details-header flex flex-row items-center justify-between">
         <div></div>
         <span>Deposit</span>
-        <div onClick={closeModal}>
+        <div onClick={ closeModal }>
           <Cross crossClassName="modal-cross" />
         </div>
       </div>
@@ -103,7 +109,7 @@ export const TransactionDetails: React.FC<TransactionDetailsProps> = ({
             {tx && (
               <div className="gray-text">
                 <a
-                  href={`${evmExplorer}/tx/${tx.hash}`}
+                  href={composeEtherscanUrl(selectedOption, composeEtherscanCompatibleTxPath(tx.hash))}
                   target="_blank"
                 >
                   View Txn
@@ -159,7 +165,7 @@ export const TransactionDetails: React.FC<TransactionDetailsProps> = ({
             <div className="gray-text">
               {eclipseTx && (
                 <a
-                  href={`https://eclipsescan.xyz/tx/${eclipseTx}?cluster=${eclipseExplorer}`}
+                  href={composeEclipsescanUrl(selectedOption, composeEtherscanCompatibleTxPath(eclipseTx))}
                   target="_blank"
                 >
                   View Txn

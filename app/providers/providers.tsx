@@ -2,7 +2,6 @@
 
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { useState, type ReactNode } from "react";
-import { NetworkProvider } from "@/app/contexts/NetworkContext";
 import { SidebarProvider } from "@/app/contexts/SidebarContext";
 import { RelayKitProvider } from "@/app/providers/RelayKitProvider";
 import { RelayChain } from "@reservoir0x/relay-sdk";
@@ -17,11 +16,9 @@ export function Providers(props: {
   return (
     <RelayKitProvider chains={props.chains}>
       <QueryClientProvider client={queryClient}>
-        <NetworkProvider>
-          <WalletFilterProvider>
-            <SidebarProvider>{props.children}</SidebarProvider>
-          </WalletFilterProvider>
-        </NetworkProvider>
+        <WalletFilterProvider>
+          <SidebarProvider>{props.children}</SidebarProvider>
+        </WalletFilterProvider>
       </QueryClientProvider>
     </RelayKitProvider>
   );

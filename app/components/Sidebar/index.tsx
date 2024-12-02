@@ -1,11 +1,11 @@
 import "./sidebar.css";
 import Link from 'next/link';
-import { BridgeIcon, WalletIcon, TethIcon, ScanIcon, GasStationIcon, FaucetIcon, EcosystemIcon } from "@/app/components/icons"
+import { BridgeIcon, TethIcon, ScanIcon, GasStationIcon, EcosystemIcon } from "@/app/components/icons"
 import { NetworkSwitcher } from "../Deposit/NetworkSwitcher";
 import { useState, type ReactNode } from "react";
 import { toKebabCase } from "@/lib/stringUtils";
-import { useRouter } from "next/navigation";
 import { usePathname } from 'next/navigation'
+import { composeEclipsescanUrl, useNetwork } from "@/app/contexts/NetworkContext";
 
 
 const ToggleIcon: React.FC<{ isExtended: boolean }> = ({ isExtended }) => {
@@ -22,12 +22,12 @@ const ToggleIcon: React.FC<{ isExtended: boolean }> = ({ isExtended }) => {
 }
 
 const SidebarItem: React.FC<{name: string, icon: ReactNode, isExtended: boolean}> = ({ name, icon, isExtended }) => {  
+  const { selectedOption } = useNetwork()
   const [hover, setHover] = useState(false);
-  const router = useRouter();
   const pathName = usePathname();
   let targetHref = toKebabCase(name)
-  if (targetHref === "eclipsescan") { targetHref = "https://eclipsescan.xyz"}
-  if (targetHref === "ecosystem")   { targetHref = "https://www.eclipse.xyz/ecosystem"}
+  if (targetHref === "eclipsescan") { targetHref = composeEclipsescanUrl(selectedOption) }
+  if (targetHref === "ecosystem")   { targetHref = "https://www.eclipse.xyz/ecosystem" }
 
   return (
     <Link href={targetHref} target={targetHref.includes("https") ? "_blank" : ""}>
@@ -71,7 +71,8 @@ export const Sidebar: React.FC<{ isExtended: boolean, setIsExtended: React.Dispa
       </div>
       <div className="flex w-[31px] mb-[20px] h-[31px] rounded-full cursor-pointer 
             border-[#ffffff1a] bg-black border-[1.35px] items-center 
-            justify-center ml-[calc(100%-15.5px)] transition-all hover:bg-[#ffffff08]
+            justify-center ml-[calc(100%-15.5px)] transition-all 
+            close-sidebar-icon
       "
            onClick={() => {setIsExtended((current) => !current)}}>
         <ToggleIcon isExtended={ isExtended }/>

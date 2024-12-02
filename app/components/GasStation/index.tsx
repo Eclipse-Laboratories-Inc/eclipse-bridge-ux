@@ -2,15 +2,7 @@ import { useState, useRef, useEffect } from "react";
 import { Chevron, GasStationIcon, WalletIcon } from "../icons";
 import { useTransactionManager, Token } from "./TokenManager";
 import { DynamicConnectButton } from "@dynamic-labs/sdk-react-core";
-import {
-  Transaction,
-  Signer,
-  Keypair,
-  VersionedTransaction,
-  TransactionMessage,
-  PublicKey,
-  Connection,
-} from "@solana/web3.js";
+import { Transaction, Connection } from "@solana/web3.js";
 import { SelectToken } from "./SelectToken";
 import { GasStationNotification, TxStatus } from "./Notification";
 import { useWallets } from "@/app/hooks/useWallets";
@@ -32,9 +24,6 @@ export const GasStation: React.FC = () => {
   const [txId, setTxId] = useState("");
   const [txStatus, setTxStatus] = useState<TxStatus>(TxStatus.None);
   const { solWallet } = useWallets();
-  useEffect(() => {
-    console.log(selectedToken, "selo");
-  }, [!selectedToken]);
 
   function getInputClassName(): string {
     // insufficient funds
@@ -82,8 +71,12 @@ export const GasStation: React.FC = () => {
       return "w-full h-[58px] bg-[#ffffff0d] rounded-[10px] text-[#EB4D4D] bg-[#eb4d4d1a] text-[20px] font-medium pointer-events-none";
     }
 
-    // amount is empty
-    if (amount === "" || Number(amount) === 0) {
+    // amount is empty or have an active transaction
+    if (
+      amount === "" ||
+      Number(amount) === 0 ||
+      txStatus === TxStatus.Waiting
+    ) {
       return "w-full h-[58px] bg-[#ffffff0d] rounded-[10px] text-[#ffffff4d] text-[20px] font-medium pointer-events-none";
     }
 
@@ -123,6 +116,12 @@ export const GasStation: React.FC = () => {
       (Number(amount) * 10 ** selectedToken.decimals) /
         (selectedToken.price ?? 1)
     );
+
+    if (!octaneData || octaneData.status === "error") {
+      emitEvent(`Failed to fetch transaction.`, TxStatus.Failed, 5);
+      return -1;
+    }
+
     setTxState("Continue in your wallet...");
     // deserialize transaction
     const tx = Transaction.from(bs58.decode(octaneData.transaction));
@@ -143,7 +142,7 @@ export const GasStation: React.FC = () => {
       console.log(signedTransaction);
     } catch {
       emitEvent(`Refueling for $${amount} is failed.`, TxStatus.Failed, 5);
-      return 1;
+      return -1;
     }
 
     setTxState(`Refueling for $${amount} ...`);
@@ -167,8 +166,7 @@ export const GasStation: React.FC = () => {
 
     emitEvent(`Refuel of $${amount} Success`, TxStatus.Confirmed, 10);
     setTxId(signedTransaction.signature);
-    // window.open(`https://solscan.io/tx/${txid}`)
-    console.log(tx);
+
     console.log(signedTransaction.signature);
   };
 
@@ -191,6 +189,7 @@ export const GasStation: React.FC = () => {
         style={{
           border: "1px solid rgba(255, 255, 255, 0.10)",
           background: "rgba(255, 255, 255, 0.02)",
+          transition: "transform 0.3s var(--ease-out-quad)",
         }}
       >
         {/* header text */}
@@ -234,7 +233,7 @@ export const GasStation: React.FC = () => {
                 </span>
                 <input
                   type="string"
-                  className="bg-transparent font-semibold text-[44px] text-center w-[1ch]"
+                  className="bg-transparent font-medium text-[44px] text-center w-[1ch]"
                   value={amount}
                   onChange={() => {
                     setAmount(inputRef.current?.value || "");
@@ -321,8 +320,10 @@ export const GasStation: React.FC = () => {
             {amount && parseFloat(amount) > 0 ? (
               <span className="text-[#A1FEA0] font-medium text-[14px]">
                 $
-                {(selectedToken.price ?? 1) *
-                  (Number(selectedToken.fee) / 10 ** selectedToken.decimals)}
+                {(
+                  (selectedToken.price ?? 1) *
+                  (Number(selectedToken.fee) / 10 ** selectedToken.decimals)
+                ).toFixed(5)}
               </span>
             ) : (
               <span className="text-[#ffffff4d] font-medium text-[14px]">
@@ -335,13 +336,16 @@ export const GasStation: React.FC = () => {
         {/* button */}
         {!solWallet ? (
           <DynamicConnectButton
-            buttonClassName={getButtonClassName()}
+            buttonClassName={`${getButtonClassName()} ${selectModal ? "bg-[#ffffff0d] text-white" : ""}`}
             buttonContainerClassName="submit-button connect-btn"
           >
             <span style={{ width: "100%" }}> {getButtonText()}</span>
           </DynamicConnectButton>
         ) : (
-          <button className={getButtonClassName()} onClick={fetchOctane}>
+          <button
+            className={`${getButtonClassName()} ${selectModal ? "bg-[#ffffff0d] text-white" : ""}`}
+            onClick={fetchOctane}
+          >
             {getButtonText()}
           </button>
         )}

@@ -123,3 +123,23 @@ export const timeAgo = (timestamp: number): string => {
   }
 };
 
+
+export const timeLeft = (timestamp: number): string => {
+  const now = Date.now(); 
+  const secondsLeft = Math.floor((timestamp - now) / 1000); 
+
+  if (secondsLeft < 60) {
+    return `${secondsLeft} secs`;
+  } else if (secondsLeft < 3600) {
+    const minutes = Math.ceil(secondsLeft / 60);
+    return minutes === 1 ? `1 min` : `${minutes} mins`;
+  } else if (secondsLeft < 86400) {
+    const hours = Math.ceil(secondsLeft / 3600);
+    return hours === 1 ? `1 hour` : `${hours} hours`;
+  } else if (secondsLeft < 2592000) { 
+    const days = Math.ceil(secondsLeft / 86400);
+    return days === 1 ? `1 day` : `${days} days`;
+  } else {
+    return ""
+  }
+};

@@ -5,9 +5,10 @@ import {
   EthereumWalletConnectors,
   SolanaWalletConnectors,
 } from "@/lib/dynamic";
-import { GasProviders } from "@/app/providers/GasProviders";
 import { IBM_Plex_Sans } from "next/font/google";
 import { mergeNetworks } from "@dynamic-labs/sdk-react-core";
+import { ETHERSCAN_TESTNET_URL } from "../components/constants";
+import { GasProviders } from "@/app/providers/GasProviders";
 
 const ibmPlexSans = IBM_Plex_Sans({
   subsets: ["latin"],
@@ -16,6 +17,12 @@ const ibmPlexSans = IBM_Plex_Sans({
 
 // TODO: maybe we can read it from a file
 const cssOverrides = `
+  @media (min-width: 640px) { 
+    .modal {
+      margin-left: var(--sidebar-width);
+    }
+  }
+
   div { font-family: 'IBM Plex Sans', sans-serif; }
   img[data-testid='iconic-solana'] {
     content: url('/eclipse.png');
@@ -84,7 +91,7 @@ const cssOverrides = `
 // sepolia
 const evmNetworks = [
   {
-    blockExplorerUrls: ["https://sepolia.etherscan.io/"],
+    blockExplorerUrls: [ETHERSCAN_TESTNET_URL],
     chainId: 11155111,
     chainName: "Ethereum Sepolia",
     iconUrls: ["https://app.dynamic.xyz/assets/networks/eth.svg"],
@@ -154,6 +161,15 @@ export default function ClientLayout({
               ) as HTMLElement;
               mainContent.style.filter = "";
             },
+            onWalletAdded: (args) => {
+              if (args.wallet.key === "backpacksol") {
+                //@ts-ignore
+                window.backpack.connect({
+                  //@ts-ignore
+                  chainGenesisHash: "EAQLJCV2mh23BsK2P9oYpV5CHVLDNHTxY",
+                });
+              }
+            },
           },
           walletsFilter: (wallets) =>
             wallets.filter(
@@ -164,6 +180,9 @@ export default function ClientLayout({
           environmentId: process.env.NEXT_PUBLIC_ENVIRONMENT_ID || "",
           walletConnectors: [EthereumWalletConnectors, SolanaWalletConnectors],
           mobileExperience: "redirect",
+          recommendedWallets: [
+            { walletKey: "backpacksol", label: "Recommended" },
+          ],
           initialAuthenticationMode: "connect-only",
           displaySiweStatement: true,
           privacyPolicyUrl: "https://www.eclipse.xyz/privacy-policy",
@@ -189,11 +208,5 @@ export default function ClientLayout({
         </GasProviders>
       </DynamicContextProvider>
     </html>
-  );
-
-  return (
-    <GasProviders>
-      <body className={ibmPlexSans.className}>{children}</body>
-    </GasProviders>
   );
 }

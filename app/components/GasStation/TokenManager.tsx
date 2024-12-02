@@ -1,8 +1,10 @@
 "use client"
 import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 import { getTokenBalance } from "@/lib/solanaUtils"
+import { Connection } from '@solana/web3.js';
 import { useWallets } from "@/app/hooks/useWallets";
 import { fetchOctaneConfig } from '@/lib/octaneUtils';
+import { fetchTokenPrice } from '@/lib/priceUtils';
 
 export type Token = {
   icon: string,
@@ -77,10 +79,7 @@ export const TMProvider = ({ children } : { children: ReactNode}) => {
       const balSol  = await getTokenBalance(tokens.SOL.mint , solWallet?.address || "")
       const balTeth  = await getTokenBalance(tokens.tETH.mint , solWallet?.address || "")
 
-      /*
-      const connection = new Connection("https://eclipse.helius-rpc.com", "finalized");
-      const solPrice = await fetchTokenPrice(connection, tokens.SOL.mint)
-      */
+      const [tethPrice, solPrice] = await fetchTokenPrice()
 
       setTokens((prevTokens) => ({
           ...prevTokens,
@@ -91,10 +90,12 @@ export const TMProvider = ({ children } : { children: ReactNode}) => {
           SOL: {
             ...prevTokens.SOL,
             balance: BigInt(balSol || 0),
+            price: Number(solPrice) 
           },
           tETH: {
             ...prevTokens.tETH,
             balance: BigInt(balTeth || 0),
+            price: Number(tethPrice) 
           }
         })); 
     }

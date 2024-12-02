@@ -16,6 +16,12 @@ const eclipseWallets = ["backpacksol", "nightlysol"];
 
 // TODO: maybe we can read it from a file
 const cssOverrides = `
+  @media (min-width: 640px) { 
+    .modal {
+      margin-left: var(--sidebar-width);
+    }
+  }
+
   div { font-family: 'IBM Plex Sans', sans-serif; }
   img[data-testid='iconic-solana'] {
     content: url('/eclipse.png');
@@ -32,6 +38,7 @@ const cssOverrides = `
   .wallet-list-item__tile, .list-tile {
     background: rgba(255, 255, 255, 0.03);
   }
+
   .wallet-list-item__tile:hover, .list-tile:hover {
     background-color: rgba(255, 255, 255, 0.05)!important;
   }
@@ -141,6 +148,15 @@ export const DynamicProvider = (props: {
             ) as HTMLElement;
             mainContent.style.filter = "";
             setWalletFilter(undefined);
+          },
+          onWalletAdded: (args) => {
+            if (args.wallet.key === "backpacksol") {
+              //@ts-ignore
+              window.backpack.connect({
+                //@ts-ignore
+                chainGenesisHash: "EAQLJCV2mh23BsK2P9oYpV5CHVLDNHTxY",
+              });
+            }
           },
         },
         walletsFilter: walletFilter

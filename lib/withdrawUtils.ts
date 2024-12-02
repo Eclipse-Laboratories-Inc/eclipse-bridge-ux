@@ -4,6 +4,8 @@ import { CanonicalBridge } from "./canonical_bridge";
 import { Connection, PublicKey } from "@solana/web3.js";
 import testnet_idl from "./canonical_bridge_testnet.json";
 import mainnet_idl from "./canonical_bridge.json";
+const solanaWeb3 = require('@solana/web3.js');
+const LosslessJSON = require('lossless-json');
 
 export async function withdrawEthereum(
   wallet: any,
@@ -53,7 +55,6 @@ export async function withdrawEthereum(
       .signers([])
       .rpc()
 
-    console.log("Transaction Signature:", tx);
     return tx
   } catch (error) {
     console.error("Transaction Error:", error);
@@ -61,3 +62,105 @@ export async function withdrawEthereum(
   }
 }
 
+export enum WithdrawStatus {
+  UNKNOWN = 'Unknown',
+  PROCESSING = 'Processing',
+  PENDING = 'Pending',
+  CLOSED = 'Closed'
+}
+
+export interface Message {
+  from: number[];
+  destination: string;
+  amount_wei: string;
+  withdraw_id: BigInt; 
+  fee_receiver: string;
+  fee_wei: string;
+}
+
+export interface MessageEntry {
+  sender: string;
+  message: Message;
+  message_hash: number[];
+  start_time: string;
+}
+
+export type Status = "Closed" | "Pending" | "Processing"; 
+export type WithdrawObject = [MessageEntry, Status];
+
+export async function getWithdrawalsByAddress(address: string, withdrawApi: string): Promise<WithdrawObject[]> {
+  if (!withdrawApi) {
+    return [];
+  }
+
+  const response = await fetch(`${withdrawApi}/${address}`); 
+  if (!response.ok) {
+    throw new Error(`HTTP Error: ${response.status}`);
+  }
+
+  const serverData = LosslessJSON.parse(await response.text());
+  const result = parseWithdrawData(serverData);
+  result.reverse()
+  return result;
+
+}
+
+export async function getWithdrawalPda(bridgeProgram: string, withdrawalId: BigInt): Promise<PublicKey | null> {
+  try {
+    const programPublicKey = new PublicKey(bridgeProgram);
+    const withdrawalNonce  = new anchor.BN(withdrawalId.toString()) 
+
+    const [withdrawalPda, _] = PublicKey.findProgramAddressSync(
+      [
+        Buffer.from('withdrawal'),
+        withdrawalNonce.toArrayLike(Buffer, 'le', 8)
+      ],
+      programPublicKey
+    );
+    return withdrawalPda;
+
+  } catch (error) {
+    console.error("Error while getting nonce or deriving PDA:", error);
+    return null
+  }
+}
+
+function parseWithdrawData(data: any[][]): WithdrawObject[] {
+  return data.map(([entry, status]) => {
+    const message: Message = {
+      from: entry.message[0], 
+      destination: entry.message[1], 
+      amount_wei: entry.message[2], 
+      withdraw_id: BigInt(entry.message[3].value), 
+      fee_receiver: entry.message[4], 
+      fee_wei: entry.message[5], 
+    };
+
+    const messageEntry: MessageEntry = {
+      sender: entry.sender,
+      message,
+      message_hash: entry.message_hash,
+      start_time: entry.start_time,
+    };
+
+    return [messageEntry, status as Status];
+  });
+}
+
+export function byteArrayToHex(byteArray: number[]): string {
+  return byteArray
+    .map((byte) => byte.toString(16).padStart(2, '0'))
+    .join('');
+}
+
+export function convertLosslessToNumbers(losslessNumbers: any[]): number[] {
+  return losslessNumbers.map((item) => {
+    if (typeof item === 'object' && typeof item.value === 'string') {
+      return parseFloat(item.value);
+    } else if (typeof item === 'number') {
+      return item;
+    } else {
+      throw new Error('Invalid item in array: Expected LosslessNumber or number');
+    }
+  });
+}
