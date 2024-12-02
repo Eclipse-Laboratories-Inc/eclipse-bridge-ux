@@ -113,7 +113,7 @@ export const NetworkBox: React.FC<NetworkBoxProps> = ({
             <Cross crossClassName="deposit-cross" />
             <div>Disconnect</div>
           </div>
-          <div className="wallet-addresss">{truncateWalletAddress(userWallets.find(w => w.chain == walletChain)?.address || '')}</div>
+          <div className="wallet-address">{truncateWalletAddress(userWallets.find(w => w.chain == walletChain)?.address || '')}</div>
         </div>}
         { showConnect 
             ? <DynamicConnectButton>
