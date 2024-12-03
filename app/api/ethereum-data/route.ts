@@ -2,7 +2,7 @@ import { NextResponse } from 'next/server';
 
 const CACHE_EXPIRATION_MS = 10000; // 10 seconds cache
 
-interface ICache  {
+interface ICache {
     blockNumber: number | null;
     gasPrice: number | null;
     ethPrice: number | null;
@@ -22,8 +22,8 @@ export async function GET() {
     const apiKey = process.env.ETHERSCAN_API_KEY || "";
     const etherscanAddress = process.env.NEXT_PUBLIC_ETHERSCAN_ADDRESS;
     
-    if (!apiKey) {
-        return NextResponse.json({ error: 'API key is not configured' }, { status: 500 });
+    if (!apiKey || !etherscanAddress) {
+        return NextResponse.json({ error: 'API key or Etherscan address is not configured' }, { status: 500 });        
     }
 
     const now = new Date().getTime();
@@ -40,12 +40,21 @@ export async function GET() {
     try {
         isFetching = true;
         console.log("Fetching new data from Etherscan");
-
+        
         const [blockResponse, gasResponse, priceResponse] = await Promise.all([
             fetch(`${etherscanAddress}?module=proxy&action=eth_blockNumber&apikey=${apiKey}`, {cache: "no-store"}),
             fetch(`${etherscanAddress}?module=proxy&action=eth_gasPrice&apikey=${apiKey}`, {cache: "no-store"}),
             fetch(`${etherscanAddress}?module=stats&action=ethprice&apikey=${apiKey}`, {cache: "no-store"})
         ]);
+
+        if (!blockResponse.ok || !gasResponse.ok || !priceResponse.ok) {
+            const failedRequests = [
+                !blockResponse.ok && 'block',
+                !gasResponse.ok && 'gas',
+                !priceResponse.ok && 'price'
+            ].filter(Boolean);
+            throw new Error(`API requests failed for: ${failedRequests.join(', ')}`);
+        }
 
         const blockData = await blockResponse.json();
         const gasData = await gasResponse.json();
@@ -70,7 +79,10 @@ export async function GET() {
         return NextResponse.json(cache);
     } catch (error) {
         console.error('Error fetching Ethereum data:', error);
-        return NextResponse.json(cache || { error: 'Failed to fetch Ethereum data' }, { status: 500 });
+        if (cache.timestamp) {
+            return NextResponse.json(cache);
+        }
+        return NextResponse.json({ error: 'Failed to fetch Ethereum data' }, { status: 500 });
     } finally {
         isFetching = false;
     }
