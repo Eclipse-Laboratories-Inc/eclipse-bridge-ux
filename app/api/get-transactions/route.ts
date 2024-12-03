@@ -3,6 +3,15 @@ import { NextResponse } from 'next/server';
 const BRIDGE_CONTRACT_ADDRESS = process.env.NEXT_PUBLIC_BRIDGE_CONTRACT || '';
 const API_KEY = process.env.ETHERSCAN_API_KEY || '';
 
+interface EtherscanTransaction {
+  to: string;
+  from: string;
+  hash: string;
+  blockNumber: string;
+  timeStamp: string;
+  value: string;
+}
+
 export async function GET(request: Request) {
   const { searchParams } = new URL(request.url);
   const address = searchParams.get('address');
@@ -21,7 +30,7 @@ export async function GET(request: Request) {
     }
 
     const deposits = data.result
-      .filter((tx: any) => tx.to.toLowerCase() === BRIDGE_CONTRACT_ADDRESS.toLowerCase());
+      .filter((tx: EtherscanTransaction) => tx.to.toLowerCase() === BRIDGE_CONTRACT_ADDRESS.toLowerCase());
 
     return NextResponse.json(deposits);
   } catch (error) {
