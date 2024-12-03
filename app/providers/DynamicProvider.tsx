@@ -2,6 +2,7 @@ import { useWalletFilter } from "@/app/hooks/useWalletContext";
 import { convertRelayChainToDynamicNetwork } from "@/lib/relay";
 import { BitcoinWalletConnectors } from "@dynamic-labs/bitcoin";
 import { EclipseWalletConnectors } from "@dynamic-labs/eclipse";
+import { ETHERSCAN_TESTNET_URL } from "../components/constants";
 import { EthereumWalletConnectors } from "@dynamic-labs/ethereum";
 import {
   DynamicContextProvider,
@@ -13,6 +14,23 @@ import { RelayChain } from "@reservoir0x/relay-sdk";
 import { ReactNode, useEffect, useState } from "react";
 
 const eclipseWallets = ["backpacksol", "nightlysol"];
+const evmNetworks = [
+  {
+    blockExplorerUrls: [ETHERSCAN_TESTNET_URL],
+    chainId: 11155111,
+    chainName: "Ethereum Sepolia",
+    iconUrls: ["https://app.dynamic.xyz/assets/networks/eth.svg"],
+    name: "Ethereum",
+    nativeCurrency: {
+      decimals: 18,
+      name: "Ether",
+      symbol: "ETH",
+    },
+    networkId: 11155111,
+    rpcUrls: ["https://sepolia.drpc.org"],
+    vanityName: "Sepolia",
+  },
+];
 
 // TODO: maybe we can read it from a file
 const cssOverrides = `
@@ -187,7 +205,7 @@ export const DynamicProvider = (props: {
               .map((chain) => {
                 return convertRelayChainToDynamicNetwork(chain);
               });
-            return mergeNetworks(networks, relayNetworks);
+            return mergeNetworks(evmNetworks, mergeNetworks(networks, relayNetworks));
           },
           chainDisplayValues: {
             solana: {
