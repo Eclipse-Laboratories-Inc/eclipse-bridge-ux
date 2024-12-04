@@ -203,6 +203,10 @@ footer {
   opacity: 1;
 }
 
+
+
+/* --- relay overwrite --- */
+
 .relay-kit-reset > div {
   max-width: 100% !important;
 }
@@ -238,6 +242,66 @@ button[aria-label="Multi wallet dropdown"]:not(:hover) .fa-chevron-down {
 #fee-breakdown-section .relay-h_1 {
   background: rgba(255, 255, 255, 0.1) !important;
 }
+
+#fee-breakdown-section .relay-text_text-default,
+#swap-route-selection-section .relay-text_text-default {
+  color: rgba(255, 255, 255, 0.6) !important;
+}
+
+#fee-breakdown-section .relay-h_1 {
+  background: rgba(255, 255, 255, 0.1) !important;
+}
+
+.relay-kit-reset {
+  font-family: '__IBM_Plex_Sans_fd4d47', '__IBM_Plex_Sans_Fallback_fd4d47' !important;
+}
+
+.relay-text_text-default.relay-font_body.relay-fw_500.relay-fs_14px {
+  color: rgba(255, 255, 255, 0.60) !important;
+  font-weight: 500 !important;
+}
+
+.relay-text_text-subtle.relay-font_body.relay-fw_500.relay-fs_12px {
+  color: rgba(255, 255, 255, 0.60) !important;
+  font-weight: 500 !important;
+}
+
+.relay-rounded_widget-card-border-radius.relay-bg_widget-background.relay-overflow_hidden.relay-mb_6px {
+  margin-top: 10px;
+  button.relay-cursor_pointer {
+    border: none !important;
+    padding: 8px 16px !important;
+  }
+  border: 1px solid rgba(255, 255, 255, 0.10) !important;
+}
+
+button[aria-label="Swap"] {
+  padding: 480px 16px;
+  height: 58px;
+}
+
+/* inputs */
+.relay-d_flex.relay-items_center.relay-justify_space-between.relay-gap_4 {
+  height: 36px;
+}
+
+#from-token-section, #to-token-section {
+  padding: 16px!important;
+  button:nth-of-type(1) {
+    background: rgba(255, 255, 255, 0.03)!important;
+  }
+}
+
+#fee-breakdown-section > button, #fee-breakdown-section > div:nth-of-type(2) {
+  padding: 8px 16px !important;
+}
+
+
+.relay-bg_modal-background.relay-rounded_modal-border-radius {
+  margin-left: var(--sidebar-width)!important;
+}
+/* --- relay overwrite --- */
+
 
 @media (max-height: 933px) {
   .main-content, footer {

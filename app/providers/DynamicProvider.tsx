@@ -144,9 +144,6 @@ export const DynamicProvider = (props: {
             )[0] as HTMLElement;
             depositBox.style.transform = "scale(0.9)";
 
-            // const submitButton = document.getElementsByClassName("submit-button")[0] as HTMLElement;
-            // if (submitButton) submitButton.className += " disabled";
-
             const mainContent = document.getElementById(
               "main-content"
             ) as HTMLElement;
@@ -157,9 +154,6 @@ export const DynamicProvider = (props: {
               "deposit-container"
             )[0] as HTMLElement;
             depositBox.style.transform = "";
-
-            // const submitButton = document.getElementsByClassName("submit-button")[0] as HTMLElement;
-            // if (submitButton) submitButton.className = submitButton.className.replace("disabled", "");
 
             const mainContent = document.getElementById(
               "main-content"

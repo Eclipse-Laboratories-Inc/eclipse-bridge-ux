@@ -4,7 +4,6 @@ import React, { useEffect, useState, useCallback } from "react";
 import "./styles.css";
 import { SwapWidget } from "@reservoir0x/relay-kit-ui";
 import { useDynamicContext } from "@dynamic-labs/sdk-react-core";
-import { zeroAddress } from "viem";
 import { useLinkedWallets } from "@/app/hooks/useLinkedWallets";
 import { useOnLinkNewWallet } from "@/app/hooks/useOnLinkNewWallet";
 import { useOnSetPrimaryWallet } from "@/app/hooks/useOnSetPrimaryWallet";

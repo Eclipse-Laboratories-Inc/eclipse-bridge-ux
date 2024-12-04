@@ -32,6 +32,7 @@ const InstantIcon: React.FC = () => {
     <svg
       width="19"
       height="24"
+      className="instant-icon"
       viewBox="0 0 19 24"
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
@@ -112,7 +113,7 @@ const Deposit: React.FC<DepositProps> = ({ amountEther, setAmountEther }) => {
                 }}
               >
                 {pendingTransactions.length === 0 ? (
-                  <Activity activityClassName="" />
+                  <Activity activityClassName="activity-icon" />
                 ) : (
                   <Loading style={{}} loadingClassName="" />
                 )}
