@@ -14,6 +14,10 @@ const theme: RelayKitTheme = {
     subtle: "rgba(255, 255, 255, 0.3)",
   },
   buttons: {
+    disabled: {
+      color: "#5a5a5a",
+      background: "#0e0e0e"
+    },
     primary: {
       color: "#000",
       background: "rgb(163, 255, 165)",
