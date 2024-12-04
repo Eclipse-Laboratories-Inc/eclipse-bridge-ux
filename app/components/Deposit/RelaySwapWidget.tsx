@@ -23,6 +23,14 @@ export const RelaySwapWidget: React.FC<RelaySwapWidgetContentProps> = ({}) => {
       onConnectWallet={() => setShowAuthFlow(true)}
       // todo: replace with eclipse configs
       lockChainId={9286185}
+      defaultFromToken={{
+        address: "11111111111111111111111111111111",
+        chainId: 1,
+        symbol: "ETH",
+        name: "ETH",
+        decimals: 18,
+        logoURI: "https://assets.relay.link/icons/currencies/eth.png",
+      }}
       defaultToToken={{
         address: "11111111111111111111111111111111",
         chainId: 9286185,
