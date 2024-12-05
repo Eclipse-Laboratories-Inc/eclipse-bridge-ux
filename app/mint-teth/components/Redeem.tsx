@@ -167,16 +167,16 @@ export function Redeem() {
         status: tokenTransferState,
       },
       {
-        title: "2. Approving tETH swap",
+        title: "2. Approving Withdraw",
         status: atomicRequestApprovalState,
       },
       {
-        title: `3. Queueing swap for tETH -> ${depositAssetLabel}`,
+        title: `3. Requesting Withdraw`,
         status: atomicRequestState,
         link: `https://etherscan.io/tx/${depositTxHash}`,
       },
     ];
-  }, [atomicRequestApprovalState, atomicRequestState, depositAssetLabel, depositTxHash, tokenTransferState]);
+  }, [atomicRequestApprovalState, atomicRequestState, depositTxHash, tokenTransferState]);
 
   ///////////////////////
   // Use effects
@@ -370,6 +370,8 @@ export function Redeem() {
         },
         { publicClient, walletClient }
       );
+    } else {
+      setAtomicRequestState(StepStatus.LOADING);
     }
   }
 
@@ -385,6 +387,7 @@ export function Redeem() {
           depositAmountAsBigInt={redeemAmountAsBigInt}
           depositAssetLabel={depositAssetLabel}
           depositAssetIcon={depositAssetIcon}
+          method="redeem"
         />
       )}
       <div className="flex flex-col gap-3">
