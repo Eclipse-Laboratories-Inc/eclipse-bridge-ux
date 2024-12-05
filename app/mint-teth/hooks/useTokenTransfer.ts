@@ -1,15 +1,30 @@
 import { useWallets } from "@/app/hooks";
 import { ISolana } from "@dynamic-labs/solana";
 import { ProviderType } from "@hyperlane-xyz/sdk";
-import { Connection } from "@solana/web3.js";
-import { useCallback, useState } from "react";
+import { Connection, TokenAmount } from "@solana/web3.js";
+import { useCallback, useEffect, useState } from "react";
 import { warpCore } from "../lib/warpcore";
 import { StepStatus } from "../types";
+import { InterchainGasPaymaster } from "@hyperlane-xyz/core";
 
 export function useTokenTransfer() {
   const [transactionState, setTransactionState] = useState<StepStatus>(StepStatus.NOT_STARTED);
   const [error, setError] = useState<string | null>(null);
   const { evmWallet, solWallet } = useWallets();
+  const [interchainTransferFee, setInterchainTransferFee] = useState<bigint>(BigInt(0));
+
+  useEffect(() => {
+    (async () => {
+      const originToken = warpCore.tokens.find(
+        (token) => token.chainName === "eclipsemainnet" && token.symbol === "tETH"
+      );
+      if (!originToken) {
+        return;
+      }
+      const fee = await warpCore.getInterchainTransferFee({ originToken, destination: "ethereum" }); // 9 decimals
+      setInterchainTransferFee(fee.amount * BigInt(1e9));
+    })();
+  }, []);
 
   const triggerTransactions = useCallback(
     async (amount: string) => {
@@ -28,12 +43,16 @@ export function useTokenTransfer() {
         const sender = solWallet.address;
         const originTokenAmount = originToken.amount(amount);
 
+        const fee = await warpCore.getInterchainTransferFee({ originToken, destination: "ethereum" }); // 9 decimals
+        setInterchainTransferFee(fee.amount * BigInt(1e9));
+
         // Get transactions
         const txs = await warpCore.getTransferRemoteTxs({
           originTokenAmount,
           destination,
           sender,
           recipient,
+          interchainFee: fee,
         });
 
         // Send transactions
@@ -62,5 +81,6 @@ export function useTokenTransfer() {
     transactionState,
     error,
     setTransactionState,
+    interchainTransferFee,
   };
 }
