@@ -8,6 +8,7 @@ import { tokenOptions } from "../constants/tokens";
 
 export enum StepStatus {
   NOT_STARTED = "not-started",
+  AWAITING_SIGNATURE = "awaiting-signature",
   LOADING = "loading",
   COMPLETED = "completed",
   FAILED = "failed",
@@ -27,6 +28,7 @@ interface TransactionDetailsProps {
   depositAmountAsBigInt: bigint;
   depositAssetLabel: string | undefined;
   depositAssetIcon: string | undefined;
+  method: "mint" | "redeem";
 }
 
 const calculateFee = (gPrice: string, gUsed: string) => {
@@ -107,12 +109,19 @@ export const MintTransactionDetails: React.FC<TransactionDetailsProps> = ({
             </div>
             {step.status !== StepStatus.NOT_STARTED && (
               <div className={`flex flex-row items-center gap-1 ${step.status}-item status-item`}>
-                <TransactionIcon iconType={step.status} className="tx-done-icon" />
+                <TransactionIcon
+                  iconType={step.status === StepStatus.AWAITING_SIGNATURE ? StepStatus.LOADING : step.status}
+                  className="tx-done-icon"
+                />
                 <span>
                   {step.status === StepStatus.COMPLETED
                     ? "Done"
                     : step.status === StepStatus.FAILED
                     ? "Failed"
+                    : step.status === StepStatus.AWAITING_SIGNATURE
+                    ? "Awaiting signature"
+                    : step.status === StepStatus.LOADING
+                    ? "Processing"
                     : "Processing"}
                 </span>
               </div>
@@ -125,7 +134,7 @@ export const MintTransactionDetails: React.FC<TransactionDetailsProps> = ({
         <div className="flex flex-row justify-between items-center">
           <span className="info-name">Deposit Amount</span>
           <div className="flex flex-row gap-2">
-            <span className="gray-text">${ethPrice && (depositAmount * ethPrice).toFixed(2)}</span>
+            <span className="gray-text">{ethPrice && (depositAmount * ethPrice).toFixed(2)}</span>
             <span className="green-text">
               {depositAmount < 0.001 ? "< 0.001" : depositAmount.toFixed(3)} {depositAssetLabel}
             </span>

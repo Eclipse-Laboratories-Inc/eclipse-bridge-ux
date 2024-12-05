@@ -50,7 +50,7 @@ export function useUpdateAtomicRequest() {
         ////////////////////////////////
         // 1. Check Allowance
         ////////////////////////////////
-        setApprovalState(StepStatus.LOADING);
+        setApprovalState(StepStatus.AWAITING_SIGNATURE);
         const allowanceAsBigInt = await publicClient.readContract({
           abi: erc20Abi,
           address: offer,
@@ -83,7 +83,7 @@ export function useUpdateAtomicRequest() {
         ////////////////////////////////
         // 3. Simulate
         ////////////////////////////////
-        setTransactionState(StepStatus.LOADING);
+        setTransactionState(StepStatus.AWAITING_SIGNATURE);
         const { request: depositRequest } = await publicClient.simulateContract({
           abi: AtomicQueue.abi as Abi,
           address: atomicQueueContractAddress,

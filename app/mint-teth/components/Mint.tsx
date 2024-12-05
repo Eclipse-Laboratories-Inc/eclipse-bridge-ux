@@ -374,6 +374,7 @@ export function Mint() {
           depositAmountAsBigInt={depositAmountAsBigInt}
           depositAssetLabel={depositAssetLabel}
           depositAssetIcon={depositAssetIcon}
+          method="mint"
         />
       )}
       <div className="flex flex-col gap-3">

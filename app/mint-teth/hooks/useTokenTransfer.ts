@@ -32,7 +32,7 @@ export function useTokenTransfer() {
         return;
       }
 
-      setTransactionState(StepStatus.LOADING);
+      setTransactionState(StepStatus.AWAITING_SIGNATURE);
       try {
         const connection = new Connection(process.env.NEXT_PUBLIC_ECLIPSE_RPC || "");
 
