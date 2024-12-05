@@ -123,5 +123,5 @@ export function useUpdateAtomicRequest() {
     [userAddress]
   );
 
-  return { updateAtomicRequest, transactionState, approvalState, error };
+  return { updateAtomicRequest, transactionState, approvalState, error, setTransactionState };
 }

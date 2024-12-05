@@ -32,7 +32,6 @@ export function Redeem() {
   ///////////////////////
   const slippage = 0.005;
   const deadlineDaysFromNow = 7;
-  const bridgeFeeInTeth = BigInt(0); // TODO: Add actual bridge fee
 
   ///////////////////////
   // Hooks
@@ -43,8 +42,14 @@ export function Redeem() {
     updateAtomicRequest,
     approvalState: atomicRequestApprovalState,
     transactionState: atomicRequestState,
+    setTransactionState: setAtomicRequestState,
   } = useUpdateAtomicRequest();
-  const { triggerTransactions, transactionState: tokenTransferState, setTransactionState } = useTokenTransfer();
+  const {
+    triggerTransactions,
+    transactionState: tokenTransferState,
+    setTransactionState,
+    interchainTransferFee,
+  } = useTokenTransfer();
 
   ///////////////////////
   // State
@@ -89,8 +94,7 @@ export function Redeem() {
         )}`;
 
   // Bridge fee
-  const bridgeFeeInEth = (bridgeFeeInTeth * BigInt(ethPerTethRate)) / BigInt(1e18);
-  const bridgeFeeInUsdAsBigInt = (bridgeFeeInEth * BigInt(ethPrice)) / BigInt(1e8);
+  const bridgeFeeInUsdAsBigInt = (interchainTransferFee * BigInt(ethPrice)) / BigInt(1e8);
   const bridgeFeeInUsd = Number(formatUnits(bridgeFeeInUsdAsBigInt, 18));
   const formattedBridgeFeeInUsd =
     bridgeFeeInUsd > 0 && bridgeFeeInUsd < 0.01
@@ -100,8 +104,7 @@ export function Redeem() {
         )}`;
 
   // Total fees
-  const totalFees = withdrawFeeInTeth + bridgeFeeInTeth;
-  const totalFeesInEth = (totalFees * BigInt(ethPerTethRate)) / BigInt(1e18);
+  const totalFeesInEth = withdrawFeeInEth + interchainTransferFee;
   const totalFeesInUsdAsBigInt = (totalFeesInEth * BigInt(ethPrice)) / BigInt(1e8);
   const totalFeesInUsd = Number(formatUnits(totalFeesInUsdAsBigInt, 18));
   const formattedTotalFeesInUsd =
@@ -313,6 +316,8 @@ export function Redeem() {
       setRedeemAmount("");
       setDepositTxHash("");
       setCurrentTx(null);
+      setTransactionState(StepStatus.LOADING);
+      setAtomicRequestState(StepStatus.LOADING);
     }, 100);
   }
 

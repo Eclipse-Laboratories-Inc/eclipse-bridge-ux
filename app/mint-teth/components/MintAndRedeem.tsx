@@ -13,7 +13,7 @@ export enum Tabs {
 }
 
 function MintAndRedeem() {
-  const [activeTab, setActiveTab] = useState<Tabs>(Tabs.Activity);
+  const [activeTab, setActiveTab] = useState<Tabs>(Tabs.Mint);
 
   return (
     <>
