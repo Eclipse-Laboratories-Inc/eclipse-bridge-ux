@@ -6,7 +6,7 @@ interface IEthereumData {
     ethPrice: number | null;
 }
 
-const CACHE_EXPIRATION_MS = 10000; // Cache expiration time (30 sec)
+const CACHE_EXPIRATION_MS = 30000; // Cache expiration time (30 sec)
 
 let cache: IEthereumData & { timestamp: number | null } = {
     blockNumber: null,
