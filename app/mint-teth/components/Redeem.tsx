@@ -20,11 +20,12 @@ import { latestRoundData } from "../lib/latestRoundData";
 import { getUserAtomicRequest } from "../lib/userAtomicRequest";
 import { getSolanaBalance } from "../utils/getSolanaBalance";
 import { sanitizeInput } from "../utils/sanitizeInput";
-import { MintTransactionDetails, StepStatus } from "./MintTransactionDetails";
+import { MintTransactionDetails } from "./MintTransactionDetails";
 import { MintValueCard } from "./MintValueCard";
 import { RedeemSummaryCard } from "./RedeemSummaryCard";
 import "./styles.css";
 import { SelectOption } from "./EcSelect";
+import { StepStatus } from "../types";
 
 export function Redeem() {
   ///////////////////////
@@ -387,7 +388,7 @@ export function Redeem() {
           depositAmountAsBigInt={redeemAmountAsBigInt}
           depositAssetLabel={depositAssetLabel}
           depositAssetIcon={depositAssetIcon}
-          method="redeem"
+          action="Redeem"
         />
       )}
       <div className="flex flex-col gap-3">

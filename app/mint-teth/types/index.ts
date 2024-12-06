@@ -3,6 +3,7 @@ export enum StepStatus {
   AWAITING_SIGNATURE = "awaiting-signature",
   LOADING = "loading",
   COMPLETED = "completed",
+  CANCELLED = "cancelled",
   FAILED = "failed",
 }
 

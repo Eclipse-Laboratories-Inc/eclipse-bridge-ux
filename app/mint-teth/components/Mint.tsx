@@ -20,10 +20,11 @@ import { calculateMinimumMint } from "../utils/calculateMinimumMint";
 import { getSolanaBalance } from "../utils/getSolanaBalance";
 import { sanitizeInput } from "../utils/sanitizeInput";
 import { MintSummaryCard } from "./MintSummaryCard";
-import { MintTransactionDetails, StepStatus } from "./MintTransactionDetails";
+import { MintTransactionDetails } from "./MintTransactionDetails";
 import { MintValueCard } from "./MintValueCard";
 import "./styles.css";
 import { SelectOption } from "./EcSelect";
+import { StepStatus } from "../types";
 
 export function Mint() {
   ///////////////////////
@@ -374,7 +375,7 @@ export function Mint() {
           depositAmountAsBigInt={depositAmountAsBigInt}
           depositAssetLabel={depositAssetLabel}
           depositAssetIcon={depositAssetIcon}
-          method="mint"
+          action="Mint"
         />
       )}
       <div className="flex flex-col gap-3">

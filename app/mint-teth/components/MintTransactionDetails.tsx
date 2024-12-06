@@ -4,15 +4,8 @@ import Image from "next/image";
 import { useContext } from "react";
 import { Arrow, Cross, TransactionIcon } from "../../components/icons";
 import "./transaction-details.css";
-import { tokenOptions } from "../constants/tokens";
-
-export enum StepStatus {
-  NOT_STARTED = "not-started",
-  AWAITING_SIGNATURE = "awaiting-signature",
-  LOADING = "loading",
-  COMPLETED = "completed",
-  FAILED = "failed",
-}
+import { tethEvmTokenAddress, tokenOptions } from "../constants/tokens";
+import { StepStatus } from "../types";
 
 export interface Step {
   title: string;
@@ -28,15 +21,8 @@ interface TransactionDetailsProps {
   depositAmountAsBigInt: bigint;
   depositAssetLabel: string | undefined;
   depositAssetIcon: string | undefined;
-  method: "mint" | "redeem";
+  action: "Mint" | "Redeem";
 }
-
-const calculateFee = (gPrice: string, gUsed: string) => {
-  const gasPriceBN = ethers.BigNumber.from(gPrice);
-  const gasUsedBN = ethers.BigNumber.from(gUsed);
-  const gasFee = gasPriceBN.mul(gasUsedBN);
-  return ethers.utils.formatEther(gasFee);
-};
 
 export const MintTransactionDetails: React.FC<TransactionDetailsProps> = ({
   fromDeposit,
@@ -46,6 +32,7 @@ export const MintTransactionDetails: React.FC<TransactionDetailsProps> = ({
   depositAmountAsBigInt,
   depositAssetLabel,
   depositAssetIcon,
+  action,
 }) => {
   const [_, ethPrice] = useContext(EthereumDataContext) ?? [0, 0];
 
@@ -55,7 +42,7 @@ export const MintTransactionDetails: React.FC<TransactionDetailsProps> = ({
     <div className="transaction-details-modal flex flex-col items-center">
       <div className="transaction-details-header flex flex-row items-center justify-between">
         <div></div>
-        <span>Deposit</span>
+        <span>{action}</span>
         <div onClick={closeModal}>
           <Cross crossClassName="modal-cross" />
         </div>
@@ -122,6 +109,8 @@ export const MintTransactionDetails: React.FC<TransactionDetailsProps> = ({
                     ? "Awaiting signature"
                     : step.status === StepStatus.LOADING
                     ? "Processing"
+                    : step.status === StepStatus.CANCELLED
+                    ? "Cancelled"
                     : "Processing"}
                 </span>
               </div>
@@ -132,7 +121,7 @@ export const MintTransactionDetails: React.FC<TransactionDetailsProps> = ({
 
       <div className="flex w-full flex-col" style={{ marginTop: "30px", gap: "12px", padding: "0 10px" }}>
         <div className="flex flex-row justify-between items-center">
-          <span className="info-name">Deposit Amount</span>
+          <span className="info-name">{action} Amount</span>
           <div className="flex flex-row gap-2">
             <span className="gray-text">{ethPrice && (depositAmount * ethPrice).toFixed(2)}</span>
             <span className="green-text">
