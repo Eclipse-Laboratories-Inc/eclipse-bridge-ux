@@ -171,3 +171,8 @@ a:hover {
     font-size: 14px !important;
   }
 }
+
+.cancelled-item {
+  color: #ffa500;
+  background: rgba(255, 165, 0, 0.05);
+}

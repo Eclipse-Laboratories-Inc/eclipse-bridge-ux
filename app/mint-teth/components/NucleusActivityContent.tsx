@@ -8,21 +8,26 @@ import Skeleton from "react-loading-skeleton";
 import "../../components/Deposit/activity.css";
 import { tethEvmTokenAddress, tokenOptions } from "../constants/tokens";
 import { useTransactions } from "../hooks/useTransactions";
-import { MintTransactionDetails, StepStatus } from "./MintTransactionDetails";
+import { MintTransactionDetails } from "./MintTransactionDetails";
 import { SelectOption } from "./EcSelect";
-import { NucleusTransaction } from "../types";
+import { NucleusTransaction, StepStatus } from "../types";
+import Loading from "@/app/components/icons/loading";
 
-export const NucleusActivityContent = () => {
+interface NucleusActivityContentProps {
+  transactions: NucleusTransaction[];
+  isLoading: boolean;
+}
+
+export const NucleusActivityContent = ({ transactions, isLoading }: NucleusActivityContentProps) => {
   // Constants
   const eclipseNucleusStatusMap: Record<string, string> = {
     pending: "loading",
     fulfilled: "completed",
-    cancelled: "failed",
+    cancelled: "cancelled",
     expired: "failed",
   };
 
   // Hooks
-  const { transactions, isLoading } = useTransactions();
   const { evmWallet } = useWallets();
 
   // State
@@ -45,7 +50,10 @@ export const NucleusActivityContent = () => {
     if (currentTx?.status === "fulfilled") {
       swapStatus = StepStatus.COMPLETED;
     }
-    if (currentTx?.status === "cancelled" || currentTx?.status === "expired") {
+    if (currentTx?.status === "cancelled") {
+      swapStatus = StepStatus.CANCELLED;
+    }
+    if (currentTx?.status === "expired") {
       swapStatus = StepStatus.FAILED;
     }
 
@@ -64,18 +72,21 @@ export const NucleusActivityContent = () => {
         status: otherStatuses,
       },
       {
-        title: `3. Queueing swap for tETH -> ${offerTokenOption?.label}`,
+        title: `3. Requesting Withdraw`,
         status: swapStatus,
         link: `https://etherscan.io/tx/${currentTx?.createdTransactionHash}`,
       },
     ];
-  }, [currentTx?.createdTransactionHash, currentTx?.status, offerTokenOption?.label]);
+  }, [currentTx?.createdTransactionHash, currentTx?.status]);
 
   return (
     <>
       <div className={isModalOpen ? "status-overlay active" : "status-overlay"}></div>
       <div className="activity-container">
-        {evmWallet &&
+        {isLoading ? (
+          <Loading loadingClassName="loading-spinner" style={{ margin: "auto", transform: "scale(4)" }} />
+        ) : (
+          evmWallet &&
           transactions &&
           transactions.map((tx, index) => {
             const offerTokenOption = findTokenByAddress(tx.offerToken);
@@ -99,7 +110,7 @@ export const NucleusActivityContent = () => {
                 <div className="flex flex-col justify-center" style={{ width: "85%" }}>
                   <div className="transaction-top flex justify-between">
                     <div className="flex tx-age" style={{ gap: "7px" }}>
-                      <span className="gray-in">Deposit</span>
+                      <span className="gray-in">{tx.offerToken === tethEvmTokenAddress ? "Redeem" : "Mint"}</span>
                       <span className="gray-in">•</span>
                       <span className="gray-in">{timeAgo(Number(tx.createdTimestamp))}</span>
                     </div>
@@ -131,7 +142,8 @@ export const NucleusActivityContent = () => {
                 </div>
               </div>
             );
-          })}
+          })
+        )}
         {!evmWallet ? (
           <span>Connect your evm wallet first.</span>
         ) : (
@@ -155,6 +167,7 @@ export const NucleusActivityContent = () => {
           depositAmountAsBigInt={BigInt(0)}
           depositAssetLabel={offerTokenOption?.label}
           depositAssetIcon={offerTokenOption?.imageSrc}
+          action={currentTx?.offerToken === tethEvmTokenAddress ? "Redeem" : "Mint"}
         />
       )}
     </>

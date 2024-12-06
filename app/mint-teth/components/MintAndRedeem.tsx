@@ -5,6 +5,7 @@ import { Redeem } from "./Redeem";
 import "./styles.css";
 import { NucleusActivityContent } from "./NucleusActivityContent";
 import { Activity } from "@/app/components/icons";
+import { useTransactions } from "../hooks/useTransactions";
 
 export enum Tabs {
   Mint,
@@ -14,6 +15,7 @@ export enum Tabs {
 
 function MintAndRedeem() {
   const [activeTab, setActiveTab] = useState<Tabs>(Tabs.Mint);
+  const { transactions, isLoading } = useTransactions();
 
   return (
     <>
@@ -53,7 +55,9 @@ function MintAndRedeem() {
             </div>
             {activeTab === Tabs.Mint && <Mint />}
             {activeTab === Tabs.Redeem && <Redeem />}
-            {activeTab === Tabs.Activity && <NucleusActivityContent />}
+            {activeTab === Tabs.Activity && (
+              <NucleusActivityContent transactions={transactions} isLoading={isLoading} />
+            )}
           </div>
         </div>
       </div>
