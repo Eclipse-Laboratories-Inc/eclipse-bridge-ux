@@ -71,6 +71,7 @@ export function useTokenTransfer() {
         console.error("Error during transfer:", error);
         setError(error.message);
         setTransactionState(StepStatus.FAILED);
+        throw e;
       }
     },
     [evmWallet, solWallet]
