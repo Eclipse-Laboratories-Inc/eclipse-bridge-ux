@@ -43,14 +43,14 @@ const TapPopup: React.FC = () => {
               <Link href="https://tap.eclipse.xyz">
                 <div className="group flex flex-row gap-[8px] items-center">
                   <span
-                    className="text-[14px] font-medium text-left text-[#303283] group-hover:text-[#303283a6]"
+                    className="text-[14px] font-medium text-left text-[#303283] group-hover:text-[#ffffff]"
                     style={{
-                      transition: "color 0.1s var(--ease-out-quad)",
+                      transition: "color 0.2s var(--ease-in-quad)",
                     }}
                   >
                     Earn Grass Now
                   </span>
-                  <ArrowUpRight className="stroke-[#303283] group-hover:stroke-[#303283a6]"/>
+                  <ArrowUpRight className="stroke-[#303283] group-hover:stroke-[#ffffff]"/>
                 </div>
               </Link>
             </div>

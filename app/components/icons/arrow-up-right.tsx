@@ -1,6 +1,5 @@
 import React from "react";
 
-// className="stroke-[#A1FEA0] group-hover:stroke-[#74FF71]"
 const ArrowUpRight = ({ className }: { className: string}) => {
   return (
     <svg
@@ -11,7 +10,7 @@ const ArrowUpRight = ({ className }: { className: string}) => {
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
       style={{
-        transition: "color 0.1s var(--ease-out-quad)",
+        transition: "stroke 0.2s var(--ease-in-quad)",
       }}
     >
       <path
