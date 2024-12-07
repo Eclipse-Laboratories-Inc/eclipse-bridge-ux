@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useContext } from 'react';
-import LrtPopup from "./LrtPopup"
+import TapPopup from "./TapPopup"
 import  { EthereumDataContext } from "@/app/context";
 import './styles.css';
 import { useState } from "react";
@@ -39,7 +39,7 @@ const Deposit: React.FC<DepositProps> = ({ amountEther, setAmountEther }) => {
   const [isModalOpen, setIsModalOpen] = useState(false); 
   const { pendingTransactions } = useTransaction();
   const { isThirdpartyBridgeModalOpen, setIsThirdpartyBridgeModalOpen } = useThirdpartyBridgeModalContext(); 
-  const { evmWallet, solWallet } = useWallets();
+  const { evmWallet } = useWallets();
 
   return (
     <>
@@ -48,7 +48,7 @@ const Deposit: React.FC<DepositProps> = ({ amountEther, setAmountEther }) => {
           width: isModalOpen ? "0px" : "", 
           paddingRight: activeTab === Tabs.Activity ? "8px" : "20px"
       }}>
-        { !isModalOpen && <LrtPopup /> }
+        { !isModalOpen && <TapPopup /> }
 
         <div className="header-tabs" style={{
           marginRight: activeTab === Tabs.Activity ? "12px" : "0px"

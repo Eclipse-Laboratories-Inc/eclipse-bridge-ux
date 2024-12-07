@@ -598,8 +598,22 @@ input::placeholder {
   height: 10px;
   position: absolute; 
   cursor: pointer;
+  right: 7px;
+  top: 7px;
+}
+
+.tap-cross {
+  width: 24px;
+  height: 24px;
+  position: absolute; 
+  cursor: pointer;
   right: 2%;
   top: 9%;
+  
+  path {
+    stroke: black;
+    stroke-opacity: 0.3;
+  }
 }
 
 .circle {
@@ -635,4 +649,10 @@ input::placeholder {
     top: 115px;
     left: 50px;
     transform: translate(-50%, -50%);
+}
+
+.text-stroke {
+  text-shadow: 0px 2.961px 0px #303283;
+  -webkit-text-stroke-width: 1.4803149700164795px;
+  -webkit-text-stroke-color: #303283;
 }
