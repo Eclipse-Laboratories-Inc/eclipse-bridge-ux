@@ -128,8 +128,8 @@ export function Redeem() {
   const ethPriceAsBigInt = ethPrice ? BigInt(ethPrice) : BigInt(0);
 
   // Redeem amount
-  const redeemtAmountInEth = (redeemAmountAsBigInt * BigInt(ethPerAssetRate)) / BigInt(1e18);
-  const redeemAmountInUsd = (redeemtAmountInEth * ethPriceAsBigInt) / BigInt(1e8);
+  const redeemAmountInEth = (redeemAmountAsBigInt * BigInt(ethPerTethRate)) / BigInt(1e18);
+  const redeemAmountInUsd = (redeemAmountInEth * ethPriceAsBigInt) / BigInt(1e8);
   const redeemAmountInUsdFormatted = Number(formatUnits(redeemAmountInUsd, 18));
   const formattedRedeemAmountInUsd =
     redeemAmountInUsdFormatted > 0 && redeemAmountInUsdFormatted < 0.01
@@ -144,7 +144,9 @@ export function Redeem() {
       ? (redeemAmountAsBigInt * BigInt(1e18)) / atomicPriceAsBigInt
       : redeemAmountAsBigInt;
   const formattedReceiveAmount = formatUnits(receiveAmountAsBigInt, 18);
-  const receiveAmountInEth = (receiveAmountAsBigInt * BigInt(ethPerTethRate)) / BigInt(1e18);
+  const receiveAmountInEth = ethPerAssetRate
+    ? (receiveAmountAsBigInt * BigInt(1e18)) / BigInt(ethPerAssetRate)
+    : BigInt(0);
   const receiveAmountInUsd = (receiveAmountInEth * ethPriceAsBigInt) / BigInt(1e8);
   const receiveAmountInUsdFormatted = Number(formatUnits(receiveAmountInUsd, 18));
   const formattedReceiveAmountInUsd =
