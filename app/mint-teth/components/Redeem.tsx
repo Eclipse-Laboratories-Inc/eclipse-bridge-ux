@@ -80,7 +80,7 @@ export function Redeem() {
 
   const formattedTokenBalance = formatUnits(BigInt(tethBalance), 18);
   const atomicPriceAsBigInt = BigInt(atomicPrice);
-  const redeemAmountAsBigInt = parseUnits(redeemAmount, 18);
+  const redeemAmountAsBigInt = BigInt(parseUnits(redeemAmount, 18));
 
   // Withdraw fee
   const withdrawFeeInTeth = (redeemAmountAsBigInt * parseUnits(slippage.toString(), 18)) / BigInt(1e18);
@@ -319,8 +319,8 @@ export function Redeem() {
       setRedeemAmount("");
       setDepositTxHash("");
       setCurrentTx(null);
-      setTransactionState(StepStatus.LOADING);
-      setAtomicRequestState(StepStatus.LOADING);
+      setTransactionState(StepStatus.NOT_STARTED);
+      setAtomicRequestState(StepStatus.NOT_STARTED);
     }, 100);
   }
 
@@ -333,48 +333,63 @@ export function Redeem() {
   }
 
   async function handleRedeem() {
-    setIsModalOpen(true);
+    try {
+      setIsModalOpen(true);
 
-    // Make the swap (this step takes up to 24 hours)
-    const deadlineInSec = BigInt(Math.floor(Date.now() / 1000) + deadlineDaysFromNow * 24 * 60 * 60);
-    const offerAmount = parseUnits(redeemAmount, 18);
+      // Make the swap (this step takes up to 24 hours)
+      const deadlineInSec = BigInt(Math.floor(Date.now() / 1000) + deadlineDaysFromNow * 24 * 60 * 60);
+      const offerAmount = parseUnits(redeemAmount, 18);
 
-    if (!evmAddress) throw new Error("No EVM address found");
-    if (!publicClient) throw new Error("No public client found");
+      if (!evmAddress) throw new Error("No EVM address found");
+      if (!publicClient) throw new Error("No public client found");
 
-    // Bridge tETH from Eclipse to Ethereum.
-    // Skip this step if the source chain is Ethereum and mark as complete.
-    // It may make more sense to just not show this step instead of marking it
-    // as complete but this would be hard to track in the transaction modal
-    // which doesn't always have the proper context to do that, so we'll just
-    // mark it as complete.
-    if (sourceChain?.value === "eclipse") {
-      await triggerTransactions(parseUnits(redeemAmount, 9).toString());
-    } else {
-      setTransactionState(StepStatus.COMPLETED);
-    }
+      // Bridge tETH from Eclipse to Ethereum.
+      // Skip this step if the source chain is Ethereum and mark as complete.
+      // It may make more sense to just not show this step instead of marking it
+      // as complete but this would be hard to track in the transaction modal
+      // which doesn't always have the proper context to do that, so we'll just
+      // mark it as complete.
+      if (sourceChain?.value === "eclipse") {
+        try {
+          await triggerTransactions(parseUnits(redeemAmount, 9).toString());
+        } catch (e) {
+          setTransactionState(StepStatus.FAILED);
+          throw e;
+        }
+      } else {
+        setTransactionState(StepStatus.COMPLETED);
+      }
 
-    // Check if the atomic request already exists.
-    // If it does, skip the updateAtomicRequest step.
-    // This is to prevent the user from triggering the request multiple times.
-    const pendingAtomicRequest = await getUserAtomicRequest(
-      { userAddress: evmAddress, offerAddress: tethEvmTokenAddress, wantAddress: receiveAsset as `0x${string}` },
-      { publicClient }
-    );
-    const { atomicPrice: pendingAtomicPrice, offerAmount: pendingOfferAmount } = pendingAtomicRequest;
-    const atomicRequestAlreadyExists = pendingAtomicPrice === atomicPrice && pendingOfferAmount === offerAmount;
+      try {
+        // Check if the atomic request already exists.
+        // If it does, skip the updateAtomicRequest step.
+        // This is to prevent the user from triggering the request multiple times.
+        const pendingAtomicRequest = await getUserAtomicRequest(
+          { userAddress: evmAddress, offerAddress: tethEvmTokenAddress, wantAddress: receiveAsset as `0x${string}` },
+          { publicClient }
+        );
+        const { atomicPrice: pendingAtomicPrice, offerAmount: pendingOfferAmount } = pendingAtomicRequest;
+        const atomicRequestAlreadyExists = pendingAtomicPrice === atomicPrice && pendingOfferAmount === offerAmount;
 
-    if (!atomicRequestAlreadyExists) {
-      const txHash = await updateAtomicRequest(
-        {
-          offer: tethEvmTokenAddress,
-          want: receiveAsset as `0x${string}`,
-          userRequest: { deadline: deadlineInSec, atomicPrice, offerAmount, inSolve: false },
-        },
-        { publicClient, walletClient }
-      );
-    } else {
-      setAtomicRequestState(StepStatus.LOADING);
+        if (!atomicRequestAlreadyExists) {
+          const txHash = await updateAtomicRequest(
+            {
+              offer: tethEvmTokenAddress,
+              want: receiveAsset as `0x${string}`,
+              userRequest: { deadline: deadlineInSec, atomicPrice, offerAmount, inSolve: false },
+            },
+            { publicClient, walletClient }
+          );
+        } else {
+          setAtomicRequestState(StepStatus.LOADING);
+        }
+      } catch (error) {
+        setAtomicRequestState(StepStatus.FAILED);
+        throw error;
+      }
+    } catch (error) {
+      setDepositTxHash("");
+      setCurrentTx(null);
     }
   }
 
