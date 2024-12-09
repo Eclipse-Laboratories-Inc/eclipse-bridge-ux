@@ -36,21 +36,21 @@ export function RedeemSummaryCard({
         </div>
         <div className="redeem-summary-item flex items-center">
           <p className="standard-text">Withdraw Fee</p>
-          <Tooltip text="Lorem ipsum" />
+          <Tooltip text="Fees are used to pay for gas and slippage costs incurred by solvers." />
         </div>
         <div className="redeem-summary-item">
           <p className="green-mint-text-sm">{withdrawFee}</p>
         </div>
         <div className="redeem-summary-item">
           <p className="standard-text">Bridge Fee</p>
-          <Tooltip text="Lorem ipsum" />
+          <Tooltip text="Fee charged by Hyperlane, the underlying bridge provider." />
         </div>
         <div className="redeem-summary-item">
           <p className="green-mint-text-sm">{bridgeFee}</p>
         </div>
         <div className="redeem-summary-item">
           <p className="standard-text">Deadline</p>
-          <Tooltip text="Lorem ipsum" />
+          <Tooltip text="Time past which the order will automatically expire and cancel." />
         </div>
         <div className="redeem-summary-item">
           <p className="green-mint-text-sm">7 Days</p>
