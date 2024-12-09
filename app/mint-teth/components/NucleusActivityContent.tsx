@@ -64,15 +64,7 @@ export const NucleusActivityContent = ({ transactions, isLoading }: NucleusActiv
 
     return [
       {
-        title: "1. Bridging tETH to Ethereum",
-        status: otherStatuses,
-      },
-      {
-        title: "2. Approving tETH swap",
-        status: otherStatuses,
-      },
-      {
-        title: `3. Requesting Withdraw`,
+        title: `Requesting Withdraw`,
         status: swapStatus,
         link: `https://etherscan.io/tx/${currentTx?.createdTransactionHash}`,
       },
