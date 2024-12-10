@@ -24,6 +24,7 @@ export const TransactionProvider = ({ children } : { children: ReactNode}) => {
   const { evmWallet } = useWallets();
   const fetchDeposits = async () => {
     try {
+      const delay = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
       setDeposits([]);
       setWithdrawals([]);
       // fix
@@ -38,18 +39,18 @@ export const TransactionProvider = ({ children } : { children: ReactNode}) => {
       try {
         const withdrawalsData = await getWithdrawalsByAddress(evmWallet?.address || '', withdrawApi); 
         setWithdrawals(withdrawalsData)
-        withdrawalsData.forEach((item) => {
+        withdrawalsData.forEach(async (item, index) => {
+          await delay(index * 300);
           addNewWithdrawal(item)
         });
       } catch (error) {
         console.log("failed to fetch withdrawals", error)
       }
       
-     const delay = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
   
      const processTransactions = async (data: any[]) => {
        data.forEach(async (tx, index) => {
-         await delay(index * 30);
+         await delay(index * 300);
          addTransactionListener(tx.hash, tx.txreceipt_status);
       });
       };
