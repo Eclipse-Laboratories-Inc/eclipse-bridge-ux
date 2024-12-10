@@ -1,5 +1,7 @@
 {
   "address": "br1xwubggTiEZ6b7iNZUwfA3psygFfaXGfZ1heaN9AW",
+  "name": "canonical_bridge",
+  "version": "0.1.14",
   "metadata": {
     "name": "canonical_bridge",
     "version": "0.1.14",
