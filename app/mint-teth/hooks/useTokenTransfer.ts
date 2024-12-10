@@ -14,17 +14,27 @@ export function useTokenTransfer() {
   const [interchainTransferFee, setInterchainTransferFee] = useState<bigint>(BigInt(0));
 
   useEffect(() => {
-    (async () => {
-      const originToken = warpCore.tokens.find(
-        (token) => token.chainName === "eclipsemainnet" && token.symbol === "tETH"
-      );
-      if (!originToken) {
-        return;
+    async function fetchFee() {
+      try {
+        const originToken = warpCore.tokens.find(
+          (token) => token.chainName === "eclipsemainnet" && token.symbol === "tETH"
+        );
+        if (!originToken) {
+          return;
+        }
+        const fee = await warpCore.getInterchainTransferFee({
+          originToken,
+          destination: "ethereum",
+          sender: solWallet?.address,
+        }); // 9 decimals
+        setInterchainTransferFee(fee.amount * BigInt(1e9));
+      } catch (error) {
+        console.error("Error fetching interchain transfer fee:", error);
+        throw error;
       }
-      const fee = await warpCore.getInterchainTransferFee({ originToken, destination: "ethereum" }); // 9 decimals
-      setInterchainTransferFee(fee.amount * BigInt(1e9));
-    })();
-  }, []);
+    }
+    fetchFee();
+  }, [solWallet?.address]);
 
   const triggerTransactions = useCallback(
     async (amount: string) => {
