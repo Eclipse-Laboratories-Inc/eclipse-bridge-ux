@@ -1,8 +1,9 @@
 "use client";
 
-import React from "react";
-import LrtPopup from "./LrtPopup";
 import "./styles.css";
+import React, { useContext } from 'react';
+import TapPopup from "./TapPopup"
+import './styles.css';
 import { useState } from "react";
 import classNames from "classnames";
 import { Activity, Loading, InstantIcon } from "../icons";
@@ -32,24 +33,17 @@ const Deposit: React.FC<DepositProps> = ({ amountEther, setAmountEther }) => {
   const [activeTab, setActiveTab] = useState<Tabs>(Tabs.Deposit);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const { pendingTransactions } = useTransaction();
-  const { isThirdpartyBridgeModalOpen, setIsThirdpartyBridgeModalOpen } =
-    useThirdpartyBridgeModalContext();
-  const { evmWallet, solWallet } = useWallets();
+  const { isThirdpartyBridgeModalOpen, setIsThirdpartyBridgeModalOpen } = useThirdpartyBridgeModalContext(); 
+  const { evmWallet } = useWallets();
 
   return (
     <>
-      <div
-        className="deposit-container flex flex-col"
-        style={{ transform: isThirdpartyBridgeModalOpen ? "scale(0.9)" : "" }}
-      >
-        <div
-          className="deposit-card"
-          style={{
-            width: isModalOpen ? "0px" : "",
-            paddingRight: activeTab === Tabs.Activity ? "8px" : "20px",
-          }}
-        >
-          {!isModalOpen && <LrtPopup />}
+    <div className="deposit-container flex flex-col" style={{ transform: isThirdpartyBridgeModalOpen ? "scale(0.9)" : ""}}>
+      <div className="deposit-card" style={{
+          width: isModalOpen ? "0px" : "", 
+          paddingRight: activeTab === Tabs.Activity ? "8px" : "20px"
+      }}>
+        { !isModalOpen && <TapPopup /> }
 
           <div
             className="header-tabs"

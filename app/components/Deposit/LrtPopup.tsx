@@ -1,29 +1,6 @@
 import React, { useState, useEffect } from "react";
 import Link from "next/link";
-import { Cross } from "../icons";
-
-const ArrowUpRight: React.FC = () => {
-  return (
-    <svg
-      width="14"
-      height="14"
-      viewBox="0 0 14 14"
-      className="stroke-[#A1FEA0] group-hover:stroke-[#74FF71]"
-      fill="none"
-      xmlns="http://www.w3.org/2000/svg"
-      style={{
-        transition: "color 0.1s var(--ease-out-quad)",
-      }}
-    >
-      <path
-        d="M10.4987 8.75V3.5M10.4987 3.5H5.2487M10.4987 3.5L3.64453 10.3542"
-        stroke-width="1.16667"
-        stroke-linecap="round"
-        stroke-linejoin="round"
-      />
-    </svg>
-  );
-};
+import { Cross, ArrowUpRight } from "../icons";
 
 const LrtPopup: React.FC = () => {
   const [lrtVisible, setLrtVisible] = useState<boolean>(false);
@@ -62,7 +39,7 @@ const LrtPopup: React.FC = () => {
                   >
                     Deposit Now
                   </span>
-                  <ArrowUpRight />
+                  <ArrowUpRight className="stroke-[#A1FEA0] group-hover:stroke-[#74FF71]"/>
                 </div>
               </Link>
             </div>
