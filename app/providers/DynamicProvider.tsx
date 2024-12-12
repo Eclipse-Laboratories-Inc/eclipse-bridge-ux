@@ -13,7 +13,7 @@ import { SolanaWalletConnectors } from "@dynamic-labs/solana";
 import { RelayChain } from "@reservoir0x/relay-sdk";
 import { ReactNode, useEffect, useState } from "react";
 
-const eclipseWallets = ["backpacksol", "nightlysol"];
+const eclipseWallets = ["backpacksol", "nightlysol", "phantom"];
 const evmNetworks = [
   {
     blockExplorerUrls: [ETHERSCAN_TESTNET_URL],

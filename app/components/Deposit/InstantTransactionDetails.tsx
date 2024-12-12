@@ -1,7 +1,8 @@
 "use client";
 
+import { useState } from "react";
 import { cn } from "@/lib/classnameUtils";
-import { Arrow, InstantIcon, Cross, Copy } from "@/app/components/icons";
+import { Arrow, InstantIcon, Cross, Copy, CircleCheck } from "@/app/components/icons";
 import { useSidebar } from "@/app/contexts/SidebarContext";
 import { timeAgo } from "@/lib/activityUtils"
 import { truncateWalletAddress } from "@/lib/stringUtils";
@@ -29,14 +30,19 @@ const TxInfo: React.FC<{
 };
 
 const AddressInfo = ({ name, address }: { name: string, address: string}) => {
+  const [isCopied, setIsCopied] = useState<boolean>();
+
   return (
     <div className="flex flex-row justify-between items-center">
       <span className="info-name">{name}</span>
       <div 
         className="flex flex-row gap-[8px] items-center cursor-pointer copy-address transition-all active:scale-[0.96]"
-        onClick={() => navigator.clipboard.writeText(address)}>
+        onClick={() => { setIsCopied(true); navigator.clipboard.writeText(address); setTimeout(() => { setIsCopied(false) }, 1000) }}>
         <span className="gray-text font-medium"> {truncateWalletAddress(address)}</span>
-        <Copy copyClassName="w-[16px] h-[16px]"/>
+        { isCopied 
+          ? <CircleCheck circleClassName="modal-circle" />
+          : <Copy copyClassName="w-[16px] h-[16px]"/> 
+        }
       </div>
     </div>
   );
