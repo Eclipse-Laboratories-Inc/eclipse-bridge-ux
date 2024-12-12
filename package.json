@@ -34,7 +34,7 @@
     "@solana/web3.js": "1.95.8",
     "@tanstack/react-query": "^5.51.21",
     "@types/node": "20.8.7",
-    "@types/react": "19.0.1",
+    "@types/react": "18.2.21",
     "@types/react-dom": "18.2.7",
     "autoprefixer": "10.4.15",
     "classnames": "^2.5.1",
