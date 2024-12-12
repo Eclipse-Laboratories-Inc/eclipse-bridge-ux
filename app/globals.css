@@ -37,6 +37,13 @@
   }
 }
 
+@font-face {
+  font-family: 'Mikado';
+  src: url('/fonts/mikado/HvDTrial_Mikado-Black.otf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+}
+
 body, html {
   font-family: 'IBM Plex Sans', sans-serif;
   height: 100%;
