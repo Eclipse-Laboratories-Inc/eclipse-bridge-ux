@@ -5,7 +5,7 @@ import LrtPopup from "./LrtPopup";
 import "./styles.css";
 import { useState } from "react";
 import classNames from "classnames";
-import { Activity, Loading } from "../icons";
+import { Activity, Loading, InstantIcon } from "../icons";
 import { DepositContent } from "./DepositContent";
 import { ActivityContent } from "./ActivityContent";
 import { RelaySwapWidget } from "@/app/components/Deposit/RelaySwapWidget";
@@ -13,6 +13,7 @@ import { useTransaction } from "../TransactionPool";
 import { ThirdpartyBridgesPill } from "../ThirdpartyBridgeModal";
 import { useWallets } from "@/app/hooks/useWallets";
 import { useThirdpartyBridgeModalContext } from "../ThirdpartyBridgeModal/ThirdpartyBridgeModalContext";
+import { InstantTransactionDetails } from "@/app/components/Deposit/InstantTransactionDetails";
 
 export enum Tabs {
   Deposit,
@@ -26,25 +27,6 @@ export interface DepositProps {
     React.SetStateAction<number | undefined | string>
   >;
 }
-
-const InstantIcon: React.FC = () => {
-  return (
-    <svg
-      width="19"
-      height="24"
-      className="instant-icon"
-      viewBox="0 0 19 24"
-      fill="none"
-      xmlns="http://www.w3.org/2000/svg"
-    >
-      <path
-        d="M13.0235 0.188477L0.328125 14.9998H7.33673L5.98115 23.8111L18.6766 8.9998H11.668L13.0235 0.188477Z"
-        fill="white"
-        fill-opacity="0.3"
-      />
-    </svg>
-  );
-};
 
 const Deposit: React.FC<DepositProps> = ({ amountEther, setAmountEther }) => {
   const [activeTab, setActiveTab] = useState<Tabs>(Tabs.Deposit);
@@ -77,37 +59,34 @@ const Deposit: React.FC<DepositProps> = ({ amountEther, setAmountEther }) => {
           >
             <div
               className={classNames(
-                "header-tab",
-                activeTab === Tabs.Deposit ? "active" : "inactive"
+                "header-tab w-full",
+                activeTab === Tabs.Deposit ? "active" : "inactive",
               )}
-              style={{ width: "100%" }}
               onClick={() => setActiveTab(Tabs.Deposit)}
             >
               Bridge
             </div>
             <div
               className={classNames(
-                "header-tab flex items-center justify-center gap-[6px]",
-                activeTab === Tabs.Relay ? "active" : "inactive"
+                "header-tab w-full flex items-center justify-center gap-[6px]",
+                activeTab === Tabs.Relay ? "active" : "inactive",
               )}
-              style={{ width: "100%" }}
               onClick={() => {
                 setActiveTab(Tabs.Relay);
               }}
-            >
-              <InstantIcon />
+            > 
+              <InstantIcon className="" />
               Instant
             </div>
             {evmWallet && (
               <div
                 className={classNames(
-                  "header-tab",
+                  "header-tab w-[131px]",
                   "flex",
                   "items-center",
                   "justify-center",
-                  activeTab === Tabs.Activity ? "active" : "inactive"
+                  activeTab === Tabs.Activity ? "active" : "inactive",
                 )}
-                style={{ width: "131px" }}
                 onClick={() => {
                   setActiveTab(Tabs.Activity);
                 }}

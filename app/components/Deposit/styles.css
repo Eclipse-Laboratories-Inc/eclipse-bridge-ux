@@ -422,6 +422,33 @@ input::placeholder {
   margin-bottom: 10px;
 }
 
+.white-instant {
+  path {
+    fill-opacity: 1;
+  }
+}
+
+.instant-cross {
+  path {
+    stroke-width: 1.1;
+  }
+}
+
+.copy-address {
+  path { transition: fill-opacity 0.1s var(--ease-out-quad) }
+  span { transition: color 0.1s var(--ease-out-quad) }
+}
+
+.copy-address:hover {
+  span { 
+    color: #ffffff80 
+  }
+
+  path {
+    fill-opacity: 0.5;   
+  }
+}
+
 .amount-input-field {
   background-color: #0d0d0d;
   border: none;

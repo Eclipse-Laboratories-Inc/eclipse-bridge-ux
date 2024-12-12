@@ -24,3 +24,4 @@ export { default as Ellipse } from "./sidebar-icons/ellipse";
 export { default as ThirdpartyBridgesIcon } from "./thirdparty-bridges-icon";
 export { default as SquareArrowTopRight } from "./square-arrow-top-right";
 export { default as WarningIcon } from "./warning-icon";
+export { default as InstantIcon } from "./instant-icon";

@@ -10,19 +10,35 @@ import { Tabs } from "./index";
 import "./activity.css";  
 import { useWallets } from '@/app/hooks/useWallets';
 import { WithdrawDetails } from '../WithdrawDetails';
+import { InstantTransactionDetails } from './InstantTransactionDetails';
+import { useRequests, useRelayChains } from "@reservoir0x/relay-kit-hooks";
 
 
-export const ActivityItem = ({ openModalEvent, transactionType, transactionTime, transactionStatusPill, transactionAmount }: {
+export const ActivityItem = ({ openModalEvent, tokenIcon, fromChain, toChain, transactionType, transactionTime, transactionStatusPill, transactionAmount, isInstant }: {
   openModalEvent: () => void,
-  transactionType: String,
-  transactionTime: String,
+  tokenIcon: string,
+  fromChain: string,
+  toChain: string,
+  transactionType: string,
+  transactionTime: string,
   transactionStatusPill: React.ReactElement,
-  transactionAmount: String
+  transactionAmount: string,
+  isInstant?: boolean
 }) => {
     return (
        <div key="key123" className="deposit-transaction flex flex-row items-center" onClick={openModalEvent}>
-            <img src="swap.png" alt="Swap" className="swap-image" style={{position: "absolute", width: "22px"}} hidden />
-            <img src="eth.png" alt="Ethereum" className="object-cover h-[53px] w-[53px] ml-[5px] mr-[16px]" />
+            <div className="flex w-[53px] h-[53px] relative ml-[5px] mr-[16px]">
+              <img src={tokenIcon} alt="Ethereum" className="object-cover h-[53px] w-[53px]" />
+              { isInstant && <div
+                className="w-[22px] h-[22px] border-[3px] border-[#0D0D0D] rounded-[50%] absolute"
+                style={{
+                  backgroundImage: "url('instant-swap-icon.png')",
+                  left: "-4.5px",
+                  top: "-4.5px",
+                  backgroundSize: "cover",
+                }}
+              ></div> }
+            </div>
           <div className="flex flex-col justify-center w-[85%] gap-[4px]">
             <div className="transaction-top flex justify-between">
               <div className="flex tx-age gap-[7px]">
@@ -34,9 +50,9 @@ export const ActivityItem = ({ openModalEvent, transactionType, transactionTime,
             </div>
             <div className="transaction-bottom flex justify-between">
               <div className="flex flex-row items-center eth-to-ecl gap-[14px]">
-                <span className="white-in">Eclipse</span>
+                <span className="white-in">{ fromChain }</span>
                 <Arrow />
-                <span className="white-in">Ethereum</span>
+                <span className="white-in">{ toChain }</span>
               </div>
               <span className="white-in">{ transactionAmount }</span>
             </div>
@@ -79,11 +95,14 @@ function getWithdrawalActivityPill(status: String, timeLeft?: String) {
 
 export const ActivityContent = ({ setActiveTab }: {setActiveTab: React.Dispatch<React.SetStateAction<Tabs>>}) => {
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
+  const [isInstantTxOpen, setIsInstantTxOpen] = useState<boolean>(false);
   const [isWithdrawModalOpen, setIsWithdrawModalOpen] = useState<boolean>(false);
   const [currentTx, setCurrentTx] = useState<any>(null);
   const { transactions, deposits, withdrawals, withdrawTransactions } = useTransaction();
-
   const { evmWallet } = useWallets();
+
+  const { data: relayTransactions } = useRequests({ user: evmWallet?.address })
+  const { chains } = useRelayChains()
 
   if (!evmWallet) {  
     setActiveTab(Tabs.Deposit); 
@@ -100,6 +119,11 @@ export const ActivityContent = ({ setActiveTab }: {setActiveTab: React.Dispatch<
       type: "deposit",
       data: tx,
       timestamp: Number(tx.timeStamp),
+    })),
+    ...(relayTransactions || []).map((tx) => ({
+      type: "relay",
+      data: tx,
+      timestamp: Math.floor(new Date((tx.createdAt ?? new Date()).toString()).getTime() / 1000),
     })),
   ];
   combinedTransactions.sort((a, b) => {
@@ -120,12 +144,38 @@ export const ActivityContent = ({ setActiveTab }: {setActiveTab: React.Dispatch<
 
   return ( 
     <>
-    <div className={isModalOpen || isWithdrawModalOpen ? "status-overlay active" : "status-overlay"}></div>
+    <div className={isModalOpen || isWithdrawModalOpen || isInstantTxOpen ? "status-overlay active" : "status-overlay"}></div>
     <div className="activity-container">
-
 
     {
       combinedTransactions && combinedTransactions.map((activity, index) => {
+        if ( activity.type === "relay" && activity.data.data.metadata && Object.keys(activity.data.data.metadata).length > 0 ) {
+          const txData = activity.data.data;
+          const sourceChain = chains?.find(chain => chain.id === txData.metadata.currencyIn.currency.chainId)
+          const targetChain = chains?.find(chain => chain.id === txData.metadata.currencyOut.currency.chainId)
+
+          const status = activity.data.status	=== "success" ? "completed" : "failed"
+          const statusPill = (
+            <div className={`flex flex-row items-center status-div ${status}`}>
+              <TransactionIcon iconType={status}/> 
+              <span>{status}</span>
+            </div>
+          );
+          return (
+            <ActivityItem 
+               openModalEvent={() => { setCurrentTx(activity.data); setIsInstantTxOpen(true)}} 
+               tokenIcon={ txData.metadata.currencyIn.currency.metadata.logoURI ?? ""}
+               transactionType="Deposit"
+               fromChain={ sourceChain?.name ?? '' }
+               toChain={ targetChain?.name ?? '' }
+               transactionTime={ timeAgo(activity.timestamp) }
+               transactionAmount={ `${ (Number(txData.metadata.currencyIn.amount) / 10**txData.metadata.currencyIn.currency.decimals).toFixed(4) } ${txData.metadata.currencyIn.currency.symbol}` }
+               transactionStatusPill={statusPill}
+               isInstant={true}
+            />
+          );
+        }
+
         if ( activity.type === "withdrawal" ) {
           const withdraw_message = activity.data[0].message;
           const withdraw_obj = withdrawTransactions.get(withdraw_message.withdraw_id);
@@ -135,7 +185,10 @@ export const ActivityContent = ({ setActiveTab }: {setActiveTab: React.Dispatch<
           return (
             <ActivityItem 
                openModalEvent={() => { setCurrentTx(activity.data); setIsWithdrawModalOpen(true)}} 
+               tokenIcon="eth.png"
                transactionType="Withdraw"
+               fromChain="Eclipse"
+               toChain="Ethereum"
                transactionTime={ withdraw_obj?.transaction && timeAgo(Number(withdraw_obj?.transaction.blockTime)) }
                transactionAmount={ `${parseFloat(amount).toFixed(3)} ETH` }
                transactionStatusPill={getWithdrawalActivityPill(activity.data[1], claimTime)}
@@ -166,8 +219,11 @@ export const ActivityContent = ({ setActiveTab }: {setActiveTab: React.Dispatch<
           );
           return (
             <ActivityItem 
-               openModalEvent={() => {() => { setIsModalOpen(true); setCurrentTx(transaction)}}} 
+               openModalEvent={() => { setIsModalOpen(true); setCurrentTx(transaction)}} 
+               tokenIcon="eth.png"
                transactionType="Deposit"
+               fromChain="Ethereum"
+               toChain="Eclipse"
                transactionTime={ timeAgo(Number(transaction.timeStamp)) }
                transactionAmount={ `${Number(ethers.utils.formatEther(transaction.value)).toFixed(3)} ETH` }
                transactionStatusPill={statusPill}
@@ -191,6 +247,7 @@ export const ActivityContent = ({ setActiveTab }: {setActiveTab: React.Dispatch<
     </div> 
       { isModalOpen && <TransactionDetails from="" tx={currentTx} closeModal={() => setTimeout(() => setIsModalOpen(false), 100)} /> }
       { isWithdrawModalOpen && <WithdrawDetails from="withdraw" tx={currentTx} ethAmount={0} closeModal={() => setTimeout(() => setIsWithdrawModalOpen(false), 100)} /> }
+      { isInstantTxOpen && <InstantTransactionDetails activity={currentTx} closeModal={() => setTimeout(() => setIsInstantTxOpen(false), 100)} /> }
     </>
   )
 }
