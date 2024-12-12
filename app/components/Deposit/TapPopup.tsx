@@ -32,7 +32,7 @@ const TapPopup: React.FC = () => {
                 className="text-[28px] text-stroke text-[#F4DE5C] font-semibold w-[247px] h-[52px] text-left line-[26px] leading-[26px]" style={{
                   fontFamily: '"Mikado"'
                 }}>
-                Less Yapping,
+                More Yapping,
               </span>
               <span
                 className="text-[28px] text-stroke text-[#F4DE5C] font-semibold mt-[-10px] w-[247px] h-[52px] text-left line-[26px] leading-[26px]" style={{
