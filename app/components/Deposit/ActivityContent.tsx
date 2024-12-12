@@ -14,7 +14,7 @@ import { InstantTransactionDetails } from './InstantTransactionDetails';
 import { useRequests, useRelayChains } from "@reservoir0x/relay-kit-hooks";
 
 
-export const ActivityItem = ({ openModalEvent, tokenIcon, fromChain, toChain, transactionType, transactionTime, transactionStatusPill, transactionAmount, isInstant }: {
+export const ActivityItem = ({ openModalEvent, tokenIcon, fromChain, toChain, transactionType, transactionTime, transactionStatusPill, transactionAmount, isInstant, key }: {
   openModalEvent: () => void,
   tokenIcon: string,
   fromChain: string,
@@ -23,10 +23,11 @@ export const ActivityItem = ({ openModalEvent, tokenIcon, fromChain, toChain, tr
   transactionTime: string,
   transactionStatusPill: React.ReactElement,
   transactionAmount: string,
+  key: string,
   isInstant?: boolean
 }) => {
     return (
-       <div key="key123" className="deposit-transaction flex flex-row items-center" onClick={openModalEvent}>
+       <div key={key} className="deposit-transaction flex flex-row items-center" onClick={openModalEvent}>
             <div className="flex w-[53px] h-[53px] relative ml-[5px] mr-[16px]">
               <img src={tokenIcon} alt="Ethereum" className="object-cover h-[53px] w-[53px]" />
               { isInstant && <div
@@ -172,6 +173,7 @@ export const ActivityContent = ({ setActiveTab }: {setActiveTab: React.Dispatch<
                transactionAmount={ `${ (Number(txData.metadata.currencyIn.amount) / 10**txData.metadata.currencyIn.currency.decimals).toFixed(4) } ${txData.metadata.currencyIn.currency.symbol}` }
                transactionStatusPill={statusPill}
                isInstant={true}
+               key={activity.data.id}
             />
           );
         }
@@ -192,6 +194,7 @@ export const ActivityContent = ({ setActiveTab }: {setActiveTab: React.Dispatch<
                transactionTime={ withdraw_obj?.transaction && timeAgo(Number(withdraw_obj?.transaction.blockTime)) }
                transactionAmount={ `${parseFloat(amount).toFixed(3)} ETH` }
                transactionStatusPill={getWithdrawalActivityPill(activity.data[1], claimTime)}
+               key={withdraw_message.withdraw_id}
             />
           );
         }
@@ -227,6 +230,7 @@ export const ActivityContent = ({ setActiveTab }: {setActiveTab: React.Dispatch<
                transactionTime={ timeAgo(Number(transaction.timeStamp)) }
                transactionAmount={ `${Number(ethers.utils.formatEther(transaction.value)).toFixed(3)} ETH` }
                transactionStatusPill={statusPill}
+               key={transaction.hash}
             />
           );
         }
