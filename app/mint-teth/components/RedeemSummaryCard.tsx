@@ -11,6 +11,7 @@ interface RedeemSummaryCardProps {
   withdrawFee: string;
   totalFees: string;
   bridgeFee: string;
+  slippage: string;
 }
 
 export function RedeemSummaryCard({
@@ -19,6 +20,7 @@ export function RedeemSummaryCard({
   withdrawFee,
   totalFees,
   bridgeFee,
+  slippage,
 }: RedeemSummaryCardProps) {
   const depositAssetSymbol = tokenOptions.find((token) => token.value === depositAsset)?.label;
   const tEthValue = exchangeRate ? 1 / Number(formatUnits(BigInt(exchangeRate), 18)) : 0;
@@ -36,10 +38,10 @@ export function RedeemSummaryCard({
         </div>
         <div className="redeem-summary-item flex items-center">
           <p className="standard-text">Withdraw Fee</p>
-          <Tooltip text="Fees are used to pay for gas and slippage costs incurred by solvers." />
+          <Tooltip text="Fees are used to pay for gas and slippage costs incurred by solvers. This fee is already applied in the receive amount." />
         </div>
         <div className="redeem-summary-item">
-          <p className="green-mint-text-sm">{withdrawFee}</p>
+          <p className="green-mint-text-sm">{(parseFloat(slippage) * 100).toFixed(2)}%</p>
         </div>
         <div className="redeem-summary-item">
           <p className="standard-text">Bridge Fee</p>

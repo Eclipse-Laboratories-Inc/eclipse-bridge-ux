@@ -460,6 +460,7 @@ export function Redeem() {
           withdrawFee={formattedWithdrawFeeInUsd}
           bridgeFee={formattedBridgeFeeInUsd}
           totalFees={formattedTotalFeesInUsd}
+          slippage={slippage.toString()}
         />
         {evmAddress && svmAddress && (
           <button
