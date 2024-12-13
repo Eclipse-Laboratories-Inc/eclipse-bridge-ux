@@ -76,7 +76,7 @@ export function Redeem() {
   ///////////////////////
   // Derived values
   ///////////////////////
-  const atomicPrice = (BigInt(assetPerTethRate) * BigInt(1e18)) / (BigInt(1e18) - parseUnits(slippage.toString(), 18));
+  const atomicPrice = (BigInt(assetPerTethRate) * (BigInt(1e18) - parseUnits(slippage.toString(), 18))) / BigInt(1e18);
 
   const formattedTokenBalance = formatUnits(BigInt(tethBalance), 18);
   const atomicPriceAsBigInt = BigInt(atomicPrice);
@@ -141,12 +141,14 @@ export function Redeem() {
   // Receive amount
   const receiveAmountAsBigInt =
     atomicPriceAsBigInt > BigInt(0)
-      ? (redeemAmountAsBigInt * BigInt(1e18)) / atomicPriceAsBigInt
+      ? (redeemAmountAsBigInt * atomicPriceAsBigInt) / BigInt(1e18)
       : redeemAmountAsBigInt;
   const formattedReceiveAmount = formatUnits(receiveAmountAsBigInt, 18);
+
   const receiveAmountInEth = ethPerAssetRate
-    ? (receiveAmountAsBigInt * BigInt(1e18)) / BigInt(ethPerAssetRate)
+    ? (receiveAmountAsBigInt * BigInt(ethPerAssetRate)) / BigInt(1e18)
     : BigInt(0);
+
   const receiveAmountInUsd = (receiveAmountInEth * ethPriceAsBigInt) / BigInt(1e8);
   const receiveAmountInUsdFormatted = Number(formatUnits(receiveAmountInUsd, 18));
   const formattedReceiveAmountInUsd =
