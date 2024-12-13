@@ -1,20 +1,12 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import Link from "next/link";
 import { Cross, ArrowUpRight } from "../icons";
 
 const TapPopup: React.FC = () => {
-  const [isTapPopupVisible, setIsTapPopupVisible] = useState<boolean>(false);
-
-  useEffect(() => {
-    const popupClosed = localStorage.getItem("tapPopup");
-    if (popupClosed === null) {
-      setIsTapPopupVisible(true);
-    }
-  }, []);
+  const [isTapPopupVisible, setIsTapPopupVisible] = useState<boolean>(true);
 
   const closePopup = () => {
     setIsTapPopupVisible(false);
-    localStorage.setItem("tapPopup", "true");
   };
 
   return (
