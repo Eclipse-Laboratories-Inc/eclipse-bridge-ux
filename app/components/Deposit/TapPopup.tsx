@@ -32,7 +32,7 @@ const TapPopup: React.FC = () => {
                 }}>
                 More Tapping
               </span>
-              <Link href="https://tap.eclipse.xyz">
+              <Link href="https://tap.eclipse.xyz" target="_blank">
                 <div className="group flex flex-row gap-[8px] items-center">
                   <span
                     className="text-[14px] font-medium text-left text-[#303283] group-hover:text-[#007D00]"
