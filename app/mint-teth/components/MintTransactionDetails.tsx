@@ -37,6 +37,7 @@ export const MintTransactionDetails: React.FC<TransactionDetailsProps> = ({
   const [_, ethPrice] = useContext(EthereumDataContext) ?? [0, 0];
 
   const depositAmount = Number(ethers.utils.formatEther(depositAmountAsBigInt));
+  const isExpired = Number(tx.deadline) < Math.floor(Date.now() / 1000) && tx.status === "pending";
 
   return (
     <div className="transaction-details-modal flex flex-col items-center">
@@ -96,12 +97,16 @@ export const MintTransactionDetails: React.FC<TransactionDetailsProps> = ({
             </div>
             {step.status !== StepStatus.NOT_STARTED && (
               <div className={`flex flex-row items-center gap-1 ${step.status}-item status-item`}>
-                <TransactionIcon
-                  iconType={step.status === StepStatus.AWAITING_SIGNATURE ? StepStatus.LOADING : step.status}
-                  className="tx-done-icon"
-                />
+                {!isExpired && (
+                  <TransactionIcon
+                    iconType={step.status === StepStatus.AWAITING_SIGNATURE ? StepStatus.LOADING : step.status}
+                    className="tx-done-icon"
+                  />
+                )}
                 <span>
-                  {step.status === StepStatus.COMPLETED
+                  {isExpired
+                    ? "Expired"
+                    : step.status === StepStatus.COMPLETED
                     ? "Done"
                     : step.status === StepStatus.FAILED
                     ? "Failed"

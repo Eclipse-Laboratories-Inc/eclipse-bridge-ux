@@ -83,6 +83,7 @@ export const NucleusActivityContent = ({ transactions, isLoading }: NucleusActiv
           transactions.map((tx, index) => {
             const offerTokenOption = findTokenByAddress(tx.offerToken);
             const wantTokenOption = findTokenByAddress(tx.wantToken);
+            const isExpired = Number(tx.deadline) < Math.floor(Date.now() / 1000) && tx.status === "pending";
             return (
               <div
                 key={index}
@@ -109,8 +110,10 @@ export const NucleusActivityContent = ({ transactions, isLoading }: NucleusActiv
                     <div className={`flex flex-row items-center status-div ${tx.status}`}>
                       {tx.status ? (
                         <>
-                          <TransactionIcon iconType={eclipseNucleusStatusMap[tx.status]} />
-                          <span>{tx.status === "pending" ? "Processing" : tx.status}</span>
+                          <TransactionIcon
+                            iconType={isExpired ? StepStatus.EXPIRED : eclipseNucleusStatusMap[tx.status]}
+                          />
+                          <span>{isExpired ? "Expired" : tx.status === "pending" ? "Processing" : tx.status}</span>
                         </>
                       ) : (
                         <Skeleton height={15} width={91} />
