@@ -5,6 +5,7 @@ export enum StepStatus {
   COMPLETED = "completed",
   CANCELLED = "cancelled",
   FAILED = "failed",
+  EXPIRED = "expired",
 }
 
 export interface NucleusTransaction {

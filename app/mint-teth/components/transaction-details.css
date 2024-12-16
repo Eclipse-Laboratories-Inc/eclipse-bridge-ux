@@ -74,7 +74,7 @@
   font-size: 16px;
   font-weight: 500;
   border-radius: 30px;
-  padding: 6px 12px 6px 6px;
+  padding: 6px 12px 6px 12px;
   svg {
     width: 24px;
   }
