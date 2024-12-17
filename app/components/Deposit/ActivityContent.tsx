@@ -29,7 +29,7 @@ export const ActivityItem = ({ openModalEvent, tokenIcon, fromChain, toChain, tr
     return (
        <div key={key} className="deposit-transaction flex flex-row items-center" onClick={openModalEvent}>
             <div className="flex w-[53px] h-[53px] relative ml-[5px] mr-[16px]">
-              <img src={tokenIcon} alt="Ethereum" className="object-cover h-[53px] w-[53px]" />
+              <img src={tokenIcon ? tokenIcon : "unknown-token.png"} alt="Ethereum" className="object-cover h-[53px] w-[53px] rounded-[50%]" />
               { isInstant && <div
                 className="w-[22px] h-[22px] border-[3px] border-[#0D0D0D] rounded-[50%] absolute"
                 style={{
@@ -102,7 +102,7 @@ export const ActivityContent = ({ setActiveTab }: {setActiveTab: React.Dispatch<
   const { transactions, deposits, withdrawals, withdrawTransactions } = useTransaction();
   const { evmWallet } = useWallets();
 
-  const { data: relayTransactions } = useRequests({ user: evmWallet?.address })
+  const { data: relayTransactions } = useRequests({ user: evmWallet?.address, chainId: "534352" })
   const { chains } = useRelayChains()
 
   if (!evmWallet) {  
