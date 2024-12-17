@@ -11,6 +11,7 @@ export interface Step {
   title: string;
   status: StepStatus | string;
   link?: string;
+  fulfilledLink?: string;
 }
 
 interface TransactionDetailsProps {
@@ -87,9 +88,16 @@ export const MintTransactionDetails: React.FC<TransactionDetailsProps> = ({
               >
                 {step.title}
               </div>
-              {step.link && tx && (
+              {step.link && !step.fulfilledLink && tx && (
                 <div className="gray-text">
                   <a href={step.link} target="_blank">
+                    View Txn
+                  </a>
+                </div>
+              )}
+              {step.fulfilledLink && tx && (
+                <div className="gray-text">
+                  <a href={step.fulfilledLink} target="_blank">
                     View Txn
                   </a>
                 </div>
