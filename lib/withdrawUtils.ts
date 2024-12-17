@@ -4,7 +4,6 @@ import { CanonicalBridge } from "./canonical_bridge";
 import { Connection, PublicKey } from "@solana/web3.js";
 import testnet_idl from "./canonical_bridge_testnet.json";
 import mainnet_idl from "./canonical_bridge.json";
-const solanaWeb3 = require('@solana/web3.js');
 const LosslessJSON = require('lossless-json');
 
 export async function withdrawEthereum(
@@ -27,7 +26,6 @@ export async function withdrawEthereum(
   const idl = programId === "br1xwubggTiEZ6b7iNZUwfA3psygFfaXGfZ1heaN9AW" ? mainnet_idl : testnet_idl;
   const program = new Program<CanonicalBridge>(idl as CanonicalBridge, provider as Provider);
   const bridgeProgram = new PublicKey(programId);
-  // program.programId = bridgeProgram;
 
   const randomNonce = Math.floor(Math.random() * 10**12);
   const [withdrawalReceiptPda, _withdrawalReceiptPdaBump ] = PublicKey.findProgramAddressSync(
