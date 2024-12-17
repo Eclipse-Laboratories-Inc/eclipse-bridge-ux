@@ -62,14 +62,21 @@ export const NucleusActivityContent = ({ transactions, isLoading }: NucleusActiv
       otherStatuses = StepStatus.FAILED;
     }
 
-    return [
-      {
-        title: `Requesting Withdraw`,
-        status: swapStatus,
-        link: `https://etherscan.io/tx/${currentTx?.createdTransactionHash}`,
-        fulfilledLink: `https://etherscan.io/tx/${currentTx?.endingTransactionHash}`,
-      },
-    ];
+    const transactionSteps: Step[] = [];
+    transactionSteps.push({
+      title: `Requesting Withdraw`,
+      status: swapStatus,
+      link: `https://etherscan.io/tx/${currentTx?.createdTransactionHash}`,
+    });
+    if (currentTx?.status === "fulfilled") {
+      transactionSteps.push({
+        title: `Withdrawal Completed`,
+        status: StepStatus.COMPLETED,
+        link: `https://etherscan.io/tx/${currentTx?.endingTransactionHash}`,
+      });
+    }
+
+    return transactionSteps;
   }, [currentTx?.createdTransactionHash, currentTx?.endingTransactionHash, currentTx?.status]);
 
   return (
