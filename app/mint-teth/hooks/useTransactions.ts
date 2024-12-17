@@ -65,13 +65,12 @@ export function useTransactions() {
               const apiUrl = `${baseUrl}/${method}?vaultAddress=${boringVaultAddress}&chainId=${chainId}&status=${status}`;
               const responseAsJson = await fetch(apiUrl);
               const response = (await responseAsJson.json()).data as RawNucleusTransaction[];
-              return response
-                .map(convertRawTransactionToTransaction)
-                .filter((tx) => tx.user === evmAddress)
-                .sort((a, b) => Number(b.createdTimestamp) - Number(a.createdTimestamp));
+              return response.map(convertRawTransactionToTransaction).filter((tx) => tx.user === evmAddress);
             })
           )
-        ).flat();
+        )
+          .flat()
+          .sort((a, b) => Number(b.createdTimestamp) - Number(a.createdTimestamp));
 
         setTransactions(transactions);
       } catch (error) {

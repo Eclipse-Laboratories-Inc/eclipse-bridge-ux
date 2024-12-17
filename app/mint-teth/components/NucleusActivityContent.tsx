@@ -8,7 +8,7 @@ import Skeleton from "react-loading-skeleton";
 import "../../components/Deposit/activity.css";
 import { tethEvmTokenAddress, tokenOptions } from "../constants/tokens";
 import { useTransactions } from "../hooks/useTransactions";
-import { MintTransactionDetails } from "./MintTransactionDetails";
+import { MintTransactionDetails, Step } from "./MintTransactionDetails";
 import { SelectOption } from "./EcSelect";
 import { NucleusTransaction, StepStatus } from "../types";
 import Loading from "@/app/components/icons/loading";
@@ -45,7 +45,7 @@ export const NucleusActivityContent = ({ transactions, isLoading }: NucleusActiv
   const offerTokenOption = currentTx?.offerToken ? findTokenByAddress(currentTx?.offerToken) : null;
 
   // Memoized because it returns a new array
-  const steps = useMemo(() => {
+  const steps: Step[] = useMemo(() => {
     let swapStatus = StepStatus.LOADING;
     if (currentTx?.status === "fulfilled") {
       swapStatus = StepStatus.COMPLETED;
@@ -67,9 +67,10 @@ export const NucleusActivityContent = ({ transactions, isLoading }: NucleusActiv
         title: `Requesting Withdraw`,
         status: swapStatus,
         link: `https://etherscan.io/tx/${currentTx?.createdTransactionHash}`,
+        fulfilledLink: `https://etherscan.io/tx/${currentTx?.endingTransactionHash}`,
       },
     ];
-  }, [currentTx?.createdTransactionHash, currentTx?.status]);
+  }, [currentTx?.createdTransactionHash, currentTx?.endingTransactionHash, currentTx?.status]);
 
   return (
     <>
