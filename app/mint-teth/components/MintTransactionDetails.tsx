@@ -37,7 +37,7 @@ export const MintTransactionDetails: React.FC<TransactionDetailsProps> = ({
   const [_, ethPrice] = useContext(EthereumDataContext) ?? [0, 0];
 
   const depositAmount = Number(ethers.utils.formatEther(depositAmountAsBigInt));
-  const isExpired = Number(tx.deadline) < Math.floor(Date.now() / 1000) && tx.status === "pending";
+  const isExpired = tx ? Number(tx.deadline) < Math.floor(Date.now() / 1000) && tx.status === "pending" : false;
 
   return (
     <div className="transaction-details-modal flex flex-col items-center">
