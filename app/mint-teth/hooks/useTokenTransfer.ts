@@ -53,7 +53,7 @@ export function useTokenTransfer() {
         const sender = solWallet.address;
         const originTokenAmount = originToken.amount(amount);
 
-        const fee = await warpCore.getInterchainTransferFee({ originToken, destination: "ethereum" }); // 9 decimals
+        const fee = await warpCore.getInterchainTransferFee({ originToken, destination: "ethereum", sender }); // 9 decimals
         setInterchainTransferFee(fee.amount * BigInt(1e9));
 
         // Get transactions
@@ -80,6 +80,7 @@ export function useTokenTransfer() {
         const error = e as Error;
         console.error("Error during transfer:", error);
         setError(error.message);
+        console.log("here?");
         setTransactionState(StepStatus.FAILED);
         throw e;
       }

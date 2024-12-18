@@ -70,7 +70,7 @@ export const NucleusActivityContent = ({ transactions, isLoading }: NucleusActiv
     });
     if (currentTx?.status === "fulfilled") {
       transactionSteps.push({
-        title: `Withdrawal Completed`,
+        title: `Withdraw Fulfillment`,
         status: StepStatus.COMPLETED,
         link: `https://etherscan.io/tx/${currentTx?.endingTransactionHash}`,
       });
