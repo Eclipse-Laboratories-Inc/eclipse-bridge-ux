@@ -44,7 +44,7 @@ export async function generateTxObjectForDetails(walletClient: any, txHash: stri
 export async function getNonce(walletClient: any, transactionHash: string, bridgeProgram: string): Promise<PublicKey | null> {
   try {
     const txHashLowU64 = low64(BigInt(transactionHash))
-    const ethDepositNonceBN = new anchor.BN(txHashLowU64, 10);
+    const ethDepositNonceBN = new anchor.BN(txHashLowU64.toString(), 10);
     const programPublicKey = new PublicKey(bridgeProgram);
 
     const [depositReceiptPda, _] = PublicKey.findProgramAddressSync(
