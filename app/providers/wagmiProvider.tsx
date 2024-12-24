@@ -26,6 +26,10 @@ export const WagmiProvider = (props: WagmiProviderProps) => {
   ]);
   useEffect(() => {
     queryRelayChains(MAINNET_RELAY_API, {}).then((data) => {
+      const eclipseChain = data.chains?.find((chain) => chain.id === 9286185);
+      if (eclipseChain) {
+        eclipseChain.explorerUrl = "https://eclipsescan.xyz";
+      }
       const apiChains =
         data.chains
           ?.map((chain) => configureViemChain(chain as any))
