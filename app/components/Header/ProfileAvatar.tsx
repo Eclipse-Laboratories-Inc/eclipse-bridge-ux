@@ -39,7 +39,7 @@ export const ProfileAvatar: React.FC = () => {
         setIsModalOpen((prevState) => !prevState);
       }
     },
-    [evmWallet, isModalOpen, solWallet]
+    [evmWallet, isModalOpen, solWallet],
   );
 
   const handleClickOutside = useCallback(
@@ -55,7 +55,7 @@ export const ProfileAvatar: React.FC = () => {
         toggleModal();
       }
     },
-    [toggleModal]
+    [toggleModal],
   );
 
   useEffect(() => {
@@ -72,7 +72,10 @@ export const ProfileAvatar: React.FC = () => {
   useEffect(() => {
     const element = document.querySelector(".main-content") as HTMLElement;
     if (element) {
-      element.style.filter = isModalOpen ? "blur(3px)" : "";
+      if (isModalOpen) {
+        element.style.filter = "blur(3px)";
+        element.style.overflow = "hidden";
+      }
     }
 
     if (modalRef.current) {
