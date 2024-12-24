@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect, useState, useCallback } from "react";
+import React from "react";
 
 import "./styles.css";
 import { SwapWidget } from "@reservoir0x/relay-kit-ui";
@@ -24,7 +24,7 @@ export const RelaySwapWidget: React.FC<RelaySwapWidgetContentProps> = ({}) => {
       // todo: replace with eclipse configs
       lockChainId={9286185}
       defaultFromToken={{
-        address: "11111111111111111111111111111111",
+        address: "0x0000000000000000000000000000000000000000",
         chainId: 1,
         symbol: "ETH",
         name: "ETH",

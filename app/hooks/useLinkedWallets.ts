@@ -12,7 +12,7 @@ export const useLinkedWallets = () => {
         linkedWallets.push(convertToLinkedWallet(wallet));
         return linkedWallets;
       },
-      [] as ReturnType<typeof convertToLinkedWallet>[]
+      [] as ReturnType<typeof convertToLinkedWallet>[],
     );
     wallets.current = userWallets;
     return _wallets;

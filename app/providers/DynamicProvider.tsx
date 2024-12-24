@@ -2,7 +2,10 @@ import { useWalletFilter } from "@/app/hooks/useWalletContext";
 import { convertRelayChainToDynamicNetwork } from "@/lib/relay";
 import { BitcoinWalletConnectors } from "@dynamic-labs/bitcoin";
 import { EclipseWalletConnectors } from "@dynamic-labs/eclipse";
-import { ETHERSCAN_TESTNET_URL } from "../components/constants";
+import {
+  ETHERSCAN_TESTNET_URL,
+  ETHERSCAN_MAINNET_URL,
+} from "../components/constants";
 import { EthereumWalletConnectors } from "@dynamic-labs/ethereum";
 import {
   DynamicContextProvider,
@@ -29,7 +32,7 @@ const evmNetworks = [
     networkId: 11155111,
     rpcUrls: ["https://sepolia.drpc.org"],
     vanityName: "Sepolia",
-  },
+  }
 ];
 
 // TODO: maybe we can read it from a file
@@ -140,23 +143,23 @@ export const DynamicProvider = (props: {
           },
           onAuthFlowOpen: () => {
             const depositBox = document.getElementsByClassName(
-              "deposit-container"
+              "deposit-container",
             )[0] as HTMLElement;
             depositBox.style.transform = "scale(0.9)";
 
             const mainContent = document.getElementById(
-              "main-content"
+              "main-content",
             ) as HTMLElement;
             mainContent.style.filter = "blur(3px)";
           },
           onAuthFlowClose: () => {
             const depositBox = document.getElementsByClassName(
-              "deposit-container"
+              "deposit-container",
             )[0] as HTMLElement;
             depositBox.style.transform = "";
 
             const mainContent = document.getElementById(
-              "main-content"
+              "main-content",
             ) as HTMLElement;
             mainContent.style.filter = "";
             setWalletFilter(undefined);
@@ -177,7 +180,7 @@ export const DynamicProvider = (props: {
               wallets.filter(
                 (w) =>
                   w.walletConnector.supportedChains.includes("EVM") ||
-                  eclipseWallets.includes(w.key)
+                  eclipseWallets.includes(w.key),
               ),
         environmentId: process.env.NEXT_PUBLIC_ENVIRONMENT_ID || "",
         walletConnectors: [
@@ -199,7 +202,10 @@ export const DynamicProvider = (props: {
               .map((chain) => {
                 return convertRelayChainToDynamicNetwork(chain);
               });
-            return mergeNetworks(evmNetworks, mergeNetworks(networks, relayNetworks));
+            return mergeNetworks(
+              evmNetworks,
+              mergeNetworks(networks, relayNetworks),
+            );
           },
           chainDisplayValues: {
             solana: {

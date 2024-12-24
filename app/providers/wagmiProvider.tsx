@@ -34,7 +34,7 @@ export const WagmiProvider = (props: WagmiProviderProps) => {
       const { wagmiConfig } = createWagmiConfig(
         apiChains
           .filter(({ viemChain }) => viemChain !== undefined)
-          .map(({ viemChain }) => viemChain as Chain)
+          .map(({ viemChain }) => viemChain as Chain),
       );
       setConfig(wagmiConfig);
       setChains(apiChains);
@@ -59,10 +59,16 @@ function createWagmiConfig(dynamicChains: Chain[]) {
     transports: chains.reduce(
       (transportsConfig: Record<number, HttpTransport>, chain) => {
         //TODO: add alchemy transport if needed
-        transportsConfig[chain.id] = http();
+        if (chain.id === 1) {
+          transportsConfig[chain.id] = http(
+            "https://empty-responsive-patron.quiknode.pro/91dfa8475605dcdec9afdc8273578c9f349774a1/",
+          );
+        } else {
+          transportsConfig[chain.id] = http();
+        }
         return transportsConfig;
       },
-      {}
+      {},
     ),
   });
   return {
