@@ -154,8 +154,8 @@ export const ActivityContent = ({
     ...(relayTransactions || [])
       .filter(
         (tx) =>
-          tx.data.outTxs[0].chainId === 9286185 ||
-          tx.data.inTxs[0].chainId === 9286185,
+          tx.data?.outTxs[0].chainId === 9286185 ||
+          tx.data?.inTxs[0].chainId === 9286185,
       )
       .map((tx) => ({
         type: "relay",
