@@ -309,7 +309,7 @@ button[aria-label="Connect wallet"]  {
     background: rgba(255, 255, 255, 0.03)!important;
   }
 
-  button[aria-label="MAX"] {
+  button[aria-label="MAX"], button[aria-label="Multi wallet dropdown"] {
     background: none!important;
   }
 }
