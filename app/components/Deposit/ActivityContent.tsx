@@ -152,11 +152,11 @@ export const ActivityContent = ({
       timestamp: Number(tx.timeStamp),
     })),
     ...(relayTransactions || [])
-      .filter(
-        (tx) =>
-          tx.data?.outTxs[0].chainId === 9286185 ||
-          tx.data?.inTxs[0].chainId === 9286185,
-      )
+      .filter((tx) => {
+        const outTxsChainId = tx.data?.outTxs?.[0]?.chainId;
+        const inTxsChainId = tx.data?.inTxs?.[0]?.chainId;
+        return outTxsChainId === 9286185 || inTxsChainId === 9286185;
+      })
       .map((tx) => ({
         type: "relay",
         data: tx,
