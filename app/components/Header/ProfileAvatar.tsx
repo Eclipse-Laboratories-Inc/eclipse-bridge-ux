@@ -72,10 +72,8 @@ export const ProfileAvatar: React.FC = () => {
   useEffect(() => {
     const element = document.querySelector(".main-content") as HTMLElement;
     if (element) {
-      if (isModalOpen) {
-        element.style.filter = "blur(3px)";
-        element.style.overflow = "hidden";
-      }
+      element.style.filter = isModalOpen ? "blur(3px)" : "";
+      element.style.overflow = isModalOpen ? "hidden" : "";
     }
 
     if (modalRef.current) {
