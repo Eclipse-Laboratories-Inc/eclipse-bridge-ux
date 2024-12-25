@@ -41,8 +41,8 @@ const Deposit: React.FC<DepositProps> = ({ amountEther, setAmountEther }) => {
   useEffect(() => {
     const targetTab = urlParams.get("target");
 
-    if (Object.values(Tabs).includes(targetTab)) {
-      setActiveTab(targetTab);
+    if (Object.values(Tabs).includes(targetTab as Tabs)) {
+      setActiveTab(targetTab as Tabs);
     }
   }, []);
 
