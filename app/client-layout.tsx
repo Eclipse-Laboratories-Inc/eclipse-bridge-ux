@@ -4,6 +4,7 @@ import "@reservoir0x/relay-kit-ui/styles.css";
 import { Providers } from "@/app/providers/providers";
 import { usePathname } from "next/navigation";
 import { IBM_Plex_Sans } from "next/font/google";
+import { Suspense } from "react";
 import { WagmiProvider } from "@/app/providers/wagmiProvider";
 import { DynamicProvider } from "@/app/providers/DynamicProvider";
 import { WalletFilterProvider } from "@/app/providers/WalletFilterProvider";
@@ -40,19 +41,21 @@ export default function ClientLayout({
       <head>
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
       </head>
-      <WalletFilterProvider>
-        <WagmiProvider>
-          {({ chains }) => {
-            return (
-              <DynamicProvider chains={chains}>
-                <body className={ibmPlexSans.className}>
-                  <Providers chains={chains}>{children}</Providers>
-                </body>
-              </DynamicProvider>
-            );
-          }}
-        </WagmiProvider>
-      </WalletFilterProvider>
+      <Suspense>
+        <WalletFilterProvider>
+          <WagmiProvider>
+            {({ chains }) => {
+              return (
+                <DynamicProvider chains={chains}>
+                  <body className={ibmPlexSans.className}>
+                    <Providers chains={chains}>{children}</Providers>
+                  </body>
+                </DynamicProvider>
+              );
+            }}
+          </WagmiProvider>
+        </WalletFilterProvider>
+      </Suspense>
     </html>
   );
 }

@@ -5,6 +5,7 @@ import React, { useEffect } from "react";
 import TapPopup from "./TapPopup";
 import "./styles.css";
 import { useState } from "react";
+import { useSearchParams, useRouter, usePathname } from "next/navigation";
 import classNames from "classnames";
 import { Activity, Loading, InstantIcon } from "../icons";
 import { DepositContent } from "./DepositContent";
@@ -14,7 +15,6 @@ import { useTransaction } from "../TransactionPool";
 import { ThirdpartyBridgesPill } from "../ThirdpartyBridgeModal";
 import { useWallets } from "@/app/hooks/useWallets";
 import { useThirdpartyBridgeModalContext } from "../ThirdpartyBridgeModal/ThirdpartyBridgeModalContext";
-import { useSearchParams } from "react-router-dom";
 
 export enum Tabs {
   Deposit = "deposit",
@@ -30,8 +30,10 @@ export interface DepositProps {
 }
 
 const Deposit: React.FC<DepositProps> = ({ amountEther, setAmountEther }) => {
+  const urlParams = useSearchParams();
+  const router = useRouter();
+  const pathname = usePathname();
   const [activeTab, setActiveTab] = useState<Tabs>(Tabs.Deposit);
-  const [urlParams] = useSearchParams();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const { pendingTransactions } = useTransaction();
   const { isThirdpartyBridgeModalOpen, setIsThirdpartyBridgeModalOpen } =
@@ -47,7 +49,7 @@ const Deposit: React.FC<DepositProps> = ({ amountEther, setAmountEther }) => {
   }, []);
 
   useEffect(() => {
-    urlParams.set("target", activeTab.toString());
+    router.push(pathname + `?target=${activeTab}`);
   }, [activeTab]);
 
   return (

@@ -17,7 +17,7 @@ export function Providers(props: {
     <RelayKitProvider chains={props.chains}>
       <QueryClientProvider client={queryClient}>
         <WalletFilterProvider>
-          <SidebarProvider>{props.children}</SidebarProvider>
+            <SidebarProvider>{props.children}</SidebarProvider>
         </WalletFilterProvider>
       </QueryClientProvider>
     </RelayKitProvider>
