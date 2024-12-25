@@ -64,7 +64,7 @@ interface NetworkProviderProps extends PropsWithChildren {
 export const NetworkProvider = ({ selectedOption, setSelectedOption, children }: NetworkProviderProps) => {
   const isMainnet = (selectedOption === Options.Mainnet);
   const bridgeProgram   = isMainnet ? "br1xwubggTiEZ6b7iNZUwfA3psygFfaXGfZ1heaN9AW" : "br1t2MBNdtVRZk3taADwNLt142cVNkekXe1hn3qJVYb"
-  const eclipseRpc      = isMainnet ? "https://mainnetbeta-archive-rpc.prod.eclipsenetwork.xyz/" : "https://testnet-archive-rpc.dev.eclipsenetwork.xyz/"
+  const eclipseRpc      = isMainnet ? "https://eclipse.lgns.net/" : "https://testnet-archive-rpc.dev.eclipsenetwork.xyz/"
   const contractAddress = isMainnet ? "0x2B08D7cF7EafF0f5f6623d9fB09b080726D4be11" : "0xe49aaa25a10fd6e15dd7ddcb50904ca1e91f6e01"
   const relayerAddress  = isMainnet ? "CrfbABN2sSvmoZLu9eDDfXpaC2nHg42R7AXbHs9eg4S9" : "ec1vCnQKsQSnTbcTyc3SH2azcDXZquiFB3QqtRvm3Px"
   const configAccount   = isMainnet ? "B6UA9rd6Qrx9chsrcMWPV3EFnSb1cbnf7AA2wdkhkpqw" : "A3jHKVwNvrvTjnUPGKYei9jbPn7NcraD6H94ewWyfVMY"

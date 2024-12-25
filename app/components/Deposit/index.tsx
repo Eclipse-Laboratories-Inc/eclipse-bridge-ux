@@ -1,9 +1,9 @@
 "use client";
 
 import "./styles.css";
-import React, { useContext } from 'react';
-import TapPopup from "./TapPopup"
-import './styles.css';
+import React, { useEffect } from "react";
+import TapPopup from "./TapPopup";
+import "./styles.css";
 import { useState } from "react";
 import classNames from "classnames";
 import { Activity, Loading, InstantIcon } from "../icons";
@@ -14,12 +14,12 @@ import { useTransaction } from "../TransactionPool";
 import { ThirdpartyBridgesPill } from "../ThirdpartyBridgeModal";
 import { useWallets } from "@/app/hooks/useWallets";
 import { useThirdpartyBridgeModalContext } from "../ThirdpartyBridgeModal/ThirdpartyBridgeModalContext";
-import { InstantTransactionDetails } from "@/app/components/Deposit/InstantTransactionDetails";
+import { useSearchParams } from "react-router-dom";
 
 export enum Tabs {
-  Deposit,
-  Relay,
-  Activity,
+  Deposit = "deposit",
+  Relay = "instant",
+  Activity = "activity",
 }
 
 export interface DepositProps {
@@ -31,19 +31,39 @@ export interface DepositProps {
 
 const Deposit: React.FC<DepositProps> = ({ amountEther, setAmountEther }) => {
   const [activeTab, setActiveTab] = useState<Tabs>(Tabs.Deposit);
+  const [urlParams] = useSearchParams();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const { pendingTransactions } = useTransaction();
-  const { isThirdpartyBridgeModalOpen, setIsThirdpartyBridgeModalOpen } = useThirdpartyBridgeModalContext(); 
+  const { isThirdpartyBridgeModalOpen, setIsThirdpartyBridgeModalOpen } =
+    useThirdpartyBridgeModalContext();
   const { evmWallet } = useWallets();
+
+  useEffect(() => {
+    const targetTab = urlParams.get("target");
+
+    if (Object.values(Tabs).includes(targetTab)) {
+      setActiveTab(targetTab);
+    }
+  }, []);
+
+  useEffect(() => {
+    urlParams.set("target", activeTab.toString());
+  }, [activeTab]);
 
   return (
     <>
-    <div className="deposit-container flex flex-col" style={{ transform: isThirdpartyBridgeModalOpen ? "scale(0.9)" : ""}}>
-      <div className="deposit-card" style={{
-          width: isModalOpen ? "0px" : "", 
-          paddingRight: activeTab === Tabs.Activity ? "8px" : "20px"
-      }}>
-        { !isModalOpen && <TapPopup /> }
+      <div
+        className="deposit-container flex flex-col"
+        style={{ transform: isThirdpartyBridgeModalOpen ? "scale(0.9)" : "" }}
+      >
+        <div
+          className="deposit-card"
+          style={{
+            width: isModalOpen ? "0px" : "",
+            paddingRight: activeTab === Tabs.Activity ? "8px" : "20px",
+          }}
+        >
+          {!isModalOpen && <TapPopup />}
 
           <div
             className="header-tabs"
@@ -68,17 +88,14 @@ const Deposit: React.FC<DepositProps> = ({ amountEther, setAmountEther }) => {
               onClick={() => {
                 setActiveTab(Tabs.Relay);
               }}
-            > 
+            >
               <InstantIcon className="" />
               Instant
             </div>
             {evmWallet && (
               <div
                 className={classNames(
-                  "header-tab w-[131px]",
-                  "flex",
-                  "items-center",
-                  "justify-center",
+                  "flex header-tab w-[131px] items-center justify-center",
                   activeTab === Tabs.Activity ? "active" : "inactive",
                 )}
                 onClick={() => {
