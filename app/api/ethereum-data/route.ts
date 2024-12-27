@@ -1,8 +1,9 @@
 import { NextResponse } from 'next/server';
 
-const CACHE_EXPIRATION_MS = 10000; // 10 seconds cache
+// Cache expiration time in milliseconds (10 seconds)
+const CACHE_EXPIRATION_MS = 10000;
 
-interface ICache  {
+interface ICache {
     blockNumber: number | null;
     gasPrice: number | null;
     ethPrice: number | null;
@@ -42,14 +43,32 @@ export async function GET() {
         console.log("Fetching new data from Etherscan");
 
         const [blockResponse, gasResponse, priceResponse] = await Promise.all([
-            fetch(`${etherscanAddress}?module=proxy&action=eth_blockNumber&apikey=${apiKey}`, {cache: "no-store"}),
-            fetch(`${etherscanAddress}?module=proxy&action=eth_gasPrice&apikey=${apiKey}`, {cache: "no-store"}),
-            fetch(`${etherscanAddress}?module=stats&action=ethprice&apikey=${apiKey}`, {cache: "no-store"})
+            fetch(`${etherscanAddress}?module=proxy&action=eth_blockNumber&apikey=${apiKey}`, { cache: "no-store" }),
+            fetch(`${etherscanAddress}?module=proxy&action=eth_gasPrice&apikey=${apiKey}`, { cache: "no-store" }),
+            fetch(`${etherscanAddress}?module=stats&action=ethprice&apikey=${apiKey}`, { cache: "no-store" })
         ]);
+
+        // Check response statuses
+        if (!blockResponse.ok || !gasResponse.ok || !priceResponse.ok) {
+            console.error('One or more API requests failed');
+            return NextResponse.json(
+                cache || { error: 'Failed to fetch Ethereum data' }, 
+                { status: 502 }
+            );
+        }
 
         const blockData = await blockResponse.json();
         const gasData = await gasResponse.json();
         const priceData = await priceResponse.json();
+
+        // Check for API response errors
+        if (blockData.error || gasData.error || priceData.error) {
+            console.error('API returned error:', { blockData, gasData, priceData });
+            return NextResponse.json(
+                cache || { error: 'Etherscan API returned error' }, 
+                { status: 502 }
+            );
+        }
 
         const newBlockNumber = parseInt(blockData.result, 16);
         const newGasPrice = Math.round((parseInt(gasData.result, 16) / 1e9) * 100) / 100; 
