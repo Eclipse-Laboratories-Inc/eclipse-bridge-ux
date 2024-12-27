@@ -230,3 +230,39 @@ footer {
     stroke-opacity: 1;
   }
 }
+
+.highlight-icon {
+  svg path{
+    stroke: white;
+  } 
+  path {
+    transition: stroke-opacity 0.1s var(--ease-out-quad);
+  }
+  path.make-filled {
+    fill: white;
+    fill-opacity: 1;
+  }
+  color: rgba(255, 255, 255, 1);
+  background: rgba(255, 255, 255, 0.05);
+  .side-icon-box {
+    background: rgba(255, 255, 255, 0.1); 
+  }
+}
+
+.i-icon {
+  svg path {
+    transition: stroke-opacity 0.1s var(--ease-out-quad); 
+  }
+}
+
+.i-icon:hover {
+  svg path {
+    stroke-opacity: 1;
+  }
+}
+
+.i-icon:active {
+  svg path {
+    stroke-opacity: 0.5;
+  }
+}
