@@ -15,9 +15,13 @@ interface ThirdpartyBridgeModalProviderProps {
 export const ThirdpartyBridgeModalProvider: React.FC<ThirdpartyBridgeModalProviderProps> = ({ children }) => {
   const [isThirdpartyBridgeModalOpen, setIsThirdpartyBridgeModalOpen] = useState<boolean>(false);
 
-  const toggleThirdpartyBridgeModal = () => {
-    setIsThirdpartyBridgeModalOpen((prev) => !prev);
-  };
+
+  const toggleThirdpartyBridgeModal = React.useCallback(() => {
+    setIsThirdpartyBridgeModalOpen((prev) => {
+      return !prev;
+    });
+  }, [setIsThirdpartyBridgeModalOpen]);
+
 
   return (
     <ThirdpartyBridgeModalContext.Provider
