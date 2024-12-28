@@ -167,7 +167,7 @@ export const GasStation: React.FC = () => {
       "confirmed",
     );
 
-    emitEvent(`Refuel of $${amount} Success`, TxStatus.Confirmed, 10);
+    emitEvent(`$${amount} refuel was successfull.`, TxStatus.Confirmed, 10);
     setTxId(signedTransaction.signature);
 
     console.log(signedTransaction.signature);
