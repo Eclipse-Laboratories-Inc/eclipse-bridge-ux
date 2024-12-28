@@ -134,7 +134,7 @@ export const GasStationNotification: React.FC<{
           )}
           target="_blank"
         >
-          View Transaction Details
+          View Txn
         </a>
       )}
     </Notification>
