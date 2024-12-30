@@ -1,12 +1,24 @@
-import { decodeAbiParameters } from 'viem'
-const solanaWeb3 = require('@solana/web3.js');
-import { PublicKey } from '@solana/web3.js';
+import type { Buffer } from 'buffer';
+import type { ProcessEnv } from 'process';
+
+import { decodeAbiParameters } from 'viem';
+import { Connection, PublicKey } from '@solana/web3.js';
 import * as anchor from '@project-serum/anchor';
 
+/**
+ * Extracts the least significant 64 bits from the bigint value
+ * @param value - Input value of bigint
+ * @returns Low 64 bits as bigint
+ */
 function low64(value: bigint): bigint {
     return value & BigInt("0xFFFFFFFFFFFFFFFF");
 }
 
+/**
+ * Generates a transaction object with details to display
+ * @param walletClient
+ * txHash @param - Transaction Hash
+ */
 export async function generateTxObjectForDetails(walletClient: any, txHash: string) {
   const receiptPromise = walletClient.request({
     method: 'eth_getTransactionReceipt',
@@ -41,31 +53,19 @@ export async function generateTxObjectForDetails(walletClient: any, txHash: stri
   };
 }
 
+/**
+ * Receives a PDA (Program Derived Address) based on the transaction hash
+ * @param walletClient
+ * @param transactionHash - Transaction Hash
+ * @returns Promise<PublicKey | null>
+ */
 export async function getNonce(walletClient: any, transactionHash: string): Promise<PublicKey | null> {
   try {
-    /*
-    const data = await walletClient.request({
-      method: "eth_getTransactionReceipt",
-      params: [transactionHash]
-    });
-    if (!data) return null;
-    if (!data.logs[0]) return null; 
-
-    const values = decodeAbiParameters([
-      { name: 'to', type: 'bytes' },
-      { name: 'toChainId', type: 'bytes' },
-      { name: 'message', type: 'bytes' },
-      { name: 'extraData', type: 'bytes' }
-    ], data.logs[0].data);
-
-    const ethDepositNonceBN = new anchor.BN(values[3].replace("0x", ""), 16);
-    */
-
-    const txHashLowU64 = low64(BigInt(transactionHash))
-    const ethDepositNonceBN = new anchor.BN(txHashLowU64, 10);
+    const txHashLowU64 = low64(BigInt(transactionHash));
+    const ethDepositNonceBN = new anchor.BN(txHashLowU64.toString(), 10);
     const programPublicKey = new PublicKey(process.env.NEXT_PUBLIC_BRIDGE_PROGRAM || '');
 
-    const [depositReceiptPda, _] = PublicKey.findProgramAddressSync(
+    const [depositReceiptPda] = PublicKey.findProgramAddressSync(
       [
         Buffer.from('deposit'),
         ethDepositNonceBN.toArrayLike(Buffer, 'le', 8)
@@ -76,47 +76,56 @@ export async function getNonce(walletClient: any, transactionHash: string): Prom
 
   } catch (error) {
     console.error("Error while getting nonce or deriving PDA:", error);
-    return null
+    return null;
   }
 }
 
-
-// fix
+/**
+ * Receives Eclipse transactions for the specified address
+ * @param address - Public address key
+ */
 export async function getEclipseTransaction(address: PublicKey | null) {
-  if (!address) {return null;} 
-  const connection = new solanaWeb3.Connection(
-    process.env.NEXT_PUBLIC_ECLIPSE_RPC,
+  if (!address) return null;
+  const connection = new Connection(
+    process.env.NEXT_PUBLIC_ECLIPSE_RPC || '',
     'confirmed'
   );
 
   const data = await connection.getSignaturesForAddress(address);
-  if (!data) return null
-  return data
-} 
+  return data;
+}
 
-
-// fix
-export async function checkDepositWithPDA(address: PublicKey | null ) {
-  if (!address) {return null;} 
-  const connection = new solanaWeb3.Connection(
-    process.env.NEXT_PUBLIC_ECLIPSE_RPC,
+/**
+ * Checks the deposit using PDA
+ * @param address - Public address key
+ */
+export async function checkDepositWithPDA(address: PublicKey | null) {
+  if (!address) return null;
+  const connection = new Connection(
+    process.env.NEXT_PUBLIC_ECLIPSE_RPC || '',
     'confirmed'
   );
 
   const data = await connection.getAccountInfo(address);
-  if (!data) return null
-  return data
+  return data;
 }
 
-
+/**
+ * Receives the latest deposits for the address
+ * @param address - Wallet address
+ */
 export async function getLastDeposits(address: string) {
   if (!address) return [];
-  const response = await fetch(`/api/get-transactions?address=${address}`)
+  const response = await fetch(`/api/get-transactions?address=${address}`);
   const deposits = await response.json();
-
   return deposits;
 }
 
+/**
+ * Formats the timestamp into a readable "time back" format
+ * @param timestamp - Timestamp in seconds
+ * @returns Formatted string
+ */
 export const timeAgo = (timestamp: number): string => {
   const now = Date.now(); 
   const secondsPast = Math.floor((now - timestamp * 1000) / 1000); 
