@@ -8,6 +8,7 @@ import { useState } from "react";
 import { useSearchParams, useRouter, usePathname } from "next/navigation";
 import classNames from "classnames";
 import { Activity, Loading, InstantIcon } from "../icons";
+import "./styles.css";
 import { DepositContent } from "./DepositContent";
 import { ActivityContent } from "./ActivityContent";
 import { RelaySwapWidget } from "@/app/components/Deposit/RelaySwapWidget";
@@ -28,7 +29,6 @@ export interface DepositProps {
     React.SetStateAction<number | undefined | string>
   >;
 }
-
 const Deposit: React.FC<DepositProps> = ({ amountEther, setAmountEther }) => {
   const urlParams = useSearchParams();
   const router = useRouter();

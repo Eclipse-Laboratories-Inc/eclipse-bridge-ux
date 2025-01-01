@@ -35,7 +35,7 @@ function roundUpToFiveDecimals(value: number): number {
 // NB: rounds up to 5 decimals
 function calculateMaxTxFeeEther(
   gasPriceWei: bigint,
-  maxPriorityFeePerGasWei: bigint
+  maxPriorityFeePerGasWei: bigint,
 ): number {
   const maxFeeWei: bigint =
     gasPriceWei * BigInt(DEPOSIT_TX_GAS_LIMIT) +
@@ -113,7 +113,7 @@ export const NetworkBox: React.FC<NetworkBoxProps> = ({
       ? WITHDRAW_TX_FEE
       : calculateMaxTxFeeEther(
           gasPriceWei ?? BigInt(0),
-          maxPriorityFeePerGasWei ?? BigInt(0)
+          maxPriorityFeePerGasWei ?? BigInt(0),
         );
   // remove bottom border for ethereum box
   const css =
@@ -124,7 +124,7 @@ export const NetworkBox: React.FC<NetworkBoxProps> = ({
       className="network-box flex flex-col"
       onClick={() => inputRef.current?.focus()}
     >
-      <div className={`network-info flex items-center justify-center ${css}`}>
+      <div className={`network-info flex items-center ${css}`}>
         <div className="network-info-left-section flex items-center justify-center">
           <img
             src={imageSrc}
@@ -151,7 +151,7 @@ export const NetworkBox: React.FC<NetworkBoxProps> = ({
                 <span className="addr">
                   {truncateWalletAddress(
                     userWallets.find((w) => w.chain == walletChain)?.address ||
-                      ""
+                      "",
                   )}
                 </span>
                 <Cross crossClassName="deposit-cross" />
@@ -283,7 +283,7 @@ export const NetworkBox: React.FC<NetworkBoxProps> = ({
                   disabled={balanceEther <= maxTxFeeEther}
                   onClick={() => {
                     setAmountEther(
-                      roundUpToFiveDecimals(balanceEther - maxTxFeeEther)
+                      roundUpToFiveDecimals(balanceEther - maxTxFeeEther),
                     );
                     setTimeout(adjustInputWidth, 0);
                   }}

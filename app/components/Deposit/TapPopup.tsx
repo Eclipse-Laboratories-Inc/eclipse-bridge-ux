@@ -1,20 +1,12 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import Link from "next/link";
 import { Cross, ArrowUpRight } from "../icons";
 
 const TapPopup: React.FC = () => {
-  const [isTapPopupVisible, setIsTapPopupVisible] = useState<boolean>(false);
-
-  useEffect(() => {
-    const popupClosed = localStorage.getItem("tapPopup");
-    if (popupClosed === null) {
-      setIsTapPopupVisible(true);
-    }
-  }, []);
+  const [isTapPopupVisible, setIsTapPopupVisible] = useState<boolean>(true);
 
   const closePopup = () => {
     setIsTapPopupVisible(false);
-    localStorage.setItem("tapPopup", "true");
   };
 
   return (
@@ -40,7 +32,7 @@ const TapPopup: React.FC = () => {
                 }}>
                 More Tapping
               </span>
-              <Link href="https://tap.eclipse.xyz">
+              <Link href="https://tap.eclipse.xyz" target="_blank">
                 <div className="group flex flex-row gap-[8px] items-center">
                   <span
                     className="text-[14px] font-medium text-left text-[#303283] group-hover:text-[#007D00]"

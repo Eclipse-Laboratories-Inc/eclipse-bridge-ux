@@ -2,12 +2,9 @@
 import "@/app/globals.css";
 import {
   DynamicContextProvider,
-  EthereumWalletConnectors,
   SolanaWalletConnectors,
 } from "@/lib/dynamic";
 import { IBM_Plex_Sans } from "next/font/google";
-import { mergeNetworks } from "@dynamic-labs/sdk-react-core";
-import { ETHERSCAN_TESTNET_URL } from "../components/constants";
 import { GasProviders } from "@/app/providers/GasProviders";
 
 const ibmPlexSans = IBM_Plex_Sans({
@@ -88,24 +85,6 @@ const cssOverrides = `
   }
 `;
 
-// sepolia
-const evmNetworks = [
-  {
-    blockExplorerUrls: [ETHERSCAN_TESTNET_URL],
-    chainId: 11155111,
-    chainName: "Ethereum Sepolia",
-    iconUrls: ["https://app.dynamic.xyz/assets/networks/eth.svg"],
-    name: "Ethereum",
-    nativeCurrency: {
-      decimals: 18,
-      name: "Ether",
-      symbol: "ETH",
-    },
-    networkId: 11155111,
-    rpcUrls: ["https://sepolia.drpc.org"],
-    vanityName: "Sepolia",
-  },
-];
 const eclipseWallets = ["backpacksol", "nightlysol"];
 
 export default function ClientLayout({
@@ -123,41 +102,25 @@ export default function ClientLayout({
       <DynamicContextProvider
         settings={{
           events: {
-            onWalletRemoved: (args) => {
-              if (args.wallet.chain === "EVM") {
-                //@ts-ignore
-                const client: any = args.wallet.connector.getWalletClient();
-                client.request({
-                  method: "wallet_revokePermissions",
-                  params: [{ eth_accounts: {} }],
-                });
-              }
-            },
             onAuthFlowOpen: () => {
               const depositBox = document.getElementsByClassName(
-                "deposit-container"
+                "deposit-container",
               )[0] as HTMLElement;
               depositBox.style.transform = "scale(0.9)";
 
-              // const submitButton = document.getElementsByClassName("submit-button")[0] as HTMLElement;
-              // if (submitButton) submitButton.className += " disabled";
-
               const mainContent = document.getElementById(
-                "main-content"
+                "main-content",
               ) as HTMLElement;
               mainContent.style.filter = "blur(3px)";
             },
             onAuthFlowClose: () => {
               const depositBox = document.getElementsByClassName(
-                "deposit-container"
+                "deposit-container",
               )[0] as HTMLElement;
               depositBox.style.transform = "";
 
-              // const submitButton = document.getElementsByClassName("submit-button")[0] as HTMLElement;
-              // if (submitButton) submitButton.className = submitButton.className.replace("disabled", "");
-
               const mainContent = document.getElementById(
-                "main-content"
+                "main-content",
               ) as HTMLElement;
               mainContent.style.filter = "";
             },
@@ -172,13 +135,9 @@ export default function ClientLayout({
             },
           },
           walletsFilter: (wallets) =>
-            wallets.filter(
-              (w) =>
-                w.walletConnector.supportedChains.includes("EVM") ||
-                eclipseWallets.includes(w.key)
-            ),
+            wallets.filter((w) => eclipseWallets.includes(w.key)),
           environmentId: process.env.NEXT_PUBLIC_ENVIRONMENT_ID || "",
-          walletConnectors: [EthereumWalletConnectors, SolanaWalletConnectors],
+          walletConnectors: [SolanaWalletConnectors],
           mobileExperience: "redirect",
           recommendedWallets: [
             { walletKey: "backpacksol", label: "Recommended" },
@@ -188,7 +147,6 @@ export default function ClientLayout({
           privacyPolicyUrl: "https://www.eclipse.xyz/privacy-policy",
           termsOfServiceUrl: "https://www.eclipse.xyz/terms",
           overrides: {
-            evmNetworks: (networks) => mergeNetworks(evmNetworks, networks),
             chainDisplayValues: {
               solana: {
                 displayName: "Eclipse",
@@ -196,11 +154,6 @@ export default function ClientLayout({
             },
           },
           cssOverrides,
-          bridgeChains: [
-            {
-              chain: "SOL",
-            },
-          ],
         }}
       >
         <GasProviders>
