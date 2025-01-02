@@ -4,8 +4,8 @@ import {
   DynamicContextProvider,
   SolanaWalletConnectors,
 } from "@/lib/dynamic";
-import { Providers } from "@/app/providers";
 import { IBM_Plex_Sans } from "next/font/google";
+import { GasProviders } from "@/app/providers/GasProviders";
 
 const ibmPlexSans = IBM_Plex_Sans({
   subsets: ["latin"],
@@ -156,9 +156,9 @@ export default function ClientLayout({
           cssOverrides,
         }}
       >
-        <Providers>
+        <GasProviders>
           <body className={ibmPlexSans.className}>{children}</body>
-        </Providers>
+        </GasProviders>
       </DynamicContextProvider>
     </html>
   );

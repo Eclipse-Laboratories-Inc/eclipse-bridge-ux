@@ -1,13 +1,17 @@
-"use client"
+'use client';
 import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
-import { getLastDeposits, getNonce, getEclipseTransaction, checkDepositWithPDA } from "@/lib/activityUtils"
+
+import { getLastDeposits, getNonce, getEclipseTransaction, checkDepositWithPDA } from "@/lib/activityUtils";
 import { useNetwork } from "@/app/contexts/NetworkContext"; 
-import { createPublicClient, PublicClient, http } from 'viem'
-import { mainnet, sepolia } from "viem/chains";
-import { Transaction, defaultTransaction, TransactionContextType, WithdrawActivity } from "./types"
 import { useWallets } from '@/app/hooks/useWallets';
-import { getWithdrawalsByAddress, WithdrawObject, getWithdrawalPda} from "@/lib/withdrawUtils"
+import { getWithdrawalsByAddress, WithdrawObject, getWithdrawalPda } from "@/lib/withdrawUtils";
 import { Options } from '@/lib/networkUtils';
+
+import { createPublicClient, PublicClient, http } from 'viem';
+import { mainnet, sepolia } from "viem/chains";
+import { useRequests, queryRequests } from "@reservoir0x/relay-kit-hooks";
+
+import { Transaction, defaultTransaction, TransactionContextType, WithdrawActivity } from "./types";
 
 export const TransactionContext = createContext<TransactionContextType | undefined>(undefined);
 
@@ -19,11 +23,14 @@ export const TransactionProvider = ({ children } : { children: ReactNode}) => {
   const [pendingTransactions, setPendingTransactions] = useState<Transaction[]>([]);
   const [lastAddress, setLastAddress] = useState<string>(''); 
   const [viemClient, setClient] = useState<PublicClient | null>(null)
-  const { selectedOption, contractAddress, bridgeProgram, eclipseRpc, withdrawApi } = useNetwork();
+  const { selectedOption, bridgeProgram, eclipseRpc, withdrawApi } = useNetwork();
 
   const { evmWallet } = useWallets();
   const fetchDeposits = async () => {
+    const relayTransactions = await queryRequests(undefined, { user: evmWallet?.address });
+    console.log(relayTransactions, "relaytransactions")
     try {
+      const delay = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
       setDeposits([]);
       setWithdrawals([]);
       // fix
@@ -38,18 +45,18 @@ export const TransactionProvider = ({ children } : { children: ReactNode}) => {
       try {
         const withdrawalsData = await getWithdrawalsByAddress(evmWallet?.address || '', withdrawApi); 
         setWithdrawals(withdrawalsData)
-        withdrawalsData.forEach((item) => {
+        withdrawalsData.forEach(async (item, index) => {
+          await delay(index * 300);
           addNewWithdrawal(item)
         });
       } catch (error) {
         console.log("failed to fetch withdrawals", error)
       }
       
-     const delay = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
   
      const processTransactions = async (data: any[]) => {
        data.forEach(async (tx, index) => {
-         await delay(index * 30);
+         await delay(index * 300);
          addTransactionListener(tx.hash, tx.txreceipt_status);
       });
       };

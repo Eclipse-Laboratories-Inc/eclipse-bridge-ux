@@ -5,11 +5,11 @@ import { DynamicConnectButton } from "@dynamic-labs/sdk-react-core";
 import { Transaction, Connection } from "@solana/web3.js";
 import { SelectToken } from "./SelectToken";
 import { GasStationNotification, TxStatus } from "./Notification";
-import { BridgeRedirectionComponent } from "./BridgeRedirectionComponent";
 import { useWallets } from "@/app/hooks/useWallets";
-import { useAboutGasStationModal } from "@/app/hooks/useAboutGasStationModal";
 import { createOctaneSwapTransaction } from "@/lib/octaneUtils";
-import { ISolana } from "@dynamic-labs/solana";
+import { SolanaWalletConnector } from "@dynamic-labs/solana";
+import { BridgeRedirectionComponent } from "./BridgeRedirectionComponent";
+import { useAboutGasStationModal } from "@/app/hooks/useAboutGasStationModal";
 const bs58 = require("bs58");
 
 /*
@@ -32,7 +32,6 @@ export const GasStation: React.FC = () => {
   const [txId, setTxId] = useState("");
   const [txStatus, setTxStatus] = useState<TxStatus>(TxStatus.None);
   const { solWallet } = useWallets();
-
   function userHaveEnoughFunds(): boolean {
     return !(
       BigInt(Number(amount ?? "0") * 10 ** selectedToken.decimals) /
@@ -140,7 +139,9 @@ export const GasStation: React.FC = () => {
     const tx = Transaction.from(bs58.decode(octaneData.transaction));
     console.log(tx);
 
-    const cli = await solWallet?.connector.getSigner<ISolana>();
+    const cli = await (
+      solWallet?.connector as SolanaWalletConnector
+    ).getSigner();
 
     if (!cli) {
       return 1;
@@ -333,7 +334,6 @@ export const GasStation: React.FC = () => {
             <span className="text-[#ffffff99] font-medium text-[14px]">
               You Receive
             </span>
-
             {amount && parseFloat(amount) > 0 ? (
               <span className="text-[#A1FEA0] font-medium text-[14px]">
                 ${amount}
