@@ -3,9 +3,11 @@ import "@/app/globals.css";
 import {
   DynamicContextProvider,
   SolanaWalletConnectors,
-} from "@/lib/dynamic";
+} from "@dynamic-labs/sdk-react-core";
 import { IBM_Plex_Sans } from "next/font/google";
 import { GasProviders } from "@/app/providers/GasProviders";
+import React from 'react';
+import type { WalletConnectorEvents } from "@dynamic-labs/sdk-react-core";
 
 const ibmPlexSans = IBM_Plex_Sans({
   subsets: ["latin"],
@@ -124,7 +126,7 @@ export default function ClientLayout({
               ) as HTMLElement;
               mainContent.style.filter = "";
             },
-            onWalletAdded: (args) => {
+            onWalletAdded: (args: WalletConnectorEvents['onWalletAdded']) => {
               if (args.wallet.key === "backpacksol") {
                 //@ts-ignore
                 window.backpack.connect({
@@ -134,8 +136,8 @@ export default function ClientLayout({
               }
             },
           },
-          walletsFilter: (wallets) =>
-            wallets.filter((w) => eclipseWallets.includes(w.key)),
+          walletsFilter: (wallets: any[]) =>
+            wallets.filter((w: { key: string }) => eclipseWallets.includes(w.key)),
           environmentId: process.env.NEXT_PUBLIC_ENVIRONMENT_ID || "",
           walletConnectors: [SolanaWalletConnectors],
           mobileExperience: "redirect",
