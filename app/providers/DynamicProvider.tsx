@@ -14,6 +14,7 @@ import { RelayChain } from "@reservoir0x/relay-sdk";
 import { ReactNode, useEffect, useState } from "react";
 
 const eclipseWallets = ["backpacksol", "nightlysol"];
+
 const evmNetworks = [
   {
     blockExplorerUrls: [ETHERSCAN_TESTNET_URL],
