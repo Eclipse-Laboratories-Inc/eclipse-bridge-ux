@@ -161,6 +161,14 @@ export const DynamicProvider = (props: {
             mainContent.style.filter = "";
             setWalletFilter(undefined);
           },
+          walletsFilter: walletFilter
+            ? FilterChain(walletFilter)
+            : (wallets) =>
+              wallets.filter(
+                (w) =>
+                  w.walletConnector.supportedChains.includes("EVM") ||
+                  eclipseWallets.includes(w.key),
+          ),
           onWalletAdded: (args) => {
             if (args.wallet.key === "backpacksol") {
               //@ts-ignore
