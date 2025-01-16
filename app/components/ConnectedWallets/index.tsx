@@ -48,7 +48,7 @@ const useWalletData = () => {
         const formattedEtherBalance = parseFloat(balanceAsEther.slice(0, balanceAsEther.indexOf('.') + 5));
         setBalanceEther(formattedEtherBalance);
       }
-      if (wallet.chain === "SOL") {
+      if (wallet.chain === "ECLIPSE") {
         const balance = await getWalletBalance(wallet.address, eclipseRpc);
         setBalanceEclipse(balance);
       }
@@ -154,4 +154,4 @@ const ConnectedWallets = forwardRef<HTMLDivElement, ConnectedWalletsProps>(({ cl
 });
 
 ConnectedWallets.displayName = "ConnectedWallets";
-export default ConnectedWallets;
+export default ConnectedWallets

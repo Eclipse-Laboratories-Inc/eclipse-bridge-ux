@@ -16,7 +16,7 @@ const theme: RelayKitTheme = {
   buttons: {
     disabled: {
       color: "#5a5a5a",
-      background: "#0e0e0e"
+      background: "#0e0e0e",
     },
     primary: {
       color: "#000",
@@ -69,7 +69,7 @@ export const RelayKitProvider = (props: {
         duneApiKey: process.env.NEXT_PUBLIC_DUNE_API_KEY,
         source: "bridge.eclipse.xyz",
         vmConnectorKeyOverrides: {
-          9286185: ["backpacksol", "nightlysol"],
+          9286185: ["backpackeclipse", "nightlyeclipse"],
         },
       }}
       theme={theme}

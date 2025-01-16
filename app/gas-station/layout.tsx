@@ -2,8 +2,8 @@
 import "@/app/globals.css";
 import {
   DynamicContextProvider,
-  SolanaWalletConnectors,
 } from "@/lib/dynamic";
+import { EclipseWalletConnectors } from "@dynamic-labs/eclipse";
 import { IBM_Plex_Sans } from "next/font/google";
 import { GasProviders } from "@/app/providers/GasProviders";
 
@@ -125,7 +125,7 @@ export default function ClientLayout({
               mainContent.style.filter = "";
             },
             onWalletAdded: (args) => {
-              if (args.wallet.key === "backpacksol") {
+              if (args.wallet.key.includes("backpack")) {
                 //@ts-ignore
                 window.backpack.connect({
                   //@ts-ignore
@@ -134,13 +134,11 @@ export default function ClientLayout({
               }
             },
           },
-          walletsFilter: (wallets) =>
-            wallets.filter((w) => eclipseWallets.includes(w.key)),
           environmentId: process.env.NEXT_PUBLIC_ENVIRONMENT_ID || "",
-          walletConnectors: [SolanaWalletConnectors],
+          walletConnectors: [EclipseWalletConnectors],
           mobileExperience: "redirect",
           recommendedWallets: [
-            { walletKey: "backpacksol", label: "Recommended" },
+            { walletKey: "backpackeclipse", label: "Recommended" },
           ],
           initialAuthenticationMode: "connect-only",
           displaySiweStatement: true,
