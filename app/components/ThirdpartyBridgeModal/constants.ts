@@ -8,5 +8,7 @@ export const thirdpartyBridges: ThirdpartyBridge[] = [
   { name: "Gas.zip", address: "gas.zip", iconAddr: "/thirdparty-bridges/gaszip.png" },
   { name: "Mini Bridge", address: "minibridge.chaineye.tools/?dst=eclipse&mode=swap", iconAddr: "/thirdparty-bridges/minibridge.png" },
   { name: "Stride", address: "bridge.stride.zone", iconAddr: "/thirdparty-bridges/stride.png" },
+  { name: "Alldomains Bridge", address: "bridge.alldomains.id", iconAddr: "/thirdparty-bridges/alldomains.png" },
+  { name: "Retro Bridge", address: "app.retrobridge.io/?tokenFrom=ETH&destination=Eclipse", iconAddr: "/thirdparty-bridges/retrobridge.png" },
 ] 
 
