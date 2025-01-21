@@ -11,5 +11,10 @@
       "destination": "https://app.eclipse.xyz/bridge",
       "permanent": true
     }
-  ]
+  ],
+  "git": {
+    "deploymentEnabled": {
+      "main": false
+    }
+  }
 }
