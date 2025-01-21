@@ -13,24 +13,31 @@ const TapPopup: React.FC = () => {
     <>
       {isTapPopupVisible && (
         <>
-          <div className="lrt-box flex flex-row justify-between items-center !bg-[#A6D3FA] mb-[20px]" style={{
-            background: 'url("/clouds.png")',
-            backgroundSize: '585px',
-            backgroundPosition: 'calc(100% + 53px) calc(100% + 269px)',
-            border: '1px solid rgba(161, 254, 160, 0.10)'
-          }}>
+          <div
+            className="lrt-box flex flex-row justify-between items-center !bg-[#A6D3FA] mb-[20px]"
+            style={{
+              background: 'url("/clouds.png")',
+              backgroundSize: "585px",
+              backgroundPosition: "calc(100% + 53px) calc(100% + 269px)",
+              border: "1px solid rgba(161, 254, 160, 0.10)",
+            }}
+          >
             <div className="flex flex-col justify-between h-full">
               <span
-                className="text-[28px] text-stroke text-[#F4DE5C] font-semibold w-[247px] h-[52px] text-left line-[26px] leading-[26px]" style={{
-                  fontFamily: '"Mikado"'
-                }}>
-                More Yapping,
+                className="text-[28px] text-stroke text-[#F4DE5C] font-semibold w-[247px] h-[52px] text-left line-[26px] leading-[26px]"
+                style={{
+                  fontFamily: '"Mikado"',
+                }}
+              >
+                Bridge Now To
               </span>
               <span
-                className="text-[28px] text-stroke text-[#F4DE5C] font-semibold mt-[-10px] w-[247px] h-[52px] text-left line-[26px] leading-[26px]" style={{
-                  fontFamily: '"Mikado"'
-                }}>
-                More Tapping
+                className="text-[28px] text-stroke text-[#F4DE5C] font-semibold mt-[-10px] w-[247px] h-[52px] text-left line-[26px] leading-[26px]"
+                style={{
+                  fontFamily: '"Mikado"',
+                }}
+              >
+                Grow Grass
               </span>
               <Link href="https://tap.eclipse.xyz" target="_blank">
                 <div className="group flex flex-row gap-[8px] items-center">
@@ -40,9 +47,9 @@ const TapPopup: React.FC = () => {
                       transition: "color 0.2s var(--ease-in-quad)",
                     }}
                   >
-                    Earn Grass Now
+                    Start Tapping
                   </span>
-                  <ArrowUpRight className="stroke-[#303283] group-hover:stroke-[#007D00]"/>
+                  <ArrowUpRight className="stroke-[#303283] group-hover:stroke-[#007D00]" />
                 </div>
               </Link>
             </div>
