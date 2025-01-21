@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import Link from "next/link";
-import { Cross, ArrowUpRight } from "../icons";
+import { Cross, ArrowUpRight, GrassIcon } from "../icons";
 
 const TapPopup: React.FC = () => {
   const [isTapPopupVisible, setIsTapPopupVisible] = useState<boolean>(true);
@@ -37,7 +37,7 @@ const TapPopup: React.FC = () => {
                   fontFamily: '"Mikado"',
                 }}
               >
-                Grow Grass
+                Grow Grass <GrassIcon className="" />
               </span>
               <Link href="https://tap.eclipse.xyz" target="_blank">
                 <div className="group flex flex-row gap-[8px] items-center">

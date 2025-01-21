@@ -27,3 +27,4 @@ export { default as WarningIcon } from "./warning-icon";
 export { default as InstantIcon } from "./instant-icon";
 export { default as ArrowUpRight } from "./arrow-up-right";
 export { default as CircleInfo } from "./circle-info";
+export { default as GrassIcon } from "./grass";
