@@ -37,7 +37,7 @@ const TapPopup: React.FC = () => {
                   fontFamily: '"Mikado"',
                 }}
               >
-                Grow Grass <GrassIcon className="" />
+                Grow Grass <img src="/grass.png" />
               </span>
               <Link href="https://tap.eclipse.xyz" target="_blank">
                 <div className="group flex flex-row gap-[8px] items-center">
