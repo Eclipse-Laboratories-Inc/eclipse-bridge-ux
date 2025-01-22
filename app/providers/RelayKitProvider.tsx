@@ -69,7 +69,7 @@ export const RelayKitProvider = (props: {
         duneApiKey: process.env.NEXT_PUBLIC_DUNE_API_KEY,
         source: "bridge.eclipse.xyz",
         vmConnectorKeyOverrides: {
-          9286185: ["backpackeclipse", "nightlyeclipse"],
+          9286185: ["backpackeclipse", "nightlyeclipse", "okxeclipse"],
         },
       }}
       theme={theme}
