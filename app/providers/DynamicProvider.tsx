@@ -162,7 +162,7 @@ export const DynamicProvider = (props: {
             setWalletFilter(undefined);
           },
           onWalletAdded: (args) => {
-            if (args.wallet.key === "backpacksol") {
+            if (args.wallet.key.includes("backpack")) {
               //@ts-ignore
               window.backpack.connect({
                 //@ts-ignore
@@ -171,18 +171,9 @@ export const DynamicProvider = (props: {
             }
           },
         },
-        walletsFilter: walletFilter
-          ? FilterChain(walletFilter)
-          : (wallets) =>
-              wallets.filter(
-                (w) =>
-                  w.walletConnector.supportedChains.includes("EVM") ||
-                  eclipseWallets.includes(w.key),
-              ),
         environmentId: process.env.NEXT_PUBLIC_ENVIRONMENT_ID || "",
         walletConnectors: [
           EthereumWalletConnectors,
-          SolanaWalletConnectors,
           EclipseWalletConnectors,
           BitcoinWalletConnectors,
         ],
@@ -212,9 +203,9 @@ export const DynamicProvider = (props: {
         },
         cssOverrides,
         bridgeChains: [
-          ...((isMobile ? [] : [{ chain: "EVM" }, { chain: "SOL" }]) as [
+          ...((isMobile ? [] : [{ chain: "EVM" }, { chain: "ECLIPSE" }]) as [
             { chain: "EVM" },
-            { chain: "SOL" },
+            { chain: "ECLIPSE" },
           ]),
         ],
       }}
