@@ -8,7 +8,7 @@ const WAD = {
  *
  * @param depositAmount - The amount to be deposited, represented as a bigint.
  * @param rate - The rate at which the deposit amount is converted, represented as a bigint.
- * @param mintSlippage - The slippage percentage to account for, represented as a number. Default is 0.5%.
+ * @param mintSlippage - The slippage percentage to account for, is represented as a number. Default is 0.5%.
  * @returns The minimum mint amount after slippage, represented as a bigint.
  */
 export function calculateMinimumMint(
