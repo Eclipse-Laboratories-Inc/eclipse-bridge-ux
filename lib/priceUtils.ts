@@ -17,7 +17,7 @@ function findCorrectPool(mintA: PublicKey, mintB: PublicKey): PublicKey {
 
 
 export async function fetchTokenPrice() {
-  const response = await fetch("https://pools-api-eclipse.mainnet.orca.so/prices?amount=100000000");
+  const response = await fetch("https://pools-api-eclipse.mainnet.orca.so/prices");
 
   if (!response.ok) {
     throw new Error("Failed to fetch prices.");
