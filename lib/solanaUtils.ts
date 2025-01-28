@@ -4,7 +4,7 @@ import { createAssociatedTokenAccount, getAccount, getAssociatedTokenAddress, To
 import { toHex } from 'viem';
 import { toTokenAmount } from '@orca-so/whirlpools-sdk';
 
-export async function getWalletBalance(publicKey: String, eclipseRpc: string) {
+export async function getWalletBalance(publicKey: string, eclipseRpc: string) {
   // Connect to the Solana mainnet
   const connection = new solanaWeb3.Connection(
     eclipseRpc,
