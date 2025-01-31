@@ -17,7 +17,7 @@
     "@dynamic-labs/ethereum-core": "4.3.0",
     "@dynamic-labs/ethers-v5": "3.0.0-alpha.48",
     "@dynamic-labs/sdk-react-core": "4.3.0",
-    "@dynamic-labs/solana": "4.3.0",
+    "@dynamic-labs/solana": "4.4.3",
     "@dynamic-labs/utils": "4.3.0",
     "@dynamic-labs/wagmi-connector": "4.3.0",
     "@dynamic-labs/wallet-book": "4.3.0",
