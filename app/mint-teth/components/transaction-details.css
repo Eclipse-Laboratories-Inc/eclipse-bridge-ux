@@ -74,7 +74,7 @@
   font-size: 16px;
   font-weight: 500;
   border-radius: 30px;
-  padding: 6px 12px 6px 6px;
+  padding: 6px 12px 6px 12px;
   svg {
     width: 24px;
   }
@@ -170,4 +170,9 @@ a:hover {
   .gray-text {
     font-size: 14px !important;
   }
+}
+
+.cancelled-item {
+  color: #ffa500;
+  background: rgba(255, 165, 0, 0.05);
 }

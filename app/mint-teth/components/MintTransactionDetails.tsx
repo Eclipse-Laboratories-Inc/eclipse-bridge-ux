@@ -4,14 +4,8 @@ import Image from "next/image";
 import { useContext } from "react";
 import { Arrow, Cross, TransactionIcon } from "../../components/icons";
 import "./transaction-details.css";
-import { tokenOptions } from "../constants/tokens";
-
-export enum StepStatus {
-  NOT_STARTED = "not-started",
-  LOADING = "loading",
-  COMPLETED = "completed",
-  FAILED = "failed",
-}
+import { tethEvmTokenAddress, tokenOptions } from "../constants/tokens";
+import { StepStatus } from "../types";
 
 export interface Step {
   title: string;
@@ -27,14 +21,8 @@ interface TransactionDetailsProps {
   depositAmountAsBigInt: bigint;
   depositAssetLabel: string | undefined;
   depositAssetIcon: string | undefined;
+  action: "Mint" | "Redeem";
 }
-
-const calculateFee = (gPrice: string, gUsed: string) => {
-  const gasPriceBN = ethers.BigNumber.from(gPrice);
-  const gasUsedBN = ethers.BigNumber.from(gUsed);
-  const gasFee = gasPriceBN.mul(gasUsedBN);
-  return ethers.utils.formatEther(gasFee);
-};
 
 export const MintTransactionDetails: React.FC<TransactionDetailsProps> = ({
   fromDeposit,
@@ -44,17 +32,18 @@ export const MintTransactionDetails: React.FC<TransactionDetailsProps> = ({
   depositAmountAsBigInt,
   depositAssetLabel,
   depositAssetIcon,
+  action,
 }) => {
   const [_, ethPrice] = useContext(EthereumDataContext) ?? [0, 0];
 
   const depositAmount = Number(ethers.utils.formatEther(depositAmountAsBigInt));
-  const totalFee = tx && calculateFee(tx.gasPrice, tx.gasUsed);
+  const isExpired = tx ? Number(tx.deadline) < Math.floor(Date.now() / 1000) && tx.status === "pending" : false;
 
   return (
     <div className="transaction-details-modal flex flex-col items-center">
       <div className="transaction-details-header flex flex-row items-center justify-between">
         <div></div>
-        <span>Deposit</span>
+        <span>{action}</span>
         <div onClick={closeModal}>
           <Cross crossClassName="modal-cross" />
         </div>
@@ -108,12 +97,25 @@ export const MintTransactionDetails: React.FC<TransactionDetailsProps> = ({
             </div>
             {step.status !== StepStatus.NOT_STARTED && (
               <div className={`flex flex-row items-center gap-1 ${step.status}-item status-item`}>
-                <TransactionIcon iconType={step.status} className="tx-done-icon" />
+                {!isExpired && (
+                  <TransactionIcon
+                    iconType={step.status === StepStatus.AWAITING_SIGNATURE ? StepStatus.LOADING : step.status}
+                    className="tx-done-icon"
+                  />
+                )}
                 <span>
-                  {step.status === StepStatus.COMPLETED
+                  {isExpired
+                    ? "Expired"
+                    : step.status === StepStatus.COMPLETED
                     ? "Done"
                     : step.status === StepStatus.FAILED
                     ? "Failed"
+                    : step.status === StepStatus.AWAITING_SIGNATURE
+                    ? "Awaiting signature"
+                    : step.status === StepStatus.LOADING
+                    ? "Processing"
+                    : step.status === StepStatus.CANCELLED
+                    ? "Cancelled"
                     : "Processing"}
                 </span>
               </div>
@@ -122,54 +124,42 @@ export const MintTransactionDetails: React.FC<TransactionDetailsProps> = ({
         ))}
       </div>
 
-      {tx && (
-        <div className="flex w-full flex-col" style={{ marginTop: "30px", gap: "12px", padding: "0 10px" }}>
-          <div className="flex flex-row justify-between items-center">
-            <span className="info-name">Deposit Amount</span>
-            <div className="flex flex-row gap-2">
-              <span className="gray-text">${ethPrice && (depositAmount * ethPrice).toFixed(2)}</span>
-              <span className="green-text">
-                {depositAmount < 0.001 ? "< 0.001" : depositAmount.toFixed(3)} {depositAssetLabel}
-              </span>
-            </div>
-          </div>
-
-          <div className="flex flex-row justify-between items-center">
-            <span className="info-name">Transaction Fee</span>
-            <div className="flex flex-row gap-2">
-              <span className="gray-text">${ethPrice && (Number(totalFee) * ethPrice).toFixed(3)}</span>
-              <span className="green-text">{Number(totalFee).toFixed(4)} ETH</span>
-            </div>
-          </div>
-
-          <div className="flex flex-row justify-between items-center">
-            <span className="info-name">Asset</span>
-            <div className="flex flex-row gap-2 items-center">
-              {depositAssetIcon && (
-                <Image
-                  src={depositAssetIcon}
-                  alt="Token Icon"
-                  width={16}
-                  height={16}
-                  style={{
-                    objectFit: "cover",
-                  }}
-                />
-              )}
-              <span className="green-text">{depositAssetLabel}</span>
-            </div>
+      <div className="flex w-full flex-col" style={{ marginTop: "30px", gap: "12px", padding: "0 10px" }}>
+        <div className="flex flex-row justify-between items-center">
+          <span className="info-name">{action} Amount</span>
+          <div className="flex flex-row gap-2">
+            <span className="gray-text">{ethPrice && (depositAmount * ethPrice).toFixed(2)}</span>
+            <span className="green-text">
+              {depositAmount < 0.001 ? "< 0.001" : depositAmount.toFixed(3)} {depositAssetLabel}
+            </span>
           </div>
         </div>
-      )}
 
-      {tx && fromDeposit && (
+        <div className="flex flex-row justify-between items-center">
+          <span className="info-name">Asset</span>
+          <div className="flex flex-row gap-2 items-center">
+            {depositAssetIcon && (
+              <Image
+                src={depositAssetIcon}
+                alt="Token Icon"
+                width={16}
+                height={16}
+                style={{
+                  objectFit: "cover",
+                }}
+              />
+            )}
+            <span className="green-text">{depositAssetLabel}</span>
+          </div>
+        </div>
+      </div>
+
+      {fromDeposit && (
         <div className="flex w-full items-center justify-center modal-info">You may close this window anytime</div>
       )}
-      {tx && (
-        <button onClick={closeModal} className="done-button">
-          Done
-        </button>
-      )}
+      <button onClick={closeModal} className="done-button">
+        Done
+      </button>
     </div>
   );
 };

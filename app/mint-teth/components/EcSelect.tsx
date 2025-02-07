@@ -1,25 +1,27 @@
 import React, { useState, useRef, useEffect } from "react";
 import Image from "next/image";
 
-export interface TokenOption {
-  value: `0x${string}`;
+export interface SelectOption {
+  value: string;
   label: string;
   imageSrc: string;
 }
 
 interface TokenSelectProps {
-  options: TokenOption[];
-  selected: TokenOption | undefined;
+  options: SelectOption[] | undefined;
+  selected: SelectOption | undefined;
   disabled?: boolean;
-  onChange: (val: TokenOption) => void;
+  onChange: (val: SelectOption) => void;
+  smallText?: boolean;
 }
 
-export function TokenSelect({ options, selected, disabled, onChange }: TokenSelectProps) {
+// Eclipse Select
+export function EcSelect({ options, selected, disabled, onChange, smallText }: TokenSelectProps) {
   const [isOpen, setIsOpen] = useState(false);
 
   const dropdownRef = useRef<HTMLDivElement>(null);
 
-  const handleOptionClick = (option: TokenOption) => {
+  const handleOptionClick = (option: SelectOption) => {
     onChange(option);
     setIsOpen(false);
   };
@@ -43,14 +45,20 @@ export function TokenSelect({ options, selected, disabled, onChange }: TokenSele
     <div className="relative inline-block text-left" ref={dropdownRef}>
       <button
         type="button"
-        className={`dropdown-button ${disabled ? "cursor-default" : ""}`}
+        className={`dropdown-button ${disabled ? "cursor-default" : ""} ${smallText ? "text-sm" : ""}`}
         onClick={() => setIsOpen(!isOpen)}
-        disabled={options.length === 0 || disabled}
+        disabled={options?.length === 0 || disabled}
       >
         <div className="flex items-center justify-center">
           {selected ? (
             <>
-              <Image src={selected.imageSrc} alt={selected.label} width={24} height={24} className="mr-3" />
+              <Image
+                src={selected.imageSrc}
+                alt={selected.label}
+                width={smallText ? 18 : 24}
+                height={smallText ? 18 : 24}
+                className="mr-3"
+              />
               {selected.label}
             </>
           ) : (
@@ -74,7 +82,7 @@ export function TokenSelect({ options, selected, disabled, onChange }: TokenSele
         )}
       </button>
 
-      {isOpen && options.length > 0 && (
+      {isOpen && options?.length && (
         <div className="dropdown-menu">
           <div className="py-1">
             {options.map((option) => (

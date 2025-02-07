@@ -5,6 +5,5 @@ export const useWallets = () => {
   const solWallet = userWallets.find((w) => w.chain === "ECLIPSE");
   const evmWallet = userWallets.find((w) => w.chain === "EVM");
 
-  console.log(solWallet, "solWallet")
   return { userWallets, solWallet, evmWallet };
 };

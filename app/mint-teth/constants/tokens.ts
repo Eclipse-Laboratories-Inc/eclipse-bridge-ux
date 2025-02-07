@@ -1,5 +1,5 @@
 import { Address } from "viem";
-import { TokenOption } from "../components/TokenSelect";
+import { SelectOption } from "../components/EcSelect";
 
 export const tokenAddresses: `0x${string}`[] = [
   "0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2", // WETH
@@ -10,7 +10,7 @@ export const tokenAddresses: `0x${string}`[] = [
   "0xD9A442856C234a39a81a089C06451EBAa4306a72", // pufETh
 ];
 
-export const tokenOptions: TokenOption[] = [
+export const tokenOptions: SelectOption[] = [
   { value: "0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2", label: "WETH", imageSrc: "/token-weth.svg" },
   { value: "0xCd5fE23C85820F7B72D0926FC9b05b43E359b7ee", label: "weETH", imageSrc: "/token-weeth.svg" },
   { value: "0xbf5495efe5db9ce00f80364c8b423567e58d2110", label: "ezETH", imageSrc: "/token-ezeth.svg" },
@@ -19,5 +19,11 @@ export const tokenOptions: TokenOption[] = [
   { value: "0xD9A442856C234a39a81a089C06451EBAa4306a72", label: "pufETH", imageSrc: "/token-pufeth.svg" },
 ];
 
+export const chainOptions: SelectOption[] = [
+  { value: "eclipse", label: "Eclipse", imageSrc: "/eclipse.png" },
+  { value: "ethereum", label: "Ethereum", imageSrc: "/eth.png" },
+];
+
 // tETH token address on Eclipse
-export const tEthTokenAddress = "GU7NS9xCwgNPiAdJ69iusFrRfawjDDPjeMBovhV1d4kn";
+export const tethSvmTokenAddress = "GU7NS9xCwgNPiAdJ69iusFrRfawjDDPjeMBovhV1d4kn";
+export const tethEvmTokenAddress = "0x19e099B7aEd41FA52718D780dDA74678113C0b32";
