@@ -1,9 +1,9 @@
-import { useWallets } from "@/app/hooks";
+import { useWalletClient, useWallets } from "@/app/hooks";
 import { DynamicConnectButton, useDynamicContext } from "@dynamic-labs/sdk-react-core";
 import classNames from "classnames";
 import { useEffect, useMemo, useState } from "react";
-import { Address, formatUnits, parseUnits, PublicClient, WalletClient } from "viem";
-import { mainnet } from "viem/chains";
+import { Address, createPublicClient, formatUnits, http, parseUnits, PublicClient, WalletClient } from "viem";
+import { mainnet, sepolia } from "viem/chains";
 import {
   chainOptions,
   tethEvmTokenAddress,
@@ -26,6 +26,8 @@ import { RedeemSummaryCard } from "./RedeemSummaryCard";
 import "./styles.css";
 import { SelectOption } from "./EcSelect";
 import { StepStatus } from "../types";
+import { useNetwork } from "@/app/contexts/NetworkContext";
+import { Options } from "@/lib/networkUtils";
 
 export function Redeem() {
   ///////////////////////
@@ -37,7 +39,8 @@ export function Redeem() {
   ///////////////////////
   // Hooks
   ///////////////////////
-  const { walletConnector, handleUnlinkWallet, rpcProviders } = useDynamicContext();
+  const { handleUnlinkWallet } = useDynamicContext();
+  const walletClient = useWalletClient();
   const { evmWallet, solWallet } = useWallets();
   const {
     updateAtomicRequest,
@@ -55,8 +58,6 @@ export function Redeem() {
   ///////////////////////
   // State
   ///////////////////////
-  const [walletClient, setWalletClient] = useState<WalletClient | null>(null);
-  const [publicClient, setPublicClient] = useState<PublicClient | null>(null);
   const [redeemAmount, setRedeemAmount] = useState<string>("");
   const [receiveAsset, setReceiveAsset] = useState<string>(tokenAddresses[0]);
   const [assetPerTethRate, setAssetPerTethRate] = useState<string>("");
@@ -76,6 +77,12 @@ export function Redeem() {
   ///////////////////////
   // Derived values
   ///////////////////////
+  const publicClient = createPublicClient({
+    chain: mainnet,
+    transport: http("https://empty-responsive-patron.quiknode.pro/91dfa8475605dcdec9afdc8273578c9f349774a1/"),
+    cacheTime: 0,
+  });
+
   const atomicPrice = (BigInt(assetPerTethRate) * (BigInt(1e18) - parseUnits(slippage.toString(), 18))) / BigInt(1e18);
 
   const formattedTokenBalance = formatUnits(BigInt(tethBalance), 18);
@@ -119,8 +126,6 @@ export function Redeem() {
 
   const isMintDisabled =
     depositPending || !redeemAmount || !receiveAsset || !evmWallet || isOverBalance || Number(redeemAmount) === 0;
-
-  const provider = rpcProviders.evmDefaultProvider;
 
   const evmAddress = evmWallet?.address as `0x${string}` | undefined;
   const svmAddress = solWallet?.address as `0x${string}` | undefined;
@@ -219,21 +224,6 @@ export function Redeem() {
       setTokenBalanceAsBigInt(BigInt(0));
     }
   }, [evmWallet]);
-
-  // Set up the public and wallet clients
-  useEffect(() => {
-    async function loadClients() {
-      if (!walletConnector) return;
-
-      const fetchedWalletClient = walletConnector.getWalletClient(mainnet.id.toString()) as WalletClient;
-      const fetchedPublicClient = (await walletConnector.getPublicClient()) as PublicClient;
-
-      setWalletClient(fetchedWalletClient);
-      setPublicClient(fetchedPublicClient);
-    }
-
-    loadClients();
-  }, [walletConnector]);
 
   // Get an updated exchange rate every time the deposit asset changes and every 30 seconds after that.
   useEffect(() => {
@@ -417,7 +407,6 @@ export function Redeem() {
           chainIconImg="/eclipse.png"
           userAddress={svmAddress}
           inputValue={redeemAmount}
-          disabled={false}
           loadingTokenBalance={isLoadingTokenBalance}
           onChangeInput={handleRedeemAmountChange}
           depositAsset={{

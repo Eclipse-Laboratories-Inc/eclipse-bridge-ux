@@ -1,7 +1,8 @@
+import { composeEtherscanCompatibleTxPath, composeEtherscanUrl, useNetwork } from "@/app/contexts/NetworkContext";
 import { useWallets } from "@/app/hooks";
 import { generateTxObjectForDetails } from "@/lib/activityUtils";
-import { createPublicClient, formatEther, http } from "viem";
 import { solanaToBytes32 } from "@/lib/solanaUtils";
+import { evmProvidersSelector, isEthereumWallet } from "@dynamic-labs/ethereum-core";
 import { DynamicConnectButton, useDynamicContext, useRpcProviders } from "@dynamic-labs/sdk-react-core";
 import classNames from "classnames";
 import { useEffect, useMemo, useState } from "react";
@@ -9,25 +10,22 @@ import { Abi, Address, erc20Abi, formatUnits, parseEther, parseUnits, PublicClie
 import { mainnet } from "viem/chains";
 import WarpRouteContract from "../abis/WarpRouteContract.json";
 import { warpRouteContractAddress } from "../constants/contracts";
-import { tEthTokenAddress, tokenAddresses, tokenOptions } from "../constants/tokens";
+import { chainOptions, tethSvmTokenAddress, tokenAddresses, tokenOptions } from "../constants/tokens";
 import { balanceOf } from "../lib/balanceOf";
 import { getRate } from "../lib/getRate";
 import { getRateInQuote } from "../lib/getRateInQuote";
 import { latestRoundData } from "../lib/latestRoundData";
 import { quoteGasPayment } from "../lib/quoteGasPayment";
+import { StepStatus } from "../types";
 import { calculateMinimumMint } from "../utils/calculateMinimumMint";
 import { getSolanaBalance } from "../utils/getSolanaBalance";
 import { sanitizeInput } from "../utils/sanitizeInput";
+import { SelectOption } from "./EcSelect";
+import { Tabs } from "./MintAndRedeem";
 import { MintSummaryCard } from "./MintSummaryCard";
 import { MintTransactionDetails } from "./MintTransactionDetails";
 import { MintValueCard } from "./MintValueCard";
 import "./styles.css";
-import { TokenOption } from "./TokenSelect";
-import { getRate } from "../lib/getRate";
-import { latestRoundData } from "../lib/latestRoundData";
-import { quoteGasPayment } from "../lib/quoteGasPayment";
-import { composeEtherscanCompatibleTxPath, composeEtherscanUrl, useNetwork } from "@/app/contexts/NetworkContext";
-import { evmProvidersSelector, isEthereumWallet } from "@dynamic-labs/ethereum-core";
 
 export function Mint() {
   ///////////////////////
@@ -59,7 +57,7 @@ export function Mint() {
   const [depositTxHash, setDepositTxHash] = useState<string>("");
   const [svmBalance, setSvmBalance] = useState<string>("");
   const [ethPrice, setEthPrice] = useState<string>("");
-
+  const [assetPerTethRate, setAssetPerTethRate] = useState<string>("");
   ///////////////////////
   // Derived values
   ///////////////////////
@@ -119,7 +117,7 @@ export function Mint() {
         link: composeEtherscanUrl(selectedOption, composeEtherscanCompatibleTxPath(depositTxHash)),
       },
     ];
-  }, [approveStatus, depositStatus, depositTxHash]);
+  }, [approveStatus, depositStatus, depositTxHash, selectedOption]);
 
   // Memoized because it iterates over an array
   const { depositAssetLabel, depositAssetIcon } = useMemo(() => {
@@ -400,87 +398,77 @@ export function Mint() {
             depositAmountAsBigInt={depositAmountAsBigInt}
             depositAssetLabel={depositAssetLabel}
             depositAssetIcon={depositAssetIcon}
+            action="Mint"
           />
         )}
         <div className="deposit-container flex flex-col">
-          <div className="deposit-card">
-            <div className="header-tabs">
-              <div
-                className={classNames("header-tab", activeTab === Tabs.Mint ? "active" : "inactive")}
-                style={{ width: "100%" }}
-                onClick={() => setActiveTab(Tabs.Mint)}
-              >
-                Mint
-              </div>
-              <div
-                className={classNames("header-tab", "disabled", activeTab === Tabs.Redeem ? "active" : "inactive")}
-                style={{ width: "100%" }}
-              >
-                Redeem
-              </div>
+          {activeTab === Tabs.Mint && (
+            <div className="flex flex-col gap-3">
+              <MintValueCard
+                title="Deposit from"
+                chainName="Ethereum"
+                chainIconImg="/eth.png"
+                userAddress={evmAddress}
+                inputValue={depositAmount}
+                loadingTokenBalance={loadingTokenBalance}
+                onChangeInput={handleDepositAmountChange}
+                depositAsset={tokenOptions.find((token) => token.value === depositAsset)}
+                onChangeDepositAsset={handleDepositAssetChange}
+                isOverBalance={isOverBalance}
+                tokenBalance={tokenBalanceAsBigInt}
+                onClickMax={handleClickMax}
+                onClickFiftyPercent={handleClickFiftyPercent}
+                usdValue={formattedDepositAmountInUsd}
+                handleDisconnect={() => evmWallet && handleUnlinkWallet(evmWallet.id)}
+                tokenOptions={tokenOptions}
+                selectedChain={{ value: "ethereum", label: "Ethereum", imageSrc: "/eth.png" }}
+                chainOptions={[{ value: "ethereum", label: "Ethereum", imageSrc: "/eth.png" }]}
+              />
+              <MintValueCard
+                title="Receive on"
+                chainName="Eclipse"
+                chainIconImg="/eclipse.png"
+                userAddress={svmAddress}
+                inputValue={formattedReceiveAmount}
+                disabled={true}
+                depositAsset={{
+                  value: "0xtETH-solana",
+                  label: "tETH",
+                  imageSrc: "/token-teth.svg",
+                }}
+                tokenBalance={BigInt(svmBalance)}
+                usdValue={formattedReceiveAmountInUsd}
+                handleDisconnect={() => solWallet && handleUnlinkWallet(solWallet.id)}
+                tokenOptions={tokenOptions}
+                selectedChain={{ value: "eclipse", label: "Eclipse", imageSrc: "/eclipse.png" }}
+                chainOptions={[{ value: "eclipse", label: "Eclipse", imageSrc: "/eclipse.png" }]}
+              />
+              <MintSummaryCard depositAsset={depositAsset} exchangeRate={tethPerAssetRate} />
             </div>
-            {activeTab === Tabs.Mint && (
-              <div className="flex flex-col gap-3">
-                <MintValueCard
-                  title="Deposit from"
-                  chainName="Ethereum"
-                  chainIconImg="/eth.png"
-                  userAddress={evmAddress}
-                  inputValue={depositAmount}
-                  loadingTokenBalance={loadingTokenBalance}
-                  onChangeInput={handleDepositAmountChange}
-                  depositAsset={tokenOptions.find((token) => token.value === depositAsset)}
-                  onChangeDepositAsset={handleDepositAssetChange}
-                  isOverBalance={isOverBalance}
-                  tokenBalance={tokenBalanceAsBigInt}
-                  onClickMax={handleClickMax}
-                  onClickFiftyPercent={handleClickFiftyPercent}
-                  usdValue={formattedDepositAmountInUsd}
-                  handleDisconnect={() => evmWallet && handleUnlinkWallet(evmWallet.id)}
-                />
-                <MintValueCard
-                  title="Receive on"
-                  chainName="Eclipse"
-                  chainIconImg="/eclipse.png"
-                  userAddress={svmAddress}
-                  inputValue={formattedReceiveAmount}
-                  disabled={true}
-                  depositAsset={{
-                    value: "0xtETH-solana",
-                    label: "tETH",
-                    imageSrc: "/token-teth.svg",
-                  }}
-                  tokenBalance={BigInt(svmBalance)}
-                  usdValue={formattedReceiveAmountInUsd}
-                  handleDisconnect={() => solWallet && handleUnlinkWallet(solWallet.id)}
-                />
-                <MintSummaryCard depositAsset={depositAsset} exchangeRate={tethPerAssetRate} />
-              </div>
-            )}
-            {activeTab === Tabs.Redeem && <div>Redeem</div>}
-            {evmAddress && svmAddress && (
-              <button
-                className={classNames("mint-button mt-3", {
-                  "mint-button-disabled": isMintDisabled,
-                })}
-                onClick={handleMint}
-                disabled={isMintDisabled}
-              >
-                {depositPending ? "Minting..." : "Mint"}
-              </button>
-            )}
-            {(!evmAddress || !svmAddress) && (
-              <DynamicConnectButton
-                buttonClassName="wallet-connect-button w-full"
-                buttonContainerClassName="submit-button connect-btn"
-              >
-                <span style={{ width: "100%" }}>
-                  {" "}
-                  {!evmAddress && !svmAddress ? "Connect Wallets" : "Connect Wallet"}
-                </span>
-              </DynamicConnectButton>
-            )}
-          </div>
+          )}
+          {activeTab === Tabs.Redeem && <div>Redeem</div>}
+          {evmAddress && svmAddress && (
+            <button
+              className={classNames("mint-button mt-3", {
+                "mint-button-disabled": isMintDisabled,
+              })}
+              onClick={handleMint}
+              disabled={isMintDisabled}
+            >
+              {depositPending ? "Minting..." : "Mint"}
+            </button>
+          )}
+          {(!evmAddress || !svmAddress) && (
+            <DynamicConnectButton
+              buttonClassName="wallet-connect-button w-full"
+              buttonContainerClassName="submit-button connect-btn"
+            >
+              <span style={{ width: "100%" }}>
+                {" "}
+                {!evmAddress && !svmAddress ? "Connect Wallets" : "Connect Wallet"}
+              </span>
+            </DynamicConnectButton>
+          )}
         </div>
       </div>
     </>
