@@ -2,7 +2,18 @@ import { useWalletClient, useWallets } from "@/app/hooks";
 import { DynamicConnectButton, useDynamicContext } from "@dynamic-labs/sdk-react-core";
 import classNames from "classnames";
 import { useEffect, useMemo, useState } from "react";
-import { Address, createPublicClient, formatUnits, http, parseUnits, PublicClient, WalletClient } from "viem";
+import {
+  Account,
+  Address,
+  Chain,
+  createPublicClient,
+  formatUnits,
+  http,
+  parseUnits,
+  PublicClient,
+  Transport,
+  WalletClient,
+} from "viem";
 import { mainnet, sepolia } from "viem/chains";
 import {
   chainOptions,
@@ -40,7 +51,6 @@ export function Redeem() {
   // Hooks
   ///////////////////////
   const { handleUnlinkWallet } = useDynamicContext();
-  const walletClient = useWalletClient();
   const { evmWallet, solWallet } = useWallets();
   const {
     updateAtomicRequest,
@@ -58,6 +68,7 @@ export function Redeem() {
   ///////////////////////
   // State
   ///////////////////////
+  const [walletClient, setWalletClient] = useState<WalletClient<Transport, Chain, Account> | null>(null);
   const [redeemAmount, setRedeemAmount] = useState<string>("");
   const [receiveAsset, setReceiveAsset] = useState<string>(tokenAddresses[0]);
   const [assetPerTethRate, setAssetPerTethRate] = useState<string>("");
@@ -191,6 +202,14 @@ export function Redeem() {
   ///////////////////////
   // Use effects
   ///////////////////////
+
+  useEffect(() => {
+    let lWalletClient =
+      //@ts-ignore
+      evmWallet?.connector.getWalletClient<WalletClient<Transport, Chain, Account>>();
+    lWalletClient && (lWalletClient.cacheTime = 0);
+    setWalletClient(lWalletClient ?? null);
+  }, [evmWallet?.connector]);
 
   // Set the balance of the SVM wallet
   useEffect(() => {

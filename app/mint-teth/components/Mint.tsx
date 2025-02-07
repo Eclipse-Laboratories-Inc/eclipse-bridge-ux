@@ -1,16 +1,29 @@
 import { composeEtherscanCompatibleTxPath, composeEtherscanUrl, useNetwork } from "@/app/contexts/NetworkContext";
-import { useWallets } from "@/app/hooks";
+import { useWalletClient, useWallets } from "@/app/hooks";
 import { generateTxObjectForDetails } from "@/lib/activityUtils";
 import { solanaToBytes32 } from "@/lib/solanaUtils";
-import { evmProvidersSelector, isEthereumWallet } from "@dynamic-labs/ethereum-core";
+import { evmProvidersSelector } from "@dynamic-labs/ethereum-core";
 import { DynamicConnectButton, useDynamicContext, useRpcProviders } from "@dynamic-labs/sdk-react-core";
 import classNames from "classnames";
 import { useEffect, useMemo, useState } from "react";
-import { Abi, Address, erc20Abi, formatUnits, parseEther, parseUnits, PublicClient, WalletClient } from "viem";
+import {
+  Abi,
+  Account,
+  Address,
+  Chain,
+  createPublicClient,
+  erc20Abi,
+  formatUnits,
+  http,
+  parseEther,
+  parseUnits,
+  Transport,
+  WalletClient,
+} from "viem";
 import { mainnet } from "viem/chains";
 import WarpRouteContract from "../abis/WarpRouteContract.json";
 import { warpRouteContractAddress } from "../constants/contracts";
-import { chainOptions, tethSvmTokenAddress, tokenAddresses, tokenOptions } from "../constants/tokens";
+import { tethSvmTokenAddress, tokenAddresses, tokenOptions } from "../constants/tokens";
 import { balanceOf } from "../lib/balanceOf";
 import { getRate } from "../lib/getRate";
 import { getRateInQuote } from "../lib/getRateInQuote";
@@ -31,7 +44,7 @@ export function Mint() {
   ///////////////////////
   // Hooks
   ///////////////////////
-  const { primaryWallet, accountSwitchState, handleUnlinkWallet } = useDynamicContext();
+  const { handleUnlinkWallet } = useDynamicContext();
   const { evmWallet, solWallet } = useWallets();
   const evmRpcProvider = useRpcProviders(evmProvidersSelector);
   const { selectedOption } = useNetwork();
@@ -39,8 +52,7 @@ export function Mint() {
   ///////////////////////
   // State
   ///////////////////////
-  const [walletClient, setWalletClient] = useState<WalletClient | null>(null);
-  const [publicClient, setPublicClient] = useState<PublicClient | null>(null);
+  const [walletClient, setWalletClient] = useState<WalletClient<Transport, Chain, Account> | null>(null);
   const [depositAmount, setDepositAmount] = useState<string>("");
   const [depositAsset, setDepositAsset] = useState<`0x${string}`>(tokenAddresses[0]);
   const [tethPerAssetRate, setTethPerAssetRate] = useState<string>("");
@@ -58,9 +70,15 @@ export function Mint() {
   const [svmBalance, setSvmBalance] = useState<string>("");
   const [ethPrice, setEthPrice] = useState<string>("");
   const [assetPerTethRate, setAssetPerTethRate] = useState<string>("");
+
   ///////////////////////
   // Derived values
   ///////////////////////
+  const publicClient = createPublicClient({
+    chain: mainnet,
+    transport: http("https://empty-responsive-patron.quiknode.pro/91dfa8475605dcdec9afdc8273578c9f349774a1/"),
+    cacheTime: 0,
+  });
   const formattedTokenBalance = formatUnits(tokenBalanceAsBigInt, 18);
   const depositAmountAsBigInt = parseUnits(depositAmount, 18);
   const exchangeRateAsBigInt = BigInt(assetPerTethRate);
@@ -132,6 +150,14 @@ export function Mint() {
   // Use effects
   ///////////////////////
 
+  useEffect(() => {
+    let lWalletClient =
+      //@ts-ignore
+      evmWallet?.connector.getWalletClient<WalletClient<Transport, Chain, Account>>();
+    lWalletClient && (lWalletClient.cacheTime = 0);
+    setWalletClient(lWalletClient ?? null);
+  }, [evmWallet?.connector]);
+
   // Set the balance of the SVM wallet
   useEffect(() => {
     async function getSvmBalance() {
@@ -149,28 +175,6 @@ export function Mint() {
       setTokenBalanceAsBigInt(BigInt(0));
     }
   }, [evmWallet]);
-
-  // Set up the public and wallet clients
-  useEffect(() => {
-    async function loadClients() {
-      if (!primaryWallet || !isEthereumWallet(primaryWallet)) return;
-
-      const fetchedWalletClient = (await primaryWallet.getWalletClient(mainnet.id.toString())) as WalletClient;
-      // const fetchedWalletClient = evmWallet?.connector.getWalletClient<WalletClient<Transport, Chain, Account>>() as WalletClient;
-      //
-      // const mclient = createPublicClient({
-      //  chain: mainnet,
-      //  transport: http("https://empty-responsive-patron.quiknode.pro/91dfa8475605dcdec9afdc8273578c9f349774a1/"),
-      //  cacheTime: 0
-      //})
-      const fetchedPublicClient = (await primaryWallet?.getPublicClient()) as PublicClient;
-
-      setWalletClient(fetchedWalletClient);
-      setPublicClient(fetchedPublicClient);
-    }
-
-    loadClients();
-  }, [primaryWallet]);
 
   // Get an updated exchange rate every time the deposit asset changes and every 30 seconds after that.
   useEffect(() => {
@@ -262,12 +266,20 @@ export function Mint() {
       args: [evmAddress, warpRouteContractAddress],
     });
 
+    console.log("allowanceAsBigInt", allowanceAsBigInt);
+
     ////////////////////////////////
     // Approve
     ////////////////////////////////
     try {
       if (depositAmountAsBigInt > allowanceAsBigInt) {
+        console.log("approving...");
         // Simulate the transaction to catch any errors
+        console.log("publicClient", publicClient);
+        console.log("depositAsset", depositAsset);
+        console.log("warpRouteContractAddress", warpRouteContractAddress);
+        console.log("depositAmountAsBigInt", depositAmountAsBigInt);
+        console.log("evmAddress", evmAddress);
         const { request: approvalRequest } = await publicClient.simulateContract({
           abi: erc20Abi,
           address: depositAsset,
@@ -275,6 +287,8 @@ export function Mint() {
           args: [warpRouteContractAddress, depositAmountAsBigInt],
           account: evmAddress,
         });
+        console.log("SIMULATE PASSED!");
+        console.log("approvalRequest", approvalRequest);
 
         // Execute the transaction
         const approvalTxHash = await walletClient.writeContract(approvalRequest);
