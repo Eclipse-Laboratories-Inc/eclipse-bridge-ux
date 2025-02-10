@@ -10,6 +10,6 @@ export function truncateWalletAddress(str: string) {
 }
 
 export function toKebabCase(str: string) {
-  return str.toLowerCase().replace(" ", "-");
+  return str.toLowerCase().replace(/ /g, "-");
 }
 
