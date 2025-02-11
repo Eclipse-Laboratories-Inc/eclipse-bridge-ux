@@ -1,5 +1,6 @@
 'use client';
 import "./globals.css";
+import "./dynamic-overrides.css";
 import {
   DynamicContextProvider,
   EthereumWalletConnectors,
