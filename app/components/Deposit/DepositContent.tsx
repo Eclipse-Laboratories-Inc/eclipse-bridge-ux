@@ -116,11 +116,17 @@ export const DepositContent: React.FC<DepositContentProps> = ({
 
   useEffect(() => {
     const isMainnet = selectedOption === Options.Mainnet;
+    // switch to selected network
+    const cid = isMainnet ? 1 : 11155111;
+    if (evmWallet?.connector.supportsNetworkSwitching()) {
+      evmWallet?.connector.switchNetwork({ networkChainId: cid });
+    }
+
     const mclient = createPublicClient({
       chain: isMainnet ? mainnet : sepolia,
       transport: isMainnet
         ? http(
-            "https://empty-responsive-patron.quiknode.pro/91dfa8475605dcdec9afdc8273578c9f349774a1/"
+            "https://empty-responsive-patron.quiknode.pro/91dfa8475605dcdec9afdc8273578c9f349774a1/",
           )
         : http("https://ethereum-sepolia-rpc.publicnode.com"),
       cacheTime: 0,
@@ -134,7 +140,7 @@ export const DepositContent: React.FC<DepositContentProps> = ({
       setGasPriceWei(gp);
       setMaxPriorityFeePerGasWei(mpf);
     });
-  }, [selectedOption]);
+  }, [selectedOption, evmWallet]);
 
   useEffect(() => {
     let lWalletClient =
@@ -157,7 +163,7 @@ export const DepositContent: React.FC<DepositContentProps> = ({
     const fetchEclipse = async () => {
       const balance = await getWalletBalance(
         solWallet?.address || "",
-        eclipseRpc
+        eclipseRpc,
       );
       const balanceAsEther = formatEther(BigInt(balance * 10 ** 18));
       const formattedEtherBalance = balanceAsEther.includes(".")
@@ -227,7 +233,7 @@ export const DepositContent: React.FC<DepositContentProps> = ({
       });
       const txData = await generateTxObjectForDetails(
         provider ? provider.provider : client,
-        txResponse
+        txResponse,
       );
 
       setAmountEther("");
