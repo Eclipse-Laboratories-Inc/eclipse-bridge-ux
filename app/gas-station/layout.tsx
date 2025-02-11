@@ -1,11 +1,9 @@
 "use client";
 import "@/app/globals.css";
-import {
-  DynamicContextProvider,
-} from "@/lib/dynamic";
 import { EclipseWalletConnectors } from "@dynamic-labs/eclipse";
 import { IBM_Plex_Sans } from "next/font/google";
 import { GasProviders } from "@/app/providers/GasProviders";
+import { DynamicContextProvider } from "@dynamic-labs/sdk-react-core";
 
 const ibmPlexSans = IBM_Plex_Sans({
   subsets: ["latin"],
