@@ -1,5 +1,8 @@
 import { useWalletClient, useWallets } from "@/app/hooks";
-import { DynamicConnectButton, useDynamicContext } from "@dynamic-labs/sdk-react-core";
+import {
+  DynamicConnectButton,
+  useDynamicContext,
+} from "@dynamic-labs/sdk-react-core";
 import classNames from "classnames";
 import { useEffect, useMemo, useState } from "react";
 import {
@@ -68,14 +71,20 @@ export function Redeem() {
   ///////////////////////
   // State
   ///////////////////////
-  const [walletClient, setWalletClient] = useState<WalletClient<Transport, Chain, Account> | null>(null);
+  const [walletClient, setWalletClient] = useState<WalletClient<
+    Transport,
+    Chain,
+    Account
+  > | null>(null);
   const [redeemAmount, setRedeemAmount] = useState<string>("");
   const [receiveAsset, setReceiveAsset] = useState<string>(tokenAddresses[0]);
   const [assetPerTethRate, setAssetPerTethRate] = useState<string>("");
   const [ethPerAssetRate, setEthPerAssetRate] = useState("");
   const [ethPerTethRate, setEthPerTethRate] = useState("");
   const [depositPending, setDepositPending] = useState<boolean>(false);
-  const [tokenBalanceAsBigInt, setTokenBalanceAsBigInt] = useState<bigint>(BigInt(0));
+  const [tokenBalanceAsBigInt, setTokenBalanceAsBigInt] = useState<bigint>(
+    BigInt(1),
+  );
   const [isLoadingTokenBalance, setIsLoadingTokenBalance] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [currentTx, setCurrentTx] = useState<any>(null);
@@ -83,60 +92,80 @@ export function Redeem() {
   const [tethBalance, setTethBalance] = useState<string>("");
   const [tethBalanceLoading, setTethBalanceLoading] = useState(false);
   const [ethPrice, setEthPrice] = useState<string>("");
-  const [sourceChain, setSourceChain] = useState<SelectOption | undefined>(chainOptions[0]);
+  const [sourceChain, setSourceChain] = useState<SelectOption | undefined>(
+    chainOptions[0],
+  );
 
   ///////////////////////
   // Derived values
   ///////////////////////
   const publicClient = createPublicClient({
     chain: mainnet,
-    transport: http("https://empty-responsive-patron.quiknode.pro/91dfa8475605dcdec9afdc8273578c9f349774a1/"),
+    transport: http(
+      "https://empty-responsive-patron.quiknode.pro/91dfa8475605dcdec9afdc8273578c9f349774a1/",
+    ),
     cacheTime: 0,
   });
 
-  const atomicPrice = (BigInt(assetPerTethRate) * (BigInt(1e18) - parseUnits(slippage.toString(), 18))) / BigInt(1e18);
+  const atomicPrice =
+    (BigInt(assetPerTethRate) *
+      (BigInt(1e18) - parseUnits(slippage.toString(), 18))) /
+    BigInt(1e18);
 
   const formattedTokenBalance = formatUnits(BigInt(tethBalance), 18);
   const atomicPriceAsBigInt = BigInt(atomicPrice);
   const redeemAmountAsBigInt = BigInt(parseUnits(redeemAmount, 18));
 
   // Withdraw fee
-  const withdrawFeeInTeth = (redeemAmountAsBigInt * parseUnits(slippage.toString(), 18)) / BigInt(1e18);
-  const withdrawFeeInEth = (withdrawFeeInTeth * BigInt(ethPerTethRate)) / BigInt(1e18);
-  const withdrawFeeInUsdAsBigInt = (withdrawFeeInEth * BigInt(ethPrice)) / BigInt(1e8);
+  const withdrawFeeInTeth =
+    (redeemAmountAsBigInt * parseUnits(slippage.toString(), 18)) / BigInt(1e18);
+  const withdrawFeeInEth =
+    (withdrawFeeInTeth * BigInt(ethPerTethRate)) / BigInt(1e18);
+  const withdrawFeeInUsdAsBigInt =
+    (withdrawFeeInEth * BigInt(ethPrice)) / BigInt(1e8);
   const withdrawFeeInUsd = Number(formatUnits(withdrawFeeInUsdAsBigInt, 18));
   const formattedWithdrawFeeInUsd =
     withdrawFeeInUsd > 0 && withdrawFeeInUsd < 0.01
       ? "<$0.01"
-      : `$${new Intl.NumberFormat("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 }).format(
-          withdrawFeeInUsd
-        )}`;
+      : `$${new Intl.NumberFormat("en-US", {
+          minimumFractionDigits: 2,
+          maximumFractionDigits: 2,
+        }).format(withdrawFeeInUsd)}`;
 
   // Bridge fee
-  const bridgeFeeInUsdAsBigInt = (interchainTransferFee * BigInt(ethPrice)) / BigInt(1e8);
+  const bridgeFeeInUsdAsBigInt =
+    (interchainTransferFee * BigInt(ethPrice)) / BigInt(1e8);
   const bridgeFeeInUsd = Number(formatUnits(bridgeFeeInUsdAsBigInt, 18));
   const formattedBridgeFeeInUsd =
     bridgeFeeInUsd > 0 && bridgeFeeInUsd < 0.01
       ? "<$0.01"
-      : `$${new Intl.NumberFormat("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 }).format(
-          bridgeFeeInUsd
-        )}`;
+      : `$${new Intl.NumberFormat("en-US", {
+          minimumFractionDigits: 2,
+          maximumFractionDigits: 2,
+        }).format(bridgeFeeInUsd)}`;
 
   // Total fees
   const totalFeesInEth = withdrawFeeInEth + interchainTransferFee;
-  const totalFeesInUsdAsBigInt = (totalFeesInEth * BigInt(ethPrice)) / BigInt(1e8);
+  const totalFeesInUsdAsBigInt =
+    (totalFeesInEth * BigInt(ethPrice)) / BigInt(1e8);
   const totalFeesInUsd = Number(formatUnits(totalFeesInUsdAsBigInt, 18));
   const formattedTotalFeesInUsd =
     totalFeesInUsd > 0 && totalFeesInUsd < 0.01
       ? "<$0.01"
-      : `$${new Intl.NumberFormat("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 }).format(
-          totalFeesInUsd
-        )}`;
+      : `$${new Intl.NumberFormat("en-US", {
+          minimumFractionDigits: 2,
+          maximumFractionDigits: 2,
+        }).format(totalFeesInUsd)}`;
 
   const isOverBalance = BigInt(tethBalance) < redeemAmountAsBigInt;
 
   const isMintDisabled =
-    depositPending || !redeemAmount || !receiveAsset || !evmWallet || isOverBalance || Number(redeemAmount) === 0;
+    depositPending ||
+    !redeemAmount ||
+    !receiveAsset ||
+    !evmWallet ||
+    isOverBalance ||
+    Number(redeemAmount) === 0;
 
   const evmAddress = evmWallet?.address as `0x${string}` | undefined;
   const svmAddress = solWallet?.address as `0x${string}` | undefined;
@@ -144,15 +173,18 @@ export function Redeem() {
   const ethPriceAsBigInt = ethPrice ? BigInt(ethPrice) : BigInt(0);
 
   // Redeem amount
-  const redeemAmountInEth = (redeemAmountAsBigInt * BigInt(ethPerTethRate)) / BigInt(1e18);
-  const redeemAmountInUsd = (redeemAmountInEth * ethPriceAsBigInt) / BigInt(1e8);
+  const redeemAmountInEth =
+    (redeemAmountAsBigInt * BigInt(ethPerTethRate)) / BigInt(1e18);
+  const redeemAmountInUsd =
+    (redeemAmountInEth * ethPriceAsBigInt) / BigInt(1e8);
   const redeemAmountInUsdFormatted = Number(formatUnits(redeemAmountInUsd, 18));
   const formattedRedeemAmountInUsd =
     redeemAmountInUsdFormatted > 0 && redeemAmountInUsdFormatted < 0.01
       ? "<$0.01"
-      : `$${new Intl.NumberFormat("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 }).format(
-          redeemAmountInUsdFormatted
-        )}`;
+      : `$${new Intl.NumberFormat("en-US", {
+          minimumFractionDigits: 2,
+          maximumFractionDigits: 2,
+        }).format(redeemAmountInUsdFormatted)}`;
 
   // Receive amount
   const receiveAmountAsBigInt =
@@ -165,19 +197,28 @@ export function Redeem() {
     ? (receiveAmountAsBigInt * BigInt(ethPerAssetRate)) / BigInt(1e18)
     : BigInt(0);
 
-  const receiveAmountInUsd = (receiveAmountInEth * ethPriceAsBigInt) / BigInt(1e8);
-  const receiveAmountInUsdFormatted = Number(formatUnits(receiveAmountInUsd, 18));
+  const receiveAmountInUsd =
+    (receiveAmountInEth * ethPriceAsBigInt) / BigInt(1e8);
+  const receiveAmountInUsdFormatted = Number(
+    formatUnits(receiveAmountInUsd, 18),
+  );
   const formattedReceiveAmountInUsd =
     receiveAmountInUsdFormatted > 0 && receiveAmountInUsdFormatted < 0.01
       ? "<$0.01"
-      : `$${new Intl.NumberFormat("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 }).format(
-          receiveAmountInUsdFormatted
-        )}`;
+      : `$${new Intl.NumberFormat("en-US", {
+          minimumFractionDigits: 2,
+          maximumFractionDigits: 2,
+        }).format(receiveAmountInUsdFormatted)}`;
 
   // Memoized because it iterates over an array
   const { depositAssetLabel, depositAssetIcon } = useMemo(() => {
-    const tokenOption = tokenOptions.find((token) => token.value === receiveAsset);
-    return { depositAssetLabel: tokenOption?.label, depositAssetIcon: tokenOption?.imageSrc };
+    const tokenOption = tokenOptions.find(
+      (token) => token.value === receiveAsset,
+    );
+    return {
+      depositAssetLabel: tokenOption?.label,
+      depositAssetIcon: tokenOption?.imageSrc,
+    };
   }, [receiveAsset]);
 
   // Memoized because it returns a new array on every render
@@ -197,7 +238,12 @@ export function Redeem() {
         link: `https://etherscan.io/tx/${depositTxHash}`,
       },
     ];
-  }, [atomicRequestApprovalState, atomicRequestState, depositTxHash, tokenTransferState]);
+  }, [
+    atomicRequestApprovalState,
+    atomicRequestState,
+    depositTxHash,
+    tokenTransferState,
+  ]);
 
   ///////////////////////
   // Use effects
@@ -206,7 +252,9 @@ export function Redeem() {
   useEffect(() => {
     let lWalletClient =
       //@ts-ignore
-      evmWallet?.connector.getWalletClient<WalletClient<Transport, Chain, Account>>();
+      evmWallet?.connector.getWalletClient<
+        WalletClient<Transport, Chain, Account>
+      >();
     lWalletClient && (lWalletClient.cacheTime = 0);
     setWalletClient(lWalletClient ?? null);
   }, [evmWallet?.connector]);
@@ -217,9 +265,16 @@ export function Redeem() {
       try {
         setTethBalanceLoading(true);
         if (sourceChain?.value === "eclipse" && svmAddress) {
-          const balance = await getSolanaBalance(svmAddress, tethSvmTokenAddress);
+          const balance = await getSolanaBalance(
+            svmAddress,
+            tethSvmTokenAddress,
+          );
           setTethBalance(balance.toString());
-        } else if (sourceChain?.value === "ethereum" && evmAddress && publicClient) {
+        } else if (
+          sourceChain?.value === "ethereum" &&
+          evmAddress &&
+          publicClient
+        ) {
           const balance = await balanceOf({
             tokenAddress: tethEvmTokenAddress,
             userAddress: evmAddress,
@@ -255,11 +310,14 @@ export function Redeem() {
       if (asset === "0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2") {
         _ethPerAssetRate = BigInt(1e18);
       } else {
-        _ethPerAssetRate = await getRate({ tokenAddress: asset }, { publicClient });
+        _ethPerAssetRate = await getRate(
+          { tokenAddress: asset },
+          { publicClient },
+        );
       }
       const _ethPerTethRate = await getRateInQuote(
         { quote: "0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2" }, // WETH
-        { publicClient }
+        { publicClient },
       );
       const _ethPrice = await latestRoundData({ publicClient });
 
@@ -289,14 +347,15 @@ export function Redeem() {
   useEffect(() => {
     async function getTokenBalance() {
       try {
-        if (!publicClient || !evmWallet) return;
+        if (!publicClient || !evmWallet || tokenBalanceAsBigInt != BigInt(1))
+          return;
         setIsLoadingTokenBalance(true);
-        const tokenBalanceAsBigInt = await balanceOf({
+        const _tokenBalanceAsBigInt = await balanceOf({
           tokenAddress: receiveAsset as `0x${string}`,
           userAddress: evmWallet.address as `0x${string}`,
           publicClient,
         });
-        setTokenBalanceAsBigInt(tokenBalanceAsBigInt);
+        setTokenBalanceAsBigInt(_tokenBalanceAsBigInt);
       } catch (error) {
         console.error(error);
       } finally {
@@ -348,7 +407,9 @@ export function Redeem() {
       setIsModalOpen(true);
 
       // Make the swap (this step takes up to 24 hours)
-      const deadlineInSec = BigInt(Math.floor(Date.now() / 1000) + deadlineDaysFromNow * 24 * 60 * 60);
+      const deadlineInSec = BigInt(
+        Math.floor(Date.now() / 1000) + deadlineDaysFromNow * 24 * 60 * 60,
+      );
       const offerAmount = parseUnits(redeemAmount, 18);
 
       if (!evmAddress) throw new Error("No EVM address found");
@@ -376,20 +437,34 @@ export function Redeem() {
         // If it does, skip the updateAtomicRequest step.
         // This is to prevent the user from triggering the request multiple times.
         const pendingAtomicRequest = await getUserAtomicRequest(
-          { userAddress: evmAddress, offerAddress: tethEvmTokenAddress, wantAddress: receiveAsset as `0x${string}` },
-          { publicClient }
+          {
+            userAddress: evmAddress,
+            offerAddress: tethEvmTokenAddress,
+            wantAddress: receiveAsset as `0x${string}`,
+          },
+          { publicClient },
         );
-        const { atomicPrice: pendingAtomicPrice, offerAmount: pendingOfferAmount } = pendingAtomicRequest;
-        const atomicRequestAlreadyExists = pendingAtomicPrice === atomicPrice && pendingOfferAmount === offerAmount;
+        const {
+          atomicPrice: pendingAtomicPrice,
+          offerAmount: pendingOfferAmount,
+        } = pendingAtomicRequest;
+        const atomicRequestAlreadyExists =
+          pendingAtomicPrice === atomicPrice &&
+          pendingOfferAmount === offerAmount;
 
         if (!atomicRequestAlreadyExists) {
           const txHash = await updateAtomicRequest(
             {
               offer: tethEvmTokenAddress,
               want: receiveAsset as `0x${string}`,
-              userRequest: { deadline: deadlineInSec, atomicPrice, offerAmount, inSolve: false },
+              userRequest: {
+                deadline: deadlineInSec,
+                atomicPrice,
+                offerAmount,
+                inSolve: false,
+              },
             },
-            { publicClient, walletClient }
+            { publicClient, walletClient },
           );
         } else {
           setAtomicRequestState(StepStatus.LOADING);
@@ -406,7 +481,11 @@ export function Redeem() {
 
   return (
     <>
-      <div className={isModalOpen ? "mint-status-overlay active" : "mint-status-overlay"}></div>
+      <div
+        className={
+          isModalOpen ? "mint-status-overlay active" : "mint-status-overlay"
+        }
+      ></div>
       {isModalOpen && (
         <MintTransactionDetails
           fromDeposit={true}
@@ -452,7 +531,9 @@ export function Redeem() {
           userAddress={evmAddress}
           inputValue={formattedReceiveAmount}
           disabled={true}
-          depositAsset={tokenOptions.find((token) => token.value === receiveAsset)}
+          depositAsset={tokenOptions.find(
+            (token) => token.value === receiveAsset,
+          )}
           tokenBalance={tokenBalanceAsBigInt}
           usdValue={formattedReceiveAmountInUsd}
           handleDisconnect={() => evmWallet && handleUnlinkWallet(evmWallet.id)}
@@ -472,7 +553,9 @@ export function Redeem() {
         />
         {evmAddress && svmAddress && (
           <button
-            className={classNames("mint-button mt-3", { "mint-button-disabled": isMintDisabled })}
+            className={classNames("mint-button mt-3", {
+              "mint-button-disabled": isMintDisabled,
+            })}
             onClick={handleRedeem}
             disabled={isMintDisabled}
           >
@@ -484,7 +567,12 @@ export function Redeem() {
             buttonClassName="wallet-connect-button w-full"
             buttonContainerClassName="submit-button connect-btn"
           >
-            <span style={{ width: "100%" }}> {!evmAddress && !svmAddress ? "Connect Wallets" : "Connect Wallet"}</span>
+            <span style={{ width: "100%" }}>
+              {" "}
+              {!evmAddress && !svmAddress
+                ? "Connect Wallets"
+                : "Connect Wallet"}
+            </span>
           </DynamicConnectButton>
         )}
       </div>
