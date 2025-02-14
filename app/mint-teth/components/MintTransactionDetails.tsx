@@ -3,8 +3,7 @@ import { ethers } from "ethers";
 import Image from "next/image";
 import { useContext } from "react";
 import { Arrow, Cross, TransactionIcon } from "../../components/icons";
-import "./transaction-details.css";
-import { tethEvmTokenAddress, tokenOptions } from "../constants/tokens";
+import "@/app/components/TransactionDetails/transaction-details.css";
 import { StepStatus } from "../types";
 
 export interface Step {
@@ -37,7 +36,39 @@ export const MintTransactionDetails: React.FC<TransactionDetailsProps> = ({
   const [_, ethPrice] = useContext(EthereumDataContext) ?? [0, 0];
 
   const depositAmount = Number(ethers.utils.formatEther(depositAmountAsBigInt));
-  const isExpired = tx ? Number(tx.deadline) < Math.floor(Date.now() / 1000) && tx.status === "pending" : false;
+  const isExpired = tx
+    ? Number(tx.deadline) < Math.floor(Date.now() / 1000) &&
+      tx.status === "pending"
+    : false;
+
+  const chainLogos = [
+    <Image
+      src="/eth.png"
+      alt="Ethereum"
+      width={55}
+      height={55}
+      style={{
+        objectFit: "cover",
+        border: "7px solid rgba(0, 0, 0, 0.2)",
+        outline: "1px solid rgba(255, 255, 255, 0.1)",
+        borderRadius: "100%",
+      }}
+    />,
+    <Image
+      src="/eclipse.png"
+      alt="Eclipse"
+      width={55}
+      height={55}
+      style={{
+        objectFit: "cover",
+        border: "7px solid rgba(0, 0, 0, 0.2)",
+        outline: "1px solid rgba(255, 255, 255, 0.1)",
+        borderRadius: "100%",
+      }}
+    />,
+  ];
+
+  action === "Redeem" && chainLogos.reverse();
 
   return (
     <div className="transaction-details-modal flex flex-col items-center">
@@ -50,39 +81,24 @@ export const MintTransactionDetails: React.FC<TransactionDetailsProps> = ({
       </div>
 
       <div className="logo-header flex flex-row items-center">
-        <Image
-          src="/eth.png"
-          alt="Ethereum"
-          width={55}
-          height={55}
-          style={{
-            objectFit: "cover",
-            border: "7px solid rgba(0, 0, 0, 0.2)",
-            outline: "1px solid rgba(255, 255, 255, 0.1)",
-            borderRadius: "100%",
-          }}
-        />
+        {chainLogos[0]}
         <Arrow />
-        <Image
-          src="/eclipse.png"
-          alt="Eclipse"
-          width={55}
-          height={55}
-          style={{
-            objectFit: "cover",
-            border: "7px solid rgba(0, 0, 0, 0.2)",
-            outline: "1px solid rgba(255, 255, 255, 0.1)",
-            borderRadius: "100%",
-          }}
-        />
+        {chainLogos[1]}
       </div>
 
       <div className="status-panel">
         {steps.map((step, index) => (
-          <div key={index} className="panel-elem flex flex-row items-center justify-between">
+          <div
+            key={index}
+            className="panel-elem flex flex-row items-center justify-between"
+          >
             <div className="left-side flex flex-row items-center">
               <div
-                className={step.status === StepStatus.NOT_STARTED ? "gray-text" : "white-text"}
+                className={
+                  step.status === StepStatus.NOT_STARTED
+                    ? "gray-text"
+                    : "white-text"
+                }
                 style={{ fontSize: "16px" }}
               >
                 {step.title}
@@ -96,10 +112,16 @@ export const MintTransactionDetails: React.FC<TransactionDetailsProps> = ({
               )}
             </div>
             {step.status !== StepStatus.NOT_STARTED && (
-              <div className={`flex flex-row items-center gap-1 ${step.status}-item status-item`}>
+              <div
+                className={`flex flex-row items-center gap-1 ${step.status}-item status-item`}
+              >
                 {!isExpired && (
                   <TransactionIcon
-                    iconType={step.status === StepStatus.AWAITING_SIGNATURE ? StepStatus.LOADING : step.status}
+                    iconType={
+                      step.status === StepStatus.AWAITING_SIGNATURE
+                        ? StepStatus.LOADING
+                        : step.status
+                    }
                     className="tx-done-icon"
                   />
                 )}
@@ -107,16 +129,16 @@ export const MintTransactionDetails: React.FC<TransactionDetailsProps> = ({
                   {isExpired
                     ? "Expired"
                     : step.status === StepStatus.COMPLETED
-                    ? "Done"
-                    : step.status === StepStatus.FAILED
-                    ? "Failed"
-                    : step.status === StepStatus.AWAITING_SIGNATURE
-                    ? "Awaiting signature"
-                    : step.status === StepStatus.LOADING
-                    ? "Processing"
-                    : step.status === StepStatus.CANCELLED
-                    ? "Cancelled"
-                    : "Processing"}
+                      ? "Done"
+                      : step.status === StepStatus.FAILED
+                        ? "Failed"
+                        : step.status === StepStatus.AWAITING_SIGNATURE
+                          ? "Awaiting signature"
+                          : step.status === StepStatus.LOADING
+                            ? "Processing"
+                            : step.status === StepStatus.CANCELLED
+                              ? "Cancelled"
+                              : "Processing"}
                 </span>
               </div>
             )}
@@ -124,13 +146,19 @@ export const MintTransactionDetails: React.FC<TransactionDetailsProps> = ({
         ))}
       </div>
 
-      <div className="flex w-full flex-col" style={{ marginTop: "30px", gap: "12px", padding: "0 10px" }}>
+      <div
+        className="flex w-full flex-col"
+        style={{ marginTop: "30px", gap: "12px", padding: "0 10px" }}
+      >
         <div className="flex flex-row justify-between items-center">
           <span className="info-name">{action} Amount</span>
           <div className="flex flex-row gap-2">
-            <span className="gray-text">{ethPrice && (depositAmount * ethPrice).toFixed(2)}</span>
+            <span className="gray-text">
+              {ethPrice && (depositAmount * ethPrice).toFixed(2)}
+            </span>
             <span className="green-text">
-              {depositAmount < 0.001 ? "< 0.001" : depositAmount.toFixed(3)} {depositAssetLabel}
+              {depositAmount < 0.001 ? "< 0.001" : depositAmount.toFixed(3)}{" "}
+              {depositAssetLabel}
             </span>
           </div>
         </div>
@@ -155,7 +183,9 @@ export const MintTransactionDetails: React.FC<TransactionDetailsProps> = ({
       </div>
 
       {fromDeposit && (
-        <div className="flex w-full items-center justify-center modal-info">You may close this window anytime</div>
+        <div className="flex w-full items-center justify-center modal-info">
+          You may close this window anytime
+        </div>
       )}
       <button onClick={closeModal} className="done-button">
         Done
