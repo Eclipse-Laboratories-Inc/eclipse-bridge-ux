@@ -88,11 +88,11 @@ export const MintTransactionDetails: React.FC<TransactionDetailsProps> = ({
         {chainLogos[1]}
       </div>
 
-      <div className="status-panel">
+      <div className="status-panel h-auto!">
         {steps.map((step, index) => (
           <div
             key={index}
-            className="panel-elem flex flex-row items-center justify-between"
+            className={`panel-elem flex flex-row items-center justify-between ${index === steps.length - 1 ? "border-none!" : ""}`}
           >
             <div className="left-side flex flex-row items-center">
               <div
