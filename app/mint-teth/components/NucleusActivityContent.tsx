@@ -1,4 +1,8 @@
-import { ActivityBoxIcon, Arrow, TransactionIcon } from "@/app/components/icons";
+import {
+  ActivityBoxIcon,
+  Arrow,
+  TransactionIcon,
+} from "@/app/components/icons";
 import { useWallets } from "@/app/hooks/useWallets";
 import { timeAgo } from "@/lib/activityUtils";
 import { ethers } from "ethers";
@@ -18,7 +22,10 @@ interface NucleusActivityContentProps {
   isLoading: boolean;
 }
 
-export const NucleusActivityContent = ({ transactions, isLoading }: NucleusActivityContentProps) => {
+export const NucleusActivityContent = ({
+  transactions,
+  isLoading,
+}: NucleusActivityContentProps) => {
   // Constants
   const eclipseNucleusStatusMap: Record<string, string> = {
     pending: "loading",
@@ -38,11 +45,17 @@ export const NucleusActivityContent = ({ transactions, isLoading }: NucleusActiv
   // Memoized callback because it iterates over an array
   const findTokenByAddress = useCallback((address: string) => {
     return tokenOptions
-      .concat({ value: tethEvmTokenAddress, label: "tETH", imageSrc: "/token-teth.svg" })
+      .concat({
+        value: tethEvmTokenAddress,
+        label: "tETH",
+        imageSrc: "/token-teth.svg",
+      })
       .find((token) => token.value === address);
   }, []);
 
-  const offerTokenOption = currentTx?.offerToken ? findTokenByAddress(currentTx?.offerToken) : null;
+  const offerTokenOption = currentTx?.offerToken
+    ? findTokenByAddress(currentTx?.offerToken)
+    : null;
 
   // Memoized because it returns a new array
   const steps: Step[] = useMemo(() => {
@@ -74,24 +87,49 @@ export const NucleusActivityContent = ({ transactions, isLoading }: NucleusActiv
         status: StepStatus.COMPLETED,
         link: `https://etherscan.io/tx/${currentTx?.endingTransactionHash}`,
       });
+    } else {
+      if (swapStatus === StepStatus.COMPLETED) {
+        transactionSteps.push({
+          title: `Withdraw Fulfillment`,
+          status: StepStatus.LOADING,
+          link: ``,
+        });
+      } else {
+        transactionSteps.push({
+          title: `Withdraw Fulfillment`,
+          status: StepStatus.NOT_STARTED,
+          link: ``,
+        });
+      }
     }
 
     return transactionSteps;
-  }, [currentTx?.createdTransactionHash, currentTx?.endingTransactionHash, currentTx?.status]);
+  }, [
+    currentTx?.createdTransactionHash,
+    currentTx?.endingTransactionHash,
+    currentTx?.status,
+  ]);
 
   return (
     <>
-      <div className={isModalOpen ? "status-overlay active" : "status-overlay"}></div>
+      <div
+        className={isModalOpen ? "status-overlay active" : "status-overlay"}
+      ></div>
       <div className="activity-container">
         {isLoading ? (
-          <Loading loadingClassName="loading-spinner" style={{ margin: "auto", transform: "scale(4)" }} />
+          <Loading
+            loadingClassName="loading-spinner"
+            style={{ margin: "auto", transform: "scale(4)" }}
+          />
         ) : (
           evmWallet &&
           transactions &&
           transactions.map((tx, index) => {
             const offerTokenOption = findTokenByAddress(tx.offerToken);
             const wantTokenOption = findTokenByAddress(tx.wantToken);
-            const isExpired = Number(tx.deadline) < Math.floor(Date.now() / 1000) && tx.status === "pending";
+            const isExpired =
+              Number(tx.deadline) < Math.floor(Date.now() / 1000) &&
+              tx.status === "pending";
             return (
               <div
                 key={index}
@@ -104,24 +142,51 @@ export const NucleusActivityContent = ({ transactions, isLoading }: NucleusActiv
                 <Image
                   src={offerTokenOption?.imageSrc ?? ""}
                   alt={offerTokenOption?.label ?? ""}
-                  style={{ objectFit: "cover", height: "53px", width: "53px", marginLeft: "5px", marginRight: "16px" }}
+                  style={{
+                    objectFit: "cover",
+                    height: "53px",
+                    width: "53px",
+                    marginLeft: "5px",
+                    marginRight: "16px",
+                  }}
                   width={53}
                   height={53}
                 />
-                <div className="flex flex-col justify-center" style={{ width: "85%" }}>
+                <div
+                  className="flex flex-col justify-center"
+                  style={{ width: "85%" }}
+                >
                   <div className="transaction-top flex justify-between">
                     <div className="flex tx-age" style={{ gap: "7px" }}>
-                      <span className="gray-in">{tx.offerToken === tethEvmTokenAddress ? "Redeem" : "Mint"}</span>
+                      <span className="gray-in">
+                        {tx.offerToken === tethEvmTokenAddress
+                          ? "Redeem"
+                          : "Mint"}
+                      </span>
                       <span className="gray-in">•</span>
-                      <span className="gray-in">{timeAgo(Number(tx.createdTimestamp))}</span>
+                      <span className="gray-in">
+                        {timeAgo(Number(tx.createdTimestamp))}
+                      </span>
                     </div>
-                    <div className={`flex flex-row items-center status-div ${tx.status}`}>
+                    <div
+                      className={`flex flex-row items-center status-div ${tx.status}`}
+                    >
                       {tx.status ? (
                         <>
                           <TransactionIcon
-                            iconType={isExpired ? StepStatus.EXPIRED : eclipseNucleusStatusMap[tx.status]}
+                            iconType={
+                              isExpired
+                                ? StepStatus.EXPIRED
+                                : eclipseNucleusStatusMap[tx.status]
+                            }
                           />
-                          <span>{isExpired ? "Expired" : tx.status === "pending" ? "Processing" : tx.status}</span>
+                          <span>
+                            {isExpired
+                              ? "Expired"
+                              : tx.status === "pending"
+                                ? "Processing"
+                                : tx.status}
+                          </span>
                         </>
                       ) : (
                         <Skeleton height={15} width={91} />
@@ -129,15 +194,24 @@ export const NucleusActivityContent = ({ transactions, isLoading }: NucleusActiv
                     </div>
                   </div>
                   <div className="transaction-bottom flex justify-between">
-                    <div className="flex flex-row items-center eth-to-ecl" style={{ gap: "14px" }}>
-                      <span className="white-in preserve-casing">{offerTokenOption?.label}</span>
+                    <div
+                      className="flex flex-row items-center eth-to-ecl"
+                      style={{ gap: "14px" }}
+                    >
+                      <span className="white-in preserve-casing">
+                        {offerTokenOption?.label}
+                      </span>
                       <Arrow />
-                      <span className="white-in preserve-casing">{wantTokenOption?.label}</span>
+                      <span className="white-in preserve-casing">
+                        {wantTokenOption?.label}
+                      </span>
                     </div>
                     {/* <span className="white-in">{Number(ethers.utils.formatEther(tx.amount)).toFixed(3)} ETH</span> */}
                     <span className="white-in">
                       {parseFloat(ethers.utils.formatEther(tx.amount)) > 0.001
-                        ? parseFloat(ethers.utils.formatEther(tx.amount)).toFixed(3)
+                        ? parseFloat(
+                            ethers.utils.formatEther(tx.amount),
+                          ).toFixed(3)
                         : "< 0.001"}{" "}
                       ETH
                     </span>
@@ -152,9 +226,19 @@ export const NucleusActivityContent = ({ transactions, isLoading }: NucleusActiv
         ) : (
           !isLoading &&
           transactions.length === 0 && (
-            <div className="flex flex-col items-center justify-center" style={{ height: "90%", gap: "21px" }}>
+            <div
+              className="flex flex-col items-center justify-center"
+              style={{ height: "90%", gap: "21px" }}
+            >
               <ActivityBoxIcon activityBoxClassName="" />
-              <span style={{ fontSize: "18px", color: "rgba(255, 255, 255, 0.3)", fontWeight: "500", width: "266px" }}>
+              <span
+                style={{
+                  fontSize: "18px",
+                  color: "rgba(255, 255, 255, 0.3)",
+                  fontWeight: "500",
+                  width: "266px",
+                }}
+              >
                 You don’t have any transactions to show
               </span>
             </div>
@@ -170,7 +254,9 @@ export const NucleusActivityContent = ({ transactions, isLoading }: NucleusActiv
           depositAmountAsBigInt={BigInt(0)}
           depositAssetLabel={offerTokenOption?.label}
           depositAssetIcon={offerTokenOption?.imageSrc}
-          action={currentTx?.offerToken === tethEvmTokenAddress ? "Redeem" : "Mint"}
+          action={
+            currentTx?.offerToken === tethEvmTokenAddress ? "Redeem" : "Mint"
+          }
         />
       )}
     </>
