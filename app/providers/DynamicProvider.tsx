@@ -105,7 +105,7 @@ export const DynamicProvider = (props: {
   chains: RelayChain[];
 }) => {
   const [isMobile, setIsMobile] = useState<boolean>(false);
-  const { walletFilter, setWalletFilter } = useWalletFilter();
+  const { setWalletFilter } = useWalletFilter();
 
   useEffect(() => {
     const checkWindowSize = () => {
