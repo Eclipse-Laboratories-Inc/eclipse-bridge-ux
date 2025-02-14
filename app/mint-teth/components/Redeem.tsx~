@@ -262,7 +262,7 @@ export function Redeem() {
     async function getSvmBalance() {
       try {
         setTethBalanceLoading(true);
-        if (tethBalance != "") {
+        if (tethBalance == "") {
           return;
         }
         if (sourceChain?.value === "eclipse" && svmAddress) {
