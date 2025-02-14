@@ -43,6 +43,7 @@ export const MintTransactionDetails: React.FC<TransactionDetailsProps> = ({
 
   const chainLogos = [
     <Image
+      key="1"
       src="/eth.png"
       alt="Ethereum"
       width={55}
@@ -55,6 +56,7 @@ export const MintTransactionDetails: React.FC<TransactionDetailsProps> = ({
       }}
     />,
     <Image
+      key="2"
       src="/eclipse.png"
       alt="Eclipse"
       width={55}
