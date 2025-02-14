@@ -39,9 +39,6 @@ const cssOverrides = `
   }
 
   div { font-family: 'IBM Plex Sans', sans-serif; }
-  img[data-testid='iconic-solana'] {
-    content: url('/eclipse.png');
-  }
   
   .wallet-progress-stepper, .accordion-item {
     border: 1px solid rgba(255, 255, 255, 0.1);
@@ -193,11 +190,6 @@ export const DynamicProvider = (props: {
               evmNetworks,
               mergeNetworks(networks, relayNetworks),
             );
-          },
-          chainDisplayValues: {
-            solana: {
-              displayName: "Eclipse",
-            },
           },
         },
         cssOverrides,
