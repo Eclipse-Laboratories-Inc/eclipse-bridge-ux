@@ -1584,6 +1584,13 @@
     buffer "6.0.3"
     eventemitter3 "5.0.1"
 
+"@dynamic-labs/ethers-v5@^2.6.2":
+  version "2.6.2"
+  resolved "https://registry.yarnpkg.com/@dynamic-labs/ethers-v5/-/ethers-v5-2.6.2.tgz#260b339b031d135a1ac0c566abef57be95341eaa"
+  integrity sha512-v1EzNUiC50nJ0cWlHYLU/d98gQzHEchjTFVpZhhMi/JG2bz6Wy4bj4gSuIjpnB1ci6aG33ZV60Bhx8DQSSFfJQ==
+  dependencies:
+    "@dynamic-labs/wallet-connector-core" "2.6.2"
+
 "@dynamic-labs/iconic@4.5.3":
   version "4.5.3"
   resolved "https://registry.yarnpkg.com/@dynamic-labs/iconic/-/iconic-4.5.3.tgz#64c7d08942a606c2bd636c01369cf8dc0f634dbb"
@@ -1621,6 +1628,11 @@
   dependencies:
     "@dynamic-labs/assert-package-version" "4.5.3"
     "@dynamic-labs/types" "4.5.3"
+
+"@dynamic-labs/sdk-api-core@0.0.510":
+  version "0.0.510"
+  resolved "https://registry.yarnpkg.com/@dynamic-labs/sdk-api-core/-/sdk-api-core-0.0.510.tgz#693b2e89db07cd431611c63faa311889a0f611a2"
+  integrity sha512-bUhiHkxbHf5Td2hf/XZRsZXcsSJZvG6QwkJCpg8QFVafJEAL3o9ifYFFRDycwvcVSYEEzBRcy44oCnpdgVUD3Q==
 
 "@dynamic-labs/sdk-api-core@0.0.613":
   version "0.0.613"
@@ -1741,6 +1753,13 @@
     eventemitter3 "5.0.1"
     util "0.12.5"
     zod "3.22.4"
+
+"@dynamic-labs/wallet-connector-core@2.6.2":
+  version "2.6.2"
+  resolved "https://registry.yarnpkg.com/@dynamic-labs/wallet-connector-core/-/wallet-connector-core-2.6.2.tgz#32d315b900930fc4404445ae065e4ec1bde5088d"
+  integrity sha512-pMjxyPRX0zSuk9Tf9CvOuDrYD33Tt9kLsv9AA5IeD/Su6cDPS+DFjFVhAk4Sido1XvBnu+6M3QN/1G/Bdsv61Q==
+  dependencies:
+    "@dynamic-labs/sdk-api-core" "0.0.510"
 
 "@dynamic-labs/wallet-connector-core@4.5.3":
   version "4.5.3"
@@ -11992,11 +12011,6 @@ preact@^10.16.0:
   version "10.24.2"
   resolved "https://registry.npmjs.org/preact/-/preact-10.24.2.tgz"
   integrity sha512-1cSoF0aCC8uaARATfrlz4VCBqE8LwZwRfLgkxJOQwAlQt6ayTmi0D9OF7nXid1POI5SZidFuG9CnlXbDfLqY/Q==
-
-preact@^10.24.2:
-  version "10.25.4"
-  resolved "https://registry.yarnpkg.com/preact/-/preact-10.25.4.tgz#c1d00bee9d7b9dcd06a2311d9951973b506ae8ac"
-  integrity sha512-jLdZDb+Q+odkHJ+MpW/9U5cODzqnB+fy2EiHSZES7ldV5LK7yjlVzTp7R8Xy6W6y75kfK8iWYtFVH7lvjwrCMA==
 
 preact@^10.24.2:
   version "10.25.4"
