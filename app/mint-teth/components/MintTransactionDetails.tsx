@@ -157,7 +157,7 @@ export const MintTransactionDetails: React.FC<TransactionDetailsProps> = ({
           <span className="info-name">{action} Amount</span>
           <div className="flex flex-row gap-2">
             <span className="gray-text">
-              {ethPrice && (depositAmount * ethPrice).toFixed(2)}
+              ${ethPrice && (depositAmount * ethPrice).toFixed(2)}
             </span>
             <span className="green-text">
               {depositAmount < 0.001 ? "< 0.001" : depositAmount.toFixed(3)}{" "}
