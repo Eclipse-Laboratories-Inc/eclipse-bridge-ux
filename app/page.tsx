@@ -22,20 +22,13 @@ export default function Main() {
   const { isSidebar, setIsSidebar } = useSidebar();
   const [selectedOption, setSelectedOption] = useState(Options.Mainnet);
   const { gasPrice, ethPrice, blockNumber } = useEthereumData(selectedOption);
-  const [isMobile, setIsMobile] = useState<boolean>(
-    typeof window !== "undefined" ? window.innerWidth < 768 : false
-  );
-  const [amountEther, setAmountEther] = useState<number | string | undefined>(
-    undefined
-  );
+  const [isMobile, setIsMobile] = useState<boolean>(typeof window !== "undefined" ? window.innerWidth < 768 : false);
+  const [amountEther, setAmountEther] = useState<number | string | undefined>(undefined);
   const walletClient = useWalletClient();
 
   return (
     <EthereumDataContext.Provider value={[gasPrice, ethPrice, blockNumber]}>
-      <NetworkProvider
-        selectedOption={selectedOption}
-        setSelectedOption={setSelectedOption}
-      >
+      <NetworkProvider selectedOption={selectedOption} setSelectedOption={setSelectedOption}>
         <WalletClientContext.Provider value={walletClient}>
           <TransactionProvider>
             <ThirdpartyBridgeModalProvider>
@@ -53,19 +46,10 @@ export default function Main() {
                   <TosClickwrap />
 
                   <div className="flex flex-row w-full items-center sm:h-full">
-                    <Sidebar
-                      isExtended={isSidebar}
-                      setIsExtended={setIsSidebar}
-                    />
-                    <div
-                      className="flex flex-col items-center"
-                      style={{ gap: "13px", flexGrow: "1" }}
-                    >
+                    <Sidebar isExtended={isSidebar} setIsExtended={setIsSidebar} />
+                    <div className="flex flex-col items-center" style={{ gap: "13px", flexGrow: "1" }}>
                       <div className="main-content flex flex-col gap-2 items-center">
-                        <Deposit
-                          amountEther={amountEther}
-                          setAmountEther={setAmountEther}
-                        />
+                        <Deposit amountEther={amountEther} setAmountEther={setAmountEther} />
                         <br />
                       </div>
                     </div>
