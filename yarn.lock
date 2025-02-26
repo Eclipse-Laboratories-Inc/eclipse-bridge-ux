@@ -1454,6 +1454,13 @@
   dependencies:
     "@dynamic-labs/logger" "4.5.3"
 
+"@dynamic-labs/assert-package-version@4.8.1":
+  version "4.8.1"
+  resolved "https://registry.yarnpkg.com/@dynamic-labs/assert-package-version/-/assert-package-version-4.8.1.tgz#e1e8ad3a54984c7ac50babf956edf90373bae733"
+  integrity sha512-TWfuSr5zHNkdJr/4pnFo9UQY3toiHgTsMnKPxdwRy3Cq6IspvnI4RnrKYDJbjznNg9T08cgRzntOCR5DiR0ItA==
+  dependencies:
+    "@dynamic-labs/logger" "4.8.1"
+
 "@dynamic-labs/bitcoin@4.5.3":
   version "4.5.3"
   resolved "https://registry.yarnpkg.com/@dynamic-labs/bitcoin/-/bitcoin-4.5.3.tgz#8e6773ede1cd15c0185a653f9be083a3a9dc3827"
@@ -1533,6 +1540,30 @@
     react-dom "18.2.0"
     viem "2.21.57"
 
+"@dynamic-labs/embedded-wallet-solana@4.8.1":
+  version "4.8.1"
+  resolved "https://registry.yarnpkg.com/@dynamic-labs/embedded-wallet-solana/-/embedded-wallet-solana-4.8.1.tgz#0eb563d14d177f98108c63fba852190098001751"
+  integrity sha512-77wsK9Sm3oCY2Y24Z+o3TwS85ThWNO/sjfnG3CTvDP8fpPBBZjJAx55QbidG0EJlP/xfSwKA6NaqkCX2fC3Oig==
+  dependencies:
+    "@dynamic-labs/assert-package-version" "4.8.1"
+    "@dynamic-labs/embedded-wallet" "4.8.1"
+    "@dynamic-labs/logger" "4.8.1"
+    "@dynamic-labs/rpc-providers" "4.8.1"
+    "@dynamic-labs/sdk-api-core" "0.0.628"
+    "@dynamic-labs/solana-core" "4.8.1"
+    "@dynamic-labs/types" "4.8.1"
+    "@dynamic-labs/utils" "4.8.1"
+    "@dynamic-labs/wallet-book" "4.8.1"
+    "@dynamic-labs/wallet-connector-core" "4.8.1"
+    "@dynamic-labs/webauthn" "4.8.1"
+    "@solana/web3.js" "1.92.1"
+    "@turnkey/iframe-stamper" "2.0.0"
+    "@turnkey/solana" "1.0.1"
+    "@turnkey/webauthn-stamper" "0.5.0"
+    eventemitter3 "5.0.1"
+    react-dom "18.2.0"
+    viem "2.21.57"
+
 "@dynamic-labs/embedded-wallet@4.5.3":
   version "4.5.3"
   resolved "https://registry.yarnpkg.com/@dynamic-labs/embedded-wallet/-/embedded-wallet-4.5.3.tgz#e0830b3cb186fca92be606cc3c75167463e94eff"
@@ -1545,6 +1576,23 @@
     "@dynamic-labs/wallet-book" "4.5.3"
     "@dynamic-labs/wallet-connector-core" "4.5.3"
     "@dynamic-labs/webauthn" "4.5.3"
+    "@turnkey/api-key-stamper" "0.4.3"
+    "@turnkey/http" "2.15.0"
+    "@turnkey/iframe-stamper" "2.0.0"
+    "@turnkey/webauthn-stamper" "0.5.0"
+
+"@dynamic-labs/embedded-wallet@4.8.1":
+  version "4.8.1"
+  resolved "https://registry.yarnpkg.com/@dynamic-labs/embedded-wallet/-/embedded-wallet-4.8.1.tgz#c0934a4fbe27cd7e5183e72c360fae60a3de24a7"
+  integrity sha512-bOf/zHlBe7vYUsdTg6W42jqwyHF56dykQ9az+78Sl2H3mDGV6PhXSQ/eTa21TPoOa8tLabcPiJldGFHyvnc5/g==
+  dependencies:
+    "@dynamic-labs/assert-package-version" "4.8.1"
+    "@dynamic-labs/logger" "4.8.1"
+    "@dynamic-labs/sdk-api-core" "0.0.628"
+    "@dynamic-labs/utils" "4.8.1"
+    "@dynamic-labs/wallet-book" "4.8.1"
+    "@dynamic-labs/wallet-connector-core" "4.8.1"
+    "@dynamic-labs/webauthn" "4.8.1"
     "@turnkey/api-key-stamper" "0.4.3"
     "@turnkey/http" "2.15.0"
     "@turnkey/iframe-stamper" "2.0.0"
@@ -1600,10 +1648,26 @@
     "@dynamic-labs/logger" "4.5.3"
     sharp "0.33.2"
 
+"@dynamic-labs/iconic@4.8.1":
+  version "4.8.1"
+  resolved "https://registry.yarnpkg.com/@dynamic-labs/iconic/-/iconic-4.8.1.tgz#14bdee801323c45b1764883be926338cd00c2062"
+  integrity sha512-PeVhgJ1qfRF12FsIoL1Z0vAKZwu4yZJojKgMGZwlSTh5tXr8h6JfGNTQuqjiDjprE9sZFgM4Y0mYk/Dcc7qx6Q==
+  dependencies:
+    "@dynamic-labs/assert-package-version" "4.8.1"
+    "@dynamic-labs/logger" "4.8.1"
+    sharp "0.33.5"
+
 "@dynamic-labs/logger@4.5.3":
   version "4.5.3"
   resolved "https://registry.yarnpkg.com/@dynamic-labs/logger/-/logger-4.5.3.tgz#b0277b5fcdba5b9f33f1382311761f9627cfaecb"
   integrity sha512-yRKA1jUHJAUghNko5PvGMMxc6UXtxXLCGzGhosqKlUkQ8+q5LT/542i8RJhoLExTJjVGDM1JkAcTOWk/bRhflg==
+  dependencies:
+    eventemitter3 "5.0.1"
+
+"@dynamic-labs/logger@4.8.1":
+  version "4.8.1"
+  resolved "https://registry.yarnpkg.com/@dynamic-labs/logger/-/logger-4.8.1.tgz#9c9b05f926ea700448e7d38e920291c7d0ff3bfa"
+  integrity sha512-VBAWrPANYXraEBnnxbnnweeYrxCT2ufX0+CASpFaJES/VbAWDj/CW3dpD5h4KSyXsA00RApZDi3MQcYxEpMDfA==
   dependencies:
     eventemitter3 "5.0.1"
 
@@ -1629,6 +1693,14 @@
     "@dynamic-labs/assert-package-version" "4.5.3"
     "@dynamic-labs/types" "4.5.3"
 
+"@dynamic-labs/rpc-providers@4.8.1":
+  version "4.8.1"
+  resolved "https://registry.yarnpkg.com/@dynamic-labs/rpc-providers/-/rpc-providers-4.8.1.tgz#68b5b3b8fc4143be7ac44f78d8cbee19ece781ea"
+  integrity sha512-kKDbIzvQ0ZQInGlG8x/xint4/efogeBDkmNBhM5ybxiQ1rcABIcxi0IpitIsWoat8xvPxz+4m7jBmsh6OsNMRw==
+  dependencies:
+    "@dynamic-labs/assert-package-version" "4.8.1"
+    "@dynamic-labs/types" "4.8.1"
+
 "@dynamic-labs/sdk-api-core@0.0.510":
   version "0.0.510"
   resolved "https://registry.yarnpkg.com/@dynamic-labs/sdk-api-core/-/sdk-api-core-0.0.510.tgz#693b2e89db07cd431611c63faa311889a0f611a2"
@@ -1638,6 +1710,11 @@
   version "0.0.613"
   resolved "https://registry.yarnpkg.com/@dynamic-labs/sdk-api-core/-/sdk-api-core-0.0.613.tgz#f50a20bfeb86bc308cfe659dbc378576116cb64e"
   integrity sha512-LUtcjCf8g6wiMxsvI7B36ZRAE2xViMW4Y1nse3TcTGhxEXVuUsUjv8Js1i73zO+d1p1UmYdtw39iUbK4urKOxg==
+
+"@dynamic-labs/sdk-api-core@0.0.628":
+  version "0.0.628"
+  resolved "https://registry.yarnpkg.com/@dynamic-labs/sdk-api-core/-/sdk-api-core-0.0.628.tgz#14dc6912abb7bbd6dc44084a56d9ff30de04bb12"
+  integrity sha512-wYX4U3/Y6oTVDH56Xm9HgZj2eVTci6U6KbwEzXDU4EDwFqQMlkdLIcJ5AYm7trCBns55TAlQom1rjJInuthH7A==
 
 "@dynamic-labs/sdk-react-core@4.5.3":
   version "4.5.3"
@@ -1684,6 +1761,22 @@
     "@solana/web3.js" "1.92.1"
     eventemitter3 "5.0.1"
 
+"@dynamic-labs/solana-core@4.8.1":
+  version "4.8.1"
+  resolved "https://registry.yarnpkg.com/@dynamic-labs/solana-core/-/solana-core-4.8.1.tgz#ee8e92e7cc431eb71a67b87910f0782f40b85cb2"
+  integrity sha512-Qmss2cptsw/B4tv8is0SOrIU5p7jkqtUrmYc42ga0+BBDsjdcYiSpka3LdkGfnqihL38mHy2yQGXr1ferGNArQ==
+  dependencies:
+    "@dynamic-labs/assert-package-version" "4.8.1"
+    "@dynamic-labs/rpc-providers" "4.8.1"
+    "@dynamic-labs/sdk-api-core" "0.0.628"
+    "@dynamic-labs/types" "4.8.1"
+    "@dynamic-labs/utils" "4.8.1"
+    "@dynamic-labs/wallet-book" "4.8.1"
+    "@dynamic-labs/wallet-connector-core" "4.8.1"
+    "@solana/spl-token" "0.4.6"
+    "@solana/web3.js" "1.92.1"
+    eventemitter3 "5.0.1"
+
 "@dynamic-labs/solana@4.5.3":
   version "4.5.3"
   resolved "https://registry.yarnpkg.com/@dynamic-labs/solana/-/solana-4.5.3.tgz#ba2b2d3492e0ff9e435462f4021813e413f89a43"
@@ -1699,6 +1792,29 @@
     "@dynamic-labs/utils" "4.5.3"
     "@dynamic-labs/wallet-book" "4.5.3"
     "@dynamic-labs/wallet-connector-core" "4.5.3"
+    "@solana/web3.js" "1.92.1"
+    "@wallet-standard/app" "1.0.1"
+    "@wallet-standard/base" "1.0.1"
+    "@wallet-standard/experimental-features" "0.1.1"
+    "@wallet-standard/features" "1.0.3"
+    bs58 "5.0.0"
+    tweetnacl "1.0.3"
+
+"@dynamic-labs/solana@4.8.1":
+  version "4.8.1"
+  resolved "https://registry.yarnpkg.com/@dynamic-labs/solana/-/solana-4.8.1.tgz#e3d28a65672e03eb19572a310a3393795f7c0119"
+  integrity sha512-+OBNY04W64lYS6iH8gKgb3oQQo1ABvCzNOLyXkgA9GiASs7EfKlsRBJALQHL8CY/Pa/Zq4E+Ngwm/KFRIWYdwA==
+  dependencies:
+    "@dynamic-labs/assert-package-version" "4.8.1"
+    "@dynamic-labs/embedded-wallet-solana" "4.8.1"
+    "@dynamic-labs/logger" "4.8.1"
+    "@dynamic-labs/rpc-providers" "4.8.1"
+    "@dynamic-labs/sdk-api-core" "0.0.628"
+    "@dynamic-labs/solana-core" "4.8.1"
+    "@dynamic-labs/types" "4.8.1"
+    "@dynamic-labs/utils" "4.8.1"
+    "@dynamic-labs/wallet-book" "4.8.1"
+    "@dynamic-labs/wallet-connector-core" "4.8.1"
     "@solana/web3.js" "1.92.1"
     "@wallet-standard/app" "1.0.1"
     "@wallet-standard/base" "1.0.1"
@@ -1723,6 +1839,14 @@
     "@dynamic-labs/assert-package-version" "4.5.3"
     "@dynamic-labs/sdk-api-core" "0.0.613"
 
+"@dynamic-labs/types@4.8.1":
+  version "4.8.1"
+  resolved "https://registry.yarnpkg.com/@dynamic-labs/types/-/types-4.8.1.tgz#8da0a4a4357125d07d7bd1c116f30fe4c3344df6"
+  integrity sha512-yLy39ZZmsgotAJYuF2pUw0dTLpPmKOaOegEMk8PZYRK7qFWeMLGX/0vQNIANDlC3eR7/zPqRuyeVgratwsb9Ug==
+  dependencies:
+    "@dynamic-labs/assert-package-version" "4.8.1"
+    "@dynamic-labs/sdk-api-core" "0.0.628"
+
 "@dynamic-labs/utils@4.5.3":
   version "4.5.3"
   resolved "https://registry.yarnpkg.com/@dynamic-labs/utils/-/utils-4.5.3.tgz#65ab3fe7b0f48db8a75025a2a2c8c7a4d1537179"
@@ -1732,6 +1856,19 @@
     "@dynamic-labs/logger" "4.5.3"
     "@dynamic-labs/sdk-api-core" "0.0.613"
     "@dynamic-labs/types" "4.5.3"
+    buffer "6.0.3"
+    eventemitter3 "5.0.1"
+    tldts "6.0.16"
+
+"@dynamic-labs/utils@4.8.1":
+  version "4.8.1"
+  resolved "https://registry.yarnpkg.com/@dynamic-labs/utils/-/utils-4.8.1.tgz#9eddaaef949cefe2dd51df1e439e3459dd6add52"
+  integrity sha512-YYaCHcYdL+AaF/JtUWSJNcE7VQvAhjjF8xtSd7W6PpED3UI5TTnj22g/VC7+V7cXTwrzkB975RysICUOUezDVg==
+  dependencies:
+    "@dynamic-labs/assert-package-version" "4.8.1"
+    "@dynamic-labs/logger" "4.8.1"
+    "@dynamic-labs/sdk-api-core" "0.0.628"
+    "@dynamic-labs/types" "4.8.1"
     buffer "6.0.3"
     eventemitter3 "5.0.1"
     tldts "6.0.16"
@@ -1750,6 +1887,19 @@
     "@dynamic-labs/iconic" "4.5.3"
     "@dynamic-labs/logger" "4.5.3"
     "@dynamic-labs/utils" "4.5.3"
+    eventemitter3 "5.0.1"
+    util "0.12.5"
+    zod "3.22.4"
+
+"@dynamic-labs/wallet-book@4.8.1":
+  version "4.8.1"
+  resolved "https://registry.yarnpkg.com/@dynamic-labs/wallet-book/-/wallet-book-4.8.1.tgz#888537a116786b810b3a15d722d5f077447afbfb"
+  integrity sha512-31awltiNixtGKp+MfWKTSkDXAqst7s5DExdY3s9R00JaBBzYVFPRdBnWm73D/HCpjutBOS4Z08Dm1fbaZ044LQ==
+  dependencies:
+    "@dynamic-labs/assert-package-version" "4.8.1"
+    "@dynamic-labs/iconic" "4.8.1"
+    "@dynamic-labs/logger" "4.8.1"
+    "@dynamic-labs/utils" "4.8.1"
     eventemitter3 "5.0.1"
     util "0.12.5"
     zod "3.22.4"
@@ -1775,6 +1925,20 @@
     "@dynamic-labs/wallet-book" "4.5.3"
     eventemitter3 "5.0.1"
 
+"@dynamic-labs/wallet-connector-core@4.8.1":
+  version "4.8.1"
+  resolved "https://registry.yarnpkg.com/@dynamic-labs/wallet-connector-core/-/wallet-connector-core-4.8.1.tgz#b4d35315dc5fab0aef391058564702af0d71e6f4"
+  integrity sha512-mukQn2htBFNNWUjOq4GxgMoIbaY55I88N8rZ28GqULj1eKY32nijHyz+lCPBQOZFJ39NYLuz+wSM4I0vH2A2gQ==
+  dependencies:
+    "@dynamic-labs/assert-package-version" "4.8.1"
+    "@dynamic-labs/logger" "4.8.1"
+    "@dynamic-labs/rpc-providers" "4.8.1"
+    "@dynamic-labs/sdk-api-core" "0.0.628"
+    "@dynamic-labs/types" "4.8.1"
+    "@dynamic-labs/utils" "4.8.1"
+    "@dynamic-labs/wallet-book" "4.8.1"
+    eventemitter3 "5.0.1"
+
 "@dynamic-labs/webauthn@4.5.3":
   version "4.5.3"
   resolved "https://registry.yarnpkg.com/@dynamic-labs/webauthn/-/webauthn-4.5.3.tgz#4f19fe0cdf29f983d5b42923c9b9b8e8619dbdf2"
@@ -1782,6 +1946,16 @@
   dependencies:
     "@dynamic-labs/assert-package-version" "4.5.3"
     "@dynamic-labs/logger" "4.5.3"
+    "@simplewebauthn/browser" "9.0.1"
+    "@simplewebauthn/types" "9.0.1"
+
+"@dynamic-labs/webauthn@4.8.1":
+  version "4.8.1"
+  resolved "https://registry.yarnpkg.com/@dynamic-labs/webauthn/-/webauthn-4.8.1.tgz#7ae02a105102b83679ffed261c1e78b46e23a9fe"
+  integrity sha512-WliKYs4hWqPgmu7T4cgxSLVIn9UJBvyNHIK8eNRq/7K13O8A06LMxK+ouHIS2qFSsP9w7Aldf5XJjvM11Lc1Cw==
+  dependencies:
+    "@dynamic-labs/assert-package-version" "4.8.1"
+    "@dynamic-labs/logger" "4.8.1"
     "@simplewebauthn/browser" "9.0.1"
     "@simplewebauthn/types" "9.0.1"
 
@@ -1794,6 +1968,13 @@
   version "0.45.0"
   resolved "https://registry.yarnpkg.com/@emnapi/runtime/-/runtime-0.45.0.tgz#e754de04c683263f34fd0c7f32adfe718bbe4ddd"
   integrity sha512-Txumi3td7J4A/xTTwlssKieHKTGl3j4A1tglBx72auZ49YK7ePY6XZricgIg9mnZT4xPfA+UPCUdnhRuEFDL+w==
+  dependencies:
+    tslib "^2.4.0"
+
+"@emnapi/runtime@^1.2.0":
+  version "1.3.1"
+  resolved "https://registry.yarnpkg.com/@emnapi/runtime/-/runtime-1.3.1.tgz#0fcaa575afc31f455fd33534c19381cfce6c6f60"
+  integrity sha512-kEBmG8KyqtxJZv+ygbEim+KCGtIq1fC22Ms3S4ziXmYKm8uyoLX0MHONVKwp+9opg390VaKRNt4a7A9NwmpNhw==
   dependencies:
     tslib "^2.4.0"
 
@@ -2445,6 +2626,13 @@
   optionalDependencies:
     "@img/sharp-libvips-darwin-arm64" "1.0.1"
 
+"@img/sharp-darwin-arm64@0.33.5":
+  version "0.33.5"
+  resolved "https://registry.yarnpkg.com/@img/sharp-darwin-arm64/-/sharp-darwin-arm64-0.33.5.tgz#ef5b5a07862805f1e8145a377c8ba6e98813ca08"
+  integrity sha512-UT4p+iz/2H4twwAoLCqfA9UH5pI6DggwKEGuaPy7nCVQ8ZsiY5PIcrRvD1DzuY3qYL07NtIQcWnBSY/heikIFQ==
+  optionalDependencies:
+    "@img/sharp-libvips-darwin-arm64" "1.0.4"
+
 "@img/sharp-darwin-x64@0.33.2":
   version "0.33.2"
   resolved "https://registry.yarnpkg.com/@img/sharp-darwin-x64/-/sharp-darwin-x64-0.33.2.tgz#982e26bb9d38a81f75915c4032539aed621d1c21"
@@ -2452,45 +2640,92 @@
   optionalDependencies:
     "@img/sharp-libvips-darwin-x64" "1.0.1"
 
+"@img/sharp-darwin-x64@0.33.5":
+  version "0.33.5"
+  resolved "https://registry.yarnpkg.com/@img/sharp-darwin-x64/-/sharp-darwin-x64-0.33.5.tgz#e03d3451cd9e664faa72948cc70a403ea4063d61"
+  integrity sha512-fyHac4jIc1ANYGRDxtiqelIbdWkIuQaI84Mv45KvGRRxSAa7o7d1ZKAOBaYbnepLC1WqxfpimdeWfvqqSGwR2Q==
+  optionalDependencies:
+    "@img/sharp-libvips-darwin-x64" "1.0.4"
+
 "@img/sharp-libvips-darwin-arm64@1.0.1":
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/@img/sharp-libvips-darwin-arm64/-/sharp-libvips-darwin-arm64-1.0.1.tgz#81e83ffc2c497b3100e2f253766490f8fad479cd"
   integrity sha512-kQyrSNd6lmBV7O0BUiyu/OEw9yeNGFbQhbxswS1i6rMDwBBSX+e+rPzu3S+MwAiGU3HdLze3PanQ4Xkfemgzcw==
+
+"@img/sharp-libvips-darwin-arm64@1.0.4":
+  version "1.0.4"
+  resolved "https://registry.yarnpkg.com/@img/sharp-libvips-darwin-arm64/-/sharp-libvips-darwin-arm64-1.0.4.tgz#447c5026700c01a993c7804eb8af5f6e9868c07f"
+  integrity sha512-XblONe153h0O2zuFfTAbQYAX2JhYmDHeWikp1LM9Hul9gVPjFY427k6dFEcOL72O01QxQsWi761svJ/ev9xEDg==
 
 "@img/sharp-libvips-darwin-x64@1.0.1":
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/@img/sharp-libvips-darwin-x64/-/sharp-libvips-darwin-x64-1.0.1.tgz#fc1fcd9d78a178819eefe2c1a1662067a83ab1d6"
   integrity sha512-eVU/JYLPVjhhrd8Tk6gosl5pVlvsqiFlt50wotCvdkFGf+mDNBJxMh+bvav+Wt3EBnNZWq8Sp2I7XfSjm8siog==
 
+"@img/sharp-libvips-darwin-x64@1.0.4":
+  version "1.0.4"
+  resolved "https://registry.yarnpkg.com/@img/sharp-libvips-darwin-x64/-/sharp-libvips-darwin-x64-1.0.4.tgz#e0456f8f7c623f9dbfbdc77383caa72281d86062"
+  integrity sha512-xnGR8YuZYfJGmWPvmlunFaWJsb9T/AO2ykoP3Fz/0X5XV2aoYBPkX6xqCQvUTKKiLddarLaxpzNe+b1hjeWHAQ==
+
 "@img/sharp-libvips-linux-arm64@1.0.1":
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/@img/sharp-libvips-linux-arm64/-/sharp-libvips-linux-arm64-1.0.1.tgz#26eb8c556a9b0db95f343fc444abc3effb67ebcf"
   integrity sha512-bnGG+MJjdX70mAQcSLxgeJco11G+MxTz+ebxlz8Y3dxyeb3Nkl7LgLI0mXupoO+u1wRNx/iRj5yHtzA4sde1yA==
+
+"@img/sharp-libvips-linux-arm64@1.0.4":
+  version "1.0.4"
+  resolved "https://registry.yarnpkg.com/@img/sharp-libvips-linux-arm64/-/sharp-libvips-linux-arm64-1.0.4.tgz#979b1c66c9a91f7ff2893556ef267f90ebe51704"
+  integrity sha512-9B+taZ8DlyyqzZQnoeIvDVR/2F4EbMepXMc/NdVbkzsJbzkUjhXv/70GQJ7tdLA4YJgNP25zukcxpX2/SueNrA==
 
 "@img/sharp-libvips-linux-arm@1.0.1":
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/@img/sharp-libvips-linux-arm/-/sharp-libvips-linux-arm-1.0.1.tgz#2a377b959ff7dd6528deee486c25461296a4fa8b"
   integrity sha512-FtdMvR4R99FTsD53IA3LxYGghQ82t3yt0ZQ93WMZ2xV3dqrb0E8zq4VHaTOuLEAuA83oDawHV3fd+BsAPadHIQ==
 
+"@img/sharp-libvips-linux-arm@1.0.5":
+  version "1.0.5"
+  resolved "https://registry.yarnpkg.com/@img/sharp-libvips-linux-arm/-/sharp-libvips-linux-arm-1.0.5.tgz#99f922d4e15216ec205dcb6891b721bfd2884197"
+  integrity sha512-gvcC4ACAOPRNATg/ov8/MnbxFDJqf/pDePbBnuBDcjsI8PssmjoKMAz4LtLaVi+OnSb5FK/yIOamqDwGmXW32g==
+
 "@img/sharp-libvips-linux-s390x@1.0.1":
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/@img/sharp-libvips-linux-s390x/-/sharp-libvips-linux-s390x-1.0.1.tgz#af28ac9ba929204467ecdf843330d791e9421e10"
   integrity sha512-3+rzfAR1YpMOeA2zZNp+aYEzGNWK4zF3+sdMxuCS3ey9HhDbJ66w6hDSHDMoap32DueFwhhs3vwooAB2MaK4XQ==
+
+"@img/sharp-libvips-linux-s390x@1.0.4":
+  version "1.0.4"
+  resolved "https://registry.yarnpkg.com/@img/sharp-libvips-linux-s390x/-/sharp-libvips-linux-s390x-1.0.4.tgz#f8a5eb1f374a082f72b3f45e2fb25b8118a8a5ce"
+  integrity sha512-u7Wz6ntiSSgGSGcjZ55im6uvTrOxSIS8/dgoVMoiGE9I6JAfU50yH5BoDlYA1tcuGS7g/QNtetJnxA6QEsCVTA==
 
 "@img/sharp-libvips-linux-x64@1.0.1":
   version "1.0.1"
   resolved "https://registry.npmjs.org/@img/sharp-libvips-linux-x64/-/sharp-libvips-linux-x64-1.0.1.tgz"
   integrity sha512-3NR1mxFsaSgMMzz1bAnnKbSAI+lHXVTqAHgc1bgzjHuXjo4hlscpUxc0vFSAPKI3yuzdzcZOkq7nDPrP2F8Jgw==
 
+"@img/sharp-libvips-linux-x64@1.0.4":
+  version "1.0.4"
+  resolved "https://registry.yarnpkg.com/@img/sharp-libvips-linux-x64/-/sharp-libvips-linux-x64-1.0.4.tgz#d4c4619cdd157774906e15770ee119931c7ef5e0"
+  integrity sha512-MmWmQ3iPFZr0Iev+BAgVMb3ZyC4KeFc3jFxnNbEPas60e1cIfevbtuyf9nDGIzOaW9PdnDciJm+wFFaTlj5xYw==
+
 "@img/sharp-libvips-linuxmusl-arm64@1.0.1":
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/@img/sharp-libvips-linuxmusl-arm64/-/sharp-libvips-linuxmusl-arm64-1.0.1.tgz#d150c92151cea2e8d120ad168b9c358d09c77ce8"
   integrity sha512-5aBRcjHDG/T6jwC3Edl3lP8nl9U2Yo8+oTl5drd1dh9Z1EBfzUKAJFUDTDisDjUwc7N4AjnPGfCA3jl3hY8uDg==
 
+"@img/sharp-libvips-linuxmusl-arm64@1.0.4":
+  version "1.0.4"
+  resolved "https://registry.yarnpkg.com/@img/sharp-libvips-linuxmusl-arm64/-/sharp-libvips-linuxmusl-arm64-1.0.4.tgz#166778da0f48dd2bded1fa3033cee6b588f0d5d5"
+  integrity sha512-9Ti+BbTYDcsbp4wfYib8Ctm1ilkugkA/uscUn6UXK1ldpC1JjiXbLfFZtRlBhjPZ5o1NCLiDbg8fhUPKStHoTA==
+
 "@img/sharp-libvips-linuxmusl-x64@1.0.1":
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/@img/sharp-libvips-linuxmusl-x64/-/sharp-libvips-linuxmusl-x64-1.0.1.tgz#e297c1a4252c670d93b0f9e51fca40a7a5b6acfd"
   integrity sha512-dcT7inI9DBFK6ovfeWRe3hG30h51cBAP5JXlZfx6pzc/Mnf9HFCQDLtYf4MCBjxaaTfjCCjkBxcy3XzOAo5txw==
+
+"@img/sharp-libvips-linuxmusl-x64@1.0.4":
+  version "1.0.4"
+  resolved "https://registry.yarnpkg.com/@img/sharp-libvips-linuxmusl-x64/-/sharp-libvips-linuxmusl-x64-1.0.4.tgz#93794e4d7720b077fcad3e02982f2f1c246751ff"
+  integrity sha512-viYN1KX9m+/hGkJtvYYp+CCLgnJXwiQB39damAO7WMdKWlIhmYTfHjwSbQeUK/20vY154mwezd9HflVFM1wVSw==
 
 "@img/sharp-linux-arm64@0.33.2":
   version "0.33.2"
@@ -2499,12 +2734,26 @@
   optionalDependencies:
     "@img/sharp-libvips-linux-arm64" "1.0.1"
 
+"@img/sharp-linux-arm64@0.33.5":
+  version "0.33.5"
+  resolved "https://registry.yarnpkg.com/@img/sharp-linux-arm64/-/sharp-linux-arm64-0.33.5.tgz#edb0697e7a8279c9fc829a60fc35644c4839bb22"
+  integrity sha512-JMVv+AMRyGOHtO1RFBiJy/MBsgz0x4AWrT6QoEVVTyh1E39TrCUpTRI7mx9VksGX4awWASxqCYLCV4wBZHAYxA==
+  optionalDependencies:
+    "@img/sharp-libvips-linux-arm64" "1.0.4"
+
 "@img/sharp-linux-arm@0.33.2":
   version "0.33.2"
   resolved "https://registry.yarnpkg.com/@img/sharp-linux-arm/-/sharp-linux-arm-0.33.2.tgz#181f7466e6ac074042a38bfb679eb82505e17083"
   integrity sha512-Fndk/4Zq3vAc4G/qyfXASbS3HBZbKrlnKZLEJzPLrXoJuipFNNwTes71+Ki1hwYW5lch26niRYoZFAtZVf3EGA==
   optionalDependencies:
     "@img/sharp-libvips-linux-arm" "1.0.1"
+
+"@img/sharp-linux-arm@0.33.5":
+  version "0.33.5"
+  resolved "https://registry.yarnpkg.com/@img/sharp-linux-arm/-/sharp-linux-arm-0.33.5.tgz#422c1a352e7b5832842577dc51602bcd5b6f5eff"
+  integrity sha512-JTS1eldqZbJxjvKaAkxhZmBqPRGmxgu+qFKSInv8moZ2AmT5Yib3EQ1c6gp493HvrvV8QgdOXdyaIBrhvFhBMQ==
+  optionalDependencies:
+    "@img/sharp-libvips-linux-arm" "1.0.5"
 
 "@img/sharp-linux-s390x@0.33.2":
   version "0.33.2"
@@ -2513,12 +2762,26 @@
   optionalDependencies:
     "@img/sharp-libvips-linux-s390x" "1.0.1"
 
+"@img/sharp-linux-s390x@0.33.5":
+  version "0.33.5"
+  resolved "https://registry.yarnpkg.com/@img/sharp-linux-s390x/-/sharp-linux-s390x-0.33.5.tgz#f5c077926b48e97e4a04d004dfaf175972059667"
+  integrity sha512-y/5PCd+mP4CA/sPDKl2961b+C9d+vPAveS33s6Z3zfASk2j5upL6fXVPZi7ztePZ5CuH+1kW8JtvxgbuXHRa4Q==
+  optionalDependencies:
+    "@img/sharp-libvips-linux-s390x" "1.0.4"
+
 "@img/sharp-linux-x64@0.33.2":
   version "0.33.2"
   resolved "https://registry.npmjs.org/@img/sharp-linux-x64/-/sharp-linux-x64-0.33.2.tgz"
   integrity sha512-xUT82H5IbXewKkeF5aiooajoO1tQV4PnKfS/OZtb5DDdxS/FCI/uXTVZ35GQ97RZXsycojz/AJ0asoz6p2/H/A==
   optionalDependencies:
     "@img/sharp-libvips-linux-x64" "1.0.1"
+
+"@img/sharp-linux-x64@0.33.5":
+  version "0.33.5"
+  resolved "https://registry.yarnpkg.com/@img/sharp-linux-x64/-/sharp-linux-x64-0.33.5.tgz#d806e0afd71ae6775cc87f0da8f2d03a7c2209cb"
+  integrity sha512-opC+Ok5pRNAzuvq1AG0ar+1owsu842/Ab+4qvU879ippJBHvyY5n2mxF1izXqkPYlGuP/M556uh53jRLJmzTWA==
+  optionalDependencies:
+    "@img/sharp-libvips-linux-x64" "1.0.4"
 
 "@img/sharp-linuxmusl-arm64@0.33.2":
   version "0.33.2"
@@ -2527,12 +2790,26 @@
   optionalDependencies:
     "@img/sharp-libvips-linuxmusl-arm64" "1.0.1"
 
+"@img/sharp-linuxmusl-arm64@0.33.5":
+  version "0.33.5"
+  resolved "https://registry.yarnpkg.com/@img/sharp-linuxmusl-arm64/-/sharp-linuxmusl-arm64-0.33.5.tgz#252975b915894fb315af5deea174651e208d3d6b"
+  integrity sha512-XrHMZwGQGvJg2V/oRSUfSAfjfPxO+4DkiRh6p2AFjLQztWUuY/o8Mq0eMQVIY7HJ1CDQUJlxGGZRw1a5bqmd1g==
+  optionalDependencies:
+    "@img/sharp-libvips-linuxmusl-arm64" "1.0.4"
+
 "@img/sharp-linuxmusl-x64@0.33.2":
   version "0.33.2"
   resolved "https://registry.yarnpkg.com/@img/sharp-linuxmusl-x64/-/sharp-linuxmusl-x64-0.33.2.tgz#29e0030c24aa27c38201b1fc84e3d172899fcbe0"
   integrity sha512-+ZLE3SQmSL+Fn1gmSaM8uFusW5Y3J9VOf+wMGNnTtJUMUxFhv+P4UPaYEYT8tqnyYVaOVGgMN/zsOxn9pSsO2A==
   optionalDependencies:
     "@img/sharp-libvips-linuxmusl-x64" "1.0.1"
+
+"@img/sharp-linuxmusl-x64@0.33.5":
+  version "0.33.5"
+  resolved "https://registry.yarnpkg.com/@img/sharp-linuxmusl-x64/-/sharp-linuxmusl-x64-0.33.5.tgz#3f4609ac5d8ef8ec7dadee80b560961a60fd4f48"
+  integrity sha512-WT+d/cgqKkkKySYmqoZ8y3pxx7lx9vVejxW/W4DOFMYVSkErR+w7mf2u8m/y4+xHe7yY9DAXQMWQhpnMuFfScw==
+  optionalDependencies:
+    "@img/sharp-libvips-linuxmusl-x64" "1.0.4"
 
 "@img/sharp-wasm32@0.33.2":
   version "0.33.2"
@@ -2541,15 +2818,32 @@
   dependencies:
     "@emnapi/runtime" "^0.45.0"
 
+"@img/sharp-wasm32@0.33.5":
+  version "0.33.5"
+  resolved "https://registry.yarnpkg.com/@img/sharp-wasm32/-/sharp-wasm32-0.33.5.tgz#6f44f3283069d935bb5ca5813153572f3e6f61a1"
+  integrity sha512-ykUW4LVGaMcU9lu9thv85CbRMAwfeadCJHRsg2GmeRa/cJxsVY9Rbd57JcMxBkKHag5U/x7TSBpScF4U8ElVzg==
+  dependencies:
+    "@emnapi/runtime" "^1.2.0"
+
 "@img/sharp-win32-ia32@0.33.2":
   version "0.33.2"
   resolved "https://registry.yarnpkg.com/@img/sharp-win32-ia32/-/sharp-win32-ia32-0.33.2.tgz#09456314e223f68e5417c283b45c399635c16202"
   integrity sha512-okBpql96hIGuZ4lN3+nsAjGeggxKm7hIRu9zyec0lnfB8E7Z6p95BuRZzDDXZOl2e8UmR4RhYt631i7mfmKU8g==
 
+"@img/sharp-win32-ia32@0.33.5":
+  version "0.33.5"
+  resolved "https://registry.yarnpkg.com/@img/sharp-win32-ia32/-/sharp-win32-ia32-0.33.5.tgz#1a0c839a40c5351e9885628c85f2e5dfd02b52a9"
+  integrity sha512-T36PblLaTwuVJ/zw/LaH0PdZkRz5rd3SmMHX8GSmR7vtNSP5Z6bQkExdSK7xGWyxLw4sUknBuugTelgw2faBbQ==
+
 "@img/sharp-win32-x64@0.33.2":
   version "0.33.2"
   resolved "https://registry.yarnpkg.com/@img/sharp-win32-x64/-/sharp-win32-x64-0.33.2.tgz#148e96dfd6e68747da41a311b9ee4559bb1b1471"
   integrity sha512-E4magOks77DK47FwHUIGH0RYWSgRBfGdK56kIHSVeB9uIS4pPFr4N2kIVsXdQQo4LzOsENKV5KAhRlRL7eMAdg==
+
+"@img/sharp-win32-x64@0.33.5":
+  version "0.33.5"
+  resolved "https://registry.yarnpkg.com/@img/sharp-win32-x64/-/sharp-win32-x64-0.33.5.tgz#56f00962ff0c4e0eb93d34a047d29fa995e3e342"
+  integrity sha512-MpY/o8/8kj+EcnxwvrP4aTJSWw/aZ7JIGR4aBeZkZw5B7/Jn+tY9/VNwtcoGmdT7GfggGIU4kygOMSbYnOrAbg==
 
 "@isaacs/cliui@^8.0.2":
   version "8.0.2"
@@ -5066,7 +5360,7 @@
     rpc-websockets "^7.11.1"
     superstruct "^1.0.4"
 
-"@solana/web3.js@1.95.8", "@solana/web3.js@^1.32.0", "@solana/web3.js@^1.68.0", "@solana/web3.js@^1.88.1":
+"@solana/web3.js@1.95.8":
   version "1.95.8"
   resolved "https://registry.npmjs.org/@solana/web3.js/-/web3.js-1.95.8.tgz"
   integrity sha512-sBHzNh7dHMrmNS5xPD1d0Xa2QffW/RXaxu/OysRXBfwTp+LYqGGmMtCYYwrHPrN5rjAmJCsQRNAwv4FM0t3B6g==
@@ -5087,7 +5381,7 @@
     rpc-websockets "^9.0.2"
     superstruct "^2.0.2"
 
-"@solana/web3.js@^1.95.4":
+"@solana/web3.js@^1.32.0", "@solana/web3.js@^1.68.0", "@solana/web3.js@^1.88.1", "@solana/web3.js@^1.95.4":
   version "1.98.0"
   resolved "https://registry.yarnpkg.com/@solana/web3.js/-/web3.js-1.98.0.tgz#21ecfe8198c10831df6f0cfde7f68370d0405917"
   integrity sha512-nz3Q5OeyGFpFCR+erX2f6JPt3sKhzhYcSycBCSPkWjzSVDh/Rr1FqTVMRe58FKO16/ivTUcuJjeS5MyBvpkbzA==
@@ -7777,7 +8071,7 @@ detect-libc@^1.0.3:
   resolved "https://registry.npmjs.org/detect-libc/-/detect-libc-1.0.3.tgz"
   integrity sha512-pGjwhsmsp4kL2RTz08wcOlGN83otlqHeD/Z5T8GXZB+/YcpQ/dgo+lbU8ZsGxV0HIvqqxo9l7mqYwyYMD9bKDg==
 
-detect-libc@^2.0.2:
+detect-libc@^2.0.2, detect-libc@^2.0.3:
   version "2.0.3"
   resolved "https://registry.npmjs.org/detect-libc/-/detect-libc-2.0.3.tgz"
   integrity sha512-bwy0MGW55bG41VqxxypOsdSdGqLwXPI/focwgTYCFMbdUiBAxLg9CFzG08sz2aqzknwiX7Hkl0bQENjg8iLByw==
@@ -13057,6 +13351,35 @@ sharp@0.33.2:
     "@img/sharp-wasm32" "0.33.2"
     "@img/sharp-win32-ia32" "0.33.2"
     "@img/sharp-win32-x64" "0.33.2"
+
+sharp@0.33.5:
+  version "0.33.5"
+  resolved "https://registry.yarnpkg.com/sharp/-/sharp-0.33.5.tgz#13e0e4130cc309d6a9497596715240b2ec0c594e"
+  integrity sha512-haPVm1EkS9pgvHrQ/F3Xy+hgcuMV0Wm9vfIBSiwZ05k+xgb0PkBQpGsAA/oWdDobNaZTH5ppvHtzCFbnSEwHVw==
+  dependencies:
+    color "^4.2.3"
+    detect-libc "^2.0.3"
+    semver "^7.6.3"
+  optionalDependencies:
+    "@img/sharp-darwin-arm64" "0.33.5"
+    "@img/sharp-darwin-x64" "0.33.5"
+    "@img/sharp-libvips-darwin-arm64" "1.0.4"
+    "@img/sharp-libvips-darwin-x64" "1.0.4"
+    "@img/sharp-libvips-linux-arm" "1.0.5"
+    "@img/sharp-libvips-linux-arm64" "1.0.4"
+    "@img/sharp-libvips-linux-s390x" "1.0.4"
+    "@img/sharp-libvips-linux-x64" "1.0.4"
+    "@img/sharp-libvips-linuxmusl-arm64" "1.0.4"
+    "@img/sharp-libvips-linuxmusl-x64" "1.0.4"
+    "@img/sharp-linux-arm" "0.33.5"
+    "@img/sharp-linux-arm64" "0.33.5"
+    "@img/sharp-linux-s390x" "0.33.5"
+    "@img/sharp-linux-x64" "0.33.5"
+    "@img/sharp-linuxmusl-arm64" "0.33.5"
+    "@img/sharp-linuxmusl-x64" "0.33.5"
+    "@img/sharp-wasm32" "0.33.5"
+    "@img/sharp-win32-ia32" "0.33.5"
+    "@img/sharp-win32-x64" "0.33.5"
 
 shebang-command@^1.2.0:
   version "1.2.0"
