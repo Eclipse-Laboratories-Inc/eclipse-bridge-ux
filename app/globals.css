@@ -260,7 +260,7 @@ button[aria-label="Multi wallet dropdown"]:not(:hover) .fa-chevron-down {
 }
 
 .relay-kit-reset {
-  font-family: '__IBM_Plex_Sans_fd4d47', '__IBM_Plex_Sans_Fallback_fd4d47' !important;
+  font-family: 'IBM Plex Sans', sans-serif !important;
 }
 
 .relay-text_text-default.relay-font_body.relay-fw_500.relay-fs_14px {
