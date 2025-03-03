@@ -7,23 +7,18 @@ import { warpCore } from "../lib/warpcore";
 import { StepStatus } from "../types";
 
 export function useTokenTransfer() {
-  const [transactionState, setTransactionState] = useState<StepStatus>(
-    StepStatus.NOT_STARTED,
-  );
+  const [transactionState, setTransactionState] = useState<StepStatus>(StepStatus.NOT_STARTED);
   const [error, setError] = useState<string | null>(null);
   const { evmWallet, solWallet } = useWallets();
-  const [interchainTransferFee, setInterchainTransferFee] = useState<bigint>(
-    BigInt(0),
-  );
+  const [interchainTransferFee, setInterchainTransferFee] = useState<bigint>(BigInt(0));
 
   useEffect(() => {
     async function fetchFee() {
       try {
         const originToken = warpCore.tokens.find(
-          (token) =>
-            token.chainName === "eclipsemainnet" && token.symbol === "tETH",
+          (token) => token.chainName === "eclipsemainnet" && token.symbol === "tETH"
         );
-        if (!originToken) {
+        if (!originToken || !solWallet?.address) {
           return;
         }
         const fee = await warpCore.getInterchainTransferFee({
@@ -48,9 +43,7 @@ export function useTokenTransfer() {
 
       setTransactionState(StepStatus.AWAITING_SIGNATURE);
       try {
-        const connection = new Connection(
-          process.env.NEXT_PUBLIC_ECLIPSE_RPC || "",
-        );
+        const connection = new Connection(process.env.NEXT_PUBLIC_ECLIPSE_RPC || "");
 
         // Define paramaters
         const destination = "ethereum";
@@ -79,16 +72,12 @@ export function useTokenTransfer() {
         for (const tx of txs) {
           if (tx.type === ProviderType.SolanaWeb3) {
             // Sign and send Solana transaction
-            const signer = await (
-              solWallet?.connector as SolanaWalletConnector
-            ).getSigner();
+            const signer = await (solWallet?.connector as SolanaWalletConnector).getSigner();
             if (!signer) {
               return 1;
             }
             const signedTx = await signer.signTransaction(tx.transaction);
-            const txId = await connection.sendRawTransaction(
-              signedTx.serialize(),
-            );
+            const txId = await connection.sendRawTransaction(signedTx.serialize());
             await connection.confirmTransaction(txId, "confirmed");
           }
         }
@@ -102,7 +91,7 @@ export function useTokenTransfer() {
         throw e;
       }
     },
-    [evmWallet, solWallet],
+    [evmWallet, solWallet]
   );
 
   return {
