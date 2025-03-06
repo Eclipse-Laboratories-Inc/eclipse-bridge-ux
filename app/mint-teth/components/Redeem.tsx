@@ -437,9 +437,9 @@ export function Redeem() {
       <div className="flex flex-col gap-3">
         <MintValueCard
           title="Redeem from"
-          chainName="Eclipse"
-          chainIconImg="/eclipse.png"
-          userAddress={svmAddress}
+          chainName={sourceChain?.value === "ethereum" ? "Ethereum" : "Eclipse"}
+          chainIconImg={sourceChain?.value === "ethereum" ? "/eth.png" : "/eclipse.png"}
+          userAddress={sourceChain?.value === "ethereum" ? evmAddress : svmAddress}
           inputValue={redeemAmount}
           loadingTokenBalance={isLoadingTokenBalance}
           onChangeInput={handleRedeemAmountChange}
@@ -453,7 +453,13 @@ export function Redeem() {
           onClickMax={handleClickMax}
           onClickFiftyPercent={handleClickFiftyPercent}
           usdValue={formattedRedeemAmountInUsd}
-          handleDisconnect={() => solWallet && handleUnlinkWallet(solWallet.id)}
+          handleDisconnect={() => {
+            if (sourceChain?.value === "ethereum") {
+              evmWallet && handleUnlinkWallet(evmWallet.id);
+            } else {
+              solWallet && handleUnlinkWallet(solWallet.id);
+            }
+          }}
           tokenOptions={[]}
           selectedChain={sourceChain}
           onChangeChain={handleSourceChainChange}
