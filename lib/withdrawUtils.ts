@@ -13,7 +13,7 @@ export async function withdrawEthereum(
   configAccount: string,
   relayer: string,
   programId: string,
-  amount: number
+  amount: number,
 ) {
   const signer = await wallet;
   const connection = new Connection(eclipseRpc);
@@ -22,19 +22,33 @@ export async function withdrawEthereum(
   });
   anchor.setProvider(provider);
 
-  const idl = programId === "br1xwubggTiEZ6b7iNZUwfA3psygFfaXGfZ1heaN9AW" ? mainnet_idl : testnet_idl;
-  const program = new Program<CanonicalBridge>(idl as CanonicalBridge, provider as Provider);
+  const idl =
+    programId === "br1xwubggTiEZ6b7iNZUwfA3psygFfaXGfZ1heaN9AW"
+      ? mainnet_idl
+      : testnet_idl;
+  const program = new Program<CanonicalBridge>(
+    idl as CanonicalBridge,
+    provider as Provider,
+  );
   const bridgeProgram = new PublicKey(programId);
 
   const randomNonce = Math.floor(Math.random() * 10 ** 12);
-  const [withdrawalReceiptPda, _withdrawalReceiptPdaBump] = PublicKey.findProgramAddressSync(
-    [Buffer.from("withdrawal"), new anchor.BN(randomNonce).toArrayLike(Buffer, "le", 8)],
-    bridgeProgram
-  );
+  const [withdrawalReceiptPda, _withdrawalReceiptPdaBump] =
+    PublicKey.findProgramAddressSync(
+      [
+        Buffer.from("withdrawal"),
+        new anchor.BN(randomNonce).toArrayLike(Buffer, "le", 8),
+      ],
+      bridgeProgram,
+    );
 
   try {
     const tx = await program.methods
-      .withdraw(receiver, new anchor.BN(randomNonce), new anchor.BN(10 ** 9 * amount))
+      .withdraw(
+        receiver,
+        new anchor.BN(randomNonce),
+        new anchor.BN(10 ** 9 * amount),
+      )
       .accounts({
         withdrawer: signer.publicKey.toBase58(),
         //@ts-ignore
@@ -78,7 +92,10 @@ export interface MessageEntry {
 export type Status = "Closed" | "Pending" | "Processing";
 export type WithdrawObject = [MessageEntry, Status];
 
-export async function getWithdrawalsByAddress(address: string, withdrawApi: string): Promise<WithdrawObject[]> {
+export async function getWithdrawalsByAddress(
+  address: string,
+  withdrawApi: string,
+): Promise<WithdrawObject[]> {
   if (!withdrawApi) {
     return [];
   }
@@ -94,14 +111,17 @@ export async function getWithdrawalsByAddress(address: string, withdrawApi: stri
   return result;
 }
 
-export async function getWithdrawalPda(bridgeProgram: string, withdrawalId: BigInt): Promise<PublicKey | null> {
+export async function getWithdrawalPda(
+  bridgeProgram: string,
+  withdrawalId: BigInt,
+): Promise<PublicKey | null> {
   try {
     const programPublicKey = new PublicKey(bridgeProgram);
     const withdrawalNonce = new anchor.BN(withdrawalId.toString());
 
     const [withdrawalPda, _] = PublicKey.findProgramAddressSync(
       [Buffer.from("withdrawal"), withdrawalNonce.toArrayLike(Buffer, "le", 8)],
-      programPublicKey
+      programPublicKey,
     );
     return withdrawalPda;
   } catch (error) {
@@ -113,12 +133,12 @@ export async function getWithdrawalPda(bridgeProgram: string, withdrawalId: BigI
 function parseWithdrawData(data: any[][]): WithdrawObject[] {
   return data.map(([entry, status]) => {
     const message: Message = {
-      from: entry.message[0],
-      destination: entry.message[1],
-      amount_wei: entry.message[2],
-      withdraw_id: BigInt(entry.message[3].value),
-      fee_receiver: entry.message[4],
-      fee_wei: entry.message[5],
+      from: entry.message.from,
+      destination: entry.message.destination,
+      amount_wei: entry.message.amount_wei,
+      withdraw_id: BigInt(entry.message.withdraw_id),
+      fee_receiver: entry.message.fee_receiver,
+      fee_wei: entry.message.fee_wei,
     };
 
     const messageEntry: MessageEntry = {
@@ -143,7 +163,9 @@ export function convertLosslessToNumbers(losslessNumbers: any[]): number[] {
     } else if (typeof item === "number") {
       return item;
     } else {
-      throw new Error("Invalid item in array: Expected LosslessNumber or number");
+      throw new Error(
+        "Invalid item in array: Expected LosslessNumber or number",
+      );
     }
   });
 }
