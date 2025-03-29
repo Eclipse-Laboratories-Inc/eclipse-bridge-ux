@@ -6,14 +6,12 @@ import { ETHERSCAN_TESTNET_URL } from "../components/constants";
 import { EthereumWalletConnectors } from "@dynamic-labs/ethereum";
 import {
   DynamicContextProvider,
-  FilterChain,
   mergeNetworks,
 } from "@dynamic-labs/sdk-react-core";
 import { SolanaWalletConnectors } from "@dynamic-labs/solana";
 import { RelayChain } from "@reservoir0x/relay-sdk";
 import { ReactNode, useEffect, useState } from "react";
 
-const eclipseWallets = ["backpacksol", "nightlysol"];
 const evmNetworks = [
   {
     blockExplorerUrls: [ETHERSCAN_TESTNET_URL],
@@ -41,9 +39,6 @@ const cssOverrides = `
   }
 
   div { font-family: 'IBM Plex Sans', sans-serif; }
-  img[data-testid='iconic-solana'] {
-    content: url('/eclipse.png');
-  }
   
   .wallet-progress-stepper, .accordion-item {
     border: 1px solid rgba(255, 255, 255, 0.1);
@@ -110,7 +105,7 @@ export const DynamicProvider = (props: {
   chains: RelayChain[];
 }) => {
   const [isMobile, setIsMobile] = useState<boolean>(false);
-  const { walletFilter, setWalletFilter } = useWalletFilter();
+  const { setWalletFilter } = useWalletFilter();
 
   useEffect(() => {
     const checkWindowSize = () => {
@@ -176,6 +171,7 @@ export const DynamicProvider = (props: {
           EthereumWalletConnectors,
           EclipseWalletConnectors,
           BitcoinWalletConnectors,
+          SolanaWalletConnectors,
         ],
         mobileExperience: "redirect",
         initialAuthenticationMode: "connect-only",
@@ -194,11 +190,6 @@ export const DynamicProvider = (props: {
               evmNetworks,
               mergeNetworks(networks, relayNetworks),
             );
-          },
-          chainDisplayValues: {
-            solana: {
-              displayName: "Eclipse",
-            },
           },
         },
         cssOverrides,

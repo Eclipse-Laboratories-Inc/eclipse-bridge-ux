@@ -70,6 +70,7 @@ export const RelayKitProvider = (props: {
         source: "bridge.eclipse.xyz",
         vmConnectorKeyOverrides: {
           9286185: ["backpackeclipse", "nightlyeclipse", "okxeclipse"],
+          792703809: ["backpacksol", "nightlysol", "okxsol"],
         },
       }}
       theme={theme}
