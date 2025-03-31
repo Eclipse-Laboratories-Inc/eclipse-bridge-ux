@@ -38,7 +38,7 @@
     "@types/node": "20.8.7",
     "@types/react": "18.2.21",
     "@types/react-dom": "18.2.7",
-    "autoprefixer": "10.4.15",
+    "autoprefixer": "10.4.21",
     "classnames": "^2.5.1",
     "decimal.js": "^10.4.3",
     "encoding": "^0.1.13",
