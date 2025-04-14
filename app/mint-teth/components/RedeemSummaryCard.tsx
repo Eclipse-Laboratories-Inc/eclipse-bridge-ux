@@ -37,7 +37,7 @@ export function RedeemSummaryCard({
           <p className="green-mint-text-sm">{totalFees}</p>
         </div>
         <div className="redeem-summary-item flex items-center">
-          <p className="standard-text">Withdraw Fee</p>
+          <p className="standard-text">Slippage</p>
           <Tooltip text="Fees are used to pay for gas and slippage costs incurred by solvers. This fee is already applied in the receive amount." />
         </div>
         <div className="redeem-summary-item">
