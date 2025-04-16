@@ -179,8 +179,6 @@ export const DynamicProvider = (props: {
           },
         },
         environmentId: process.env.NEXT_PUBLIC_ENVIRONMENT_ID || "",
-        walletsFilter: (wallets) =>
-          wallets.filter((w) => eclipseWallets.includes(w.key)),
         walletConnectors: [
           EthereumWalletConnectors,
           SolanaWalletConnectors,
