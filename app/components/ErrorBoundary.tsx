@@ -1,16 +1,15 @@
+import React, { ErrorInfo } from "react";
 import * as Sentry from "@sentry/nextjs";
-import { Component, ErrorInfo, ReactNode } from "react";
 
 interface Props {
-  children: ReactNode;
-  fallback?: ReactNode;
+  children: React.ReactNode;
 }
 
 interface State {
   hasError: boolean;
 }
 
-export class ErrorBoundary extends Component<Props, State> {
+export class ErrorBoundary extends React.Component<Props, State> {
   public state: State = {
     hasError: false,
   };
@@ -20,12 +19,25 @@ export class ErrorBoundary extends Component<Props, State> {
   }
 
   public componentDidCatch(error: Error, errorInfo: ErrorInfo) {
-    Sentry.captureException(error, { contexts: { react: errorInfo } });
+    Sentry.captureException(error, {
+      contexts: {
+        react: {
+          componentStack: errorInfo.componentStack,
+        },
+      },
+    });
   }
 
   public render() {
     if (this.state.hasError) {
-      return this.props.fallback || <h1>Sorry, something went wrong.</h1>;
+      return (
+        <div className="flex h-screen w-full items-center justify-center">
+          <div className="text-center">
+            <h1 className="text-2xl font-bold">Something went wrong</h1>
+            <p className="mt-2">Please try refreshing the page</p>
+          </div>
+        </div>
+      );
     }
 
     return this.props.children;

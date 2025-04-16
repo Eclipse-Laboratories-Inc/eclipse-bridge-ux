@@ -14,6 +14,9 @@ const nextConfig = {
     };
     return config;
   },
+  env: {
+    SENTRY_SUPPRESS_REQUEST_ERROR_HANDLER_WARNING: "1",
+  },
 };
 
 module.exports = withSentryConfig(
