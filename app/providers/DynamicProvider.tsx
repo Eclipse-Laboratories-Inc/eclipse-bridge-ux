@@ -190,11 +190,6 @@ export const DynamicProvider = (props: {
         privacyPolicyUrl: "https://www.eclipse.xyz/privacy-policy",
         termsOfServiceUrl: "https://www.eclipse.xyz/terms",
         overrides: {
-          solNetworks: (networks) => {
-            return networks.filter((n) =>
-              isDynamicEclipseNetworkId(parseInt(n.networkId.toString())),
-            );
-          },
           evmNetworks: (networks) => {
             const relayNetworks = props.chains
               //@ts-ignore: todo remove when api type is updated
