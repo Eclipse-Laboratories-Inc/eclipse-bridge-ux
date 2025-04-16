@@ -316,11 +316,12 @@ export const DepositContent: React.FC<DepositContentProps> = ({
       imageSrc={isMainnet ? "eclipse.png" : "eclipse-testnet.png"}
       direction={action === Action.Deposit ? "To" : "From"}
       chainName={isMainnet ? "Eclipse Mainnet" : "Eclipse Testnet"}
-      onClickEvent={() =>
-        solWallet &&
-        handleUnlinkWallet(solWallet.id) &&
-        setIsSolDisconnected(!isSolDisconnected)
-      }
+      onClickEvent={() => {
+        if (solWallet) {
+          handleUnlinkWallet(solWallet.id);
+          setIsSolDisconnected(!isSolDisconnected);
+        }
+      }}
       walletChain="ECLIPSE"
       showConnect={!solWallet && isSolDisconnected && !isEvmDisconnected}
       wallet={solWallet}
