@@ -83,8 +83,6 @@ const cssOverrides = `
   }
 `;
 
-const eclipseWallets = ["backpacksol", "nightlysol"];
-
 export default function ClientLayout({
   children,
 }: {

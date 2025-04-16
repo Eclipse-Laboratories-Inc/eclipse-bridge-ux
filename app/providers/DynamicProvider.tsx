@@ -6,14 +6,11 @@ import { ETHERSCAN_TESTNET_URL } from "../components/constants";
 import { EthereumWalletConnectors } from "@dynamic-labs/ethereum";
 import {
   DynamicContextProvider,
-  FilterChain,
   mergeNetworks,
 } from "@dynamic-labs/sdk-react-core";
-import { SolanaWalletConnectors } from "@dynamic-labs/solana";
 import { RelayChain } from "@reservoir0x/relay-sdk";
 import { ReactNode, useEffect, useState } from "react";
 
-const eclipseWallets = ["backpacksol", "nightlysol"];
 const evmNetworks = [
   {
     blockExplorerUrls: [ETHERSCAN_TESTNET_URL],
