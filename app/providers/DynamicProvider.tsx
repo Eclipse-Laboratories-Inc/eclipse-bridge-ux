@@ -179,6 +179,8 @@ export const DynamicProvider = (props: {
           },
         },
         environmentId: process.env.NEXT_PUBLIC_ENVIRONMENT_ID || "",
+        walletsFilter: (wallets) =>
+          wallets.filter((w) => eclipseWallets.includes(w.key)),
         walletConnectors: [
           EthereumWalletConnectors,
           SolanaWalletConnectors,
@@ -191,7 +193,6 @@ export const DynamicProvider = (props: {
         termsOfServiceUrl: "https://www.eclipse.xyz/terms",
         overrides: {
           solNetworks: (networks) => {
-            console.log(networks, "newo");
             return networks.filter((n) =>
               isDynamicEclipseNetworkId(parseInt(n.networkId.toString())),
             );
