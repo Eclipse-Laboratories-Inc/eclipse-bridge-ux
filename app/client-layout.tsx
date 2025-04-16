@@ -9,17 +9,14 @@ import { WagmiProvider } from "@/app/providers/wagmiProvider";
 import { DynamicProvider } from "@/app/providers/DynamicProvider";
 import { WalletFilterProvider } from "@/app/providers/WalletFilterProvider";
 import { GasProviders } from "@/app/providers/GasProviders";
+import { ErrorBoundary } from "@/app/components/ErrorBoundary";
 
 const ibmPlexSans = IBM_Plex_Sans({
   subsets: ["latin"],
   weight: ["400", "500", "600", "700"],
 });
 
-export default function ClientLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
+export default function ClientLayout({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
   const passGlobalLayout = pathname === "/gas-station";
   if (passGlobalLayout) {
@@ -28,7 +25,9 @@ export default function ClientLayout({
         {() => {
           return (
             <GasProviders>
-              <body className={ibmPlexSans.className}>{children}</body>
+              <ErrorBoundary>
+                <body className={ibmPlexSans.className}>{children}</body>
+              </ErrorBoundary>
             </GasProviders>
           );
         }}
@@ -47,9 +46,11 @@ export default function ClientLayout({
             {({ chains }) => {
               return (
                 <DynamicProvider chains={chains}>
-                  <body className={ibmPlexSans.className}>
-                    <Providers chains={chains}>{children}</Providers>
-                  </body>
+                  <ErrorBoundary>
+                    <body className={ibmPlexSans.className}>
+                      <Providers chains={chains}>{children}</Providers>
+                    </body>
+                  </ErrorBoundary>
                 </DynamicProvider>
               );
             }}
