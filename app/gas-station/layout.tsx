@@ -1,6 +1,6 @@
 "use client";
 import "@/app/globals.css";
-import { EclipseWalletConnectors } from "@dynamic-labs/eclipse";
+import { SolanaWalletConnectors } from "@dynamic-labs/solana";
 import { IBM_Plex_Sans } from "next/font/google";
 import { GasProviders } from "@/app/providers/GasProviders";
 import { DynamicContextProvider } from "@dynamic-labs/sdk-react-core";
@@ -131,7 +131,7 @@ export default function ClientLayout({
             },
           },
           environmentId: process.env.NEXT_PUBLIC_ENVIRONMENT_ID || "",
-          walletConnectors: [EclipseWalletConnectors],
+          walletConnectors: [SolanaWalletConnectors],
           mobileExperience: "redirect",
           recommendedWallets: [
             { walletKey: "backpackeclipse", label: "Recommended" },
