@@ -8,8 +8,3 @@ export async function register() {
     });
   }
 }
-
-export function onRequestError({ request, error }: { request: Request; error: Error }) {
-  const { captureRequestError } = require("@sentry/nextjs");
-  return captureRequestError({ request, error });
-}
