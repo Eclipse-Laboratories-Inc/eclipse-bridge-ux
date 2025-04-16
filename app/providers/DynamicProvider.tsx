@@ -28,7 +28,7 @@ const evmNetworks = [
     rpcUrls: ["https://sepolia.drpc.org"],
     vanityName: "Sepolia",
     isTestnet: false,
-    key: "ethereum"
+    key: "ethereum",
   },
 ];
 
@@ -191,6 +191,7 @@ export const DynamicProvider = (props: {
         termsOfServiceUrl: "https://www.eclipse.xyz/terms",
         overrides: {
           solNetworks: (networks) => {
+            console.log(networks, "newo");
             return networks.filter((n) =>
               isDynamicEclipseNetworkId(parseInt(n.networkId.toString())),
             );
