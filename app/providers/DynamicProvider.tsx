@@ -1,7 +1,7 @@
 import { useWalletFilter } from "@/app/hooks/useWalletContext";
 import { convertRelayChainToDynamicNetwork } from "@/lib/relay";
 import { BitcoinWalletConnectors } from "@dynamic-labs/bitcoin";
-import { EclipseWalletConnectors } from "@dynamic-labs/eclipse";
+import { SolanaWalletConnectors } from "@dynamic-labs/solana";
 import { ETHERSCAN_TESTNET_URL } from "../components/constants";
 import { EthereumWalletConnectors } from "@dynamic-labs/ethereum";
 import {
@@ -102,12 +102,19 @@ const cssOverrides = `
   }
 `;
 
+export const eclipseWallets = [
+  "backpacksol",
+  "nightlysol",
+  "okxsolana",
+  "bybitwalletsol",
+];
+
 export const DynamicProvider = (props: {
   children: ReactNode;
   chains: RelayChain[];
 }) => {
   const [isMobile, setIsMobile] = useState<boolean>(false);
-  const { walletFilter, setWalletFilter } = useWalletFilter();
+  const { setWalletFilter } = useWalletFilter();
 
   useEffect(() => {
     const checkWindowSize = () => {
@@ -123,6 +130,8 @@ export const DynamicProvider = (props: {
   return (
     <DynamicContextProvider
       settings={{
+        walletsFilter: (wallets) =>
+          wallets.filter((w) => eclipseWallets.includes(w.key)),
         events: {
           onWalletRemoved: (args) => {
             if (args.wallet.chain === "EVM") {
@@ -171,7 +180,7 @@ export const DynamicProvider = (props: {
         environmentId: process.env.NEXT_PUBLIC_ENVIRONMENT_ID || "",
         walletConnectors: [
           EthereumWalletConnectors,
-          EclipseWalletConnectors,
+          SolanaWalletConnectors,
           BitcoinWalletConnectors,
         ],
         mobileExperience: "redirect",
