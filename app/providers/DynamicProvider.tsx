@@ -1,5 +1,6 @@
 import { useWalletFilter } from "@/app/hooks/useWalletContext";
 import { convertRelayChainToDynamicNetwork } from "@/lib/relay";
+import { isDynamicEclipseNetworkId } from "@/lib/isDynamicEclipseNetworkId";
 import { BitcoinWalletConnectors } from "@dynamic-labs/bitcoin";
 import { SolanaWalletConnectors } from "@dynamic-labs/solana";
 import { ETHERSCAN_TESTNET_URL } from "../components/constants";
@@ -130,8 +131,6 @@ export const DynamicProvider = (props: {
   return (
     <DynamicContextProvider
       settings={{
-        walletsFilter: (wallets) =>
-          wallets.filter((w) => eclipseWallets.includes(w.key)),
         events: {
           onWalletRemoved: (args) => {
             if (args.wallet.chain === "EVM") {
@@ -189,6 +188,11 @@ export const DynamicProvider = (props: {
         privacyPolicyUrl: "https://www.eclipse.xyz/privacy-policy",
         termsOfServiceUrl: "https://www.eclipse.xyz/terms",
         overrides: {
+          solNetworks: (networks) => {
+            return networks.filter((n) =>
+              isDynamicEclipseNetworkId(parseInt(n.networkId.toString())),
+            );
+          },
           evmNetworks: (networks) => {
             const relayNetworks = props.chains
               //@ts-ignore: todo remove when api type is updated
