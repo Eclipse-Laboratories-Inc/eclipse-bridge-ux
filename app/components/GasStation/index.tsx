@@ -150,6 +150,8 @@ export const GasStation: React.FC = () => {
     let signature = null;
 
     try {
+      const { blockhash } = await connection.getLatestBlockhash();
+      tx.recentBlockhash = blockhash;
       signedTransaction = await cli?.signTransaction(tx);
       console.log(signedTransaction);
       signature = await connection.sendRawTransaction(
