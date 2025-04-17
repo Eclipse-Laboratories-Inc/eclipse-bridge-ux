@@ -84,6 +84,13 @@ const cssOverrides = `
   }
 `;
 
+const eclipseWallets = [
+  "backpacksol",
+  "nightlysol",
+  "okxsolana",
+  "bybitwalletsol",
+  "bitgetwalletsol",
+];
 export default function ClientLayout({
   children,
 }: {
@@ -98,6 +105,10 @@ export default function ClientLayout({
       </head>
       <DynamicContextProvider
         settings={{
+          walletsFilter: (wallets) =>
+            wallets.filter((w) => {
+              return eclipseWallets.includes(w.key);
+            }),
           events: {
             onAuthFlowOpen: () => {
               const depositBox = document.getElementsByClassName(
