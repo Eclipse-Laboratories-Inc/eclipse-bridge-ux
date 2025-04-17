@@ -98,11 +98,6 @@ export default function ClientLayout({
       </head>
       <DynamicContextProvider
         settings={{
-          solNetworks: (networks: any) => {
-            return networks.filter((n: any) =>
-              isDynamicEclipseNetworkId(parseInt(n.networkId.toString())),
-            );
-          },
           evmNetworks: (_: any) => {
             return [];
           },
