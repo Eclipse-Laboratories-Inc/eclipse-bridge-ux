@@ -135,11 +135,11 @@ export const DynamicProvider = (props: {
     <DynamicContextProvider
       settings={{
         events: {
-              walletsFilter: (wallets) =>
-  wallets.filter((w) => {
-    if (w.chainId === 1) return true; 
-    return eclipseWallets.includes(w.key); 
-  }),
+          walletsFilter: (wallets) =>
+            wallets.filter((w) => {
+              if (w.walletConnector.supportedChains.includes("EVM")) return true;
+              return eclipseWallets.includes(w.key);
+            }),
           onWalletRemoved: (args) => {
             if (args.wallet.chain === "EVM") {
               const client: any =
