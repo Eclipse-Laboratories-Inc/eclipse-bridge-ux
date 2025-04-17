@@ -151,7 +151,8 @@ export const GasStation: React.FC = () => {
     try {
       signedTransaction = await cli?.signAndSendTransaction(tx);
       console.log(signedTransaction);
-    } catch {
+    } catch (error) {
+      console.error("Transaction failed:", error);
       emitEvent(`Refueling for $${amount} is failed.`, TxStatus.Failed, 5);
       return -1;
     }
