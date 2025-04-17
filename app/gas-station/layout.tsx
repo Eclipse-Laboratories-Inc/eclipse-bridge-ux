@@ -1,8 +1,8 @@
 "use client";
 import "@/app/globals.css";
 import { SolanaWalletConnectors } from "@dynamic-labs/solana";
-import { isDynamicEclipseNetworkId } from "@/lib/isDynamicEclipseNetworkId";
 import { IBM_Plex_Sans } from "next/font/google";
+import { isDynamicEclipseNetworkId } from "@/lib/isDynamicEclipseNetworkId";
 import { GasProviders } from "@/app/providers/GasProviders";
 import { DynamicContextProvider } from "@dynamic-labs/sdk-react-core";
 
@@ -153,6 +153,11 @@ export default function ClientLayout({
           privacyPolicyUrl: "https://www.eclipse.xyz/privacy-policy",
           termsOfServiceUrl: "https://www.eclipse.xyz/terms",
           overrides: {
+            solNetworks: (networks) => {
+              return networks.filter((n) =>
+                isDynamicEclipseNetworkId(parseInt(n.networkId.toString())),
+              );
+            },
             evmNetworks: (_: any) => {
               return [];
             },
