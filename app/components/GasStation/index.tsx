@@ -149,7 +149,7 @@ export const GasStation: React.FC = () => {
     let signedTransaction = null;
 
     try {
-      signedTransaction = await cli?.signAndSendTransaction(tx);
+      signedTransaction = await cli?.signTransaction(tx);
       console.log(signedTransaction);
     } catch (error) {
       console.error("Transaction failed:", error);
