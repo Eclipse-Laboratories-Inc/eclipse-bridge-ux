@@ -147,16 +147,10 @@ export const GasStation: React.FC = () => {
       return 1;
     }
     let signedTransaction = null;
-    let signature = null;
 
     try {
-      const { blockhash } = await connection.getLatestBlockhash();
-      tx.recentBlockhash = blockhash;
-      signedTransaction = await cli?.signTransaction(tx);
+      signedTransaction = await cli?.signAndSendTransaction(tx);
       console.log(signedTransaction);
-      signature = await connection.sendRawTransaction(
-        signedTransaction.serialize(),
-      );
     } catch (error) {
       console.error("Transaction failed:", error);
       emitEvent(`Refueling for $${amount} is failed.`, TxStatus.Failed, 5);
@@ -170,7 +164,7 @@ export const GasStation: React.FC = () => {
       {
         blockhash: latestBlockHash.blockhash,
         lastValidBlockHeight: latestBlockHash.lastValidBlockHeight,
-        signature: signature,
+        signature: signedTransaction.signature,
       },
       "confirmed",
     );
