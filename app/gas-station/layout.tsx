@@ -98,9 +98,6 @@ export default function ClientLayout({
       </head>
       <DynamicContextProvider
         settings={{
-          evmNetworks: (_: any) => {
-            return [];
-          },
           events: {
             onAuthFlowOpen: () => {
               const depositBox = document.getElementsByClassName(
@@ -145,6 +142,9 @@ export default function ClientLayout({
           privacyPolicyUrl: "https://www.eclipse.xyz/privacy-policy",
           termsOfServiceUrl: "https://www.eclipse.xyz/terms",
           overrides: {
+            evmNetworks: (_: any) => {
+              return [];
+            },
             chainDisplayValues: {
               solana: {
                 displayName: "Eclipse",
