@@ -62,7 +62,7 @@ const useWalletData = () => {
         );
         setBalanceEther(formattedEtherBalance);
       }
-      if (wallet.chain === "ECLIPSE") {
+      if (wallet.chain === "SOL") {
         const balance = await getWalletBalance(wallet.address, eclipseRpc);
         setBalanceEclipse(balance);
       }
