@@ -210,9 +210,9 @@ export const DynamicProvider = (props: {
         },
         cssOverrides,
         bridgeChains: [
-          ...((isMobile ? [] : [{ chain: "EVM" }, { chain: "ECLIPSE" }]) as [
+          ...((isMobile ? [] : [{ chain: "EVM" }, { chain: "SOL" }]) as [
             { chain: "EVM" },
-            { chain: "ECLIPSE" },
+            { chain: "SOL" },
           ]),
         ],
       }}

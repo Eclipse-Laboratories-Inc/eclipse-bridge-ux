@@ -9,9 +9,9 @@
     "lint": "next lint",
     "typecheck": "tsc --noEmit --incremental --watch"
   },
-	"resolutions": {
-  "@solana/web3.js": "1.98.0"
-},
+  "resolutions": {
+      "@solana/web3.js": "1.98.0"
+  },
   "dependencies": {
     "@coral-xyz/anchor": "0.30.1",
     "@dynamic-labs/bitcoin": "4.8.2",
