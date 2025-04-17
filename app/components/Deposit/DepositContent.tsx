@@ -322,7 +322,7 @@ export const DepositContent: React.FC<DepositContentProps> = ({
           setIsSolDisconnected(!isSolDisconnected);
         }
       }}
-      walletChain="ECLIPSE"
+      walletChain="SOL"
       showConnect={!solWallet && isSolDisconnected && !isEvmDisconnected}
       wallet={solWallet}
       balanceEther={balanceEther}

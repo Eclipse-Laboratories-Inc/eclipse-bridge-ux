@@ -16,7 +16,7 @@ export interface NetworkBoxProps {
   direction: string;
   chainName: string;
   onClickEvent: () => void;
-  walletChain: "EVM" | "ECLIPSE";
+  walletChain: "EVM" | "SOL";
   showConnect: boolean;
   wallet: any;
   balanceEther: number;
@@ -109,7 +109,7 @@ export const NetworkBox: React.FC<NetworkBoxProps> = ({
   });
 
   const maxTxFeeEther =
-    walletChain === "ECLIPSE"
+    walletChain === "SOL"
       ? WITHDRAW_TX_FEE
       : calculateMaxTxFeeEther(
           gasPriceWei ?? BigInt(0),
