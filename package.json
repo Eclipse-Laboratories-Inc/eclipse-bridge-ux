@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "build": "next build",
+    "build": "NODE_OPTIONS='--max-old-space-size=4096' next build",
     "start": "next start",
     "lint": "next lint",
     "typecheck": "tsc --noEmit --incremental --watch"
@@ -36,6 +36,8 @@
     "@reservoir0x/relay-kit-ui": "^2.2.22",
     "@reservoir0x/relay-sdk": "^1.4.7",
     "@reservoir0x/relay-svm-wallet-adapter": "^2.0.7",
+    "@sentry/nextjs": "^9.12.0",
+    "@sentry/replay": "^7.116.0",
     "@solana/spl-token": "^0.4.9",
     "@solana/web3.js": "1.98.0",
     "@tanstack/react-query": "^5.51.21",
@@ -70,5 +72,8 @@
     "typescript": "5.2.2",
     "viem": "^2.21.10",
     "wagmi": "^2.9.8"
+  },
+  "devDependencies": {
+    "postcss-nesting": "^13.0.1"
   }
 }

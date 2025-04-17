@@ -97,7 +97,6 @@ export function useTokenTransfer() {
         const error = e as Error;
         console.error("Error during transfer:", error);
         setError(error.message);
-        console.log("here?");
         setTransactionState(StepStatus.FAILED);
         throw e;
       }
