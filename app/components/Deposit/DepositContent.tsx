@@ -296,11 +296,12 @@ export const DepositContent: React.FC<DepositContentProps> = ({
       imageSrc="eth.png"
       direction={action === Action.Deposit ? "From" : "To"}
       chainName={isMainnet ? "Ethereum Mainnet" : "Ethereum Sepolia"}
-      onClickEvent={() =>
-        evmWallet &&
-        handleUnlinkWallet(evmWallet.id) &&
-        setIsEvmDisconnected(!isEvmDisconnected)
-      }
+      onClickEvent={() => {
+        if (evmWallet) {
+          handleUnlinkWallet(evmWallet.id);
+          setIsEvmDisconnected(!isEvmDisconnected);
+        }
+      }}
       walletChain="EVM"
       showConnect={!evmWallet && isEvmDisconnected && !isSolDisconnected}
       wallet={evmWallet}
@@ -315,12 +316,13 @@ export const DepositContent: React.FC<DepositContentProps> = ({
       imageSrc={isMainnet ? "eclipse.png" : "eclipse-testnet.png"}
       direction={action === Action.Deposit ? "To" : "From"}
       chainName={isMainnet ? "Eclipse Mainnet" : "Eclipse Testnet"}
-      onClickEvent={() =>
-        solWallet &&
-        handleUnlinkWallet(solWallet.id) &&
-        setIsSolDisconnected(!isSolDisconnected)
-      }
-      walletChain="ECLIPSE"
+      onClickEvent={() => {
+        if (solWallet) {
+          handleUnlinkWallet(solWallet.id);
+          setIsSolDisconnected(!isSolDisconnected);
+        }
+      }}
+      walletChain="SOL"
       showConnect={!solWallet && isSolDisconnected && !isEvmDisconnected}
       wallet={solWallet}
       balanceEther={balanceEther}

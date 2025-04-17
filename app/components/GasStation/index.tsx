@@ -119,7 +119,7 @@ export const GasStation: React.FC = () => {
 
   const fetchOctane = async () => {
     // create transaction
-    const connection = new Connection("https://eclipse.helius-rpc.com");
+    const connection = new Connection("https://eclipse.lgns.net");
     setTxState("Fetching transaction...");
     setTxStatus(TxStatus.Waiting);
     const octaneData = await createOctaneSwapTransaction(
@@ -151,7 +151,8 @@ export const GasStation: React.FC = () => {
     try {
       signedTransaction = await cli?.signAndSendTransaction(tx);
       console.log(signedTransaction);
-    } catch {
+    } catch (error) {
+      console.error("Transaction failed:", error);
       emitEvent(`Refueling for $${amount} is failed.`, TxStatus.Failed, 5);
       return -1;
     }

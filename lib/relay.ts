@@ -10,12 +10,12 @@ const extractWalletIcon = (wallet: Wallet) => {
   const walletBook = wallet?.connector?.walletBook?.wallets;
   let walletLogoId =
     // @ts-ignore
-    wallet?.connector?.wallet?.brand?.spriteId ??
+    (wallet?.connector?.wallet?.brand?.spriteId ??
     (walletBook &&
       wallet.key &&
       walletBook[wallet.key] &&
       walletBook[wallet.key].brand &&
-      walletBook[wallet.key].brand.spriteId)
+      walletBook[wallet.key].brand.spriteId))
       ? walletBook[wallet.key].brand.spriteId
       : undefined;
 
@@ -32,7 +32,7 @@ const extractWalletIcon = (wallet: Wallet) => {
 };
 
 export const convertRelayChainToDynamicNetwork = (
-  chain: RelayChain
+  chain: RelayChain,
 ): GenericNetwork => {
   return {
     blockExplorerUrls: [chain.explorerUrl ?? "https://etherscan.io"],
@@ -51,6 +51,8 @@ export const convertRelayChainToDynamicNetwork = (
     networkId: chain.id,
     rpcUrls: chain.httpRpcUrl ? [chain.httpRpcUrl] : [],
     vanityName: chain.displayName,
+    key: chain.name,
+    isTestnet: false,
   };
 };
 

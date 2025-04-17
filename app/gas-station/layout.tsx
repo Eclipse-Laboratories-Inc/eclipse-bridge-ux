@@ -1,7 +1,8 @@
 "use client";
 import "@/app/globals.css";
-import { EclipseWalletConnectors } from "@dynamic-labs/eclipse";
+import { SolanaWalletConnectors } from "@dynamic-labs/solana";
 import { IBM_Plex_Sans } from "next/font/google";
+import { isDynamicEclipseNetworkId } from "@/lib/isDynamicEclipseNetworkId";
 import { GasProviders } from "@/app/providers/GasProviders";
 import { DynamicContextProvider } from "@dynamic-labs/sdk-react-core";
 
@@ -83,8 +84,13 @@ const cssOverrides = `
   }
 `;
 
-const eclipseWallets = ["backpacksol", "nightlysol"];
-
+const eclipseWallets = [
+  "backpacksol",
+  "nightlysol",
+  "okxsolana",
+  "bybitwalletsol",
+  "bitgetwalletsol",
+];
 export default function ClientLayout({
   children,
 }: {
@@ -99,6 +105,10 @@ export default function ClientLayout({
       </head>
       <DynamicContextProvider
         settings={{
+          walletsFilter: (wallets) =>
+            wallets.filter((w) => {
+              return eclipseWallets.includes(w.key);
+            }),
           events: {
             onAuthFlowOpen: () => {
               const depositBox = document.getElementsByClassName(
@@ -133,7 +143,7 @@ export default function ClientLayout({
             },
           },
           environmentId: process.env.NEXT_PUBLIC_ENVIRONMENT_ID || "",
-          walletConnectors: [EclipseWalletConnectors],
+          walletConnectors: [SolanaWalletConnectors],
           mobileExperience: "redirect",
           recommendedWallets: [
             { walletKey: "backpackeclipse", label: "Recommended" },
@@ -143,6 +153,14 @@ export default function ClientLayout({
           privacyPolicyUrl: "https://www.eclipse.xyz/privacy-policy",
           termsOfServiceUrl: "https://www.eclipse.xyz/terms",
           overrides: {
+            solNetworks: (networks) => {
+              return networks.filter((n) =>
+                isDynamicEclipseNetworkId(parseInt(n.networkId.toString())),
+              );
+            },
+            evmNetworks: (_: any) => {
+              return [];
+            },
             chainDisplayValues: {
               solana: {
                 displayName: "Eclipse",
