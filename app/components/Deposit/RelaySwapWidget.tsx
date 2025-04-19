@@ -2,7 +2,7 @@
 import React from "react";
 
 import "./styles.css";
-import { SwapWidget } from "@reservoir0x/relay-kit-ui";
+import { SwapWidget, Token } from "@reservoir0x/relay-kit-ui";
 import { useDynamicContext } from "@dynamic-labs/sdk-react-core";
 import { useLinkedWallets } from "@/app/hooks/useLinkedWallets";
 import { useOnLinkNewWallet } from "@/app/hooks/useOnLinkNewWallet";
@@ -30,7 +30,7 @@ export const RelaySwapWidget: React.FC<RelaySwapWidgetContentProps> = ({}) => {
         name: "ETH",
         decimals: 18,
         logoURI: "https://assets.relay.link/icons/currencies/eth.png",
-      }}
+      } as Token}
       toToken={{
         address: "11111111111111111111111111111111",
         chainId: 9286185,
@@ -38,7 +38,7 @@ export const RelaySwapWidget: React.FC<RelaySwapWidgetContentProps> = ({}) => {
         name: "ETH",
         decimals: 9,
         logoURI: "https://assets.relay.link/icons/currencies/eth.png",
-      }}
+      } as Token}
       wallet={wallet}
       supportedWalletVMs={['evm', 'svm', 'bvm']}
       multiWalletSupportEnabled={true}
