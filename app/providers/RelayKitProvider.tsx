@@ -66,7 +66,7 @@ export const RelayKitProvider = (props: {
         pollingInterval: 3000,
         logLevel: 4,
         disablePoweredByReservoir: true,
-        source: "app.eclipse.xyz",
+        source: "bridge.eclipse.xyz",
         vmConnectorKeyOverrides: {
           9286185: [
             "backpacksol",

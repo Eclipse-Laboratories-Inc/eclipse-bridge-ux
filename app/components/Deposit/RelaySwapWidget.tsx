@@ -38,7 +38,6 @@ export const RelaySwapWidget: React.FC<RelaySwapWidgetContentProps> = ({}) => {
   return (
     <SwapWidget
       onConnectWallet={() => setShowAuthFlow(true)}
-      // todo: replace with eclipse configs
       lockChainId={9286185}
       fromToken={fromToken}
       setFromToken={setFromToken}
