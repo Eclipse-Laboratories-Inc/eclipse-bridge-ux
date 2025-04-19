@@ -1,5 +1,6 @@
 "use client";
 import React from "react";
+import { useState } from "react";
 
 import "./styles.css";
 import { SwapWidget, Token } from "@reservoir0x/relay-kit-ui";
@@ -17,32 +18,32 @@ export const RelaySwapWidget: React.FC<RelaySwapWidgetContentProps> = ({}) => {
   const onLinkNewWallet = useOnLinkNewWallet();
   const onSetPrimaryWallet = useOnSetPrimaryWallet(wallets.current);
   const wallet = useAdaptedWallet(primaryWallet);
+  const [fromToken, setFromToken] = useState<Token | undefined>({
+    address: "0x0000000000000000000000000000000000000000",
+    chainId: 1,
+    symbol: "ETH",
+    name: "ETH",
+    decimals: 18,
+    logoURI: "https://assets.relay.link/icons/currencies/eth.png",
+  });
+  const [toToken, setToToken] = useState<Token | undefined>({
+    address: "11111111111111111111111111111111",
+    chainId: 9286185,
+    symbol: "ETH",
+    name: "ETH",
+    decimals: 9,
+    logoURI: "https://assets.relay.link/icons/currencies/eth.png",
+  });
 
   return (
     <SwapWidget
       onConnectWallet={() => setShowAuthFlow(true)}
       // todo: replace with eclipse configs
       lockChainId={9286185}
-      fromToken={
-        {
-          address: "0x0000000000000000000000000000000000000000",
-          chainId: 1,
-          symbol: "ETH",
-          name: "ETH",
-          decimals: 18,
-          logoURI: "https://assets.relay.link/icons/currencies/eth.png",
-        } as Token
-      }
-      toToken={
-        {
-          address: "11111111111111111111111111111111",
-          chainId: 9286185,
-          symbol: "ETH",
-          name: "ETH",
-          decimals: 9,
-          logoURI: "https://assets.relay.link/icons/currencies/eth.png",
-        } as Token
-      }
+      fromToken={fromToken}
+      setFromToken={setFromToken}
+      toToken={toToken}
+      setToToken={setToToken}
       wallet={wallet}
       supportedWalletVMs={["evm", "svm", "bvm"]}
       multiWalletSupportEnabled={true}

@@ -66,9 +66,15 @@ export const RelayKitProvider = (props: {
         pollingInterval: 3000,
         logLevel: 4,
         disablePoweredByReservoir: true,
-        source: "bridge.eclipse.xyz",
+        source: "app.eclipse.xyz",
         vmConnectorKeyOverrides: {
-          9286185: ["backpackeclipse", "nightlyeclipse", "okxeclipse"],
+          9286185: [
+            "backpacksol",
+            "nightlysol",
+            "okxsolana",
+            "bybitwalletsol",
+            "bitgetwalletsol",
+          ],
         },
       }}
       theme={theme}
