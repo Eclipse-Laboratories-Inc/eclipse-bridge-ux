@@ -41,7 +41,7 @@ export const useOnLinkNewWallet = () => {
     if (chain?.vmType === "evm") {
       setWalletFilter("EVM");
     } else if (chain?.id === 792703809) {
-      setWalletFilter("SOL");
+      setWalletFilter("ECLIPSE");
     } else if (chain?.id === 8253038) {
       setWalletFilter("BTC");
     } else if (chain?.id === 9286185) {
