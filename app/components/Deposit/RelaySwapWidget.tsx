@@ -23,24 +23,28 @@ export const RelaySwapWidget: React.FC<RelaySwapWidgetContentProps> = ({}) => {
       onConnectWallet={() => setShowAuthFlow(true)}
       // todo: replace with eclipse configs
       lockChainId={9286185}
-      fromToken={{
-        address: "0x0000000000000000000000000000000000000000",
-        chainId: 1,
-        symbol: "ETH",
-        name: "ETH",
-        decimals: 18,
-        logoURI: "https://assets.relay.link/icons/currencies/eth.png",
-      } as Token}
-      toToken={{
-        address: "11111111111111111111111111111111",
-        chainId: 9286185,
-        symbol: "ETH",
-        name: "ETH",
-        decimals: 9,
-        logoURI: "https://assets.relay.link/icons/currencies/eth.png",
-      } as Token}
+      fromToken={
+        {
+          address: "0x0000000000000000000000000000000000000000",
+          chainId: 1,
+          symbol: "ETH",
+          name: "ETH",
+          decimals: 18,
+          logoURI: "https://assets.relay.link/icons/currencies/eth.png",
+        } as Token
+      }
+      toToken={
+        {
+          address: "11111111111111111111111111111111",
+          chainId: 9286185,
+          symbol: "ETH",
+          name: "ETH",
+          decimals: 9,
+          logoURI: "https://assets.relay.link/icons/currencies/eth.png",
+        } as Token
+      }
       wallet={wallet}
-      supportedWalletVMs={['evm', 'svm', 'bvm']}
+      supportedWalletVMs={["evm", "svm", "bvm"]}
       multiWalletSupportEnabled={true}
       linkedWallets={linkedWallets}
       onLinkNewWallet={(params) => {

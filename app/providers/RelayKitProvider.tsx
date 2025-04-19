@@ -66,7 +66,6 @@ export const RelayKitProvider = (props: {
         pollingInterval: 3000,
         logLevel: 4,
         disablePoweredByReservoir: true,
-        duneApiKey: process.env.NEXT_PUBLIC_DUNE_API_KEY,
         source: "bridge.eclipse.xyz",
         vmConnectorKeyOverrides: {
           9286185: ["backpackeclipse", "nightlyeclipse", "okxeclipse"],
