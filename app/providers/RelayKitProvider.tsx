@@ -67,6 +67,9 @@ export const RelayKitProvider = (props: {
         logLevel: 4,
         disablePoweredByReservoir: true,
         source: "bridge.eclipse.xyz",
+        duneConfig: {
+          apiKey: process.env.NEXT_PUBLIC_DUNE_API_KEY,
+        },
         vmConnectorKeyOverrides: {
           9286185: [
             "backpacksol",
