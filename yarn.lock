@@ -6113,17 +6113,17 @@
   dependencies:
     defer-to-connect "^2.0.1"
 
-"@tanstack/query-core@5.59.13":
-  version "5.59.13"
-  resolved "https://registry.npmjs.org/@tanstack/query-core/-/query-core-5.59.13.tgz"
-  integrity sha512-Oou0bBu/P8+oYjXsJQ11j+gcpLAMpqW42UlokQYEz4dE7+hOtVO9rVuolJKgEccqzvyFzqX4/zZWY+R/v1wVsQ==
+"@tanstack/query-core@5.75.4":
+  version "5.75.4"
+  resolved "https://registry.yarnpkg.com/@tanstack/query-core/-/query-core-5.75.4.tgz#e05f2fe4145fb5354271ad19e63eec61f6ce3012"
+  integrity sha512-pcqOUgWG9oGlzkfRQQMMsEFmtQu0wq81A414CtELZGq+ztVwSTAaoB3AZRAXQJs88LmNMk2YpUKuQbrvzNDyRg==
 
-"@tanstack/react-query@^5.51.21":
-  version "5.59.13"
-  resolved "https://registry.npmjs.org/@tanstack/react-query/-/react-query-5.59.13.tgz"
-  integrity sha512-GB2ELtiH8tL0rcFiM4sWvnXhazt1xRXX/LolMEV12kfEKu58aNA4lQoieslP61PO4vZO9JJMwm+6lqyS0E1HOA==
+"@tanstack/react-query@^5.75.4":
+  version "5.75.4"
+  resolved "https://registry.yarnpkg.com/@tanstack/react-query/-/react-query-5.75.4.tgz#721e1cdf7debb110671f558dc2b6276f637554a5"
+  integrity sha512-Vf65pzYRkf8fk9SP1ncIZjvaXszBhtsvpf+h45Y/9kOywOrVZfBGUpCdffdsVzbmBzmz6TCFes9bM0d3pRrIsA==
   dependencies:
-    "@tanstack/query-core" "5.59.13"
+    "@tanstack/query-core" "5.75.4"
 
 "@thumbmarkjs/thumbmarkjs@0.16.0":
   version "0.16.0"
