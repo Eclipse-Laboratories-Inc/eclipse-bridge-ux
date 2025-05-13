@@ -1,0 +1,23 @@
+{
+  "abi": [
+    {
+      "inputs": [
+        {
+          "internalType": "uint32",
+          "name": "_destinationDomain",
+          "type": "uint32"
+        }
+      ],
+      "name": "quoteGasPayment",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "_gasPayment",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    }
+  ]
+}

@@ -3,7 +3,7 @@ import Link from "next/link";
 import { Cross, ArrowUpRight, GrassIcon, PassiveGrassBanner } from "../icons";
 
 const TapPopup: React.FC = () => {
-  const [isTapPopupVisible, setIsTapPopupVisible] = useState<boolean>(true);
+  const [isTapPopupVisible, setIsTapPopupVisible] = useState<boolean>(false);
 
   const closePopup = () => {
     setIsTapPopupVisible(false);
