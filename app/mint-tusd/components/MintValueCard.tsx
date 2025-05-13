@@ -28,6 +28,7 @@ interface MintValueCardProps {
   selectedChain?: SelectOption;
   chainOptions?: SelectOption[];
   loadingTethBalance?: boolean;
+  tokenDecimals?: number;
 }
 
 export function MintValueCard({
@@ -53,13 +54,20 @@ export function MintValueCard({
   chainOptions,
   chainSelectDisabled,
   loadingTethBalance,
+  tokenDecimals = 18,
 }: MintValueCardProps) {
   ///////////////////
   // Derived values
   ///////////////////
-  const trimmedUserAddress = userAddress ? userAddress.slice(0, 5) + "•••" + userAddress.slice(-3) : "";
-  const formattedTokenBalance = tokenBalance ? parseFloat(formatUnits(tokenBalance, 18)).toFixed(4) : "0.00";
-  const formattedUsdValue = usdValue ? parseFloat(usdValue).toFixed(2) : "$0.00";
+  const trimmedUserAddress = userAddress
+    ? userAddress.slice(0, 5) + "•••" + userAddress.slice(-3)
+    : "";
+  const formattedTokenBalance = tokenBalance
+    ? parseFloat(formatUnits(tokenBalance, tokenDecimals)).toFixed(4)
+    : "0.00";
+  const formattedUsdValue = usdValue
+    ? parseFloat(usdValue).toFixed(2)
+    : "$0.00";
 
   return (
     <div className="mint-card">
@@ -71,7 +79,7 @@ export function MintValueCard({
             smallText
             options={chainOptions}
             selected={selectedChain}
-            onChange={onChangeChain || (() => {})}
+            onChange={onChangeChain || (() => { })}
           />
         </div>
         {trimmedUserAddress && (
@@ -84,9 +92,8 @@ export function MintValueCard({
       <div className="px-6 pt-4 flex flex-col">
         <div className="flex justify-between items-center">
           <input
-            className={`mint-input max-w-[250px] ${disabled ? "mint-input-disabled" : ""} ${
-              isOverBalance ? "mint-input-error" : ""
-            }`}
+            className={`mint-input max-w-[250px] ${disabled ? "mint-input-disabled" : ""} ${isOverBalance ? "mint-input-error" : ""
+              }`}
             value={inputValue}
             onChange={(e) => {
               onChangeInput?.(e.target.value);
@@ -99,7 +106,7 @@ export function MintValueCard({
             options={tokenOptions}
             selected={depositAsset}
             disabled={tokenOptions.length <= 1}
-            onChange={onChangeDepositAsset || (() => {})}
+            onChange={onChangeDepositAsset || (() => { })}
           />
         </div>
         <div className="flex justify-between mt-2 mb-3">
@@ -112,10 +119,14 @@ export function MintValueCard({
               {loadingTethBalance ? (
                 <Skeleton width={75} height={18} />
               ) : (
-                <p className="token-balance self-start">{formattedTokenBalance}</p>
+                <p className="token-balance self-start">
+                  {formattedTokenBalance}
+                </p>
               )}
             </div>
-            {(onClickMax || onClickFiftyPercent) && <p className="text-white/30">•</p>}
+            {(onClickMax || onClickFiftyPercent) && (
+              <p className="text-white/30">•</p>
+            )}
             {onClickFiftyPercent !== undefined && (
               <div>
                 <button className="max-button" onClick={onClickFiftyPercent}>

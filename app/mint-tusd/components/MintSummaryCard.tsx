@@ -8,16 +8,25 @@ interface MintSummaryCardProps {
   exchangeRate: string;
 }
 
-export function MintSummaryCard({ depositAsset, exchangeRate }: MintSummaryCardProps) {
+export function MintSummaryCard({
+  depositAsset,
+  exchangeRate,
+}: MintSummaryCardProps) {
   // Derived values
-  const depositAssetSymbol = tokenOptions.find((token) => token.value === depositAsset)?.label;
-  const tEthValue = exchangeRate ? 1 / Number(formatUnits(BigInt(exchangeRate), 18)) : 0;
-  const formattedExchangeRate = `1 ${depositAssetSymbol} = ${tEthValue.toFixed(3)} tETH`;
+  const depositAssetSymbol = tokenOptions.find(
+    (token) => token.value === depositAsset,
+  )?.label;
+  const tEthValue = exchangeRate
+    ? 1 / Number(formatUnits(BigInt(exchangeRate), 6))
+    : 0;
+  const formattedExchangeRate = `1 ${depositAssetSymbol} = ${tEthValue.toFixed(3)} tUSD`;
 
   return (
     <div className="mint-card">
       <div className="mint-card-header">
-        <p className="text-sm text-white/60 font-medium">{formattedExchangeRate}</p>
+        <p className="text-sm text-white/60 font-medium">
+          {formattedExchangeRate}
+        </p>
         <div className="flex gap-2 items-center">
           <div className="flex gap-1">
             <Image src="/clock.svg" alt="clock" width={16} height={16} />

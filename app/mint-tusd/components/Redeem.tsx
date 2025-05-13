@@ -13,15 +13,14 @@ import {
   formatUnits,
   http,
   parseUnits,
-  PublicClient,
   Transport,
   WalletClient,
 } from "viem";
 import { mainnet, sepolia } from "viem/chains";
 import {
   chainOptions,
-  tethEvmTokenAddress,
-  tethSvmTokenAddress,
+  tusdSvmTokenAddress,
+  tusdEvmTokenAddress,
   tokenAddresses,
   tokenOptions,
 } from "../constants/tokens";
@@ -110,25 +109,26 @@ export function Redeem() {
       (BigInt(1e18) - parseUnits(slippage.toString(), 18))) /
     BigInt(1e18);
 
-  const formattedTokenBalance = formatUnits(BigInt(tethBalance), 18);
+  const formattedTokenBalance = formatUnits(BigInt(tethBalance), 6);
   const atomicPriceAsBigInt = BigInt(atomicPrice);
-  const redeemAmountAsBigInt = BigInt(parseUnits(redeemAmount, 18));
+  const redeemAmountAsBigInt = BigInt(parseUnits(redeemAmount, 6));
 
   // Withdraw fee
-  const withdrawFeeInTeth =
-    (redeemAmountAsBigInt * parseUnits(slippage.toString(), 18)) / BigInt(1e18);
+  const withdrawFeeInTusd =
+    (redeemAmountAsBigInt * parseUnits(slippage.toString(), 6)) / BigInt(1e6);
   const withdrawFeeInEth =
-    (withdrawFeeInTeth * BigInt(ethPerTethRate)) / BigInt(1e18);
+    (withdrawFeeInTusd * BigInt(ethPerTethRate)) / BigInt(1e6);
   const withdrawFeeInUsdAsBigInt =
-    (withdrawFeeInEth * BigInt(ethPrice)) / BigInt(1e8);
-  const withdrawFeeInUsd = Number(formatUnits(withdrawFeeInUsdAsBigInt, 18));
+    (withdrawFeeInEth) / BigInt(1e8);
+  const withdrawFeeInUsd = Number(formatUnits(withdrawFeeInUsdAsBigInt, 6));
+  console.log(withdrawFeeInUsd, withdrawFeeInTusd, withdrawFeeInEth, withdrawFeeInUsdAsBigInt)
   const formattedWithdrawFeeInUsd =
     withdrawFeeInUsd > 0 && withdrawFeeInUsd < 0.01
       ? "<$0.01"
       : `$${new Intl.NumberFormat("en-US", {
-          minimumFractionDigits: 2,
-          maximumFractionDigits: 2,
-        }).format(withdrawFeeInUsd)}`;
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2,
+      }).format(withdrawFeeInUsd)}`;
 
   // Bridge fee
   const bridgeFeeInUsdAsBigInt =
@@ -138,22 +138,26 @@ export function Redeem() {
     bridgeFeeInUsd > 0 && bridgeFeeInUsd < 0.01
       ? "<$0.01"
       : `$${new Intl.NumberFormat("en-US", {
-          minimumFractionDigits: 2,
-          maximumFractionDigits: 2,
-        }).format(bridgeFeeInUsd)}`;
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2,
+      }).format(bridgeFeeInUsd)}`;
 
   // Total fees
   const totalFeesInEth = withdrawFeeInEth + interchainTransferFee;
+  /*
   const totalFeesInUsdAsBigInt =
     (totalFeesInEth * BigInt(ethPrice)) / BigInt(1e8);
+    */
+  const totalFeesInUsdAsBigInt =
+    ((interchainTransferFee * BigInt(ethPrice)) / BigInt(1e8)) + (withdrawFeeInTusd * BigInt(1e12));
   const totalFeesInUsd = Number(formatUnits(totalFeesInUsdAsBigInt, 18));
   const formattedTotalFeesInUsd =
     totalFeesInUsd > 0 && totalFeesInUsd < 0.01
       ? "<$0.01"
       : `$${new Intl.NumberFormat("en-US", {
-          minimumFractionDigits: 2,
-          maximumFractionDigits: 2,
-        }).format(totalFeesInUsd)}`;
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2,
+      }).format(totalFeesInUsd)}`;
 
   const isOverBalance = BigInt(tethBalance) < redeemAmountAsBigInt;
 
@@ -171,42 +175,39 @@ export function Redeem() {
   const ethPriceAsBigInt = ethPrice ? BigInt(ethPrice) : BigInt(0);
 
   // Redeem amount
-  const redeemAmountInEth =
-    (redeemAmountAsBigInt * BigInt(ethPerTethRate)) / BigInt(1e18);
-  const redeemAmountInUsd =
-    (redeemAmountInEth * ethPriceAsBigInt) / BigInt(1e8);
-  const redeemAmountInUsdFormatted = Number(formatUnits(redeemAmountInUsd, 18));
+  const redeemAmountInEth = redeemAmountAsBigInt;
+  const redeemAmountInUsd = redeemAmountInEth;
+  const redeemAmountInUsdFormatted = Number(formatUnits(redeemAmountInUsd, 6));
   const formattedRedeemAmountInUsd =
     redeemAmountInUsdFormatted > 0 && redeemAmountInUsdFormatted < 0.01
       ? "<$0.01"
       : `$${new Intl.NumberFormat("en-US", {
-          minimumFractionDigits: 2,
-          maximumFractionDigits: 2,
-        }).format(redeemAmountInUsdFormatted)}`;
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2,
+      }).format(redeemAmountInUsdFormatted)}`;
 
   // Receive amount
   const receiveAmountAsBigInt =
     atomicPriceAsBigInt > BigInt(0)
-      ? (redeemAmountAsBigInt * atomicPriceAsBigInt) / BigInt(1e18)
+      ? (redeemAmountAsBigInt * atomicPriceAsBigInt) / BigInt(1e6)
       : redeemAmountAsBigInt;
-  const formattedReceiveAmount = formatUnits(receiveAmountAsBigInt, 18);
+  const formattedReceiveAmount = formatUnits(receiveAmountAsBigInt, 6);
 
   const receiveAmountInEth = ethPerAssetRate
-    ? (receiveAmountAsBigInt * BigInt(ethPerAssetRate)) / BigInt(1e18)
+    ? (receiveAmountAsBigInt * BigInt(ethPerAssetRate)) / BigInt(1e6)
     : BigInt(0);
 
-  const receiveAmountInUsd =
-    (receiveAmountInEth * ethPriceAsBigInt) / BigInt(1e8);
+  const receiveAmountInUsd = receiveAmountInEth;
   const receiveAmountInUsdFormatted = Number(
-    formatUnits(receiveAmountInUsd, 18),
+    formatUnits(receiveAmountInUsd, 6),
   );
   const formattedReceiveAmountInUsd =
     receiveAmountInUsdFormatted > 0 && receiveAmountInUsdFormatted < 0.01
       ? "<$0.01"
       : `$${new Intl.NumberFormat("en-US", {
-          minimumFractionDigits: 2,
-          maximumFractionDigits: 2,
-        }).format(receiveAmountInUsdFormatted)}`;
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2,
+      }).format(receiveAmountInUsdFormatted)}`;
 
   // Memoized because it iterates over an array
   const { depositAssetLabel, depositAssetIcon } = useMemo(() => {
@@ -258,6 +259,9 @@ export function Redeem() {
   }, [evmWallet?.connector]);
 
   // Set the balance of the SVM wallet
+  const stableEvmWallet = useMemo(() => evmWallet, [evmWallet?.address]);
+  const stablePublicClient = useMemo(() => publicClient, []);
+
   useEffect(() => {
     async function getSvmBalance() {
       try {
@@ -265,7 +269,7 @@ export function Redeem() {
         if (sourceChain?.value === "eclipse" && svmAddress) {
           const balance = await getSolanaBalance(
             svmAddress,
-            tethSvmTokenAddress,
+            tusdSvmTokenAddress,
           );
           setTethBalance(balance.toString());
         } else if (
@@ -274,7 +278,7 @@ export function Redeem() {
           publicClient
         ) {
           const balance = await balanceOf({
-            tokenAddress: tethEvmTokenAddress,
+            tokenAddress: tusdEvmTokenAddress,
             userAddress: evmAddress,
             publicClient,
           });
@@ -288,7 +292,7 @@ export function Redeem() {
     }
 
     getSvmBalance();
-  }, [evmAddress, publicClient, sourceChain?.value, svmAddress]);
+  }, [stableEvmWallet, stablePublicClient, sourceChain?.value, svmAddress]);
 
   // Clear token balance when the wallet disconnects
   useEffect(() => {
@@ -305,8 +309,8 @@ export function Redeem() {
       if (!asset || !publicClient) return;
       const rate = await getRateInQuote({ quote: asset }, { publicClient });
       let _ethPerAssetRate: BigInt;
-      if (asset === "0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2") {
-        _ethPerAssetRate = BigInt(1e18);
+      if (asset === "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48") {
+        _ethPerAssetRate = BigInt(1e6);
       } else {
         _ethPerAssetRate = await getRate(
           { tokenAddress: asset },
@@ -314,7 +318,7 @@ export function Redeem() {
         );
       }
       const _ethPerTethRate = await getRateInQuote(
-        { quote: "0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2" }, // WETH
+        { quote: "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48" }, // USDC
         { publicClient },
       );
       const _ethPrice = await latestRoundData({ publicClient });
@@ -345,12 +349,16 @@ export function Redeem() {
   useEffect(() => {
     async function getTokenBalance() {
       try {
-        if (!publicClient || !evmWallet || tokenBalanceAsBigInt != BigInt(1))
+        if (
+          !stablePublicClient ||
+          !stableEvmWallet ||
+          tokenBalanceAsBigInt != BigInt(1)
+        )
           return;
         setIsLoadingTokenBalance(true);
         const _tokenBalanceAsBigInt = await balanceOf({
           tokenAddress: receiveAsset as `0x${string}`,
-          userAddress: evmWallet.address as `0x${string}`,
+          userAddress: stableEvmWallet.address as `0x${string}`,
           publicClient,
         });
         setTokenBalanceAsBigInt(_tokenBalanceAsBigInt);
@@ -362,7 +370,7 @@ export function Redeem() {
     }
 
     getTokenBalance();
-  }, [receiveAsset, evmWallet, publicClient]);
+  }, [receiveAsset, stableEvmWallet, stablePublicClient]);
 
   ///////////////////
   // Actions
@@ -408,7 +416,7 @@ export function Redeem() {
       const deadlineInSec = BigInt(
         Math.floor(Date.now() / 1000) + deadlineDaysFromNow * 24 * 60 * 60,
       );
-      const offerAmount = parseUnits(redeemAmount, 18);
+      const offerAmount = parseUnits(redeemAmount, 6);
 
       if (!evmAddress) throw new Error("No EVM address found");
       if (!publicClient) throw new Error("No public client found");
@@ -421,7 +429,7 @@ export function Redeem() {
       // mark it as complete.
       if (sourceChain?.value === "eclipse") {
         try {
-          await triggerTransactions(parseUnits(redeemAmount, 9).toString());
+          await triggerTransactions(parseUnits(redeemAmount, 6).toString());
         } catch (e) {
           setTransactionState(StepStatus.FAILED);
           throw e;
@@ -437,7 +445,7 @@ export function Redeem() {
         const pendingAtomicRequest = await getUserAtomicRequest(
           {
             userAddress: evmAddress,
-            offerAddress: tethEvmTokenAddress,
+            offerAddress: tusdEvmTokenAddress,
             wantAddress: receiveAsset as `0x${string}`,
           },
           { publicClient },
@@ -453,7 +461,7 @@ export function Redeem() {
         if (!atomicRequestAlreadyExists) {
           const txHash = await updateAtomicRequest(
             {
-              offer: tethEvmTokenAddress,
+              offer: tusdEvmTokenAddress,
               want: receiveAsset as `0x${string}`,
               userRequest: {
                 deadline: deadlineInSec,
@@ -511,11 +519,12 @@ export function Redeem() {
           onChangeInput={handleRedeemAmountChange}
           depositAsset={{
             value: "0xtETH-solana",
-            label: "tETH",
-            imageSrc: "/token-teth.svg",
+            label: "tUSD",
+            imageSrc: "/token-tusd.png",
           }}
           isOverBalance={isOverBalance}
           tokenBalance={BigInt(tethBalance)}
+          tokenDecimals={6}
           onClickMax={handleClickMax}
           onClickFiftyPercent={handleClickFiftyPercent}
           usdValue={formattedRedeemAmountInUsd}
@@ -543,6 +552,7 @@ export function Redeem() {
             (token) => token.value === receiveAsset,
           )}
           tokenBalance={tokenBalanceAsBigInt}
+          tokenDecimals={6}
           usdValue={formattedReceiveAmountInUsd}
           handleDisconnect={() => evmWallet && handleUnlinkWallet(evmWallet.id)}
           onChangeDepositAsset={handleReceiveAssetChange}
@@ -576,7 +586,6 @@ export function Redeem() {
             buttonContainerClassName="submit-button connect-btn"
           >
             <span style={{ width: "100%" }}>
-              {" "}
               {!evmAddress && !svmAddress
                 ? "Connect Wallets"
                 : "Connect Wallet"}

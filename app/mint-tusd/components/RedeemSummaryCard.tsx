@@ -23,7 +23,7 @@ export function RedeemSummaryCard({
   slippage,
 }: RedeemSummaryCardProps) {
   const depositAssetSymbol = tokenOptions.find((token) => token.value === depositAsset)?.label;
-  const tEthValue = exchangeRate ? 1 / Number(formatUnits(BigInt(exchangeRate), 18)) : 0;
+  const tEthValue = exchangeRate ? 1 / Number(formatUnits(BigInt(exchangeRate), 6)) : 0;
   const formattedExchangeRate = `1 ${depositAssetSymbol} = ${tEthValue.toFixed(3)} tETH`;
 
   return (

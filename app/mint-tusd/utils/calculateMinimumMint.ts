@@ -1,6 +1,6 @@
 const WAD = {
-  bigint: BigInt(1e18),
-  number: 1e18,
+  bigint: BigInt(1e6),
+  number: 1e6,
 };
 
 /**

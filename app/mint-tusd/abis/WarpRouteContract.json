@@ -3,6 +3,45 @@
     {
       "inputs": [
         {
+          "internalType": "contract TellerWithMultiAssetSupport",
+          "name": "_teller",
+          "type": "address"
+        },
+        {
+          "internalType": "contract WarpRoute",
+          "name": "_warpRoute",
+          "type": "address"
+        },
+        {
+          "internalType": "uint32",
+          "name": "_destination",
+          "type": "uint32"
+        }
+      ],
+      "stateMutability": "nonpayable",
+      "type": "constructor"
+    },
+    {
+      "inputs": [],
+      "name": "InvalidDestination",
+      "type": "error"
+    },
+    {
+      "inputs": [],
+      "name": "boringVault",
+      "outputs": [
+        {
+          "internalType": "contract BoringVault",
+          "name": "",
+          "type": "address"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
           "internalType": "contract ERC20",
           "name": "depositAsset",
           "type": "address"
@@ -19,7 +58,7 @@
         },
         {
           "internalType": "bytes32",
-          "name": "_recipient",
+          "name": "recipient",
           "type": "bytes32"
         }
       ],
@@ -36,7 +75,46 @@
           "type": "bytes32"
         }
       ],
-      "stateMutability": "nonpayable",
+      "stateMutability": "payable",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "destination",
+      "outputs": [
+        {
+          "internalType": "uint32",
+          "name": "",
+          "type": "uint32"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "teller",
+      "outputs": [
+        {
+          "internalType": "contract TellerWithMultiAssetSupport",
+          "name": "",
+          "type": "address"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "warpRoute",
+      "outputs": [
+        {
+          "internalType": "contract WarpRoute",
+          "name": "",
+          "type": "address"
+        }
+      ],
+      "stateMutability": "view",
       "type": "function"
     }
   ]

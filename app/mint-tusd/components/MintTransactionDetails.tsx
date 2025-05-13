@@ -35,10 +35,14 @@ export const MintTransactionDetails: React.FC<TransactionDetailsProps> = ({
 }) => {
   const [_, ethPrice] = useContext(EthereumDataContext) ?? [0, 0];
 
-  const depositAmount = Number(ethers.utils.formatEther(depositAmountAsBigInt));
+  console.log("asbig", depositAmountAsBigInt)
+  const depositAmount = Number(
+    ethers.utils.formatUnits(depositAmountAsBigInt, 6),
+  );
+  console.log("amo", depositAmount)
   const isExpired = tx
     ? Number(tx.deadline) < Math.floor(Date.now() / 1000) &&
-      tx.status === "pending"
+    tx.status === "pending"
     : false;
 
   const chainLogos = [
@@ -157,7 +161,7 @@ export const MintTransactionDetails: React.FC<TransactionDetailsProps> = ({
           <span className="info-name">{action} Amount</span>
           <div className="flex flex-row gap-2">
             <span className="gray-text">
-              ${ethPrice && (depositAmount * ethPrice).toFixed(2)}
+              ${ethPrice && (depositAmount * 1).toFixed(2)}
             </span>
             <span className="green-text">
               {depositAmount < 0.001 ? "< 0.001" : depositAmount.toFixed(3)}{" "}

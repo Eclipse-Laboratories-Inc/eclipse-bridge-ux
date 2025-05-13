@@ -40,12 +40,11 @@ function MintAndRedeem() {
               <div
                 className={classNames(
                   "header-tab",
-                  "flex",
+                  "flex w-[131px]",
                   "items-center",
                   "justify-center",
                   activeTab === Tabs.Activity ? "active" : "inactive"
                 )}
-                style={{ width: "131px" }}
                 onClick={() => {
                   setActiveTab(Tabs.Activity);
                 }}

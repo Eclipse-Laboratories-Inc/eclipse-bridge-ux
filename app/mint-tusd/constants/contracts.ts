@@ -1,5 +1,7 @@
-export const tellerAddress = "0x6Ae187EacF40ebd1e571a655dB92A1f47452E0Bf";
-export const boringVaultAddress = "0x19e099B7aEd41FA52718D780dDA74678113C0b32";
-export const accountantAddress = "0x8c1902A5996978F2628558DD93d309F7e3926dfD";
-export const warpRouteContractAddress = "0xFbE0c54d696Fa6c93f35D4CA7D656561816C15F6";
-export const atomicQueueContractAddress = "0x228c44bb4885c6633f4b6c83f14622f37d5112e5";
+export const tellerAddress = "0x9Ff67b826b34feE9bf4135962754a808C4a14Fbc";
+export const boringVaultAddress = "0x722a851B6798D65b80526562Fc3a36E19b1F883b";
+export const accountantAddress = "0x66455247E6f56Cb60DfcAeA669037841a8414804";
+export const warpRouteContractAddress =
+  "0x762fCFcA1cF1958cf48cf6c8E3E8238c20513a02";
+export const atomicQueueContractAddress =
+  "0x228c44bb4885c6633f4b6c83f14622f37d5112e5"; // ---

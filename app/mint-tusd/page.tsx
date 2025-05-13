@@ -65,4 +65,4 @@ export default function Main() {
       </NetworkProvider>
     </EthereumDataContext.Provider>
   );
-}
+} 

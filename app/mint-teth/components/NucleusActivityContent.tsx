@@ -11,9 +11,7 @@ import { useCallback, useMemo, useState } from "react";
 import Skeleton from "react-loading-skeleton";
 import "../../components/Deposit/activity.css";
 import { tethEvmTokenAddress, tokenOptions } from "../constants/tokens";
-import { useTransactions } from "../hooks/useTransactions";
 import { MintTransactionDetails, Step } from "./MintTransactionDetails";
-import { SelectOption } from "./EcSelect";
 import { NucleusTransaction, StepStatus } from "../types";
 import Loading from "@/app/components/icons/loading";
 
@@ -210,8 +208,8 @@ export const NucleusActivityContent = ({
                     <span className="white-in">
                       {parseFloat(ethers.utils.formatEther(tx.amount)) > 0.001
                         ? parseFloat(
-                            ethers.utils.formatEther(tx.amount),
-                          ).toFixed(3)
+                          ethers.utils.formatEther(tx.amount),
+                        ).toFixed(3)
                         : "< 0.001"}{" "}
                       ETH
                     </span>

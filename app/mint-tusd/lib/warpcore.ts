@@ -1,5 +1,15 @@
-import { chainMetadata, eclipsemainnet, eclipsemainnetAddresses, warpRouteConfigs } from "@hyperlane-xyz/registry";
-import { ChainMap, ChainMetadata, MultiProtocolProvider, WarpCore } from "@hyperlane-xyz/sdk";
+import {
+  chainMetadata,
+  eclipsemainnet,
+  eclipsemainnetAddresses,
+  warpRouteConfigs,
+} from "@hyperlane-xyz/registry";
+import {
+  ChainMap,
+  ChainMetadata,
+  MultiProtocolProvider,
+  WarpCore,
+} from "@hyperlane-xyz/sdk";
 import { Address } from "viem";
 
 const chains: ChainMap<ChainMetadata & { mailbox?: Address }> = {
@@ -13,5 +23,5 @@ const chains: ChainMap<ChainMetadata & { mailbox?: Address }> = {
 };
 const multiProvider = new MultiProtocolProvider(chains);
 export const warpCore = WarpCore.FromConfig(multiProvider, {
-  tokens: warpRouteConfigs["tETH/eclipsemainnet-ethereum"].tokens,
+  tokens: warpRouteConfigs["tUSD/eclipsemainnet-ethereum"].tokens,
 });

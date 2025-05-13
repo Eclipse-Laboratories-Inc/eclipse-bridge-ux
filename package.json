@@ -26,7 +26,7 @@
     "@dynamic-labs/wagmi-connector": "4.8.2",
     "@dynamic-labs/wallet-book": "4.8.2",
     "@dynamic-labs/wallet-connector-core": "4.8.2",
-    "@hyperlane-xyz/registry": "^9.6.0",
+    "@hyperlane-xyz/registry": "15.3.0",
     "@hyperlane-xyz/sdk": "^8.6.1",
     "@orca-so/common-sdk": "^0.6.3",
     "@orca-so/whirlpools-sdk": "0.13.8",

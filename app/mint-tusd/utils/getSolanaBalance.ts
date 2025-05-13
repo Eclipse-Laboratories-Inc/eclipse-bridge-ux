@@ -29,5 +29,5 @@ export async function getSolanaBalance(userAddress: string, tokenMint: string): 
     balance += tokenAmount; // Add balance from each token account
   });
 
-  return parseUnits(balance.toString(), 18);
+  return parseUnits(balance.toString(), 6);
 }
