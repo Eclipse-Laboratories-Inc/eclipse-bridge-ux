@@ -20,7 +20,7 @@
     "@dynamic-labs/ethereum-core": "4.8.2",
     "@dynamic-labs/ethers-v5": "^2.6.2",
     "@dynamic-labs/sdk-react-core": "4.8.2",
-    "@dynamic-labs/solana": "4.8.2",
+    "@dynamic-labs/solana": "4.18.5",
     "@dynamic-labs/utils": "4.8.2",
     "@dynamic-labs/solana-core": "4.8.2",
     "@dynamic-labs/wagmi-connector": "4.8.2",
