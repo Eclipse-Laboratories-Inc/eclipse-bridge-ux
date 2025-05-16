@@ -10,7 +10,7 @@ import Image from "next/image";
 import { useCallback, useMemo, useState } from "react";
 import Skeleton from "react-loading-skeleton";
 import "../../components/Deposit/activity.css";
-import { tethEvmTokenAddress, tokenOptions } from "../constants/tokens";
+import { tusdEvmTokenAddress, tokenOptions } from "../constants/tokens";
 import { useTransactions } from "../hooks/useTransactions";
 import { MintTransactionDetails, Step } from "./MintTransactionDetails";
 import { SelectOption } from "./EcSelect";
@@ -46,9 +46,9 @@ export const NucleusActivityContent = ({
   const findTokenByAddress = useCallback((address: string) => {
     return tokenOptions
       .concat({
-        value: tethEvmTokenAddress,
-        label: "tETH",
-        imageSrc: "/token-teth.svg",
+        value: tusdEvmTokenAddress,
+        label: "tUSD",
+        imageSrc: "/token-tusd.png",
       })
       .find((token) => token.value === address);
   }, []);
@@ -159,7 +159,7 @@ export const NucleusActivityContent = ({
                   <div className="transaction-top flex justify-between">
                     <div className="flex tx-age" style={{ gap: "7px" }}>
                       <span className="gray-in">
-                        {tx.offerToken === tethEvmTokenAddress
+                        {tx.offerToken === tusdEvmTokenAddress
                           ? "Redeem"
                           : "Mint"}
                       </span>
@@ -208,12 +208,13 @@ export const NucleusActivityContent = ({
                     </div>
                     {/* <span className="white-in">{Number(ethers.utils.formatEther(tx.amount)).toFixed(3)} ETH</span> */}
                     <span className="white-in">
-                      {parseFloat(ethers.utils.formatEther(tx.amount)) > 0.001
+                      {parseFloat(ethers.utils.formatUnits(tx.amount, 6)) >
+                        0.001
                         ? parseFloat(
-                            ethers.utils.formatEther(tx.amount),
-                          ).toFixed(3)
+                          ethers.utils.formatUnits(tx.amount, 6),
+                        ).toFixed(3)
                         : "< 0.001"}{" "}
-                      ETH
+                      USDC
                     </span>
                   </div>
                 </div>
@@ -255,7 +256,7 @@ export const NucleusActivityContent = ({
           depositAssetLabel={offerTokenOption?.label}
           depositAssetIcon={offerTokenOption?.imageSrc}
           action={
-            currentTx?.offerToken === tethEvmTokenAddress ? "Redeem" : "Mint"
+            currentTx?.offerToken === tusdEvmTokenAddress ? "Redeem" : "Mint"
           }
         />
       )}
