@@ -22,9 +22,13 @@ export function RedeemSummaryCard({
   bridgeFee,
   slippage,
 }: RedeemSummaryCardProps) {
-  const depositAssetSymbol = tokenOptions.find((token) => token.value === depositAsset)?.label;
-  const tEthValue = exchangeRate ? 1 / Number(formatUnits(BigInt(exchangeRate), 6)) : 0;
-  const formattedExchangeRate = `1 ${depositAssetSymbol} = ${tEthValue.toFixed(3)} tETH`;
+  const depositAssetSymbol = tokenOptions.find(
+    (token) => token.value === depositAsset,
+  )?.label;
+  const tEthValue = exchangeRate
+    ? 1 / Number(formatUnits(BigInt(exchangeRate), 6))
+    : 0;
+  const formattedExchangeRate = `1 ${depositAssetSymbol} = ${tEthValue.toFixed(3)} tUSD`;
 
   return (
     <div className="mint-card">
@@ -41,7 +45,9 @@ export function RedeemSummaryCard({
           <Tooltip text="Fees are used to pay for gas and slippage costs incurred by solvers. This fee is already applied in the receive amount." />
         </div>
         <div className="redeem-summary-item">
-          <p className="green-mint-text-sm">{(parseFloat(slippage) * 100).toFixed(2)}%</p>
+          <p className="green-mint-text-sm">
+            {(parseFloat(slippage) * 100).toFixed(2)}%
+          </p>
         </div>
         <div className="redeem-summary-item">
           <p className="standard-text">Bridge Fee</p>

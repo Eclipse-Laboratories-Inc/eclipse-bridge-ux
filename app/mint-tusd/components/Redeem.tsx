@@ -224,7 +224,7 @@ export function Redeem() {
   const steps = useMemo(() => {
     return [
       {
-        title: "1. Bridging tETH to Ethereum",
+        title: "1. Bridging tUSD to Ethereum",
         status: tokenTransferState,
       },
       {
