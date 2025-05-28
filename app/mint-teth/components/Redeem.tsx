@@ -126,9 +126,9 @@ export function Redeem() {
     withdrawFeeInUsd > 0 && withdrawFeeInUsd < 0.01
       ? "<$0.01"
       : `$${new Intl.NumberFormat("en-US", {
-          minimumFractionDigits: 2,
-          maximumFractionDigits: 2,
-        }).format(withdrawFeeInUsd)}`;
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2,
+      }).format(withdrawFeeInUsd)}`;
 
   // Bridge fee
   const bridgeFeeInUsdAsBigInt =
@@ -138,9 +138,9 @@ export function Redeem() {
     bridgeFeeInUsd > 0 && bridgeFeeInUsd < 0.01
       ? "<$0.01"
       : `$${new Intl.NumberFormat("en-US", {
-          minimumFractionDigits: 2,
-          maximumFractionDigits: 2,
-        }).format(bridgeFeeInUsd)}`;
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2,
+      }).format(bridgeFeeInUsd)}`;
 
   // Total fees
   const totalFeesInEth = withdrawFeeInEth + interchainTransferFee;
@@ -151,9 +151,9 @@ export function Redeem() {
     totalFeesInUsd > 0 && totalFeesInUsd < 0.01
       ? "<$0.01"
       : `$${new Intl.NumberFormat("en-US", {
-          minimumFractionDigits: 2,
-          maximumFractionDigits: 2,
-        }).format(totalFeesInUsd)}`;
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2,
+      }).format(totalFeesInUsd)}`;
 
   const isOverBalance = BigInt(tethBalance) < redeemAmountAsBigInt;
 
@@ -180,9 +180,9 @@ export function Redeem() {
     redeemAmountInUsdFormatted > 0 && redeemAmountInUsdFormatted < 0.01
       ? "<$0.01"
       : `$${new Intl.NumberFormat("en-US", {
-          minimumFractionDigits: 2,
-          maximumFractionDigits: 2,
-        }).format(redeemAmountInUsdFormatted)}`;
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2,
+      }).format(redeemAmountInUsdFormatted)}`;
 
   // Receive amount
   const receiveAmountAsBigInt =
@@ -204,9 +204,9 @@ export function Redeem() {
     receiveAmountInUsdFormatted > 0 && receiveAmountInUsdFormatted < 0.01
       ? "<$0.01"
       : `$${new Intl.NumberFormat("en-US", {
-          minimumFractionDigits: 2,
-          maximumFractionDigits: 2,
-        }).format(receiveAmountInUsdFormatted)}`;
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2,
+      }).format(receiveAmountInUsdFormatted)}`;
 
   // Memoized because it iterates over an array
   const { depositAssetLabel, depositAssetIcon } = useMemo(() => {

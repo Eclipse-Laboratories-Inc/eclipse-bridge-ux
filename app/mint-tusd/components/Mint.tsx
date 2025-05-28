@@ -31,11 +31,7 @@ import {
 import { mainnet } from "viem/chains";
 import WarpRouteContract from "../abis/WarpRouteContract.json";
 import { warpRouteContractAddress } from "../constants/contracts";
-import {
-  tethSvmTokenAddress,
-  tokenAddresses,
-  tokenOptions,
-} from "../constants/tokens";
+import * as tokens from "../constants/tokens";
 import { balanceOf } from "../lib/balanceOf";
 import { getRate } from "../lib/getRate";
 import { getRateInQuote } from "../lib/getRateInQuote";
@@ -71,11 +67,11 @@ export function Mint() {
   > | null>(null);
   const [depositAmount, setDepositAmount] = useState<string>("");
   const [depositAsset, setDepositAsset] = useState<`0x${string}`>(
-    tokenAddresses[0],
+    tokens.tokenAddresses[0],
   );
-  const [tethPerAssetRate, setTethPerAssetRate] = useState<string>("");
+  const [tusdPerAssetRate, setTusdPerAssetRate] = useState<string>("");
   const [ethPerAssetRate, setEthPerAssetRate] = useState("");
-  const [ethPerTethRate, setEthPerTethRate] = useState("");
+  const [ethPerTusdRate, setEthPerTusdRate] = useState("");
   const [depositPending, setDepositPending] = useState<boolean>(false);
   const [tokenBalanceAsBigInt, setTokenBalanceAsBigInt] = useState<bigint>(
     BigInt(0),
@@ -93,7 +89,7 @@ export function Mint() {
   const [depositTxHash, setDepositTxHash] = useState<string>("");
   const [svmBalance, setSvmBalance] = useState<string>("");
   const [ethPrice, setEthPrice] = useState<string>("");
-  const [assetPerTethRate, setAssetPerTethRate] = useState<string>("");
+  const [assetPerTusdRate, setAssetPerTusdRate] = useState<string>("");
 
   ///////////////////////
   // Derived values
@@ -105,14 +101,14 @@ export function Mint() {
     ),
     cacheTime: 0,
   });
-  const formattedTokenBalance = formatUnits(tokenBalanceAsBigInt, 18);
-  const depositAmountAsBigInt = parseUnits(depositAmount, 18);
-  const exchangeRateAsBigInt = BigInt(assetPerTethRate);
+  const formattedTokenBalance = formatUnits(tokenBalanceAsBigInt, 6);
+  const depositAmountAsBigInt = parseUnits(depositAmount, 6);
+  const exchangeRateAsBigInt = BigInt(assetPerTusdRate);
   const receiveAmountAsBigInt =
     exchangeRateAsBigInt > BigInt(0)
-      ? (depositAmountAsBigInt * BigInt(1e18)) / exchangeRateAsBigInt
+      ? (depositAmountAsBigInt * BigInt(1e6)) / exchangeRateAsBigInt
       : depositAmountAsBigInt;
-  const formattedReceiveAmount = formatUnits(receiveAmountAsBigInt, 18);
+  const formattedReceiveAmount = formatUnits(receiveAmountAsBigInt, 6);
 
   const isOverBalance = tokenBalanceAsBigInt < depositAmountAsBigInt;
 
@@ -132,11 +128,10 @@ export function Mint() {
   const ethPriceAsBigInt = ethPrice ? BigInt(ethPrice) : BigInt(0);
 
   const depositAmountInEth =
-    (depositAmountAsBigInt * BigInt(ethPerAssetRate)) / BigInt(1e18);
-  const depositAmountInUsd =
-    (depositAmountInEth * ethPriceAsBigInt) / BigInt(1e8);
+    (depositAmountAsBigInt * BigInt(ethPerAssetRate)) / BigInt(1e6);
+  const depositAmountInUsd = depositAmountInEth;
   const depositAmountInUsdFormatted = Number(
-    formatUnits(depositAmountInUsd, 18),
+    formatUnits(depositAmountInUsd, 6),
   );
   const formattedDepositAmountInUsd =
     depositAmountInUsdFormatted > 0 && depositAmountInUsdFormatted < 0.01
@@ -147,18 +142,20 @@ export function Mint() {
       }).format(depositAmountInUsdFormatted)}`;
 
   const receiveAmountInEth =
-    (receiveAmountAsBigInt * BigInt(ethPerTethRate)) / BigInt(1e18);
+    (receiveAmountAsBigInt * BigInt(ethPerTusdRate)) / BigInt(1e6);
 
   useEffect(() => {
-    const rate = (BigInt(1e18) * BigInt(ethPerTethRate) / BigInt(1e18)).toString();
-    setTethPerAssetRate(rate);
-    console.log("teth per asset", rate);
-  }, [ethPerTethRate]);
+    const rate = (
+      (BigInt(1e6) * BigInt(ethPerTusdRate)) /
+      BigInt(1e6)
+    ).toString();
+    setTusdPerAssetRate(rate);
+    console.log("tusd per asset", rate);
+  }, [ethPerTusdRate]);
 
-  const receiveAmountInUsd =
-    (receiveAmountInEth * ethPriceAsBigInt) / BigInt(1e8);
+  const receiveAmountInUsd = receiveAmountInEth;
   const receiveAmountInUsdFormatted = Number(
-    formatUnits(receiveAmountInUsd, 18),
+    formatUnits(receiveAmountInUsd, 6),
   );
   const formattedReceiveAmountInUsd =
     receiveAmountInUsdFormatted > 0 && receiveAmountInUsdFormatted < 0.01
@@ -188,7 +185,7 @@ export function Mint() {
 
   // Memoized because it iterates over an array
   const { depositAssetLabel, depositAssetIcon } = useMemo(() => {
-    const tokenOption = tokenOptions.find(
+    const tokenOption = tokens.tokenOptions.find(
       (token) => token.value === depositAsset,
     );
     return {
@@ -215,7 +212,10 @@ export function Mint() {
   useEffect(() => {
     async function getSvmBalance() {
       if (!svmAddress) return;
-      const balance = await getSolanaBalance(svmAddress, tethSvmTokenAddress);
+      const balance = await getSolanaBalance(
+        svmAddress,
+        tokens.tusdSvmTokenAddress,
+      );
       setSvmBalance(balance.toString());
     }
 
@@ -237,25 +237,25 @@ export function Mint() {
       if (!asset || !publicClient) return;
       const rate = await getRateInQuote({ quote: asset }, { publicClient });
       let _ethPerAssetRate: BigInt;
-      if (asset === "0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2") {
-        _ethPerAssetRate = BigInt(1e18);
+      if (asset === "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48") {
+        _ethPerAssetRate = BigInt(1e6);
       } else {
         _ethPerAssetRate = await getRate(
           { tokenAddress: asset },
           { publicClient },
         );
       }
-      const _ethPerTethRate = await getRateInQuote(
-        { quote: "0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2" }, // WETH
+      const _ethPerTusdRate = await getRateInQuote(
+        { quote: "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48" }, // USDC
         { publicClient },
       );
       const _ethPrice = await latestRoundData({ publicClient });
 
       // Only update if the asset hasn't changed
       if (!isCancelled && asset === depositAsset) {
-        setAssetPerTethRate(rate.toString());
+        setAssetPerTusdRate(rate.toString());
         setEthPerAssetRate(_ethPerAssetRate.toString());
-        setEthPerTethRate(_ethPerTethRate.toString());
+        setEthPerTusdRate(_ethPerTusdRate.toString());
         setEthPrice(_ethPrice.toString());
       }
     }
@@ -274,17 +274,21 @@ export function Mint() {
   }, [depositAsset, publicClient]);
 
   // Get the token balance
+  const stableEvmWallet = useMemo(() => evmWallet, [evmWallet?.address]);
+  const stablePublicClient = useMemo(() => publicClient, []);
+
   useEffect(() => {
     async function getTokenBalance() {
       try {
-        if (!publicClient || !evmWallet) return;
+        if (!stablePublicClient || !stableEvmWallet) return;
         setLoadingTokenBalance(true);
         const tokenBalanceAsBigInt = await balanceOf({
           tokenAddress: depositAsset,
-          userAddress: evmWallet.address as `0x${string}`,
-          publicClient,
+          userAddress: stableEvmWallet.address as `0x${string}`,
+          publicClient: stablePublicClient,
         });
         setTokenBalanceAsBigInt(tokenBalanceAsBigInt);
+        console.log("token balance", tokenBalanceAsBigInt);
       } catch (error) {
         console.error(error);
       } finally {
@@ -293,8 +297,7 @@ export function Mint() {
     }
 
     getTokenBalance();
-  }, [depositAsset, evmWallet, publicClient]);
-
+  }, [depositAsset, stableEvmWallet, stablePublicClient]);
   ///////////////////
   // Actions
   ///////////////////
@@ -309,7 +312,7 @@ export function Mint() {
 
     const recipientBytes32 = solanaToBytes32(solWallet?.address || "");
 
-    const depositAmountAsBigInt = parseEther(depositAmount);
+    const depositAmountAsBigInt = parseUnits(depositAmount, 6);
 
     ////////////////////////////////
     // Check Allowance
@@ -505,19 +508,20 @@ export function Mint() {
               inputValue={depositAmount}
               loadingTokenBalance={loadingTokenBalance}
               onChangeInput={handleDepositAmountChange}
-              depositAsset={tokenOptions.find(
+              depositAsset={tokens.tokenOptions.find(
                 (token) => token.value === depositAsset,
               )}
               onChangeDepositAsset={handleDepositAssetChange}
               isOverBalance={isOverBalance}
               tokenBalance={tokenBalanceAsBigInt}
+              tokenDecimals={6}
               onClickMax={handleClickMax}
               onClickFiftyPercent={handleClickFiftyPercent}
               usdValue={formattedDepositAmountInUsd}
               handleDisconnect={() =>
                 evmWallet && handleUnlinkWallet(evmWallet.id)
               }
-              tokenOptions={tokenOptions}
+              tokenOptions={tokens.tokenOptions}
               selectedChain={{
                 value: "ethereum",
                 label: "Ethereum",
@@ -534,17 +538,18 @@ export function Mint() {
               userAddress={svmAddress}
               inputValue={formattedReceiveAmount}
               disabled={true}
+              tokenDecimals={6}
               depositAsset={{
-                value: "0xtETH-solana",
-                label: "tETH",
-                imageSrc: "/token-teth.svg",
+                value: "0xtUSD-solana",
+                label: "tUSD",
+                imageSrc: "/token-tusd.png",
               }}
               tokenBalance={BigInt(svmBalance)}
               usdValue={formattedReceiveAmountInUsd}
               handleDisconnect={() =>
                 solWallet && handleUnlinkWallet(solWallet.id)
               }
-              tokenOptions={tokenOptions}
+              tokenOptions={tokens.tokenOptions}
               selectedChain={{
                 value: "eclipse",
                 label: "Eclipse",
@@ -560,7 +565,7 @@ export function Mint() {
             />
             <MintSummaryCard
               depositAsset={depositAsset}
-              exchangeRate={tethPerAssetRate}
+              exchangeRate={tusdPerAssetRate}
             />
           </div>
         )}
@@ -583,7 +588,6 @@ export function Mint() {
               buttonContainerClassName="submit-button connect-btn"
             >
               <span style={{ width: "100%" }}>
-                {" "}
                 {!evmAddress && !svmAddress
                   ? "Connect Wallets"
                   : "Connect Wallet"}

@@ -16,6 +16,7 @@ export { default as ActivityBoxIcon } from "./activityBox";
 export { default as BridgeIcon } from "./sidebar-icons/bridge";
 export { default as WalletIcon } from "./sidebar-icons/wallet";
 export { default as TethIcon } from "./sidebar-icons/teth";
+export { default as TusdIcon } from "./sidebar-icons/tusd";
 export { default as ScanIcon } from "./sidebar-icons/scan";
 export { default as FaucetIcon } from "./sidebar-icons/faucet";
 export { default as EcosystemIcon } from "./sidebar-icons/ecosystem";
