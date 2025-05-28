@@ -143,6 +143,16 @@ export function Mint() {
 
   const receiveAmountInEth =
     (receiveAmountAsBigInt * BigInt(ethPerTusdRate)) / BigInt(1e6);
+
+  useEffect(() => {
+    const rate = (
+      (BigInt(1e6) * BigInt(ethPerTusdRate)) /
+      BigInt(1e6)
+    ).toString();
+    setTusdPerAssetRate(rate);
+    console.log("tusd per asset", rate);
+  }, [ethPerTusdRate]);
+
   const receiveAmountInUsd = receiveAmountInEth;
   const receiveAmountInUsdFormatted = Number(
     formatUnits(receiveAmountInUsd, 6),

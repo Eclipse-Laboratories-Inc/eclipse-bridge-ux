@@ -148,7 +148,13 @@ export function Mint() {
 
   const receiveAmountInEth =
     (receiveAmountAsBigInt * BigInt(ethPerTethRate)) / BigInt(1e18);
-  setTethPerAssetRate((BigInt(1e18) * BigInt(ethPerTethRate)).toString());
+
+  useEffect(() => {
+    const rate = (BigInt(1e18) * BigInt(ethPerTethRate) / BigInt(1e18)).toString();
+    setTethPerAssetRate(rate);
+    console.log("teth per asset", rate);
+  }, [ethPerTethRate]);
+
   const receiveAmountInUsd =
     (receiveAmountInEth * ethPriceAsBigInt) / BigInt(1e8);
   const receiveAmountInUsdFormatted = Number(
