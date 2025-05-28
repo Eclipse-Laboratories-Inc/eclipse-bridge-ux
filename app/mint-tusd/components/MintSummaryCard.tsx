@@ -30,7 +30,7 @@ export function MintSummaryCard({
         <div className="flex gap-2 items-center">
           <div className="flex gap-1">
             <Image src="/clock.svg" alt="clock" width={16} height={16} />
-            <p className="green-mint-text text-sm">~5 mins</p>
+            <p className="green-mint-text text-sm">~10 mins</p>
           </div>
         </div>
       </div>
