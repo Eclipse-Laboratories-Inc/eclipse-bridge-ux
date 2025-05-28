@@ -148,6 +148,7 @@ export function Mint() {
 
   const receiveAmountInEth =
     (receiveAmountAsBigInt * BigInt(ethPerTethRate)) / BigInt(1e18);
+  setTethPerAssetRate((BigInt(1e18) * BigInt(ethPerTethRate)).toString());
   const receiveAmountInUsd =
     (receiveAmountInEth * ethPriceAsBigInt) / BigInt(1e8);
   const receiveAmountInUsdFormatted = Number(
@@ -247,7 +248,6 @@ export function Mint() {
       // Only update if the asset hasn't changed
       if (!isCancelled && asset === depositAsset) {
         setAssetPerTethRate(rate.toString());
-        setTethPerAssetRate((BigInt(1) / rate).toString());
         setEthPerAssetRate(_ethPerAssetRate.toString());
         setEthPerTethRate(_ethPerTethRate.toString());
         setEthPrice(_ethPrice.toString());
