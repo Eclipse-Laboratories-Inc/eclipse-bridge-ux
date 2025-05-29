@@ -416,7 +416,7 @@ export function Mint() {
 
       if (!txHash) {
         setDepositStatus(StepStatus.FAILED);
-        throw new Error("Failed to determine trasaction hash for the deposit");
+        throw new Error("Failed to determine transaction hash for the deposit");
       }
 
       setDepositTxHash(txHash);
