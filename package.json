@@ -33,7 +33,7 @@
     "@project-serum/anchor": "^0.26.0",
     "@reservoir0x/relay-bitcoin-wallet-adapter": "^1.0.7",
     "@reservoir0x/relay-kit-hooks": "1.9.2",
-    "@reservoir0x/relay-kit-ui": "2.9.9",
+    "@reservoir0x/relay-kit-ui": "2.10.11",
     "@reservoir0x/relay-sdk": "1.6.15",
     "@reservoir0x/relay-svm-wallet-adapter": "4.0.15",
     "@sentry/nextjs": "^9.12.0",
