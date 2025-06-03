@@ -226,7 +226,20 @@ export function Mint() {
   useEffect(() => {
     if (!evmWallet) {
       setTokenBalanceAsBigInt(BigInt(0));
+      return;
     }
+
+    const maybeSwitchNetwork = async () => {
+      if (evmWallet?.connector.supportsNetworkSwitching()) {
+        try {
+          await evmWallet.connector.switchNetwork({ networkChainId: 1 });
+        } catch {
+          console.log("err");
+        }
+      }
+    };
+
+    maybeSwitchNetwork();
   }, [evmWallet]);
 
   // Get an updated exchange rate every time the deposit asset changes and every 30 seconds after that.
