@@ -1,3 +1,4 @@
+
 "use client";
 
 import "./styles.css";
@@ -113,11 +114,27 @@ const Deposit: React.FC<DepositProps> = ({ amountEther, setAmountEther }) => {
             )}
           </div>
           {activeTab === Tabs.Deposit && (
-            <DepositContent
-              modalStuff={[isModalOpen, setIsModalOpen]}
-              amountEther={amountEther}
-              setAmountEther={setAmountEther}
-            />
+            <>
+              {/* Maintenance Banner */}
+              <div className="flex w-full items-center justify-center
+                py-[12px] px-[16px]
+                rounded-[10px]
+                bg-[#ff6b6b0d] gap-[12px] text-[14px] font-medium
+                text-[#ff6b6b] mb-[20px]
+                border-[1px] border-[#ff6b6b1a]">
+                <span className="w-[16px] h-[16px] border-[2px] rounded-[50%] border-[#ff6b6b] flex items-center justify-center">
+                  <span className="w-[6px] h-[6px] rounded-[50%] bg-[#ff6b6b]"></span>
+                </span>
+                <span>Bridge is under maintenance, will be back soon</span>
+              </div>
+
+              <DepositContent
+                modalStuff={[isModalOpen, setIsModalOpen]}
+                amountEther={amountEther}
+                setAmountEther={setAmountEther}
+                isMaintenanceMode={true}
+              />
+            </>
           )}
           {activeTab === Tabs.Relay && <RelaySwapWidget />}
           {activeTab === Tabs.Activity && (
