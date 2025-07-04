@@ -465,13 +465,13 @@ export const WithdrawDetails: React.FC<TransactionDetailsProps> = ({
       {!txHash && (
         <div
           className="
-            flex w-full items-center justify-center 
+            flex w-full items-center justify-center
             py-[4px] px-[8px] h-[42px]
             rounded-[10px]
             bg-[#a1fea00d] gap-[12px] text-[16px] font-medium
             text-[#a1fea099] mt-[30px]
             border-[1px] border-[#a1fea01a]
-            h-[66px] text-left 
+            h-[66px] text-left
             cursor-pointer mb-[10px]
       "
           onClick={() => setCheckbox(!checkbox)}
@@ -491,8 +491,8 @@ export const WithdrawDetails: React.FC<TransactionDetailsProps> = ({
       {waitingPeriodStatus !== WaitingPeriodState.Ready && (
         <button
           onClick={txHash ? closeModal : handleInitiate}
-          className={`initiate-button flex items-center justify-center gap-[8px] 
-            ${(txHash || initiateStatus === InitiateTxStates.InWallet) && "!text-[#ffffff4d] !bg-[#ffffff0d] cursor-pointer"} 
+          className={`initiate-button flex items-center justify-center gap-[8px]
+            ${(txHash || initiateStatus === InitiateTxStates.InWallet) && "!text-[#ffffff4d] !bg-[#ffffff0d] cursor-pointer"}
             ${!checkbox && "!text-[#ffffff4d] cursor-not-allowed !bg-[#ffffff0d]"}`}
         >
           {initiateStatus === InitiateTxStates.InWallet && (
@@ -502,16 +502,29 @@ export const WithdrawDetails: React.FC<TransactionDetailsProps> = ({
         </button>
       )}
       {waitingPeriodStatus === WaitingPeriodState.Ready && (
-        <button
-          className={`initiate-button flex items-center justify-center gap-[8px] !mt-[25px] 
-            ${buttonText != "Claim Now" && "!text-[#ffffff4d] cursor-not-allowed !bg-[#ffffff0d]"}`}
-          onClick={isClaimFlowOpen ? () => {} : submitClaim}
-        >
-          {buttonText != "Claim Now" && (
-            <Loading loadingClassName="" style={{}} />
-          )}
-          {buttonText}
-        </button>
+        <>
+          {/* Maintenance Banner */}
+          <div className="flex w-full items-center justify-center
+            py-[12px] px-[16px]
+            rounded-[10px]
+            bg-[#ff6b6b0d] gap-[12px] text-[14px] font-medium
+            text-[#ff6b6b] mt-[25px] mb-[15px]
+            border-[1px] border-[#ff6b6b1a]">
+            <span className="w-[16px] h-[16px] border-[2px] rounded-[50%] border-[#ff6b6b] flex items-center justify-center">
+              <span className="w-[6px] h-[6px] rounded-[50%] bg-[#271212]"></span>
+            </span>
+            <span>Bridge is under maintenance, will be back soon</span>
+          </div>
+
+          {/* Disabled Claim Button */}
+          <button
+            className="initiate-button flex items-center justify-center gap-[8px] !mt-[0px]
+              !text-[#ffffff4d] cursor-not-allowed !bg-[#ffffff0d]"
+            disabled={true}
+          >
+            Claim Now (Disabled)
+          </button>
+        </>
       )}
     </div>
   );
