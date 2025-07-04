@@ -87,6 +87,7 @@ export interface MessageEntry {
   message: Message;
   message_hash: number[];
   start_time: string;
+  bridge: string; // Contract address for this withdrawal
 }
 
 export type Status = "Closed" | "Pending" | "Processing";
@@ -95,6 +96,7 @@ export type WithdrawObject = [MessageEntry, Status];
 export async function getWithdrawalsByAddress(
   address: string,
   withdrawApi: string,
+  contractAddress: string, // V1 contract address for backward compatibility
 ): Promise<WithdrawObject[]> {
   if (!withdrawApi) {
     return [];
@@ -106,7 +108,7 @@ export async function getWithdrawalsByAddress(
   }
 
   const serverData = LosslessJSON.parse(await response.text());
-  const result = parseWithdrawData(serverData);
+  const result = parseWithdrawData(serverData, contractAddress);
   result.reverse();
   return result;
 }
@@ -130,25 +132,50 @@ export async function getWithdrawalPda(
   }
 }
 
-function parseWithdrawData(data: any[][]): WithdrawObject[] {
-  return data.map(([entry, status]) => {
-    const message: Message = {
-      from: entry.message.from,
-      destination: entry.message.destination,
-      amount_wei: entry.message.amount_wei,
-      withdraw_id: BigInt(entry.message.withdraw_id),
-      fee_receiver: entry.message.fee_receiver,
-      fee_wei: entry.message.fee_wei,
-    };
+function parseWithdrawData(data: any[], contractAddress: string): WithdrawObject[] {
+  return data.map((entry) => {
+    // Check if this is the new V2 format (object with bridge and auth properties)
+    if (entry.bridge && entry.auth) {
+      // New V2 format: { bridge, auth: { sender, message, message_hash, start_time }, status }
+      const message: Message = {
+        from: entry.auth.message.from,
+        destination: entry.auth.message.destination,
+        amount_wei: entry.auth.message.amount_wei,
+        withdraw_id: BigInt(entry.auth.message.withdraw_id),
+        fee_receiver: entry.auth.message.fee_receiver,
+        fee_wei: entry.auth.message.fee_wei,
+      };
 
-    const messageEntry: MessageEntry = {
-      sender: entry.sender,
-      message,
-      message_hash: entry.message_hash,
-      start_time: entry.start_time,
-    };
+      const messageEntry: MessageEntry = {
+        sender: entry.auth.sender,
+        message,
+        message_hash: entry.auth.message_hash,
+        start_time: entry.auth.start_time,
+        bridge: entry.bridge,
+      };
 
-    return [messageEntry, status as Status];
+      return [messageEntry, entry.status as Status];
+    } else {
+      // Old V1 format: [entry, status] where entry has direct properties
+      const message: Message = {
+        from: entry[0].message.from,
+        destination: entry[0].message.destination,
+        amount_wei: entry[0].message.amount_wei,
+        withdraw_id: BigInt(entry[0].message.withdraw_id),
+        fee_receiver: entry[0].message.fee_receiver,
+        fee_wei: entry[0].message.fee_wei,
+      };
+
+      const messageEntry: MessageEntry = {
+        sender: entry[0].sender,
+        message,
+        message_hash: entry[0].message_hash,
+        start_time: entry[0].start_time,
+        bridge: entry[0].bridge || contractAddress, // Use config address for V1 backward compatibility
+      };
+
+      return [messageEntry, entry[1] as Status];
+    }
   });
 }
 

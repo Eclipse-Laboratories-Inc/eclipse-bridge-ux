@@ -3,7 +3,7 @@ import { assertNever } from '@/lib/typeUtils';
 import React, { createContext, useState, ReactNode, useContext, PropsWithChildren } from 'react';
 import { ECLIPSESCAN_BASE_URL, ETHERSCAN_MAINNET_URL, ETHERSCAN_TESTNET_URL } from '../components/constants';
 
-export function composeEclipsescanUrl(network: Options, path: string = '/'): string { 
+export function composeEclipsescanUrl(network: Options, path: string = '/'): string {
   let targetNetwork: string;
   switch (network) {
     case Options.Mainnet:
@@ -48,6 +48,7 @@ type NetworkContextType = {
   bridgeProgram: string;
   eclipseRpc: string;
   contractAddress: string;
+  legacyAddress: string; // V1 contract address for backward compatibility
   relayerAddress: string;
   configAccount: string;
   withdrawApi: string;
@@ -66,19 +67,21 @@ export const NetworkProvider = ({ selectedOption, setSelectedOption, children }:
   const bridgeProgram   = isMainnet ? "br1xwubggTiEZ6b7iNZUwfA3psygFfaXGfZ1heaN9AW" : "br1t2MBNdtVRZk3taADwNLt142cVNkekXe1hn3qJVYb"
   const eclipseRpc      = isMainnet ? "https://eclipse.lgns.net/" : "https://testnet-archive-rpc.dev.eclipsenetwork.xyz/"
   const contractAddress = isMainnet ? "0x2B08D7cF7EafF0f5f6623d9fB09b080726D4be11" : "0xe49aaa25a10fd6e15dd7ddcb50904ca1e91f6e01"
+  const legacyAddress   = isMainnet ? "0x2B08D7cF7EafF0f5f6623d9fB09b080726D4be11" : "0xe49aaa25a10fd6e15dd7ddcb50904ca1e91f6e01" // V1 contract address for backward compatibility
   const relayerAddress  = isMainnet ? "CrfbABN2sSvmoZLu9eDDfXpaC2nHg42R7AXbHs9eg4S9" : "ec1vCnQKsQSnTbcTyc3SH2azcDXZquiFB3QqtRvm3Px"
   const configAccount   = isMainnet ? "B6UA9rd6Qrx9chsrcMWPV3EFnSb1cbnf7AA2wdkhkpqw" : "A3jHKVwNvrvTjnUPGKYei9jbPn7NcraD6H94ewWyfVMY"
   const withdrawApi     = isMainnet ? "https://withdraw.api.prod.eclipse.xyz" : "https://withdraw.api.dev2.eclipsenetwork.xyz"
   const waitingPeriod   = isMainnet ? "7 days" : "1 day"
 
-  return (
-    <NetworkContext.Provider value={{ 
-        selectedOption, 
-        setSelectedOption, 
-        bridgeProgram, 
-        eclipseRpc, 
-        contractAddress, 
-        relayerAddress, 
+    return (
+    <NetworkContext.Provider value={{
+        selectedOption,
+        setSelectedOption,
+        bridgeProgram,
+        eclipseRpc,
+        contractAddress,
+        legacyAddress,
+        relayerAddress,
         configAccount,
         withdrawApi,
         waitingPeriod

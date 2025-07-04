@@ -195,10 +195,14 @@ export const WithdrawDetails: React.FC<TransactionDetailsProps> = ({
       feeReceiver: tx[0].message.fee_receiver,
       feeWei: tx[0].message.fee_wei,
     };
+    // Use the contract address from the withdrawal data (V2 API provides this)
+    const targetContractAddress = tx[0].bridge;
+
     try {
+
       const { request } = await client.simulateContract({
         //@ts-ignore
-        address: contractAddress,
+        address: targetContractAddress,
         abi: CONTRACT_ABI,
         functionName: "claimWithdraw",
         args: [message],
@@ -225,7 +229,7 @@ export const WithdrawDetails: React.FC<TransactionDetailsProps> = ({
       );
       setWithdrawals(updatedWithdrawals);
     } catch (error) {
-      console.log(error, "claim error");
+      console.log(`❌ Failed to claim from contract ${targetContractAddress}:`, error);
     }
     setIsClaimFlowOpen(false);
     setButtonText("Claim Now");
@@ -465,13 +469,13 @@ export const WithdrawDetails: React.FC<TransactionDetailsProps> = ({
       {!txHash && (
         <div
           className="
-            flex w-full items-center justify-center 
+            flex w-full items-center justify-center
             py-[4px] px-[8px] h-[42px]
             rounded-[10px]
             bg-[#a1fea00d] gap-[12px] text-[16px] font-medium
             text-[#a1fea099] mt-[30px]
             border-[1px] border-[#a1fea01a]
-            h-[66px] text-left 
+            h-[66px] text-left
             cursor-pointer mb-[10px]
       "
           onClick={() => setCheckbox(!checkbox)}
@@ -491,8 +495,8 @@ export const WithdrawDetails: React.FC<TransactionDetailsProps> = ({
       {waitingPeriodStatus !== WaitingPeriodState.Ready && (
         <button
           onClick={txHash ? closeModal : handleInitiate}
-          className={`initiate-button flex items-center justify-center gap-[8px] 
-            ${(txHash || initiateStatus === InitiateTxStates.InWallet) && "!text-[#ffffff4d] !bg-[#ffffff0d] cursor-pointer"} 
+          className={`initiate-button flex items-center justify-center gap-[8px]
+            ${(txHash || initiateStatus === InitiateTxStates.InWallet) && "!text-[#ffffff4d] !bg-[#ffffff0d] cursor-pointer"}
             ${!checkbox && "!text-[#ffffff4d] cursor-not-allowed !bg-[#ffffff0d]"}`}
         >
           {initiateStatus === InitiateTxStates.InWallet && (
@@ -503,7 +507,7 @@ export const WithdrawDetails: React.FC<TransactionDetailsProps> = ({
       )}
       {waitingPeriodStatus === WaitingPeriodState.Ready && (
         <button
-          className={`initiate-button flex items-center justify-center gap-[8px] !mt-[25px] 
+          className={`initiate-button flex items-center justify-center gap-[8px] !mt-[25px]
             ${buttonText != "Claim Now" && "!text-[#ffffff4d] cursor-not-allowed !bg-[#ffffff0d]"}`}
           onClick={isClaimFlowOpen ? () => {} : submitClaim}
         >
