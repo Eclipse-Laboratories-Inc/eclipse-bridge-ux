@@ -26,6 +26,7 @@ export interface NetworkBoxProps {
   >;
   gasPriceWei: bigint | undefined;
   maxPriorityFeePerGasWei: bigint | undefined;
+  isMaintenanceMode?: boolean;
 }
 
 function roundUpToFiveDecimals(value: number): number {
@@ -64,6 +65,7 @@ export const NetworkBox: React.FC<NetworkBoxProps> = ({
   setAmountEther,
   gasPriceWei,
   maxPriorityFeePerGasWei,
+  isMaintenanceMode = false,
 }) => {
   const { userWallets, evmWallet, solWallet } = useWallets();
   const [gasPrice, ethPrice, blockNumber] = useContext(EthereumDataContext) ?? [

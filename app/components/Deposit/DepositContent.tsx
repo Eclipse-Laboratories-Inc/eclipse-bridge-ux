@@ -55,6 +55,7 @@ export interface DepositContentProps {
   setAmountEther: React.Dispatch<
     React.SetStateAction<number | undefined | string>
   >;
+  isMaintenanceMode?: boolean;
 }
 
 enum Action {
@@ -66,6 +67,7 @@ export const DepositContent: React.FC<DepositContentProps> = ({
   modalStuff,
   amountEther,
   setAmountEther,
+  isMaintenanceMode = false,
 }) => {
   const [walletClient, setWalletClient] = useState<WalletClient<
     Transport,
@@ -253,6 +255,12 @@ export const DepositContent: React.FC<DepositContentProps> = ({
     if (!evmWallet || !solWallet) {
       return "submit-button disabled";
     }
+
+    // Bridge maintenance - only disabled when in maintenance mode and wallets are connected
+    if (isMaintenanceMode) {
+      return "submit-button disabled";
+    }
+
     if (!amountEther) {
       return "submit-button disabled";
     }
@@ -276,6 +284,12 @@ export const DepositContent: React.FC<DepositContentProps> = ({
     if (!evmWallet && !solWallet) {
       return "Connect Wallets";
     }
+
+    // Bridge maintenance - only show disabled message when in maintenance mode and wallets are connected
+    if (isMaintenanceMode) {
+      return `${action} (Disabled - Maintenance)`;
+    }
+
     if (!amountEther) {
       return action;
     }
@@ -296,7 +310,7 @@ export const DepositContent: React.FC<DepositContentProps> = ({
       imageSrc="eth.png"
       direction={action === Action.Deposit ? "From" : "To"}
       chainName={isMainnet ? "Ethereum Mainnet" : "Ethereum Sepolia"}
-      onClickEvent={() => {
+            onClickEvent={() => {
         if (evmWallet) {
           handleUnlinkWallet(evmWallet.id);
           setIsEvmDisconnected(!isEvmDisconnected);
@@ -316,7 +330,7 @@ export const DepositContent: React.FC<DepositContentProps> = ({
       imageSrc={isMainnet ? "eclipse.png" : "eclipse-testnet.png"}
       direction={action === Action.Deposit ? "To" : "From"}
       chainName={isMainnet ? "Eclipse Mainnet" : "Eclipse Testnet"}
-      onClickEvent={() => {
+            onClickEvent={() => {
         if (solWallet) {
           handleUnlinkWallet(solWallet.id);
           setIsSolDisconnected(!isSolDisconnected);
@@ -345,9 +359,13 @@ export const DepositContent: React.FC<DepositContentProps> = ({
       {!isModalOpen && (
         <div>
           <div className="network-section">
-            <div
-              className="arrow-container cursor-pointer"
-              onClick={switchAction}
+                        <div
+              className={isMaintenanceMode && evmWallet && solWallet ? "arrow-container cursor-not-allowed" : "arrow-container cursor-pointer"}
+              onClick={
+                isMaintenanceMode && evmWallet && solWallet
+                  ? () => {} // Disabled during maintenance only when wallets are connected
+                  : switchAction
+              }
             >
               <TransferArrow />
             </div>
@@ -381,8 +399,11 @@ export const DepositContent: React.FC<DepositContentProps> = ({
             <button
               className={`w-full deposit-button p-4 ${determineButtonClass()}`}
               onClick={
-                action === Action.Deposit ? submitDeposit : submitWithdraw
+                isMaintenanceMode
+                  ? () => {} // Disabled during maintenance
+                  : (action === Action.Deposit ? submitDeposit : submitWithdraw)
               }
+              disabled={isMaintenanceMode}
             >
               {determineButtonText()}
             </button>
