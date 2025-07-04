@@ -96,7 +96,7 @@ export type WithdrawObject = [MessageEntry, Status];
 export async function getWithdrawalsByAddress(
   address: string,
   withdrawApi: string,
-  contractAddress: string, // V1 contract address for backward compatibility
+  legacyAddress: string, // V1 contract address for backward compatibility
 ): Promise<WithdrawObject[]> {
   if (!withdrawApi) {
     return [];
@@ -108,7 +108,7 @@ export async function getWithdrawalsByAddress(
   }
 
   const serverData = LosslessJSON.parse(await response.text());
-  const result = parseWithdrawData(serverData, contractAddress);
+  const result = parseWithdrawData(serverData, legacyAddress);
   result.reverse();
   return result;
 }
@@ -132,7 +132,7 @@ export async function getWithdrawalPda(
   }
 }
 
-function parseWithdrawData(data: any[], contractAddress: string): WithdrawObject[] {
+function parseWithdrawData(data: any[], legacyAddress: string): WithdrawObject[] {
   return data.map((entry) => {
     // Check if this is the new V2 format (object with bridge and auth properties)
     if (entry.bridge && entry.auth) {
@@ -171,7 +171,7 @@ function parseWithdrawData(data: any[], contractAddress: string): WithdrawObject
         message,
         message_hash: entry[0].message_hash,
         start_time: entry[0].start_time,
-        bridge: entry[0].bridge || contractAddress, // Use config address for V1 backward compatibility
+        bridge: legacyAddress, // Use config address for V1 backward compatibility
       };
 
       return [messageEntry, entry[1] as Status];
