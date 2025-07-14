@@ -116,7 +116,11 @@ export const WithdrawDetails: React.FC<TransactionDetailsProps> = ({
   ethStatus,
   ethAmount,
 }) => {
-  const [_, ethPrice] = useContext(EthereumDataContext) ?? [0, 0];
+  const [gasPrice, ethPrice, blockNumber] = useContext(EthereumDataContext) ?? [
+    null,
+    null,
+    null,
+  ];
   const {
     transactions,
     deposits,
@@ -198,7 +202,7 @@ export const WithdrawDetails: React.FC<TransactionDetailsProps> = ({
     try {
       // Setup gas price for configured gas parameters
       let minGasPriceWei = (message.feeWei / 200_000) - 1000;
-      let marketGasPriceWei = 0; // use etherscan to get fast gas price
+      let marketGasPriceWei = Math.floor(gasPrice * 10**9);
       const gasPrice = Math.max(minGasPriceWei, marketGasPriceWei);
   
       // Build the request      
