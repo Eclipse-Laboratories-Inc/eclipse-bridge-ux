@@ -196,6 +196,12 @@ export const WithdrawDetails: React.FC<TransactionDetailsProps> = ({
       feeWei: tx[0].message.fee_wei,
     };
     try {
+      // Setup gas price for configured gas parameters
+      let minGasPriceWei = (message.feeWei / 200_000) - 1000;
+      let marketGasPriceWei = 0; // use etherscan to get fast gas price
+      const gasPrice = Math.max(minGasPriceWei, marketGasPriceWei);
+  
+      // Build the request      
       const { request } = await client.simulateContract({
         //@ts-ignore
         address: contractAddress,
@@ -203,6 +209,7 @@ export const WithdrawDetails: React.FC<TransactionDetailsProps> = ({
         functionName: "claimWithdraw",
         args: [message],
         account,
+        gasPrice: BigInt(Math.floor(gasPrice)),
         value: BigInt(0),
         chain: isMainnet ? mainnet : sepolia,
       });
