@@ -8,6 +8,7 @@ import { Transport, Chain, Account } from "viem";
 import { useTransaction } from "../TransactionPool";
 import { createPublicClient, http, WalletClient } from "viem";
 import { mainnet, sepolia } from "viem/chains";
+import { getGasPrice } from "viem/actions";
 import { CONTRACT_ABI, WITHDRAW_TX_FEE } from "../constants";
 import {
   composeEclipsescanUrl,
@@ -201,9 +202,9 @@ export const WithdrawDetails: React.FC<TransactionDetailsProps> = ({
     };
     try {
       // Setup gas price for configured gas parameters
-      let minGasPriceWei = (message.feeWei / 200_000) - 1000;
-      let marketGasPriceWei = Math.floor(marketGasPriceWei * 10**9);
-      const gasPrice = Math.max(minGasPriceWei, marketGasPriceWei);
+      let minGasPriceWei = (BigInt(message.feeWei) / BigInt(200000)) - BigInt(1000);
+      let marketGasPriceWei = await getGasPrice(client); // Should return bigint
+      const useGasPrice = minGasPriceWei > marketGasPriceWei ? minGasPriceWei : marketGasPriceWei;
   
       // Build the request      
       const { request } = await client.simulateContract({
@@ -213,7 +214,7 @@ export const WithdrawDetails: React.FC<TransactionDetailsProps> = ({
         functionName: "claimWithdraw",
         args: [message],
         account,
-        gasPrice: BigInt(Math.floor(gasPrice)),
+        gasPrice: useGasPrice,
         value: BigInt(0),
         chain: isMainnet ? mainnet : sepolia,
       });
