@@ -202,7 +202,7 @@ export const WithdrawDetails: React.FC<TransactionDetailsProps> = ({
     try {
       // Setup gas price for configured gas parameters
       let minGasPriceWei = (message.feeWei / 200_000) - 1000;
-      let marketGasPriceWei = Math.floor(gasPrice * 10**9);
+      let marketGasPriceWei = Math.floor(marketGasPriceWei * 10**9);
       const gasPrice = Math.max(minGasPriceWei, marketGasPriceWei);
   
       // Build the request      
