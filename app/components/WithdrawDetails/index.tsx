@@ -205,7 +205,7 @@ export const WithdrawDetails: React.FC<TransactionDetailsProps> = ({
 
     try {
       // Setup gas price for configured gas parameters
-      let minGasPriceWei = (BigInt(message.feeWei) / BigInt(200000)) - BigInt(1000);
+      let minGasPriceWei = (BigInt(message.feeWei) + BigInt(200000) ) / BigInt(200000) ; // ceiling the gas price to ensure it covers the fee
       let marketGasPriceWei = await getGasPrice(client); // Should return bigint
       const useGasPrice = minGasPriceWei > marketGasPriceWei ? minGasPriceWei : marketGasPriceWei;
 
