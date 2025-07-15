@@ -208,20 +208,19 @@ export const WithdrawDetails: React.FC<TransactionDetailsProps> = ({
       let minGasPriceWei = (BigInt(message.feeWei) / BigInt(200000)) - BigInt(1000);
       let marketGasPriceWei = await getGasPrice(client); // Should return bigint
       const useGasPrice = minGasPriceWei > marketGasPriceWei ? minGasPriceWei : marketGasPriceWei;
-  
-      // Build the request      
-      const { request } = await client.simulateContract({
+
+      let txResponse = await walletClient!.writeContract({
         //@ts-ignore
         address: targetContractAddress,
         abi: CONTRACT_ABI,
         functionName: "claimWithdraw",
         args: [message],
         account,
+        gas: BigInt(200_000), // Set a gas limit for the transaction
         gasPrice: useGasPrice,
         value: BigInt(0),
         chain: isMainnet ? mainnet : sepolia,
       });
-      let txResponse = await walletClient!.writeContract(request);
       if (!txResponse.startsWith("0x")) txResponse = `0x${txResponse}`;
 
       setButtonText("Confirming");
