@@ -8,6 +8,7 @@ import { Transport, Chain, Account } from "viem";
 import { useTransaction } from "../TransactionPool";
 import { createPublicClient, http, WalletClient } from "viem";
 import { mainnet, sepolia } from "viem/chains";
+import { getGasPrice } from "viem/actions";
 import { CONTRACT_ABI, WITHDRAW_TX_FEE } from "../constants";
 import {
   composeEclipsescanUrl,
@@ -116,7 +117,11 @@ export const WithdrawDetails: React.FC<TransactionDetailsProps> = ({
   ethStatus,
   ethAmount,
 }) => {
-  const [_, ethPrice] = useContext(EthereumDataContext) ?? [0, 0];
+  const [gasPrice, ethPrice, blockNumber] = useContext(EthereumDataContext) ?? [
+    null,
+    null,
+    null,
+  ];
   const {
     transactions,
     deposits,
@@ -199,18 +204,23 @@ export const WithdrawDetails: React.FC<TransactionDetailsProps> = ({
     const targetContractAddress = tx[0].bridge;
 
     try {
+      // Setup gas price for configured gas parameters
+      let minGasPriceWei = (BigInt(message.feeWei) / BigInt(200000)) - BigInt(1000);
+      let marketGasPriceWei = await getGasPrice(client); // Should return bigint
+      const useGasPrice = minGasPriceWei > marketGasPriceWei ? minGasPriceWei : marketGasPriceWei;
 
-      const { request } = await client.simulateContract({
+      let txResponse = await walletClient!.writeContract({
         //@ts-ignore
         address: targetContractAddress,
         abi: CONTRACT_ABI,
         functionName: "claimWithdraw",
         args: [message],
         account,
+        gas: BigInt(200_000), // Set a gas limit for the transaction
+        gasPrice: useGasPrice,
         value: BigInt(0),
         chain: isMainnet ? mainnet : sepolia,
       });
-      let txResponse = await walletClient!.writeContract(request);
       if (!txResponse.startsWith("0x")) txResponse = `0x${txResponse}`;
 
       setButtonText("Confirming");
