@@ -6,7 +6,7 @@ const AirdropPopup: React.FC = () => {
   const [popupVisible, setPopupVisible] = useState<boolean>(false);
 
   useEffect(() => {
-    const popupClosed = localStorage.getItem("lrtPopup");
+    const popupClosed = localStorage.getItem("airdropPopup");
     if (popupClosed === null) {
       setPopupVisible(true);
     }
@@ -14,7 +14,7 @@ const AirdropPopup: React.FC = () => {
 
   const closePopup = () => {
     setPopupVisible(false);
-    localStorage.setItem("lrtPopup", "true");
+    localStorage.setItem("airdropPopup", "true");
   };
 
   return (
