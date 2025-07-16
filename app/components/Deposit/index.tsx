@@ -2,7 +2,7 @@
 
 import "./styles.css";
 import React, { useEffect } from "react";
-import TapPopup from "./TapPopup";
+import AirdropPopup from "./AirdropPopup";
 import "./styles.css";
 import { useState } from "react";
 import { useSearchParams, useRouter, usePathname } from "next/navigation";
@@ -65,7 +65,7 @@ const Deposit: React.FC<DepositProps> = ({ amountEther, setAmountEther }) => {
             paddingRight: activeTab === Tabs.Activity ? "8px" : "20px",
           }}
         >
-          {!isModalOpen && <TapPopup />}
+          {!isModalOpen && <AirdropPopup />}
 
           <div
             className="header-tabs"
