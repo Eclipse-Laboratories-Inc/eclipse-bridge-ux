@@ -584,18 +584,6 @@ input::placeholder {
   margin: 20px 0;
 }
 
-.lrt-box {
-  border: 1px solid rgba(161, 254, 160, 0.1);
-  border-radius: 10px;
-  background: rgba(161, 254, 160, 0.1);
-  padding: 20px;
-  height: 131px;
-  width: auto;
-
-  position: relative;
-  overflow: hidden;
-  z-index: 1;
-}
 
 .lrt-cross {
   width: 10px;
