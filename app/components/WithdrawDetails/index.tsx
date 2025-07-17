@@ -230,15 +230,11 @@ export const WithdrawDetails: React.FC<TransactionDetailsProps> = ({
       let canonicalBridgeGasEstimate = BigInt(106_800) * BigInt(12) / BigInt(10);
       let authGasPrice = BigInt(message.feeWei) / canonicalBridgeGasEstimate;
 
-      // Determine claimGasPrice max(authGasPrice, marketPrice)
-      // Bid a bit more than formula minimum to ensure we satisfy the condition
-      let claimGasPrice = authGasPrice * BigInt(12) / BigInt(10)
-
       // Get market gas price
       let marketGasPriceWei = await getGasPrice(client); // Should return bigint
 
-      // Determine use gas price: 
-      const useGasPrice = authGasPrice > marketGasPriceWei ? claimGasPrice : marketGasPriceWei;
+      // Determine use gas price: max(authGasPrice, marketPrice)
+      const useGasPrice = authGasPrice > marketGasPriceWei ? authGasPrice : marketGasPriceWei;
 
       // claimWithdraw is about 75k gas
       let txResponse = await walletClient!.writeContract({
@@ -249,7 +245,7 @@ export const WithdrawDetails: React.FC<TransactionDetailsProps> = ({
         args: [message],
         account,
         gas: BigInt(100_000), // Set a 100k gas limit for the claim transaction
-        gasPrice: useGasPrice,
+        gasPrice: useGasPrice * BigInt(12) / BigInt(10), // Bid slightly more than formula
         value: BigInt(0),
         chain: isMainnet ? mainnet : sepolia,
       });
