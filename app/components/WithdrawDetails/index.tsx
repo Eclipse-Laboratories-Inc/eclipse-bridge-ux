@@ -227,7 +227,7 @@ export const WithdrawDetails: React.FC<TransactionDetailsProps> = ({
       //
 
       // Calculate auth gas price from message.feeWei (deterministic)
-      let canonicalBridgeGasEstimate = BigInt(106_800) * BigInt(12) / BigInt(10);
+      let canonicalBridgeGasEstimate = (BigInt(106_800) * BigInt(12)) / BigInt(10);
       let authGasPrice = BigInt(message.feeWei) / canonicalBridgeGasEstimate;
 
       // Get market gas price
@@ -245,7 +245,7 @@ export const WithdrawDetails: React.FC<TransactionDetailsProps> = ({
         args: [message],
         account,
         gas: BigInt(100_000), // Set a 100k gas limit for the claim transaction
-        gasPrice: useGasPrice * BigInt(12) / BigInt(10), // Bid slightly more than formula
+        gasPrice: (useGasPrice * BigInt(12)) / BigInt(10), // Bid slightly more than formula
         value: BigInt(0),
         chain: isMainnet ? mainnet : sepolia,
       });
