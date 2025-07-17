@@ -205,10 +205,42 @@ export const WithdrawDetails: React.FC<TransactionDetailsProps> = ({
 
     try {
       // Setup gas price for configured gas parameters
-      let minGasPriceWei = (BigInt(message.feeWei) + BigInt(200000) ) / BigInt(200000) ; // ceiling the gas price to ensure it covers the fee
-      let marketGasPriceWei = await getGasPrice(client); // Should return bigint
-      const useGasPrice = minGasPriceWei > marketGasPriceWei ? minGasPriceWei : marketGasPriceWei;
+      //
+      // message.feeWei (exact calculation from relayer)
+      // 
+      // pub const CANONICAL_BRIDGE_AUTHORIZE_WITHDRAW_GAS_AMOUNT: u64 = 106_800_u64;
+      //
+      // pub async fn estimate_authorize_withdraw_fees(&self) -> eyre::Result<U256> {
+      //     let gas_price = self
+      //         .provider
+      //         .estimate_gas_price()
+      //         .await
+      //         .wrap_err("failed to query CanonicalBridge provider estimate_gas_price")?;
+      //
+      //     Ok((U256::from(CANONICAL_BRIDGE_AUTHORIZE_WITHDRAW_GAS_AMOUNT) * gas_price * 12) / 10)
+      // }
+      //
+      // let eth_fee_wei = self
+      //     .canonical_bridge
+      //     .estimate_authorize_withdraw_fees()
+      //     .await?;
+      //
 
+      // Calculate auth gas price from message.feeWei (deterministic)
+      let canonicalBridgeGasEstimate = BigInt(106_800) * BigInt(12) / BigInt(10);
+      let authGasPrice = BigInt(message.feeWei) / canonicalBridgeGasEstimate;
+
+      // Determine claimGasPrice max(authGasPrice, marketPrice)
+      // Bid a bit more than formula minimum to ensure we satisfy the condition
+      let claimGasPrice = authGasPrice * BigInt(12) / BigInt(10)
+
+      // Get market gas price
+      let marketGasPriceWei = await getGasPrice(client); // Should return bigint
+
+      // Determine use gas price: 
+      const useGasPrice = authGasPrice > marketGasPriceWei ? claimGasPrice : marketGasPriceWei;
+
+      // claimWithdraw is about 75k gas
       let txResponse = await walletClient!.writeContract({
         //@ts-ignore
         address: targetContractAddress,
@@ -216,7 +248,7 @@ export const WithdrawDetails: React.FC<TransactionDetailsProps> = ({
         functionName: "claimWithdraw",
         args: [message],
         account,
-        gas: BigInt(200_000), // Set a gas limit for the transaction
+        gas: BigInt(100_000), // Set a 100k gas limit for the claim transaction
         gasPrice: useGasPrice,
         value: BigInt(0),
         chain: isMainnet ? mainnet : sepolia,
