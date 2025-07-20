@@ -96,7 +96,6 @@ export type WithdrawObject = [MessageEntry, Status];
 export async function getWithdrawalsByAddress(
   address: string,
   withdrawApi: string,
-  legacyAddress: string, // V1 contract address for backward compatibility
 ): Promise<WithdrawObject[]> {
   if (!withdrawApi) {
     return [];
@@ -108,7 +107,7 @@ export async function getWithdrawalsByAddress(
   }
 
   const serverData = LosslessJSON.parse(await response.text());
-  const result = parseWithdrawData(serverData, legacyAddress);
+  const result = parseWithdrawData(serverData);
   result.reverse();
   return result;
 }

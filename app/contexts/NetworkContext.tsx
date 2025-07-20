@@ -48,7 +48,6 @@ type NetworkContextType = {
   bridgeProgram: string;
   eclipseRpc: string;
   contractAddress: string;
-  legacyAddress: string; // V1 contract address for backward compatibility
   relayerAddress: string;
   configAccount: string;
   withdrawApi: string;
