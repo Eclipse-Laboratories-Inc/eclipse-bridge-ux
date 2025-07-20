@@ -48,6 +48,7 @@ type NetworkContextType = {
   bridgeProgram: string;
   eclipseRpc: string;
   contractAddress: string;
+  legacyAddress: string; // V1 contract address for backward compatibility
   relayerAddress: string;
   configAccount: string;
   withdrawApi: string;
@@ -68,7 +69,7 @@ export const NetworkProvider = ({ selectedOption, setSelectedOption, children }:
   const contractAddress = isMainnet ? "0x867A8FcD5Bb6774d4d37fb342D669A35FF789a51" : "0x21c6AAB98a41560df325F74055d11d79ECae7139"
   const relayerAddress  = isMainnet ? "CrfbABN2sSvmoZLu9eDDfXpaC2nHg42R7AXbHs9eg4S9" : "ec1vCnQKsQSnTbcTyc3SH2azcDXZquiFB3QqtRvm3Px"
   const configAccount   = isMainnet ? "B6UA9rd6Qrx9chsrcMWPV3EFnSb1cbnf7AA2wdkhkpqw" : "A3jHKVwNvrvTjnUPGKYei9jbPn7NcraD6H94ewWyfVMY"
-  const withdrawApi     = isMainnet ? "https://withdraw.api.prod.eclipse.xyz" : "https://withdraw.api.dev2.eclipsenetwork.xyz"
+  const withdrawApi     = isMainnet ? "https://withdraw.api.prod.eclipse.xyz" : "http://localhost:9090/withdraws"
   const waitingPeriod   = isMainnet ? "7 days" : "1 day"
 
     return (
