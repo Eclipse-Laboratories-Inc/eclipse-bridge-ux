@@ -8,7 +8,6 @@ import { Transport, Chain, Account } from "viem";
 import { useTransaction } from "../TransactionPool";
 import { createPublicClient, http, WalletClient } from "viem";
 import { mainnet, sepolia } from "viem/chains";
-import { getGasPrice } from "viem/actions";
 import { CONTRACT_ABI, WITHDRAW_TX_FEE } from "../constants";
 import {
   composeEclipsescanUrl,
@@ -117,11 +116,7 @@ export const WithdrawDetails: React.FC<TransactionDetailsProps> = ({
   ethStatus,
   ethAmount,
 }) => {
-  const [gasPrice, ethPrice, blockNumber] = useContext(EthereumDataContext) ?? [
-    null,
-    null,
-    null,
-  ];
+  const [_, ethPrice] = useContext(EthereumDataContext) ?? [0, 0];
   const {
     transactions,
     deposits,
@@ -210,8 +205,6 @@ export const WithdrawDetails: React.FC<TransactionDetailsProps> = ({
         functionName: "claimWithdraw",
         args: [message],
         account,
-
-
         value: BigInt(0),
         chain: isMainnet ? mainnet : sepolia,
       });
