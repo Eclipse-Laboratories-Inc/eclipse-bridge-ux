@@ -148,6 +148,7 @@ export const WithdrawDetails: React.FC<TransactionDetailsProps> = ({
   );
   const [waitingPeriodStatus, setWaitingPeriodStatus] =
     useState<WaitingPeriodState>(WaitingPeriodState.Waiting);
+  const ONE_GWEI = BigInt(1_000_000_000);
 
   useEffect(() => {
     if (!tx) return;
