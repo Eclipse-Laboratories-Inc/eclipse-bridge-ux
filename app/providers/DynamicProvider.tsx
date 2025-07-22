@@ -112,6 +112,7 @@ export const eclipseWallets = [
   "bybitwalletsol",
   "bitgetwalletsol",
   "fordefisol",
+  "gatewalletsol"
 ];
 
 export const DynamicProvider = (props: {

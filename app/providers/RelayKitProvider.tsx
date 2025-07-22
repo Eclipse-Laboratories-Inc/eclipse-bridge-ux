@@ -77,6 +77,8 @@ export const RelayKitProvider = (props: {
             "okxsolana",
             "bybitwalletsol",
             "bitgetwalletsol",
+            "fordefisol",
+            "gatewalletsol"
           ],
         },
       }}
