@@ -90,6 +90,8 @@ const eclipseWallets = [
   "okxsolana",
   "bybitwalletsol",
   "bitgetwalletsol",
+  "fordefisol",
+  "gatewalletsol"
 ];
 export default function ClientLayout({
   children,
