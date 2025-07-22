@@ -153,6 +153,7 @@ export const WithdrawDetails: React.FC<TransactionDetailsProps> = ({
   );
   const [waitingPeriodStatus, setWaitingPeriodStatus] =
     useState<WaitingPeriodState>(WaitingPeriodState.Waiting);
+  const ONE_GWEI = BigInt(1_000_000_000);
 
   useEffect(() => {
     if (!tx) return;
@@ -231,7 +232,8 @@ export const WithdrawDetails: React.FC<TransactionDetailsProps> = ({
       let authGasPrice = BigInt(message.feeWei) / canonicalBridgeGasEstimate;
 
       // Get market gas price
-      let marketGasPriceWei = await getGasPrice(client); // Should return bigint
+      let nodeGasPriceWei = await getGasPrice(client); // Should return bigint
+      let marketGasPriceWei = nodeGasPriceWei > ONE_GWEI ? nodeGasPriceWei : ONE_GWEI // 1 gwei
 
       // Determine use gas price: max(authGasPrice, marketPrice)
       const useGasPrice = authGasPrice > marketGasPriceWei ? authGasPrice : marketGasPriceWei;
@@ -245,7 +247,7 @@ export const WithdrawDetails: React.FC<TransactionDetailsProps> = ({
         args: [message],
         account,
         gas: BigInt(100_000), // Set a 100k gas limit for the claim transaction
-        gasPrice: (useGasPrice * BigInt(24)) / BigInt(10), // Bid slightly more than formula
+        gasPrice: (useGasPrice * BigInt(12)) / BigInt(10), // Bid slightly more than formula
         value: BigInt(0),
         chain: isMainnet ? mainnet : sepolia,
       });
