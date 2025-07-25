@@ -62,7 +62,7 @@ export function useTransactions() {
         const transactions = (
           await Promise.all(
             statuses.map(async (status) => {
-              const apiUrl = `${baseUrl}/${method}?vaultAddress=${boringVaultAddress}&chainId=${chainId}&status=${status}`;
+              const apiUrl = `${baseUrl}/${method}?vaultAddress=${boringVaultAddress}&chainId=${chainId}&status=${status}&user=${evmAddress}`;
               const responseAsJson = await fetch(apiUrl);
               const response = (await responseAsJson.json()).data as RawNucleusTransaction[];
               return response.map(convertRawTransactionToTransaction).filter((tx) => tx.user === evmAddress);
