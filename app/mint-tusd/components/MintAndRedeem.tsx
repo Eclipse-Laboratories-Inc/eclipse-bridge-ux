@@ -14,7 +14,7 @@ export enum Tabs {
 }
 
 function MintAndRedeem() {
-  const [activeTab, setActiveTab] = useState<Tabs>(Tabs.Mint);
+  const [activeTab, setActiveTab] = useState<Tabs>(Tabs.Redeem);
   const { transactions, isLoading } = useTransactions();
 
   return (
@@ -24,14 +24,20 @@ function MintAndRedeem() {
           <div className="deposit-card">
             <div className="header-tabs">
               <div
-                className={classNames("header-tab", activeTab === Tabs.Mint ? "active" : "inactive")}
+                className={classNames(
+                  "header-tab pointer-events-none opacity-50 cursor-not-allowed",
+                  activeTab === Tabs.Mint ? "active" : "inactive",
+                )}
                 style={{ width: "100%" }}
                 onClick={() => setActiveTab(Tabs.Mint)}
               >
                 Mint
               </div>
               <div
-                className={classNames("header-tab", activeTab === Tabs.Redeem ? "active" : "inactive")}
+                className={classNames(
+                  "header-tab",
+                  activeTab === Tabs.Redeem ? "active" : "inactive",
+                )}
                 style={{ width: "100%" }}
                 onClick={() => setActiveTab(Tabs.Redeem)}
               >
@@ -43,7 +49,7 @@ function MintAndRedeem() {
                   "flex w-[131px]",
                   "items-center",
                   "justify-center",
-                  activeTab === Tabs.Activity ? "active" : "inactive"
+                  activeTab === Tabs.Activity ? "active" : "inactive",
                 )}
                 onClick={() => {
                   setActiveTab(Tabs.Activity);
@@ -55,7 +61,10 @@ function MintAndRedeem() {
             {activeTab === Tabs.Mint && <Mint />}
             {activeTab === Tabs.Redeem && <Redeem />}
             {activeTab === Tabs.Activity && (
-              <NucleusActivityContent transactions={transactions} isLoading={isLoading} />
+              <NucleusActivityContent
+                transactions={transactions}
+                isLoading={isLoading}
+              />
             )}
           </div>
         </div>
