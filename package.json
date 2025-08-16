@@ -28,8 +28,6 @@
     "@dynamic-labs/wallet-connector-core": "4.8.2",
     "@hyperlane-xyz/registry": "15.3.0",
     "@hyperlane-xyz/sdk": "^8.6.1",
-    "@orca-so/common-sdk": "^0.6.3",
-    "@orca-so/whirlpools-sdk": "0.13.8",
     "@project-serum/anchor": "^0.26.0",
     "@reservoir0x/relay-bitcoin-wallet-adapter": "^1.0.7",
     "@reservoir0x/relay-kit-hooks": "1.9.2",
