@@ -109,7 +109,7 @@ export const TMProvider = ({ children } : { children: ReactNode}) => {
             token.fee = matchingFee.fee; 
           }
         });
-      console.log(tokens)
+      // console.log(tokens)
     }
     
     fetchFeeInfo()
