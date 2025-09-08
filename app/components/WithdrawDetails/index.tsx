@@ -8,7 +8,6 @@ import { Transport, Chain, Account } from "viem";
 import { useTransaction } from "../TransactionPool";
 import { createPublicClient, http, WalletClient } from "viem";
 import { mainnet, sepolia } from "viem/chains";
-import { getGasPrice } from "viem/actions";
 import { CONTRACT_ABI, WITHDRAW_TX_FEE } from "../constants";
 import {
   composeEclipsescanUrl,
@@ -117,11 +116,7 @@ export const WithdrawDetails: React.FC<TransactionDetailsProps> = ({
   ethStatus,
   ethAmount,
 }) => {
-  const [gasPrice, ethPrice, blockNumber] = useContext(EthereumDataContext) ?? [
-    null,
-    null,
-    null,
-  ];
+  const [_, ethPrice] = useContext(EthereumDataContext) ?? [0, 0];
   const {
     transactions,
     deposits,
@@ -201,56 +196,20 @@ export const WithdrawDetails: React.FC<TransactionDetailsProps> = ({
       feeReceiver: tx[0].message.fee_receiver,
       feeWei: tx[0].message.fee_wei,
     };
-    // Use the contract address from the withdrawal data (V2 API provides this)
-    const targetContractAddress = tx[0].bridge;
 
     try {
-      // Setup gas price for configured gas parameters
-      //
-      // message.feeWei (exact calculation from relayer)
-      // 
-      // pub const CANONICAL_BRIDGE_AUTHORIZE_WITHDRAW_GAS_AMOUNT: u64 = 106_800_u64;
-      //
-      // pub async fn estimate_authorize_withdraw_fees(&self) -> eyre::Result<U256> {
-      //     let gas_price = self
-      //         .provider
-      //         .estimate_gas_price()
-      //         .await
-      //         .wrap_err("failed to query CanonicalBridge provider estimate_gas_price")?;
-      //
-      //     Ok((U256::from(CANONICAL_BRIDGE_AUTHORIZE_WITHDRAW_GAS_AMOUNT) * gas_price * 12) / 10)
-      // }
-      //
-      // let eth_fee_wei = self
-      //     .canonical_bridge
-      //     .estimate_authorize_withdraw_fees()
-      //     .await?;
-      //
-
-      // Calculate auth gas price from message.feeWei (deterministic)
-      let canonicalBridgeGasEstimate = (BigInt(106_800) * BigInt(12)) / BigInt(10);
-      let authGasPrice = BigInt(message.feeWei) / canonicalBridgeGasEstimate;
-
-      // Get market gas price
-      let nodeGasPriceWei = await getGasPrice(client); // Should return bigint
-      let marketGasPriceWei = nodeGasPriceWei > ONE_GWEI ? nodeGasPriceWei : ONE_GWEI // 1 gwei
-
-      // Determine use gas price: max(authGasPrice, marketPrice)
-      const useGasPrice = authGasPrice > marketGasPriceWei ? authGasPrice : marketGasPriceWei;
-
-      // claimWithdraw is about 75k gas
-      let txResponse = await walletClient!.writeContract({
+      // simulate transaction and send
+      const { request } = await client.simulateContract({
         //@ts-ignore
-        address: targetContractAddress,
+        address: contractAddress,
         abi: CONTRACT_ABI,
         functionName: "claimWithdraw",
         args: [message],
         account,
-        gas: BigInt(100_000), // Set a 100k gas limit for the claim transaction
-        gasPrice: (useGasPrice * BigInt(12)) / BigInt(10), // Bid slightly more than formula
         value: BigInt(0),
         chain: isMainnet ? mainnet : sepolia,
       });
+      let txResponse = await walletClient!.writeContract(request);
       if (!txResponse.startsWith("0x")) txResponse = `0x${txResponse}`;
 
       setButtonText("Confirming");
@@ -269,7 +228,7 @@ export const WithdrawDetails: React.FC<TransactionDetailsProps> = ({
       );
       setWithdrawals(updatedWithdrawals);
     } catch (error) {
-      console.log(`❌ Failed to claim from contract ${targetContractAddress}:`, error);
+      console.log(`❌ Failed to claim from contract ${contractAddress}:`, error);
     }
     setIsClaimFlowOpen(false);
     setButtonText("Claim Now");

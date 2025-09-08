@@ -23,7 +23,7 @@ export const TransactionProvider = ({ children } : { children: ReactNode}) => {
   const [pendingTransactions, setPendingTransactions] = useState<Transaction[]>([]);
   const [lastAddress, setLastAddress] = useState<string>('');
   const [viemClient, setClient] = useState<PublicClient | null>(null)
-  const { selectedOption, bridgeProgram, eclipseRpc, withdrawApi, legacyAddress } = useNetwork();
+  const { selectedOption, bridgeProgram, eclipseRpc, withdrawApi } = useNetwork();
 
   const { evmWallet } = useWallets();
   const fetchDeposits = async () => {
@@ -43,7 +43,7 @@ export const TransactionProvider = ({ children } : { children: ReactNode}) => {
       }
 
       try {
-        const withdrawalsData = await getWithdrawalsByAddress(evmWallet?.address || '', withdrawApi, legacyAddress);
+        const withdrawalsData = await getWithdrawalsByAddress(evmWallet?.address || '', withdrawApi);
         setWithdrawals(withdrawalsData)
         withdrawalsData.forEach(async (item, index) => {
           await delay(index * 300);
