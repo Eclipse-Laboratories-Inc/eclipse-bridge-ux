@@ -65,8 +65,6 @@ const Deposit: React.FC<DepositProps> = ({ amountEther, setAmountEther }) => {
             paddingRight: activeTab === Tabs.Activity ? "8px" : "20px",
           }}
         >
-          {!isModalOpen && <AirdropPopup />}
-
           <div
             className="header-tabs"
             style={{
