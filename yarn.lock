@@ -3685,20 +3685,6 @@
   resolved "https://registry.npmjs.org/@openzeppelin/contracts/-/contracts-4.9.6.tgz"
   integrity sha512-xSmezSupL+y9VkHZJGDoCBpmnB2ogM13ccaYDWqJTfS3dbuHkgjuwDFUmaFauBCboQMGB/S5UqUl2y54X99BmA==
 
-"@orca-so/common-sdk@^0.6.3":
-  version "0.6.3"
-  resolved "https://registry.npmjs.org/@orca-so/common-sdk/-/common-sdk-0.6.3.tgz"
-  integrity sha512-jeLAjQfr3R1Mg72+hlu5tPih0qY2o9WV00o/nSIR/GtpIWsRPb4Ep0FzYQSI1XH7s+XfSXNuhEWFGsFA/qPMLQ==
-  dependencies:
-    tiny-invariant "^1.3.1"
-
-"@orca-so/whirlpools-sdk@0.13.8":
-  version "0.13.8"
-  resolved "https://registry.npmjs.org/@orca-so/whirlpools-sdk/-/whirlpools-sdk-0.13.8.tgz"
-  integrity sha512-zjhGLzEm6Ya84cr9/rRE+qSTV3o3em13W9Mx3/ctfq3ouXyEzoza5t0Q7uV4oPuLWeaDuisO7TE+Fw2KE5qEDA==
-  dependencies:
-    tiny-invariant "^1.3.1"
-
 "@parcel/watcher-android-arm64@2.4.1":
   version "2.4.1"
   resolved "https://registry.yarnpkg.com/@parcel/watcher-android-arm64/-/watcher-android-arm64-2.4.1.tgz#c2c19a3c442313ff007d2d7a9c2c1dd3e1c9ca84"
@@ -6176,17 +6162,17 @@
   dependencies:
     defer-to-connect "^2.0.1"
 
-"@tanstack/query-core@5.59.13":
-  version "5.59.13"
-  resolved "https://registry.npmjs.org/@tanstack/query-core/-/query-core-5.59.13.tgz"
-  integrity sha512-Oou0bBu/P8+oYjXsJQ11j+gcpLAMpqW42UlokQYEz4dE7+hOtVO9rVuolJKgEccqzvyFzqX4/zZWY+R/v1wVsQ==
+"@tanstack/query-core@5.90.5":
+  version "5.90.5"
+  resolved "https://registry.yarnpkg.com/@tanstack/query-core/-/query-core-5.90.5.tgz#0175f9f517514906db8ab379589ed3f96694ecc4"
+  integrity sha512-wLamYp7FaDq6ZnNehypKI5fNvxHPfTYylE0m/ZpuuzJfJqhR5Pxg9gvGBHZx4n7J+V5Rg5mZxHHTlv25Zt5u+w==
 
-"@tanstack/react-query@^5.51.21":
-  version "5.59.13"
-  resolved "https://registry.npmjs.org/@tanstack/react-query/-/react-query-5.59.13.tgz"
-  integrity sha512-GB2ELtiH8tL0rcFiM4sWvnXhazt1xRXX/LolMEV12kfEKu58aNA4lQoieslP61PO4vZO9JJMwm+6lqyS0E1HOA==
+"@tanstack/react-query@^5.90.5":
+  version "5.90.5"
+  resolved "https://registry.yarnpkg.com/@tanstack/react-query/-/react-query-5.90.5.tgz#545e61282c787bd87ac5785da9a4943462f78ef6"
+  integrity sha512-pN+8UWpxZkEJ/Rnnj2v2Sxpx1WFlaa9L6a4UO89p6tTQbeo+m0MS8oYDjbggrR8QcTyjKoYWKS3xJQGr3ExT8Q==
   dependencies:
-    "@tanstack/query-core" "5.59.13"
+    "@tanstack/query-core" "5.90.5"
 
 "@thumbmarkjs/thumbmarkjs@0.16.0":
   version "0.16.0"
@@ -14855,11 +14841,6 @@ timed-out@^4.0.1:
   version "4.0.1"
   resolved "https://registry.npmjs.org/timed-out/-/timed-out-4.0.1.tgz"
   integrity sha512-G7r3AhovYtr5YKOWQkta8RKAPb+J9IsO4uVmzjl8AZwfhs8UcUwTiD6gcJYSgOtzyjvQKrKYn41syHbUWMkafA==
-
-tiny-invariant@^1.3.1:
-  version "1.3.3"
-  resolved "https://registry.npmjs.org/tiny-invariant/-/tiny-invariant-1.3.3.tgz"
-  integrity sha512-+FbBPE1o9QAYvviau/qC5SE3caw21q3xkvWKBtja5vgqOWIHHJ3ioaq1VPfn/Szqctz2bU/oYeKd9/z5BL+PVg==
 
 tiny-warning@^1.0.2:
   version "1.0.3"
