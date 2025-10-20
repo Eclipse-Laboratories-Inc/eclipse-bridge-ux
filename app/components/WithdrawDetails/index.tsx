@@ -202,7 +202,12 @@ export const WithdrawDetails: React.FC<TransactionDetailsProps> = ({
       feeWei: tx[0].message.fee_wei,
     };
     // Use the contract address from the withdrawal data (V2 API provides this)
-    const targetContractAddress = tx[0].bridge;
+    let targetContractAddress = tx[0].bridge;
+    // For testnet, use the contract address from the network context since we have upgraded to v3 contract and it will route the claim to the v2 and v1 contracts
+    // TODO: Remove this once we have upgraded to v3 contract on mainnet
+    if (!isMainnet) {
+      targetContractAddress = contractAddress;
+    }
 
     try {
       // Setup gas price for configured gas parameters
