@@ -203,14 +203,13 @@ export const WithdrawDetails: React.FC<TransactionDetailsProps> = ({
       feeWei: tx[0].message.fee_wei,
     };
     // Use the contract address from the network context since we have upgraded to v3 contract and it will route the claim to the v2 contract
-    let targetContractAddress = 
-      tx[0].bridge === legacyAddress ? legacyAddress : contractAddress;
+    const targetContractAddress = contractAddress;
 
     try {
       // Setup gas price for configured gas parameters
       //
       // message.feeWei (exact calculation from relayer)
-      // 
+      //
       // pub const CANONICAL_BRIDGE_AUTHORIZE_WITHDRAW_GAS_AMOUNT: u64 = 106_800_u64;
       //
       // pub async fn estimate_authorize_withdraw_fees(&self) -> eyre::Result<U256> {
