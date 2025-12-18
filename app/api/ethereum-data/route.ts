@@ -22,8 +22,8 @@ let cache: ICache = {
 let isFetching = false;
 
 const ETHERSCAN_API_URLS: Record<OptionsLower, string> = {
-    'mainnet': "https://api.etherscan.io/api",
-    'testnet': "https://api-sepolia.etherscan.io/api"
+    'mainnet': "https://api.etherscan.io/v2/api",
+    'testnet': "https://api.etherscan.io/v2/api"
 }
 
 function isValidChain(c: string): c is OptionsLower {
@@ -57,9 +57,9 @@ export async function GET(request: NextRequest) {
         console.log("Fetching new data from Etherscan");
 
         const [blockResponse, gasResponse, priceResponse] = await Promise.all([
-            fetch(`${etherscanAddress}?module=proxy&action=eth_blockNumber&apikey=${apiKey}`, {cache: "no-store"}),
-            fetch(`${etherscanAddress}?module=proxy&action=eth_gasPrice&apikey=${apiKey}`, {cache: "no-store"}),
-            fetch(`${etherscanAddress}?module=stats&action=ethprice&apikey=${apiKey}`, {cache: "no-store"})
+            fetch(`${etherscanAddress}?chainid=1&module=proxy&action=eth_blockNumber&apikey=${apiKey}`, {cache: "no-store"}),
+            fetch(`${etherscanAddress}?chainid=1&module=proxy&action=eth_gasPrice&apikey=${apiKey}`, {cache: "no-store"}),
+            fetch(`${etherscanAddress}?chainid=1&module=stats&action=ethprice&apikey=${apiKey}`, {cache: "no-store"})
         ]);
 
         const blockData = await blockResponse.json();
