@@ -6,7 +6,7 @@ const Loading = ({ loadingClassName, style }: { loadingClassName: string, style:
       viewBox="0 0 24 24"
       xmlns="http://www.w3.org/2000/svg"
       className={loadingClassName}
-      style={...style}
+      style={style}
       fill="currentColor"
       width="20px"
     >
