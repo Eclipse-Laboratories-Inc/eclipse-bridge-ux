@@ -214,7 +214,7 @@ export const WithdrawDetails: React.FC<TransactionDetailsProps> = ({
         functionName: "claimWithdraw",
         args: [message],
         account,
-        gas: BigInt(100_000), // Set a 100k gas limit for the claim transaction
+        gas: BigInt(250_000), // Set a 100k gas limit for the claim transaction
         value: BigInt(0),
         chain: isMainnet ? mainnet : sepolia,
       });
