@@ -52,7 +52,7 @@ export function useTokenTransfer() {
           process.env.NEXT_PUBLIC_ECLIPSE_RPC || "",
         );
 
-        // Define paramaters
+        // Define parameters
         const destination = "ethereum";
         const recipient = evmWallet.address;
         const originToken = warpCore.tokens[1];
