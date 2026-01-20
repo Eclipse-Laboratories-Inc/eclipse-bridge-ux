@@ -12,7 +12,7 @@
  *
  * @param val - The new value entered by the user.
  * @param currentDepositAmount - The current deposit amount in the input field.
- * @returns The sanitized value to be set in the input field.
+ * @returns The sanitized value is to be set in the input field.
  */
 export const sanitizeInput = (val: string, currentDepositAmount: string): string => {
   // If the user presses the decimal point with an empty input, set the value to "0."
@@ -20,7 +20,7 @@ export const sanitizeInput = (val: string, currentDepositAmount: string): string
     return "0.";
   }
 
-  // Replace single leading zero with the number pressed (if it's between 1-9)
+  // Replace the single leading zero with the number pressed (if it's between 1-9)
   if (currentDepositAmount === "0" && parseInt(val) > 0 && parseInt(val) <= 9) {
     return val.replace("0", "");
   }
