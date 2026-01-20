@@ -150,7 +150,7 @@ export function Mint() {
       BigInt(1e6)
     ).toString();
     setTusdPerAssetRate(rate);
-    console.log("tusd per asset", rate);
+    // console.log("tusd per asset", rate);
   }, [ethPerTusdRate]);
 
   const receiveAmountInUsd = receiveAmountInEth;
@@ -234,7 +234,7 @@ export function Mint() {
         try {
           await evmWallet.connector.switchNetwork({ networkChainId: 1 });
         } catch {
-          console.log("err");
+          // console.log("err");
         }
       }
     };
@@ -301,7 +301,7 @@ export function Mint() {
           publicClient: stablePublicClient,
         });
         setTokenBalanceAsBigInt(tokenBalanceAsBigInt);
-        console.log("token balance", tokenBalanceAsBigInt);
+        // console.log("token balance", tokenBalanceAsBigInt);
       } catch (error) {
         console.error(error);
       } finally {
@@ -338,20 +338,20 @@ export function Mint() {
       args: [evmAddress, warpRouteContractAddress],
     });
 
-    console.log("allowanceAsBigInt", allowanceAsBigInt);
+    // console.log("allowanceAsBigInt", allowanceAsBigInt);
 
     ////////////////////////////////
     // Approve
     ////////////////////////////////
     try {
       if (depositAmountAsBigInt > allowanceAsBigInt) {
-        console.log("approving...");
+        // console.log("approving...");
         // Simulate the transaction to catch any errors
-        console.log("publicClient", publicClient);
-        console.log("depositAsset", depositAsset);
-        console.log("warpRouteContractAddress", warpRouteContractAddress);
-        console.log("depositAmountAsBigInt", depositAmountAsBigInt);
-        console.log("evmAddress", evmAddress);
+        // console.log("publicClient", publicClient);
+        // console.log("depositAsset", depositAsset);
+        // console.log("warpRouteContractAddress", warpRouteContractAddress);
+        // console.log("depositAmountAsBigInt", depositAmountAsBigInt);
+        // console.log("evmAddress", evmAddress);
         const { request: approvalRequest } =
           await publicClient.simulateContract({
             abi: erc20Abi,
@@ -360,8 +360,8 @@ export function Mint() {
             args: [warpRouteContractAddress, depositAmountAsBigInt],
             account: evmAddress,
           });
-        console.log("SIMULATE PASSED!");
-        console.log("approvalRequest", approvalRequest);
+        // console.log("SIMULATE PASSED!");
+        // console.log("approvalRequest", approvalRequest);
 
         // Execute the transaction
         const approvalTxHash =

@@ -137,7 +137,7 @@ export const GasStation: React.FC = () => {
     setTxState("Continue in your wallet...");
     // deserialize transaction
     const tx = Transaction.from(bs58.decode(octaneData.transaction));
-    console.log(tx);
+    // // console.log(tx);
 
     const cli = await (
       solWallet?.connector as SolanaWalletConnector
@@ -150,7 +150,7 @@ export const GasStation: React.FC = () => {
 
     try {
       signedTransaction = await cli?.signAndSendTransaction(tx);
-      console.log(signedTransaction);
+      // console.log(signedTransaction);
     } catch (error) {
       console.error("Transaction failed:", error);
       emitEvent(`Refueling for $${amount} is failed.`, TxStatus.Failed, 5);
@@ -172,7 +172,7 @@ export const GasStation: React.FC = () => {
     emitEvent(`$${amount} refuel was successful.`, TxStatus.Confirmed, 10);
     setTxId(signedTransaction.signature);
 
-    console.log(signedTransaction.signature);
+    // console.log(signedTransaction.signature);
   };
 
   useEffect(() => {

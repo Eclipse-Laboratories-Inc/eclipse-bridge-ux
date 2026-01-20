@@ -155,7 +155,7 @@ export function Mint() {
       BigInt(1e18)
     ).toString();
     setTethPerAssetRate(rate);
-    console.log("teth per asset", rate);
+    // console.log("teth per asset", rate);
   }, [ethPerTethRate]);
 
   const receiveAmountInUsd =
@@ -237,7 +237,7 @@ export function Mint() {
         try {
           await evmWallet.connector.switchNetwork({ networkChainId: 1 });
         } catch {
-          console.log("err");
+          // console.log("err");
         }
       }
     };
@@ -338,20 +338,20 @@ export function Mint() {
       args: [evmAddress, warpRouteContractAddress],
     });
 
-    console.log("allowanceAsBigInt", allowanceAsBigInt);
+    // console.log("allowanceAsBigInt", allowanceAsBigInt);
 
     ////////////////////////////////
     // Approve
     ////////////////////////////////
     try {
       if (depositAmountAsBigInt > allowanceAsBigInt) {
-        console.log("approving...");
+        // console.log("approving...");
         // Simulate the transaction to catch any errors
-        console.log("publicClient", publicClient);
-        console.log("depositAsset", depositAsset);
-        console.log("warpRouteContractAddress", warpRouteContractAddress);
-        console.log("depositAmountAsBigInt", depositAmountAsBigInt);
-        console.log("evmAddress", evmAddress);
+        // console.log("publicClient", publicClient);
+        // console.log("depositAsset", depositAsset);
+        // console.log("warpRouteContractAddress", warpRouteContractAddress);
+        // console.log("depositAmountAsBigInt", depositAmountAsBigInt);
+        // console.log("evmAddress", evmAddress);
         const { request: approvalRequest } =
           await publicClient.simulateContract({
             abi: erc20Abi,
@@ -360,8 +360,8 @@ export function Mint() {
             args: [warpRouteContractAddress, depositAmountAsBigInt],
             account: evmAddress,
           });
-        console.log("SIMULATE PASSED!");
-        console.log("approvalRequest", approvalRequest);
+        // console.log("SIMULATE PASSED!");
+        // console.log("approvalRequest", approvalRequest);
 
         // Execute the transaction
         const approvalTxHash =
