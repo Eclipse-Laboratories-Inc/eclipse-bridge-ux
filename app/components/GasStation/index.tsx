@@ -119,7 +119,7 @@ export const GasStation: React.FC = () => {
 
   const fetchOctane = async () => {
     // create transaction
-    const connection = new Connection("https://eclipse.lgns.net");
+    const connection = new Connection("https://public-000.eclipserpc.xyz");
     setTxState("Fetching transaction...");
     setTxStatus(TxStatus.Waiting);
     const octaneData = await createOctaneSwapTransaction(
