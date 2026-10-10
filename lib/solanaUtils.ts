@@ -6,7 +6,7 @@ import {
 } from "@solana/spl-token";
 import { toHex } from "viem";
 
-export async function getWalletBalance(publicKey: String, eclipseRpc: string) {
+export async function getWalletBalance(publicKey: string, eclipseRpc: string) {
   // Connect to the Solana mainnet
   const connection = new solanaWeb3.Connection(eclipseRpc, "confirmed");
 
