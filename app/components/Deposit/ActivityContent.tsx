@@ -82,7 +82,7 @@ export const ActivityItem = ({
   );
 };
 
-function getWithdrawalActivityPill(status: String, timeLeft?: String) {
+function getWithdrawalActivityPill(status: string, timeLeft?: string) {
   if (status === "Pending") {
     return (
       <div className="flex items-center bg-[#A1FEA0] rounded-[13px] py-[3px] px-[8px] text-black text-[12px]">
