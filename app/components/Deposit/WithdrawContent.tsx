@@ -41,7 +41,7 @@ const client = createPublicClient({
   transport:
     process.env.NEXT_PUBLIC_CURRENT_CHAIN === "mainnet"
       ? http("https://eth.llamarpc.com")
-      : http("https://sepolia.drpc.org"),
+      : http("https://ethereum-sepolia-rpc.publicnode.com"),
   cacheTime: 0,
 });
 

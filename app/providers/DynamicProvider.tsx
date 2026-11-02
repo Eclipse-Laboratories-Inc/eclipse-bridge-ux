@@ -25,7 +25,7 @@ const evmNetworks = [
       symbol: "ETH",
     },
     networkId: 11155111,
-    rpcUrls: ["https://sepolia.drpc.org"],
+    rpcUrls: ["https://ethereum-sepolia-rpc.publicnode.com"],
     vanityName: "Sepolia",
     isTestnet: false,
     key: "ethereum",
