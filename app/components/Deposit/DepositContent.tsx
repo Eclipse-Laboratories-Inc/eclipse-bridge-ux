@@ -43,6 +43,7 @@ import {
   DEPOSIT_TX_GAS_LIMIT,
   MIN_DEPOSIT_AMOUNT,
   MIN_WITHDRAWAL_AMOUNT,
+  TREASURY_ABI,
 } from "../constants";
 import { useWallets } from "@/app/hooks/useWallets";
 import { Options } from "@/lib/networkUtils";
@@ -102,6 +103,9 @@ export const DepositContent: React.FC<DepositContentProps> = ({
   const [action, setAction] = useState<Action>(Action.Deposit);
   const MIN_ACTION_AMOUNT =
     action === Action.Deposit ? MIN_DEPOSIT_AMOUNT : MIN_WITHDRAWAL_AMOUNT;
+  // null while loading; deposits revert if the bridge lacks DEPOSITOR_ROLE on the treasury
+  const [canDeposit, setCanDeposit] = useState<boolean | null>(null);
+  const isDepositDisabled = action === Action.Deposit && canDeposit !== true;
 
   function switchAction() {
     setAmountEther("");
@@ -141,6 +145,43 @@ export const DepositContent: React.FC<DepositContentProps> = ({
       setMaxPriorityFeePerGasWei(mpf);
     });
   }, [selectedOption, evmWallet]);
+
+  useEffect(() => {
+    setCanDeposit(null);
+    // contractAddress flips with selectedOption immediately, client only after the effect above runs
+    const expectedChainId = selectedOption === Options.Mainnet ? mainnet.id : sepolia.id;
+    if (!client || client.chain?.id !== expectedChainId) return;
+    let cancelled = false;
+
+    (async () => {
+      const treasury = await client.readContract({
+        address: contractAddress,
+        abi: CONTRACT_ABI,
+        functionName: "TREASURY",
+      });
+      const depositorRole = await client.readContract({
+        address: treasury,
+        abi: TREASURY_ABI,
+        functionName: "DEPOSITOR_ROLE",
+      });
+      return client.readContract({
+        address: treasury,
+        abi: TREASURY_ABI,
+        functionName: "hasRole",
+        args: [depositorRole, contractAddress],
+      });
+    })()
+      .then((hasRole) => !cancelled && setCanDeposit(hasRole))
+      .catch((error) => {
+        console.error("Failed to check treasury depositor role", error);
+        // fall back to allowing deposits; simulateContract still guards against reverts
+        !cancelled && setCanDeposit(true);
+      });
+
+    return () => {
+      cancelled = true;
+    };
+  }, [client, contractAddress, selectedOption]);
 
   useEffect(() => {
     let lWalletClient =
@@ -203,6 +244,7 @@ export const DepositContent: React.FC<DepositContentProps> = ({
   };
 
   const submitDeposit = async () => {
+    if (isDepositDisabled) return;
     setIsModalOpen(true);
     setEthTxStatus("Continue in your wallet");
     const destinationBytes32 = solanaToBytes32(solWallet?.address || "");
@@ -253,6 +295,9 @@ export const DepositContent: React.FC<DepositContentProps> = ({
     if (!evmWallet || !solWallet) {
       return "submit-button disabled";
     }
+    if (isDepositDisabled) {
+      return "submit-button disabled";
+    }
     if (!amountEther) {
       return "submit-button disabled";
     }
@@ -275,6 +320,9 @@ export const DepositContent: React.FC<DepositContentProps> = ({
     }
     if (!evmWallet && !solWallet) {
       return "Connect Wallets";
+    }
+    if (isDepositDisabled) {
+      return canDeposit === null ? "Checking..." : "Deposits are disabled";
     }
     if (!amountEther) {
       return action;
@@ -380,6 +428,7 @@ export const DepositContent: React.FC<DepositContentProps> = ({
           ) : (
             <button
               className={`w-full deposit-button p-4 ${determineButtonClass()}`}
+              disabled={isDepositDisabled}
               onClick={
                 action === Action.Deposit ? submitDeposit : submitWithdraw
               }
