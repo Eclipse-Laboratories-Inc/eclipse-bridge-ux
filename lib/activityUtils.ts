@@ -130,6 +130,12 @@ export const timeAgo = (timestamp: number): string => {
   }
 };
 
+// fraudWindowDuration is at least 1 day on-chain; round up so we never understate the wait
+export const formatDuration = (seconds: number): string => {
+  const days = Math.ceil(seconds / 86400);
+  return days === 1 ? `1 day` : `${days} days`;
+};
+
 export const timeLeft = (timestamp: number): string => {
   const now = Date.now();
   const secondsLeft = Math.floor((timestamp - now) / 1000);

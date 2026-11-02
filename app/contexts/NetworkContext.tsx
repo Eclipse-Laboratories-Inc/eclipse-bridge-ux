@@ -1,7 +1,8 @@
-import { Options } from '@/lib/networkUtils';
+import { Options, createEthPublicClient } from '@/lib/networkUtils';
 import { assertNever } from '@/lib/typeUtils';
-import React, { createContext, useState, ReactNode, useContext, PropsWithChildren } from 'react';
-import { ECLIPSESCAN_BASE_URL, ETHERSCAN_MAINNET_URL, ETHERSCAN_TESTNET_URL } from '../components/constants';
+import { formatDuration } from '@/lib/activityUtils';
+import React, { createContext, useState, useEffect, ReactNode, useContext, PropsWithChildren } from 'react';
+import { CONTRACT_ABI, ECLIPSESCAN_BASE_URL, ETHERSCAN_MAINNET_URL, ETHERSCAN_TESTNET_URL } from '../components/constants';
 
 export function composeEclipsescanUrl(network: Options, path: string = '/'): string {
   let targetNetwork: string;
@@ -71,7 +72,25 @@ export const NetworkProvider = ({ selectedOption, setSelectedOption, children }:
   const relayerAddress  = isMainnet ? "CrfbABN2sSvmoZLu9eDDfXpaC2nHg42R7AXbHs9eg4S9" : "ec1vCnQKsQSnTbcTyc3SH2azcDXZquiFB3QqtRvm3Px"
   const configAccount   = isMainnet ? "B6UA9rd6Qrx9chsrcMWPV3EFnSb1cbnf7AA2wdkhkpqw" : "A3jHKVwNvrvTjnUPGKYei9jbPn7NcraD6H94ewWyfVMY"
   const withdrawApi     = isMainnet ? "https://withdraw.api.prod.eclipse.xyz" : "https://withdraw.api.dev2.eclipsenetwork.xyz"
-  const waitingPeriod   = isMainnet ? "7 days" : "1 day"
+
+  // fraudWindowDuration per network, read from the bridge contract; keyed so a late response can't land on the other network
+  const [fraudWindowSeconds, setFraudWindowSeconds] = useState<Partial<Record<Options, number>>>({});
+  useEffect(() => {
+    if (fraudWindowSeconds[selectedOption] !== undefined) return;
+    const network = selectedOption;
+    createEthPublicClient(network)
+      .readContract({
+        address: contractAddress as `0x${string}`,
+        abi: CONTRACT_ABI,
+        functionName: "fraudWindowDuration",
+      })
+      .then((seconds) => setFraudWindowSeconds((prev) => ({ ...prev, [network]: Number(seconds) })))
+      .catch((error) => console.error("Failed to read fraudWindowDuration", error));
+  }, [selectedOption, contractAddress]);
+
+  const fetchedSeconds  = fraudWindowSeconds[selectedOption]
+  // fallbacks match the on-chain values at the time of writing
+  const waitingPeriod   = fetchedSeconds !== undefined ? formatDuration(fetchedSeconds) : (isMainnet ? "7 days" : "1 day")
 
     return (
     <NetworkContext.Provider value={{
