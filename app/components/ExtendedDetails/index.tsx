@@ -5,6 +5,7 @@ import "react-loading-skeleton/dist/skeleton.css";
 import "./styles.css";
 import { MIN_DEPOSIT_AMOUNT } from "../constants";
 import { useWallets } from "@/app/hooks/useWallets";
+import { useNetwork } from "@/app/contexts/NetworkContext";
 import MotionNumber from "motion-number";
 
 export interface ExtendedDetailsProps {
@@ -58,6 +59,7 @@ const ExtendedDetails: React.FC<ExtendedDetailsProps> = ({
   const amountEth =
     typeof amountEther === "string" ? parseFloat(amountEther) : amountEther;
   const { evmWallet, solWallet } = useWallets();
+  const { waitingPeriod } = useNetwork();
 
   return (
     <>
@@ -90,7 +92,7 @@ const ExtendedDetails: React.FC<ExtendedDetailsProps> = ({
             <div className="flex items-center gap-[4px]">
               <TimeIcon />
               <span className="tgreen">
-                {target === "Eclipse" ? "~5 mins" : "~7 days"}
+                {target === "Eclipse" ? "~5 mins" : `~${waitingPeriod}`}
               </span>
             </div>
             <span style={{ color: "rgba(255, 255, 255, 0.3)" }}>•</span>
