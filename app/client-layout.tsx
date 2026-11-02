@@ -40,23 +40,23 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
       <head>
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
       </head>
-      <Suspense>
-        <WalletFilterProvider>
-          <WagmiProvider>
-            {({ chains }) => {
-              return (
-                <DynamicProvider chains={chains}>
-                  <ErrorBoundary>
-                    <body className={ibmPlexSans.className}>
+      <body className={ibmPlexSans.className}>
+        <Suspense>
+          <WalletFilterProvider>
+            <WagmiProvider>
+              {({ chains }) => {
+                return (
+                  <DynamicProvider chains={chains}>
+                    <ErrorBoundary>
                       <Providers chains={chains}>{children}</Providers>
-                    </body>
-                  </ErrorBoundary>
-                </DynamicProvider>
-              );
-            }}
-          </WagmiProvider>
-        </WalletFilterProvider>
-      </Suspense>
+                    </ErrorBoundary>
+                  </DynamicProvider>
+                );
+              }}
+            </WagmiProvider>
+          </WalletFilterProvider>
+        </Suspense>
+      </body>
     </html>
   );
 }
