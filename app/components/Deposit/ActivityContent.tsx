@@ -23,7 +23,6 @@ export const ActivityItem = ({
   transactionStatusPill,
   transactionAmount,
   isInstant,
-  key,
 }: {
   openModalEvent: () => void;
   tokenIcon: string;
@@ -33,12 +32,10 @@ export const ActivityItem = ({
   transactionTime: string;
   transactionStatusPill: React.ReactElement;
   transactionAmount: string;
-  key: string;
   isInstant?: boolean;
 }) => {
   return (
     <div
-      key={key}
       className="deposit-transaction flex flex-row items-center"
       onClick={openModalEvent}
     >
