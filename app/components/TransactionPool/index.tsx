@@ -34,7 +34,7 @@ export const TransactionProvider = ({ children } : { children: ReactNode}) => {
       let data: any[] = [];
       try {
         data = await getLastDeposits(evmWallet?.address || '', (selectedOption === Options.Mainnet) ? "mainnet" : "testnet");
-        setDeposits(data.reverse());
+        setDeposits(data);
       } catch (error) {
         console.log("failed to fetch deposits", error)
       }

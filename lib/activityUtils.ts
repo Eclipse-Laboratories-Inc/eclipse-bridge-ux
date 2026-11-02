@@ -101,6 +101,7 @@ export async function getLastDeposits(address: string, chain: string) {
     `/api/get-transactions?address=${address}&chain=${chain}`,
   );
   const deposits = await response.json();
+  if (!response.ok) throw new Error(deposits.message);
 
   return deposits;
 }
