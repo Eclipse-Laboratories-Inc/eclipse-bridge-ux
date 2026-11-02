@@ -35,7 +35,7 @@ const GrassIcon = ({ className }: { className: string }) => {
           opacity="0.15"
           d="M22.8889 23.3396L22.8889 23.3391C22.8746 20.7497 22.9012 18.5072 23.4678 16.3742L23.5258 16.1562L23.415 15.9901L23.3171 15.7942L23.0711 15.7496C21.4071 15.4474 19.8764 16.6191 19.6904 18.2626L19.6903 18.2628C19.554 19.4705 19.5147 20.6696 19.5071 21.9219L19.5071 21.9223C19.5057 22.1687 19.3039 22.37 19.0549 22.37H17.6328C16.0414 22.37 14.75 23.6614 14.75 25.2528V25.7528H15.25H20.4827C21.8171 25.7528 22.8949 24.6703 22.8889 23.3396ZM23.3838 15.9447L23.385 15.9463C23.3844 15.9454 23.3827 15.9432 23.3838 15.9447Z"
           fill="black"
-          fill-opacity="0.7"
+          fillOpacity="0.7"
           stroke="#303283"
         />
       </g>
@@ -56,9 +56,9 @@ const GrassIcon = ({ className }: { className: string }) => {
           width="23.6836"
           height="28.3601"
           filterUnits="userSpaceOnUse"
-          color-interpolation-filters="sRGB"
+          colorInterpolationFilters="sRGB"
         >
-          <feFlood flood-opacity="0" result="BackgroundImageFix" />
+          <feFlood floodOpacity="0" result="BackgroundImageFix" />
           <feColorMatrix
             in="SourceAlpha"
             type="matrix"

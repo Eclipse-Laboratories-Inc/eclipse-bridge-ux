@@ -7,8 +7,8 @@ const Ellipse = () => {
       <circle cx="13" cy="13" r="3" fill="#A1FEA0"/>
       </g>
       <defs>
-      <filter id="filter0_d_1106_7967" x="0" y="0" width="26" height="26" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
-      <feFlood flood-opacity="0" result="BackgroundImageFix"/>
+      <filter id="filter0_d_1106_7967" x="0" y="0" width="26" height="26" filterUnits="userSpaceOnUse" colorInterpolationFilters="sRGB">
+      <feFlood floodOpacity="0" result="BackgroundImageFix"/>
       <feColorMatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" result="hardAlpha"/>
       <feOffset/>
       <feGaussianBlur stdDeviation="5"/>

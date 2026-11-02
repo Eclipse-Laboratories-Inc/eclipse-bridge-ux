@@ -41,7 +41,7 @@ export const PassiveGrassBanner = ({ className }: { className: string }) => {
           height="63.167"
           rx="31.5835"
           stroke="#8342D8"
-          stroke-width="2.4295"
+          strokeWidth="2.4295"
         />
         <g filter="url(#filter0_i_2638_4509)">
           <rect
@@ -59,9 +59,9 @@ export const PassiveGrassBanner = ({ className }: { className: string }) => {
             height="50.4121"
             rx="25.2061"
             stroke="#A658FF"
-            stroke-width="0.607375"
+            strokeWidth="0.607375"
           />
-          <g clip-path="url(#clip0_2638_4509)">
+          <g clipPath="url(#clip0_2638_4509)">
             <path
               opacity="0.3"
               d="M46.6561 94.231C51.2685 94.231 55.0075 93.6702 55.0075 92.9783C55.0075 92.2864 51.2685 91.7256 46.6561 91.7256C42.0437 91.7256 38.3047 92.2864 38.3047 92.9783C38.3047 93.6702 42.0437 94.231 46.6561 94.231Z"
@@ -87,7 +87,7 @@ export const PassiveGrassBanner = ({ className }: { className: string }) => {
               opacity="0.15"
               d="M52.9115 87.9588C52.9156 88.8816 52.1682 89.6332 51.2412 89.6332H46.6562C46.6562 88.4807 47.5916 87.5454 48.7441 87.5454H49.9901C50.4482 87.5454 50.8219 87.1754 50.8244 86.7173C50.8311 85.6266 50.8654 84.5936 50.9823 83.5576C51.1172 82.3658 52.2258 81.5186 53.4309 81.7374C53.4317 81.7391 53.4326 81.7399 53.4334 81.7411C52.9198 83.6745 52.8989 85.6955 52.9115 87.9588Z"
               fill="black"
-              fill-opacity="0.7"
+              fillOpacity="0.7"
             />
             <path
               opacity="0.3"
@@ -157,7 +157,7 @@ export const PassiveGrassBanner = ({ className }: { className: string }) => {
               mask="url(#path-15-outside-2_2638_4509)"
             />
           </g>
-          <g clip-path="url(#clip1_2638_4509)">
+          <g clipPath="url(#clip1_2638_4509)">
             <rect
               x="166.887"
               y="67.5098"
@@ -173,14 +173,14 @@ export const PassiveGrassBanner = ({ className }: { className: string }) => {
               height="26.718"
               rx="13.359"
               fill="url(#paint1_linear_2638_4509)"
-              fill-opacity="0.25"
+              fillOpacity="0.25"
             />
             <rect
               width="89"
               height="13.3623"
               transform="translate(166.887 67.5098)"
               fill="white"
-              fill-opacity="0.25"
+              fillOpacity="0.25"
             />
             <g filter="url(#filter3_d_2638_4509)">
               <mask
@@ -219,7 +219,7 @@ export const PassiveGrassBanner = ({ className }: { className: string }) => {
             height="25.5033"
             rx="12.7516"
             stroke="url(#paint2_linear_2638_4509)"
-            stroke-width="1.21475"
+            strokeWidth="1.21475"
             mix-blend-mode="soft-light"
           />
         </g>
@@ -393,9 +393,9 @@ export const PassiveGrassBanner = ({ className }: { className: string }) => {
           width="261.617"
           height="53.449"
           filterUnits="userSpaceOnUse"
-          color-interpolation-filters="sRGB"
+          colorInterpolationFilters="sRGB"
         >
-          <feFlood flood-opacity="0" result="BackgroundImageFix" />
+          <feFlood floodOpacity="0" result="BackgroundImageFix" />
           <feBlend
             mode="normal"
             in="SourceGraphic"
@@ -428,9 +428,9 @@ export const PassiveGrassBanner = ({ className }: { className: string }) => {
           width="59.7148"
           height="9.4604"
           filterUnits="userSpaceOnUse"
-          color-interpolation-filters="sRGB"
+          colorInterpolationFilters="sRGB"
         >
-          <feFlood flood-opacity="0" result="BackgroundImageFix" />
+          <feFlood floodOpacity="0" result="BackgroundImageFix" />
           <feColorMatrix
             in="SourceAlpha"
             type="matrix"
@@ -462,9 +462,9 @@ export const PassiveGrassBanner = ({ className }: { className: string }) => {
           width="85.7734"
           height="19.083"
           filterUnits="userSpaceOnUse"
-          color-interpolation-filters="sRGB"
+          colorInterpolationFilters="sRGB"
         >
-          <feFlood flood-opacity="0" result="BackgroundImageFix" />
+          <feFlood floodOpacity="0" result="BackgroundImageFix" />
           <feColorMatrix
             in="SourceAlpha"
             type="matrix"
@@ -496,9 +496,9 @@ export const PassiveGrassBanner = ({ className }: { className: string }) => {
           width="60.4805"
           height="10.7019"
           filterUnits="userSpaceOnUse"
-          color-interpolation-filters="sRGB"
+          colorInterpolationFilters="sRGB"
         >
-          <feFlood flood-opacity="0" result="BackgroundImageFix" />
+          <feFlood floodOpacity="0" result="BackgroundImageFix" />
           <feColorMatrix
             in="SourceAlpha"
             type="matrix"
@@ -530,9 +530,9 @@ export const PassiveGrassBanner = ({ className }: { className: string }) => {
           width="22.0117"
           height="20.0116"
           filterUnits="userSpaceOnUse"
-          color-interpolation-filters="sRGB"
+          colorInterpolationFilters="sRGB"
         >
-          <feFlood flood-opacity="0" result="BackgroundImageFix" />
+          <feFlood floodOpacity="0" result="BackgroundImageFix" />
           <feColorMatrix
             in="SourceAlpha"
             type="matrix"
@@ -564,9 +564,9 @@ export const PassiveGrassBanner = ({ className }: { className: string }) => {
           width="16.875"
           height="15.3421"
           filterUnits="userSpaceOnUse"
-          color-interpolation-filters="sRGB"
+          colorInterpolationFilters="sRGB"
         >
-          <feFlood flood-opacity="0" result="BackgroundImageFix" />
+          <feFlood floodOpacity="0" result="BackgroundImageFix" />
           <feColorMatrix
             in="SourceAlpha"
             type="matrix"
@@ -598,9 +598,9 @@ export const PassiveGrassBanner = ({ className }: { className: string }) => {
           width="16.875"
           height="15.3421"
           filterUnits="userSpaceOnUse"
-          color-interpolation-filters="sRGB"
+          colorInterpolationFilters="sRGB"
         >
-          <feFlood flood-opacity="0" result="BackgroundImageFix" />
+          <feFlood floodOpacity="0" result="BackgroundImageFix" />
           <feColorMatrix
             in="SourceAlpha"
             type="matrix"
@@ -632,9 +632,9 @@ export const PassiveGrassBanner = ({ className }: { className: string }) => {
           width="15.4102"
           height="14.008"
           filterUnits="userSpaceOnUse"
-          color-interpolation-filters="sRGB"
+          colorInterpolationFilters="sRGB"
         >
-          <feFlood flood-opacity="0" result="BackgroundImageFix" />
+          <feFlood floodOpacity="0" result="BackgroundImageFix" />
           <feColorMatrix
             in="SourceAlpha"
             type="matrix"
@@ -666,9 +666,9 @@ export const PassiveGrassBanner = ({ className }: { className: string }) => {
           width="10.2695"
           height="9.33866"
           filterUnits="userSpaceOnUse"
-          color-interpolation-filters="sRGB"
+          colorInterpolationFilters="sRGB"
         >
-          <feFlood flood-opacity="0" result="BackgroundImageFix" />
+          <feFlood floodOpacity="0" result="BackgroundImageFix" />
           <feColorMatrix
             in="SourceAlpha"
             type="matrix"
@@ -700,9 +700,9 @@ export const PassiveGrassBanner = ({ className }: { className: string }) => {
           width="15.4102"
           height="14.008"
           filterUnits="userSpaceOnUse"
-          color-interpolation-filters="sRGB"
+          colorInterpolationFilters="sRGB"
         >
-          <feFlood flood-opacity="0" result="BackgroundImageFix" />
+          <feFlood floodOpacity="0" result="BackgroundImageFix" />
           <feColorMatrix
             in="SourceAlpha"
             type="matrix"
@@ -734,9 +734,9 @@ export const PassiveGrassBanner = ({ className }: { className: string }) => {
           width="10.2695"
           height="9.33866"
           filterUnits="userSpaceOnUse"
-          color-interpolation-filters="sRGB"
+          colorInterpolationFilters="sRGB"
         >
-          <feFlood flood-opacity="0" result="BackgroundImageFix" />
+          <feFlood floodOpacity="0" result="BackgroundImageFix" />
           <feColorMatrix
             in="SourceAlpha"
             type="matrix"
@@ -770,7 +770,7 @@ export const PassiveGrassBanner = ({ className }: { className: string }) => {
           gradientUnits="userSpaceOnUse"
         >
           <stop offset="0.69" />
-          <stop offset="1" stop-opacity="0.3" />
+          <stop offset="1" stopOpacity="0.3" />
         </linearGradient>
         <linearGradient
           id="paint1_linear_2638_4509"
@@ -780,8 +780,8 @@ export const PassiveGrassBanner = ({ className }: { className: string }) => {
           y2="94.2278"
           gradientUnits="userSpaceOnUse"
         >
-          <stop stop-color="white" />
-          <stop offset="1" stop-color="white" stop-opacity="0" />
+          <stop stopColor="white" />
+          <stop offset="1" stopColor="white" stopOpacity="0" />
         </linearGradient>
         <linearGradient
           id="paint2_linear_2638_4509"
@@ -791,7 +791,7 @@ export const PassiveGrassBanner = ({ className }: { className: string }) => {
           y2="94.2278"
           gradientUnits="userSpaceOnUse"
         >
-          <stop stop-color="white" />
+          <stop stopColor="white" />
           <stop offset="1" />
         </linearGradient>
         <clipPath id="clip0_2638_4509">
