@@ -109,6 +109,7 @@ export const DepositContent: React.FC<DepositContentProps> = ({
 
   function switchAction() {
     setAmountEther("");
+    setAmountBalanceEther(-1);
     setAction(action === Action.Deposit ? Action.Withdraw : Action.Deposit);
   }
 
@@ -200,6 +201,8 @@ export const DepositContent: React.FC<DepositContentProps> = ({
   }, [evmWallet]);
 
   useEffect(() => {
+    // a fetch started for the other tab must not overwrite this tab's balance
+    let cancelled = false;
     // if action is withdraw fetch eclipse balance
     const fetchEclipse = async () => {
       const balance = await getWalletBalance(
@@ -211,11 +214,14 @@ export const DepositContent: React.FC<DepositContentProps> = ({
         ? balanceAsEther.slice(0, balanceAsEther.indexOf(".") + 5)
         : balanceAsEther;
       const balanceEther = parseFloat(formattedEtherBalance);
-      setAmountBalanceEther(balanceEther);
+      !cancelled && setAmountBalanceEther(balanceEther);
       return;
     };
     if (action === Action.Withdraw) {
       fetchEclipse();
+      return () => {
+        cancelled = true;
+      };
     }
     userWallets.forEach(async (wallet) => {
       if (!wallet) return;
@@ -235,8 +241,11 @@ export const DepositContent: React.FC<DepositContentProps> = ({
         ? balanceAsEther.slice(0, balanceAsEther.indexOf(".") + 5)
         : balanceAsEther;
       const balanceEther = parseFloat(formattedEtherBalance);
-      setAmountBalanceEther(balanceEther);
+      !cancelled && setAmountBalanceEther(balanceEther);
     });
+    return () => {
+      cancelled = true;
+    };
   }, [userWallets, client, action]);
 
   const submitWithdraw = async () => {
