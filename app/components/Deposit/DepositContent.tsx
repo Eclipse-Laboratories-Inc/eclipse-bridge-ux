@@ -175,8 +175,8 @@ export const DepositContent: React.FC<DepositContentProps> = ({
       .then((hasRole) => !cancelled && setCanDeposit(hasRole))
       .catch((error) => {
         console.error("Failed to check treasury depositor role", error);
-        // fall back to allowing deposits; simulateContract still guards against reverts
-        !cancelled && setCanDeposit(true);
+        // fail closed: keep deposits disabled if we can't confirm the role
+        !cancelled && setCanDeposit(false);
       });
 
     return () => {
