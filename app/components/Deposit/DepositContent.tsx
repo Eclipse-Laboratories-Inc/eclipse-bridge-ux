@@ -43,7 +43,6 @@ import {
   DEPOSIT_TX_GAS_LIMIT,
   MIN_DEPOSIT_AMOUNT,
   MIN_WITHDRAWAL_AMOUNT,
-  TREASURY_ABI,
 } from "../constants";
 import { useWallets } from "@/app/hooks/useWallets";
 import { Options } from "@/lib/networkUtils";
@@ -79,7 +78,7 @@ export const DepositContent: React.FC<DepositContentProps> = ({
     null,
     null,
   ];
-  const { selectedOption, contractAddress, eclipseRpc } = useNetwork();
+  const { selectedOption, contractAddress, eclipseRpc, canDeposit } = useNetwork();
   const [balanceEther, setAmountBalanceEther] = useState<number>(-1);
   const [isEvmDisconnected, setIsEvmDisconnected] = useState(false);
   const [isSolDisconnected, setIsSolDisconnected] = useState(false);
@@ -103,8 +102,6 @@ export const DepositContent: React.FC<DepositContentProps> = ({
   const [action, setAction] = useState<Action>(Action.Deposit);
   const MIN_ACTION_AMOUNT =
     action === Action.Deposit ? MIN_DEPOSIT_AMOUNT : MIN_WITHDRAWAL_AMOUNT;
-  // null while loading; deposits revert if the bridge lacks DEPOSITOR_ROLE on the treasury
-  const [canDeposit, setCanDeposit] = useState<boolean | null>(null);
   const isDepositDisabled = action === Action.Deposit && canDeposit !== true;
 
   function switchAction() {
@@ -146,43 +143,6 @@ export const DepositContent: React.FC<DepositContentProps> = ({
       setMaxPriorityFeePerGasWei(mpf);
     });
   }, [selectedOption, evmWallet]);
-
-  useEffect(() => {
-    setCanDeposit(null);
-    // contractAddress flips with selectedOption immediately, client only after the effect above runs
-    const expectedChainId = selectedOption === Options.Mainnet ? mainnet.id : sepolia.id;
-    if (!client || client.chain?.id !== expectedChainId) return;
-    let cancelled = false;
-
-    (async () => {
-      const treasury = await client.readContract({
-        address: contractAddress,
-        abi: CONTRACT_ABI,
-        functionName: "TREASURY",
-      });
-      const depositorRole = await client.readContract({
-        address: treasury,
-        abi: TREASURY_ABI,
-        functionName: "DEPOSITOR_ROLE",
-      });
-      return client.readContract({
-        address: treasury,
-        abi: TREASURY_ABI,
-        functionName: "hasRole",
-        args: [depositorRole, contractAddress],
-      });
-    })()
-      .then((hasRole) => !cancelled && setCanDeposit(hasRole))
-      .catch((error) => {
-        console.error("Failed to check treasury depositor role", error);
-        // fail closed: keep deposits disabled if we can't confirm the role
-        !cancelled && setCanDeposit(false);
-      });
-
-    return () => {
-      cancelled = true;
-    };
-  }, [client, contractAddress, selectedOption]);
 
   useEffect(() => {
     let lWalletClient =
