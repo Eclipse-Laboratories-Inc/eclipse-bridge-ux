@@ -4,8 +4,8 @@ import {
   useDynamicEvents,
   useDynamicModals,
 } from "@dynamic-labs/sdk-react-core";
-import { LinkedWallet } from "@reservoir0x/relay-kit-ui";
-import { RelayChain } from "@reservoir0x/relay-sdk";
+import { LinkedWallet } from "@relayprotocol/relay-kit-ui";
+import { RelayChain } from "@relayprotocol/relay-sdk";
 import { useState } from "react";
 
 export const useOnLinkNewWallet = () => {

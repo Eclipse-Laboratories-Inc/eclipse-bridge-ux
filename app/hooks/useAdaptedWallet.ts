@@ -1,9 +1,9 @@
 import { useEffect, useState } from "react";
 import { Wallet } from "@dynamic-labs/sdk-react-core";
 import { WalletConnectorCore } from "@dynamic-labs/wallet-connector-core";
-import { AdaptedWallet, adaptViemWallet } from "@reservoir0x/relay-sdk";
+import { AdaptedWallet, adaptViemWallet } from "@relayprotocol/relay-sdk";
 import { isSolanaWallet } from "@dynamic-labs/solana";
-import { adaptSolanaWallet } from "@reservoir0x/relay-svm-wallet-adapter";
+import { adaptSolanaWallet } from "@relayprotocol/relay-svm-wallet-adapter";
 import { isEthereumWallet } from "@dynamic-labs/ethereum";
 import { isEclipseWallet } from "@dynamic-labs/eclipse";
 

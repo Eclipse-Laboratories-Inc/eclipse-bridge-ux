@@ -1,6 +1,6 @@
 "use client";
 import "./globals.css";
-import "@reservoir0x/relay-kit-ui/styles.css";
+import "@relayprotocol/relay-kit-ui/styles.css";
 import { Providers } from "@/app/providers/providers";
 import { usePathname } from "next/navigation";
 import { IBM_Plex_Sans } from "next/font/google";

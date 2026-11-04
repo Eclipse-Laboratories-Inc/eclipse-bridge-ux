@@ -3,7 +3,7 @@ import React from "react";
 import { useState } from "react";
 
 import "./styles.css";
-import { SwapWidget, Token } from "@reservoir0x/relay-kit-ui";
+import { SwapWidget, Token } from "@relayprotocol/relay-kit-ui";
 import { useDynamicContext } from "@dynamic-labs/sdk-react-core";
 import { useLinkedWallets } from "@/app/hooks/useLinkedWallets";
 import { useOnLinkNewWallet } from "@/app/hooks/useOnLinkNewWallet";

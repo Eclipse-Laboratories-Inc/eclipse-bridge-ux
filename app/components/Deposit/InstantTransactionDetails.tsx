@@ -6,6 +6,7 @@ import { Arrow, InstantIcon, Cross, Copy, CircleCheck } from "@/app/components/i
 import { useSidebar } from "@/app/contexts/SidebarContext";
 import { timeAgo } from "@/lib/activityUtils"
 import { truncateWalletAddress } from "@/lib/stringUtils";
+import { summarizeRelayRequest } from "@/lib/relay";
 
 const TxInfo: React.FC<{
   name: string;
@@ -56,8 +57,8 @@ const RelayBridgeItem = ({
 }: {
   amountToken: string;
   amountUsd: string;
-  chainId: string;
-  logoURI: string;
+  chainId?: number;
+  logoURI?: string;
 }) => {
   return (
     <div
@@ -95,13 +96,10 @@ export const InstantTransactionDetails = ({
 }) => {
   const { isSidebar } = useSidebar();
   const txData = activity.data;
-  const currencyIn = txData.metadata.currencyIn;
-  const currencyOut = txData.metadata.currencyOut;
+  const { currencyIn, currencyOut, feeCurrency, feeAmount, feeUsd } = summarizeRelayRequest(activity);
+  if (!currencyIn?.currency || !currencyOut?.currency) return null;
 
   const priceImpact = (Number(currencyOut.amountUsd) - Number(currencyIn.amountUsd)) / Number(currencyIn.amountUsd) * 100
-
-  const transactionFeeUsd = (Number(txData.feesUsd.gas) + Number(txData.feesUsd.price)) / 10**6
-  const transactionFeeToken = (Number(txData.fees.gas) + Number(txData.fees.price)) / 10**(txData.feeCurrencyObject.decimals) 
 
   return (
     <div
@@ -133,7 +131,7 @@ export const InstantTransactionDetails = ({
           amountToken={ Number(currencyIn.amountFormatted).toFixed(5) }
           amountUsd={ `$${Number(currencyIn.amountUsd).toFixed(2)}` }
           chainId={ currencyIn.currency.chainId }
-          logoURI={ currencyIn.currency.metadata.logoURI }
+          logoURI={ currencyIn.currency.metadata?.logoURI }
         />
         <div className="p-[8px]">
           <Arrow />
@@ -142,7 +140,7 @@ export const InstantTransactionDetails = ({
           amountToken={ Number(currencyOut.amountFormatted).toFixed(5) }
           amountUsd={ `$${Number(currencyOut.amountUsd).toFixed(2)}` }
           chainId={ currencyOut.currency.chainId  }
-          logoURI={ currencyOut.currency.metadata.logoURI }
+          logoURI={ currencyOut.currency.metadata?.logoURI }
         />
       </div>
 
@@ -154,14 +152,14 @@ export const InstantTransactionDetails = ({
         />
         <TxInfo
           name="Transaction Fee"
-          grayText={`$${transactionFeeUsd.toFixed(3)}`}
-          greenText={`${transactionFeeToken.toFixed(5)} ${txData.feeCurrencyObject.symbol}`}
+          grayText={`$${feeUsd.toFixed(3)}`}
+          greenText={`${feeAmount.toFixed(5)} ${feeCurrency?.symbol ?? ""}`}
         />
         { priceImpact > 0 
           ? <TxInfo name="Price Impact" greenText={ `${priceImpact.toFixed(2)}%` }/>
           : <TxInfo name="Price Impact" redText={ `${priceImpact.toFixed(2)}%` }/>
         }
-        <TxInfo name="Asset" greenText="Ethereum" assetIcon={ currencyOut.currency.metadata.logoURI } />
+        <TxInfo name="Asset" greenText="Ethereum" assetIcon={ currencyOut.currency.metadata?.logoURI } />
         <TxInfo name="Age" greenText={timeAgo(txData.inTxs[0].timestamp)} />
 
         <div className="dash-box !m-0 "></div>

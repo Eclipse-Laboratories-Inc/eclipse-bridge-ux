@@ -1,10 +1,11 @@
 "use client";
-import { MAINNET_RELAY_API, RelayChain } from "@reservoir0x/relay-sdk";
+import { RelayChain } from "@relayprotocol/relay-sdk";
 import {
   RelayKitProvider as _RelayKitProvider,
   RelayKitTheme,
-} from "@reservoir0x/relay-kit-ui";
+} from "@relayprotocol/relay-kit-ui";
 import { type ReactNode } from "react";
+import { relayApiUrl } from "@/lib/relay";
 const theme: RelayKitTheme = {
   font: "var(--font-ibm-pex-sans)",
   primaryColor: "rgb(161, 254, 160)",
@@ -61,15 +62,11 @@ export const RelayKitProvider = (props: {
   return (
     <_RelayKitProvider
       options={{
-        baseApiUrl: MAINNET_RELAY_API,
+        baseApiUrl: relayApiUrl(),
         chains: props.chains,
         pollingInterval: 3000,
         logLevel: 4,
-        disablePoweredByReservoir: true,
         source: "bridge.eclipse.xyz",
-        duneConfig: {
-          apiKey: process.env.NEXT_PUBLIC_DUNE_API_KEY,
-        },
         vmConnectorKeyOverrides: {
           9286185: [
             "backpacksol",

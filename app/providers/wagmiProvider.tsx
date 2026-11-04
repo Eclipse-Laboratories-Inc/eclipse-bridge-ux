@@ -3,13 +3,13 @@ import { ReactNode, useEffect, useState } from "react";
 import { http, HttpTransport } from "viem";
 import { WagmiProvider as _WagmiProvider, Config, createConfig } from "wagmi";
 import { Chain, mainnet } from "wagmi/chains";
-import { queryRelayChains } from "@reservoir0x/relay-kit-hooks";
+import { queryRelayChains } from "@relayprotocol/relay-kit-hooks";
 import {
-  configureViemChain,
   convertViemChainToRelayChain,
-  MAINNET_RELAY_API,
   RelayChain,
-} from "@reservoir0x/relay-sdk";
+} from "@relayprotocol/relay-sdk";
+import { configureViemChain } from "@relayprotocol/relay-sdk/chain-utils";
+import { relayApiUrl } from "@/lib/relay";
 export type ChildrenProps = {
   chains: RelayChain[];
 };
@@ -25,7 +25,7 @@ export const WagmiProvider = (props: WagmiProviderProps) => {
     convertViemChainToRelayChain(mainnet),
   ]);
   useEffect(() => {
-    queryRelayChains(MAINNET_RELAY_API, {}).then((data) => {
+    queryRelayChains(relayApiUrl(), {}).then((data) => {
       const eclipseChain = data.chains?.find((chain) => chain.id === 9286185);
       if (eclipseChain) {
         eclipseChain.explorerUrl = "https://eclipsescan.xyz";
