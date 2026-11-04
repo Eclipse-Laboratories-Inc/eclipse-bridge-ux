@@ -19,6 +19,18 @@ const ALLOWED_PATH_PREFIXES = [
 
 const FORWARDED_HEADERS = ['content-type', 'accept'];
 
+// Every visitor shares our key's rate limits (/requests/* is the tightest), so
+// cache the GETs that are safe to serve slightly stale. Next only caches 200s.
+const CACHE_TTL_SECONDS: [string, number][] = [
+    ['chains', 3600],
+    ['requests/v3', 60],
+];
+
+function cacheTtlFor(url: URL, method: string) {
+    if (method !== 'GET') return undefined;
+    return CACHE_TTL_SECONDS.find(([path]) => url.pathname === `/${path}`)?.[1];
+}
+
 // Check the URL we'll actually fetch: fetch normalizes `..` segments, so
 // matching the raw path would let `chains/../admin` escape the allowlist.
 function relayUrlFor(path: string, search: string): URL | null {
@@ -64,12 +76,14 @@ async function proxy(request: NextRequest, { params }: { params: Promise<{ path:
         if (value) headers.set(name, value);
     }
 
+    const ttl = cacheTtlFor(relayUrl, request.method);
+
     try {
         const response = await fetch(relayUrl, {
             method: request.method,
             headers,
             body: request.method === 'POST' ? await request.text() : undefined,
-            cache: 'no-store',
+            ...(ttl ? { next: { revalidate: ttl } } : { cache: 'no-store' }),
         });
 
         return new NextResponse(await response.text(), {

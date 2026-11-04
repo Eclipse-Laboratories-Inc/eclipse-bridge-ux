@@ -128,9 +128,17 @@ export const ActivityContent = ({
     useTransaction();
   const { evmWallet } = useWallets();
 
-  const { data: relayTransactions } = useRequests(
-    { user: evmWallet?.address },
+  // /requests/v3 has a tight rate limit shared by every visitor (via our proxy
+  // key), so skip it until a wallet is connected and don't refetch on focus.
+  const {
+    data: relayTransactions,
+    isError: isRelayError,
+    isFetching: isRelayFetching,
+    refetch: refetchRelay,
+  } = useRequests(
+    evmWallet ? { user: evmWallet.address } : false,
     relayApiUrl(),
+    { staleTime: 60_000, refetchOnWindowFocus: false },
   );
   const { chains } = useRelayChains(relayApiUrl());
 
@@ -191,6 +199,18 @@ export const ActivityContent = ({
         }
       ></div>
       <div className="activity-container">
+        {isRelayError && (
+          <div className="flex flex-row items-center justify-between gap-2 text-sm font-medium text-[#ffffff4d]">
+            <span>Couldn&apos;t load Instant transactions.</span>
+            <button
+              className="text-white disabled:opacity-50"
+              disabled={isRelayFetching}
+              onClick={() => refetchRelay()}
+            >
+              Retry
+            </button>
+          </div>
+        )}
         {combinedTransactions &&
           combinedTransactions.map((activity, index) => {
             const relaySummary =
