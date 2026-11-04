@@ -1,6 +1,7 @@
 "use client";
 import "@/app/globals.css";
 import { SolanaWalletConnectors } from "@dynamic-labs/solana";
+import "eclipse-global-wallet/solana";
 import { IBM_Plex_Sans } from "next/font/google";
 import { isDynamicEclipseNetworkId } from "@/lib/isDynamicEclipseNetworkId";
 import { GasProviders } from "@/app/providers/GasProviders";
@@ -91,7 +92,8 @@ const eclipseWallets = [
   "bybitwalletsol",
   "bitgetwalletsol",
   "fordefisol",
-  "gatewalletsol"
+  "gatewalletsol",
+  "eclipseglobalwalletsol",
 ];
 export default function ClientLayout({
   children,

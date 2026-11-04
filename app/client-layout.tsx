@@ -10,13 +10,18 @@ import { DynamicProvider } from "@/app/providers/DynamicProvider";
 import { WalletFilterProvider } from "@/app/providers/WalletFilterProvider";
 import { GasProviders } from "@/app/providers/GasProviders";
 import { ErrorBoundary } from "@/app/components/ErrorBoundary";
+import "eclipse-global-wallet/solana";
 
 const ibmPlexSans = IBM_Plex_Sans({
   subsets: ["latin"],
   weight: ["400", "500", "600", "700"],
 });
 
-export default function ClientLayout({ children }: { children: React.ReactNode }) {
+export default function ClientLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
   const pathname = usePathname();
   const passGlobalLayout = pathname === "/gas-station";
   if (passGlobalLayout) {
