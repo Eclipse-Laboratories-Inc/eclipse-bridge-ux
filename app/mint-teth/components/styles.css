@@ -181,7 +181,7 @@ div.disabled {
 .input-inner-container {
   display: flex;
   flex-direction: column;
-  align-items: start;
+  align-items: flex-start;
 }
 
 .network-info img {
@@ -473,7 +473,7 @@ input::placeholder {
 
 .amount-input-bottom {
   display: flex;
-  align-items: end;
+  align-items: flex-end;
   border-radius: 10px;
   margin-top: 10px;
 }

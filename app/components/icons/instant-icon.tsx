@@ -13,7 +13,7 @@ const InstantIcon = ({ className }: { className: string}) => {
       <path
         d="M13.0235 0.188477L0.328125 14.9998H7.33673L5.98115 23.8111L18.6766 8.9998H11.668L13.0235 0.188477Z"
         fill="white"
-        fill-opacity="0.3"
+        fillOpacity="0.3"
       />
     </svg>
   );

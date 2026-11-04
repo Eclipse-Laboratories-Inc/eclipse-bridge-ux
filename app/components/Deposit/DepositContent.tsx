@@ -78,7 +78,7 @@ export const DepositContent: React.FC<DepositContentProps> = ({
     null,
     null,
   ];
-  const { selectedOption, contractAddress, eclipseRpc } = useNetwork();
+  const { selectedOption, contractAddress, eclipseRpc, canDeposit } = useNetwork();
   const [balanceEther, setAmountBalanceEther] = useState<number>(-1);
   const [isEvmDisconnected, setIsEvmDisconnected] = useState(false);
   const [isSolDisconnected, setIsSolDisconnected] = useState(false);
@@ -102,9 +102,11 @@ export const DepositContent: React.FC<DepositContentProps> = ({
   const [action, setAction] = useState<Action>(Action.Deposit);
   const MIN_ACTION_AMOUNT =
     action === Action.Deposit ? MIN_DEPOSIT_AMOUNT : MIN_WITHDRAWAL_AMOUNT;
+  const isDepositDisabled = action === Action.Deposit && canDeposit !== true;
 
   function switchAction() {
     setAmountEther("");
+    setAmountBalanceEther(-1);
     setAction(action === Action.Deposit ? Action.Withdraw : Action.Deposit);
   }
 
@@ -159,6 +161,8 @@ export const DepositContent: React.FC<DepositContentProps> = ({
   }, [evmWallet]);
 
   useEffect(() => {
+    // a fetch started for the other tab must not overwrite this tab's balance
+    let cancelled = false;
     // if action is withdraw fetch eclipse balance
     const fetchEclipse = async () => {
       const balance = await getWalletBalance(
@@ -170,11 +174,14 @@ export const DepositContent: React.FC<DepositContentProps> = ({
         ? balanceAsEther.slice(0, balanceAsEther.indexOf(".") + 5)
         : balanceAsEther;
       const balanceEther = parseFloat(formattedEtherBalance);
-      setAmountBalanceEther(balanceEther);
+      !cancelled && setAmountBalanceEther(balanceEther);
       return;
     };
     if (action === Action.Withdraw) {
       fetchEclipse();
+      return () => {
+        cancelled = true;
+      };
     }
     userWallets.forEach(async (wallet) => {
       if (!wallet) return;
@@ -194,8 +201,11 @@ export const DepositContent: React.FC<DepositContentProps> = ({
         ? balanceAsEther.slice(0, balanceAsEther.indexOf(".") + 5)
         : balanceAsEther;
       const balanceEther = parseFloat(formattedEtherBalance);
-      setAmountBalanceEther(balanceEther);
+      !cancelled && setAmountBalanceEther(balanceEther);
     });
+    return () => {
+      cancelled = true;
+    };
   }, [userWallets, client, action]);
 
   const submitWithdraw = async () => {
@@ -203,6 +213,7 @@ export const DepositContent: React.FC<DepositContentProps> = ({
   };
 
   const submitDeposit = async () => {
+    if (isDepositDisabled) return;
     setIsModalOpen(true);
     setEthTxStatus("Continue in your wallet");
     const destinationBytes32 = solanaToBytes32(solWallet?.address || "");
@@ -253,6 +264,9 @@ export const DepositContent: React.FC<DepositContentProps> = ({
     if (!evmWallet || !solWallet) {
       return "submit-button disabled";
     }
+    if (isDepositDisabled) {
+      return "submit-button disabled";
+    }
     if (!amountEther) {
       return "submit-button disabled";
     }
@@ -275,6 +289,9 @@ export const DepositContent: React.FC<DepositContentProps> = ({
     }
     if (!evmWallet && !solWallet) {
       return "Connect Wallets";
+    }
+    if (isDepositDisabled) {
+      return canDeposit === null ? "Checking..." : "Deposits are disabled";
     }
     if (!amountEther) {
       return action;
@@ -380,6 +397,7 @@ export const DepositContent: React.FC<DepositContentProps> = ({
           ) : (
             <button
               className={`w-full deposit-button p-4 ${determineButtonClass()}`}
+              disabled={isDepositDisabled}
               onClick={
                 action === Action.Deposit ? submitDeposit : submitWithdraw
               }

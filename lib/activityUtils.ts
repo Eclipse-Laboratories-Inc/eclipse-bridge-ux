@@ -101,6 +101,7 @@ export async function getLastDeposits(address: string, chain: string) {
     `/api/get-transactions?address=${address}&chain=${chain}`,
   );
   const deposits = await response.json();
+  if (!response.ok) throw new Error(deposits.message);
 
   return deposits;
 }
@@ -127,6 +128,12 @@ export const timeAgo = (timestamp: number): string => {
     const years = Math.floor(secondsPast / 31536000);
     return years === 1 ? `1 Year ago` : `${years} Years ago`;
   }
+};
+
+// fraudWindowDuration is at least 1 day on-chain; round up so we never understate the wait
+export const formatDuration = (seconds: number): string => {
+  const days = Math.ceil(seconds / 86400);
+  return days === 1 ? `1 day` : `${days} days`;
 };
 
 export const timeLeft = (timestamp: number): string => {

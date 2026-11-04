@@ -9,7 +9,6 @@ import { Options } from '@/lib/networkUtils';
 
 import { createPublicClient, PublicClient, http } from 'viem';
 import { mainnet, sepolia } from "viem/chains";
-import { useRequests, queryRequests } from "@reservoir0x/relay-kit-hooks";
 
 import { Transaction, defaultTransaction, TransactionContextType, WithdrawActivity } from "./types";
 
@@ -27,8 +26,6 @@ export const TransactionProvider = ({ children } : { children: ReactNode}) => {
 
   const { evmWallet } = useWallets();
   const fetchDeposits = async () => {
-    const relayTransactions = await queryRequests(undefined, { user: evmWallet?.address });
-    console.log(relayTransactions, "relaytransactions")
     try {
       const delay = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
       setDeposits([]);
@@ -37,7 +34,7 @@ export const TransactionProvider = ({ children } : { children: ReactNode}) => {
       let data: any[] = [];
       try {
         data = await getLastDeposits(evmWallet?.address || '', (selectedOption === Options.Mainnet) ? "mainnet" : "testnet");
-        setDeposits(data.reverse());
+        setDeposits(data);
       } catch (error) {
         console.log("failed to fetch deposits", error)
       }
@@ -73,7 +70,7 @@ export const TransactionProvider = ({ children } : { children: ReactNode}) => {
       chain    : isMainnet ? mainnet : sepolia,
       transport: isMainnet
         ? http("https://empty-responsive-patron.quiknode.pro/91dfa8475605dcdec9afdc8273578c9f349774a1/")
-        : http("https://sepolia.drpc.org"),
+        : http("https://ethereum-sepolia-rpc.publicnode.com"),
       cacheTime: 0
     })
     setClient(client);
@@ -119,7 +116,7 @@ export const TransactionProvider = ({ children } : { children: ReactNode}) => {
     const isMainnet = (selectedOption === Options.Mainnet);
     const client = createPublicClient({
       chain    : isMainnet ? mainnet : sepolia,
-      transport: isMainnet ? http() : http("https://sepolia.drpc.org"),
+      transport: isMainnet ? http() : http("https://ethereum-sepolia-rpc.publicnode.com"),
       cacheTime: 0
     })
     const fetchEclipseTx = async () => {
