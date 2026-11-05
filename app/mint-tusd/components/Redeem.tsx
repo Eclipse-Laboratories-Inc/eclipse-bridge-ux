@@ -121,7 +121,7 @@ export function Redeem() {
   const withdrawFeeInUsdAsBigInt =
     (withdrawFeeInEth) / BigInt(1e8);
   const withdrawFeeInUsd = Number(formatUnits(withdrawFeeInUsdAsBigInt, 6));
-  console.log(withdrawFeeInUsd, withdrawFeeInTusd, withdrawFeeInEth, withdrawFeeInUsdAsBigInt)
+  // console.log(withdrawFeeInUsd, withdrawFeeInTusd, withdrawFeeInEth, withdrawFeeInUsdAsBigInt)
   const formattedWithdrawFeeInUsd =
     withdrawFeeInUsd > 0 && withdrawFeeInUsd < 0.01
       ? "<$0.01"

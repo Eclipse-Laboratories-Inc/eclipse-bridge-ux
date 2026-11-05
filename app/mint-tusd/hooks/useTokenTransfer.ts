@@ -23,7 +23,7 @@ export function useTokenTransfer() {
           (token) =>
             token.chainName === "eclipsemainnet" && token.symbol === "tUSD",
         );
-        console.log(originToken, "origin");
+        // console.log(originToken, "origin");
         if (!originToken || !solWallet?.address) {
           return;
         }
@@ -32,7 +32,7 @@ export function useTokenTransfer() {
           destination: "ethereum",
           sender: solWallet?.address,
         }); // 9 decimals
-        console.log("interrr", fee);
+        // console.log("interrr", fee);
         setInterchainTransferFee(fee.amount * BigInt(1e9));
       } catch (error) {
         console.error("Error fetching interchain transfer fee:", error);
@@ -58,10 +58,10 @@ export function useTokenTransfer() {
         const destination = "ethereum";
         const recipient = evmWallet.address;
         const originToken = warpCore.tokens[0];
-        console.log("tokens", warpCore.tokens);
+        // console.log("tokens", warpCore.tokens);
         const sender = solWallet.address;
         const originTokenAmount = originToken.amount(amount);
-        console.log("origin token", originToken, originTokenAmount);
+        // console.log("origin token", originToken, originTokenAmount);
 
         const fee = await warpCore.getInterchainTransferFee({
           originToken,
