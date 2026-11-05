@@ -43,6 +43,10 @@ module.exports = withSentryConfig(
 
     // Suppresses source map uploading logs during build
     silent: true,
+    // Source maps were generated for every bundle but can't be uploaded (org and
+    // project below are placeholders), and generating them pushed the build past
+    // Vercel's 8 GB limit. Re-enable once Sentry uploads are configured.
+    sourcemaps: { disable: true },
     org: "your-org-name",
     project: "your-project-name",
   },
