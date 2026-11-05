@@ -9,7 +9,7 @@ import {
   DynamicContextProvider,
   mergeNetworks,
 } from "@dynamic-labs/sdk-react-core";
-import { RelayChain } from "@reservoir0x/relay-sdk";
+import { RelayChain } from "@relayprotocol/relay-sdk";
 import { ReactNode, useEffect, useState } from "react";
 
 const evmNetworks = [

@@ -283,7 +283,7 @@ button[aria-label="Multi wallet dropdown"]:not(:hover) .fa-chevron-down {
 }
 
 button[aria-label="Swap"]  {
-  padding: 480px 16px;
+  padding: 0 16px;
   height: 58px;
 
   font-weight: 400!important;
@@ -291,7 +291,7 @@ button[aria-label="Swap"]  {
 }
 
 button[aria-label="Connect wallet"]  {
-  padding: 480px 16px;
+  padding: 0 16px;
   height: 58px;
 
   font-weight: 400!important;

@@ -11,7 +11,8 @@ import "./activity.css";
 import { useWallets } from "@/app/hooks/useWallets";
 import { WithdrawDetails } from "../WithdrawDetails";
 import { InstantTransactionDetails } from "./InstantTransactionDetails";
-import { useRequests, useRelayChains } from "@reservoir0x/relay-kit-hooks";
+import { useRequests, useRelayChains } from "@relayprotocol/relay-kit-hooks";
+import { relayApiUrl, summarizeRelayRequest } from "@/lib/relay";
 
 export const ActivityItem = ({
   openModalEvent,
@@ -127,8 +128,19 @@ export const ActivityContent = ({
     useTransaction();
   const { evmWallet } = useWallets();
 
-  const { data: relayTransactions } = useRequests({ user: evmWallet?.address });
-  const { chains } = useRelayChains();
+  // /requests/v3 has a tight rate limit shared by every visitor (via our proxy
+  // key), so skip it until a wallet is connected and don't refetch on focus.
+  const {
+    data: relayTransactions,
+    isError: isRelayError,
+    isFetching: isRelayFetching,
+    refetch: refetchRelay,
+  } = useRequests(
+    evmWallet ? { user: evmWallet.address } : false,
+    relayApiUrl(),
+    { staleTime: 60_000, refetchOnWindowFocus: false },
+  );
+  const { chains } = useRelayChains(relayApiUrl());
 
   if (!evmWallet) {
     setActiveTab(Tabs.Deposit);
@@ -187,21 +199,32 @@ export const ActivityContent = ({
         }
       ></div>
       <div className="activity-container">
+        {isRelayError && (
+          <div className="flex flex-row items-center justify-between gap-2 text-sm font-medium text-[#ffffff4d]">
+            <span>Couldn&apos;t load Instant transactions.</span>
+            <button
+              className="text-white disabled:opacity-50"
+              disabled={isRelayFetching}
+              onClick={() => refetchRelay()}
+            >
+              Retry
+            </button>
+          </div>
+        )}
         {combinedTransactions &&
           combinedTransactions.map((activity, index) => {
-            if (
-              activity.type === "relay" &&
-              activity.data.data.metadata &&
-              Object.keys(activity.data.data.metadata).length > 0
-            ) {
-              const txData = activity.data.data;
+            const relaySummary =
+              activity.type === "relay"
+                ? summarizeRelayRequest(activity.data)
+                : undefined;
+            const currencyIn = relaySummary?.currencyIn;
+            const currencyOut = relaySummary?.currencyOut;
+            if (currencyIn?.currency && currencyOut?.currency) {
               const sourceChain = chains?.find(
-                (chain) =>
-                  chain.id === txData.metadata.currencyIn.currency.chainId,
+                (chain) => chain.id === currencyIn.currency?.chainId,
               );
               const targetChain = chains?.find(
-                (chain) =>
-                  chain.id === txData.metadata.currencyOut.currency.chainId,
+                (chain) => chain.id === currencyOut.currency?.chainId,
               );
 
               const status =
@@ -220,14 +243,12 @@ export const ActivityContent = ({
                     setCurrentTx(activity.data);
                     setIsInstantTxOpen(true);
                   }}
-                  tokenIcon={
-                    txData.metadata.currencyIn.currency.metadata.logoURI ?? ""
-                  }
+                  tokenIcon={currencyIn.currency.metadata?.logoURI ?? ""}
                   transactionType="Deposit"
                   fromChain={sourceChain?.name ?? ""}
                   toChain={targetChain?.name ?? ""}
                   transactionTime={timeAgo(activity.timestamp)}
-                  transactionAmount={`${(Number(txData.metadata.currencyIn.amount) / 10 ** txData.metadata.currencyIn.currency.decimals).toFixed(4)} ${txData.metadata.currencyIn.currency.symbol}`}
+                  transactionAmount={`${(Number(currencyIn.amount) / 10 ** (currencyIn.currency.decimals ?? 18)).toFixed(4)} ${currencyIn.currency.symbol}`}
                   transactionStatusPill={statusPill}
                   isInstant={true}
                   key={activity.data.id}
