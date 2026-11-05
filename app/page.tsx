@@ -5,10 +5,10 @@ import { Header } from "./components/Header";
 import { Sidebar } from "./components/Sidebar";
 import { Footer } from "./components/Footer";
 import { TosClickwrap } from "./components/TosClickwrap";
-import useEthereumData from "@/lib/ethUtils";
+import { EthereumDataProvider } from "@/app/providers/EthereumDataProvider";
 import { NetworkProvider } from "@/app/contexts/NetworkContext";
 import { useWalletClient } from "./hooks";
-import { EthereumDataContext, WalletClientContext } from "./context";
+import { WalletClientContext } from "./context";
 import { useSidebar } from "@/app/contexts/SidebarContext";
 import { ThirdpartyBridgeModalProvider } from "@/app/components/ThirdpartyBridgeModal/ThirdpartyBridgeModalContext";
 import { TransactionProvider } from "./components/TransactionPool";
@@ -21,13 +21,12 @@ import "react-toastify/dist/ReactToastify.min.css";
 export default function Main() {
   const { isSidebar, setIsSidebar } = useSidebar();
   const [selectedOption, setSelectedOption] = useState(Options.Mainnet);
-  const { gasPrice, ethPrice, blockNumber } = useEthereumData(selectedOption);
   const [isMobile, setIsMobile] = useState<boolean>(typeof window !== "undefined" ? window.innerWidth < 768 : false);
   const [amountEther, setAmountEther] = useState<number | string | undefined>(undefined);
   const walletClient = useWalletClient();
 
   return (
-    <EthereumDataContext.Provider value={[gasPrice, ethPrice, blockNumber]}>
+    <EthereumDataProvider chain={selectedOption}>
       <NetworkProvider selectedOption={selectedOption} setSelectedOption={setSelectedOption}>
         <WalletClientContext.Provider value={walletClient}>
           <TransactionProvider>
@@ -70,6 +69,6 @@ export default function Main() {
           </TransactionProvider>
         </WalletClientContext.Provider>
       </NetworkProvider>
-    </EthereumDataContext.Provider>
+    </EthereumDataProvider>
   );
 }

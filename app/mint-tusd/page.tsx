@@ -1,7 +1,7 @@
 "use client";
 import { NetworkProvider } from "@/app/contexts/NetworkContext";
 import { useSidebar } from "@/app/contexts/SidebarContext";
-import useEthereumData from "@/lib/ethUtils";
+import { EthereumDataProvider } from "@/app/providers/EthereumDataProvider";
 import { useState } from "react";
 import { SkeletonTheme } from "react-loading-skeleton";
 import { Footer } from "../components/Footer";
@@ -10,7 +10,7 @@ import { TosClickwrap } from "../components/TosClickwrap";
 import MintAndRedeem from "./components/MintAndRedeem";
 import { Sidebar } from "../components/Sidebar";
 import { TransactionProvider } from "../components/TransactionPool";
-import { EthereumDataContext, WalletClientContext } from "../context";
+import { WalletClientContext } from "../context";
 import { useWalletClient } from "../hooks";
 import { Options } from "@/lib/networkUtils";
 import { ToastContainer } from "react-toastify";
@@ -20,11 +20,10 @@ import "react-toastify/dist/ReactToastify.min.css";
 export default function Main() {
   const { isSidebar, setIsSidebar } = useSidebar();
   const [selectedOption, setSelectedOption] = useState(Options.Mainnet);
-  const { gasPrice, ethPrice, blockNumber } = useEthereumData(selectedOption);
   const walletClient = useWalletClient();
 
   return (
-    <EthereumDataContext.Provider value={[gasPrice, ethPrice, blockNumber]}>
+    <EthereumDataProvider chain={selectedOption}>
       <NetworkProvider selectedOption={selectedOption} setSelectedOption={setSelectedOption}>
         <WalletClientContext.Provider value={walletClient}>
           <TransactionProvider>
@@ -63,6 +62,6 @@ export default function Main() {
           </TransactionProvider>
         </WalletClientContext.Provider>
       </NetworkProvider>
-    </EthereumDataContext.Provider>
+    </EthereumDataProvider>
   );
 } 
