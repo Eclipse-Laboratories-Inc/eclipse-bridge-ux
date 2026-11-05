@@ -18,6 +18,19 @@ const nextConfig = {
       stream: require.resolve("stream-browserify"),
       child_process: false, // Disable 'child_process'
     };
+    // React Native-only optional dependency of @metamask/sdk; not needed on web.
+    config.resolve.alias = {
+      ...config.resolve.alias,
+      "@react-native-async-storage/async-storage": false,
+    };
+    // ox's Tempo miner dynamically imports node:worker_threads (Node-only path).
+    config.ignoreWarnings = [
+      ...(config.ignoreWarnings ?? []),
+      {
+        module: /node_modules[\\/](viem[\\/]node_modules[\\/])?ox[\\/]_esm[\\/]tempo[\\/]/,
+        message: /Critical dependency: the request of a dependency is an expression/,
+      },
+    ];
     return config;
   },
 };
