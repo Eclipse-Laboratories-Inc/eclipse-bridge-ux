@@ -2,6 +2,12 @@ const { withSentryConfig } = require("@sentry/nextjs");
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  // `yarn build` runs `tsc --noEmit` before `next build`, so type errors still
+  // fail the build. Running it inside `next build` alongside webpack's heap ran
+  // Vercel's 8 GB build machine out of memory.
+  typescript: {
+    ignoreBuildErrors: true,
+  },
   webpack: (config) => {
     config.resolve.fallback = {
       net: false,
