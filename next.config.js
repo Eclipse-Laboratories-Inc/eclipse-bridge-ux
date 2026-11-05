@@ -2,6 +2,12 @@ const { withSentryConfig } = require("@sentry/nextjs");
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  // `yarn build` runs `tsc --noEmit` before `next build`, so type errors still
+  // fail the build. Running it inside `next build` alongside webpack's heap ran
+  // Vercel's 8 GB build machine out of memory.
+  typescript: {
+    ignoreBuildErrors: true,
+  },
   webpack: (config) => {
     config.resolve.fallback = {
       net: false,
@@ -12,6 +18,19 @@ const nextConfig = {
       stream: require.resolve("stream-browserify"),
       child_process: false, // Disable 'child_process'
     };
+    // React Native-only optional dependency of @metamask/sdk; not needed on web.
+    config.resolve.alias = {
+      ...config.resolve.alias,
+      "@react-native-async-storage/async-storage": false,
+    };
+    // ox's Tempo miner dynamically imports node:worker_threads (Node-only path).
+    config.ignoreWarnings = [
+      ...(config.ignoreWarnings ?? []),
+      {
+        module: /node_modules[\\/](viem[\\/]node_modules[\\/])?ox[\\/]_esm[\\/]tempo[\\/]/,
+        message: /Critical dependency: the request of a dependency is an expression/,
+      },
+    ];
     return config;
   },
 };

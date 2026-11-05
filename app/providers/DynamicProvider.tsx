@@ -136,6 +136,9 @@ export const DynamicProvider = (props: {
   return (
     <DynamicContextProvider
       settings={{
+        // Dynamic logs WARN-level noise while its wallet book loads ("Wallet book
+        // is required", "exodusevm not found in wallet book"); keep real errors.
+        logLevel: "ERROR",
         walletsFilter: (wallets) =>
           wallets.filter((w) => {
             if (w.walletConnector.supportedChains.includes("EVM")) return true;
