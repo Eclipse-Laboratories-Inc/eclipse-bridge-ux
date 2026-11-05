@@ -98,7 +98,8 @@ export async function getWithdrawalsByAddress(
   withdrawApi: string,
   legacyAddress: string, // V1 contract address for backward compatibility
 ): Promise<WithdrawObject[]> {
-  if (!withdrawApi) {
+  // No wallet connected yet: `${withdrawApi}/` hits the API root, which returns 503.
+  if (!withdrawApi || !address) {
     return [];
   }
 
