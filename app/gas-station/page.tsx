@@ -4,10 +4,10 @@ import { Header } from "../components/Header";
 import { Sidebar } from "../components/Sidebar";
 import { GasStation } from "../components/GasStation";
 import { Footer } from "../components/Footer";
-import useEthereumData from "@/lib/ethUtils";
+import { EthereumDataProvider } from "@/app/providers/EthereumDataProvider";
 import { TosClickwrap } from "../components/TosClickwrap";
 import { useWalletClient } from "../hooks";
-import { EthereumDataContext, WalletClientContext } from "../context";
+import { WalletClientContext } from "../context";
 import {
   useTransactionManager,
   TMProvider,
@@ -22,12 +22,11 @@ import "react-toastify/dist/ReactToastify.min.css";
 
 export default function GasStationPage() {
   const [selectedOption, setSelectedOption] = useState(Options.Mainnet);
-  const { gasPrice, ethPrice, blockNumber } = useEthereumData(selectedOption);
   const { isSidebar, setIsSidebar } = useSidebar();
   const walletClient = useWalletClient();
 
   return (
-    <EthereumDataContext.Provider value={[gasPrice, ethPrice, blockNumber]}>
+    <EthereumDataProvider chain={selectedOption}>
       <NetworkProvider
         selectedOption={selectedOption}
         setSelectedOption={setSelectedOption}
@@ -79,6 +78,6 @@ export default function GasStationPage() {
           </TMProvider>
         </WalletClientContext.Provider>
       </NetworkProvider>
-    </EthereumDataContext.Provider>
+    </EthereumDataProvider>
   );
 }

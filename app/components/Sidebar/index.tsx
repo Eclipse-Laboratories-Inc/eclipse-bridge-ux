@@ -63,6 +63,9 @@ const SidebarItem: React.FC<{
     <Link
       href={targetHref}
       target={targetHref.includes("https") ? "_blank" : ""}
+      // Prefetching makes the browser preload other pages' CSS, which Chrome
+      // reports as "preloaded but not used" on every page.
+      prefetch={false}
     >
       <div
         className={`side-item flex flex-row items-center ${pathName.slice(1) === toKebabCase(name) ? "highlight-icon" : ""}`}
