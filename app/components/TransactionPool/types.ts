@@ -34,4 +34,8 @@ export interface TransactionContextType {
   withdrawals: WithdrawObject[] | null;
   addNewDeposit: (txData: any) => void;
   setWithdrawals: React.Dispatch<React.SetStateAction<any[] | null>>;
+  /** Refetch deposits and withdrawals in place, keeping local-only entries. */
+  refreshActivity: () => void;
+  /** Call after initiating a withdrawal: polls until the API lists it. */
+  trackNewWithdrawal: () => void;
 }

@@ -128,6 +128,7 @@ export const WithdrawDetails: React.FC<TransactionDetailsProps> = ({
     withdrawals,
     setWithdrawals,
     withdrawTransactions,
+    trackNewWithdrawal,
   } = useTransaction();
   const {
     waitingPeriod,
@@ -165,7 +166,9 @@ export const WithdrawDetails: React.FC<TransactionDetailsProps> = ({
 
     const hexAmount = tx[0].message.amount_wei;
     setWithdrawAmount(Number(parseInt(hexAmount, 16)) / 10 ** 18);
-  }, [tx]);
+    // withdrawTransactions: show the link once the lookup finishes, even if
+    // the modal was opened before it did.
+  }, [tx, withdrawTransactions]);
 
   useEffect(() => {
     if (!tx) return;
@@ -229,12 +232,15 @@ export const WithdrawDetails: React.FC<TransactionDetailsProps> = ({
       });
       setWaitingPeriodStatus(WaitingPeriodState.Closed);
 
-      const updatedWithdrawals = withdrawals!.map((item) =>
-        item[0].message.withdraw_id === tx[0].message.withdraw_id
-          ? ([item[0], "Closed"] as WithdrawObject)
-          : item
+      // Functional update: the list may have been refreshed by polling
+      // while we waited for the receipt.
+      setWithdrawals((prev) =>
+        (prev ?? []).map((item) =>
+          item[0].message.withdraw_id === tx[0].message.withdraw_id
+            ? ([item[0], "Closed"] as WithdrawObject)
+            : item
+        )
       );
-      setWithdrawals(updatedWithdrawals);
     } catch (error) {
       console.log(`❌ Failed to claim from contract ${targetContractAddress}:`, error);
     }
@@ -265,6 +271,7 @@ export const WithdrawDetails: React.FC<TransactionDetailsProps> = ({
       setInitiateStatus(InitiateTxStates.Confirming);
       setInitiateStatus(InitiateTxStates.Done);
       setTxHash(_txHash ?? null);
+      trackNewWithdrawal();
     } catch (error) {}
   };
 

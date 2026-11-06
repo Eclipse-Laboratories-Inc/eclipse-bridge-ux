@@ -56,6 +56,7 @@ type NetworkContextType = {
   configAccount: string;
   withdrawApi: string;
   waitingPeriod: string;
+  fraudWindowSeconds: number; // on-chain value, or the fallback until it loads
   canDeposit: boolean | null; // null while the treasury role check is loading
 };
 
@@ -130,7 +131,8 @@ export const NetworkProvider = ({ selectedOption, setSelectedOption, children }:
   const canDeposit      = depositsEnabled[selectedOption] ?? null
   const fetchedSeconds  = fraudWindowSeconds[selectedOption]
   // fallbacks match the on-chain values at the time of writing
-  const waitingPeriod   = fetchedSeconds !== undefined ? formatDuration(fetchedSeconds) : (isMainnet ? "7 days" : "1 day")
+  const fraudWindow     = fetchedSeconds ?? (isMainnet ? 7 * 86400 : 86400)
+  const waitingPeriod   = formatDuration(fraudWindow)
 
     return (
     <NetworkContext.Provider value={{
@@ -144,6 +146,7 @@ export const NetworkProvider = ({ selectedOption, setSelectedOption, children }:
         configAccount,
         withdrawApi,
         waitingPeriod,
+        fraudWindowSeconds: fraudWindow,
         canDeposit
     }}>
       {children}

@@ -106,7 +106,28 @@ export async function getLastDeposits(address: string, chain: string) {
   return deposits;
 }
 
-export const timeAgo = (timestamp: number): string => {
+export type WithdrawalTx = { signature: string; blockTime: number | null };
+
+// Initiation tx of a withdrawal from the archive-backed /api/withdrawal-tx.
+// Returns undefined when the route is unavailable (e.g. archive RPC not
+// configured locally), so the caller can fall back to the public RPC.
+export async function getWithdrawalTxFromArchive(
+  withdrawId: bigint,
+  chain: "mainnet" | "testnet",
+): Promise<WithdrawalTx | null | undefined> {
+  try {
+    const response = await fetch(
+      `/api/withdrawal-tx?network=${chain}&id=${withdrawId.toString()}`,
+    );
+    if (!response.ok) return undefined;
+    const { transaction } = await response.json();
+    return transaction ?? null;
+  } catch {
+    return undefined;
+  }
+}
+
+export const timeAgo =(timestamp: number): string => {
   const now = Date.now();
   const secondsPast = Math.floor((now - timestamp * 1000) / 1000);
 
