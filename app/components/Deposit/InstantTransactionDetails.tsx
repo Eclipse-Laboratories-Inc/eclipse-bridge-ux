@@ -153,7 +153,8 @@ export const InstantTransactionDetails = ({
         <TxInfo
           name="Transaction Fee"
           grayText={`$${feeUsd.toFixed(3)}`}
-          greenText={`${feeAmount.toFixed(5)} ${feeCurrency?.symbol ?? ""}`}
+          // 8 decimals, capped at the token's own (USDC has 6) to avoid padding zeros.
+          greenText={`${feeAmount.toFixed(Math.min(8, feeCurrency?.decimals ?? 18))} ${feeCurrency?.symbol ?? ""}`}
         />
         { priceImpact > 0 
           ? <TxInfo name="Price Impact" greenText={ `${priceImpact.toFixed(2)}%` }/>

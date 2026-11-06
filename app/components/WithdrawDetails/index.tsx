@@ -437,7 +437,7 @@ export const WithdrawDetails: React.FC<TransactionDetailsProps> = ({
           <TxInfo
             name="Transaction Fee"
             grayText={`$${ethPrice && (Number(WITHDRAW_TX_FEE) * ethPrice).toFixed(5)}`}
-            greenText={`${Number(WITHDRAW_TX_FEE).toFixed(4)} ETH`}
+            greenText={`${Number(WITHDRAW_TX_FEE).toFixed(8)} ETH`}
           />
 
           <div className="flex flex-row justify-between items-center">

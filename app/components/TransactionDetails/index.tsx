@@ -203,7 +203,7 @@ export const TransactionDetails: React.FC<TransactionDetailsProps> = ({
           <TxInfo 
             name="Transaction Fee" 
             grayText={`$${ethPrice && (Number(totalFee) * ethPrice).toFixed(3)}`}
-            greenText={`${Number(totalFee).toFixed(4)} ETH`}
+            greenText={`${Number(totalFee).toFixed(8)} ETH`}
           />
 
           <div className="flex flex-row justify-between items-center">
