@@ -8,6 +8,24 @@ const chains: { [key: string]: [number, string[], string] } = {
   testnet: [11155111, ['0xe49aaa25a10fd6e15dd7ddcb50904ca1e91f6e01', '0x6f3A89b6cd44b814c35964bb22541EF20D756c33'], "7025169"],
 };
 
+// Every visitor shares one Etherscan key, so let the CDN absorb repeat
+// requests (Activity polls this). The client keeps just-sent deposits
+// locally until Etherscan indexes them, so 15 s of staleness is invisible.
+const SUCCESS_CACHE_CONTROL = 'public, s-maxage=15, stale-while-revalidate=30';
+const RATE_LIMIT_RETRY_MS = 1200;
+
+// Etherscan reports failures as { status: "0", message: "NOTOK", result:
+// "<reason>" }; the reason (e.g. "Max calls per sec rate limit reached")
+// is in `result`. Its rate limit is per second, so retry that case once.
+async function fetchTxlist(apiUrl: string): Promise<any> {
+  const data = await (await fetch(apiUrl, { cache: 'no-store' })).json();
+  if (data.status === '0' && typeof data.result === 'string' && /rate limit/i.test(data.result)) {
+    await new Promise((resolve) => setTimeout(resolve, RATE_LIMIT_RETRY_MS));
+    return (await fetch(apiUrl, { cache: 'no-store' })).json();
+  }
+  return data;
+}
+
 export async function GET(request: Request) {
   const { searchParams } = new URL(request.url);
   const address = searchParams.get('address');
@@ -24,14 +42,15 @@ export async function GET(request: Request) {
 
   try {
     const apiUrl = `${ETHERSCAN_API}?chainid=${chainId}&module=account&action=txlist&address=${address}&startblock=${startBlock}&endblock=99999999&page=1&offset=1000&sort=desc&apikey=${API_KEY}`;
-    const response = await fetch(apiUrl);
-    const data = await response.json();
+    const data = await fetchTxlist(apiUrl);
 
     if (data.status === '0' && data.message === 'No transactions found') {
-      return NextResponse.json([]);
+      return NextResponse.json([], { headers: { 'Cache-Control': SUCCESS_CACHE_CONTROL } });
     }
     if (data.status !== '1') {
-      throw new Error(data.message || 'Failed to fetch data from Etherscan');
+      // Include `result`: `message` alone is just "NOTOK".
+      const reason = typeof data.result === 'string' ? `: ${data.result}` : '';
+      throw new Error(`${data.message || 'Failed to fetch data from Etherscan'}${reason} (chain ${chain})`);
     }
 
     const deposits = data.result
@@ -42,7 +61,7 @@ export async function GET(request: Request) {
       );
 
     // TODO: remove this
-    return NextResponse.json(deposits.slice(0, 5));
+    return NextResponse.json(deposits.slice(0, 5), { headers: { 'Cache-Control': SUCCESS_CACHE_CONTROL } });
   } catch (error) {
     console.error('Error fetching last deposits:', error);
     return NextResponse.json({ message: 'Internal Server Error' }, { status: 500 });

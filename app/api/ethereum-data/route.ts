@@ -45,6 +45,20 @@ async function fetchJsonWithRetry(url: string): Promise<any> {
 
 const hasCachedData = () => !!(cache.blockNumber && cache.gasPrice && cache.ethPrice);
 
+// The in-memory cache above is per serverless instance, so on Vercel every
+// instance made its own 3 Etherscan calls per 10 s, all on one shared key
+// (production hit Etherscan's rate limit). Let the CDN serve one response per
+// 10 s per chain instead; max-age=0 keeps browsers polling the CDN.
+const CDN_CACHE_CONTROL = 'public, max-age=0, s-maxage=10, stale-while-revalidate=20';
+
+// Only responses with real data are CDN-cacheable; an empty cache (cold
+// instance mid-fetch) or an error must not be served to everyone.
+function respond() {
+    return hasCachedData()
+        ? NextResponse.json(cache, { headers: { 'Cache-Control': CDN_CACHE_CONTROL } })
+        : NextResponse.json(cache, { headers: { 'Cache-Control': 'no-store' } });
+}
+
 export async function GET(request: NextRequest) {
     const apiKey = process.env.ETHERSCAN_API_KEY || "";
     
@@ -59,12 +73,12 @@ export async function GET(request: NextRequest) {
     const now = new Date().getTime();
     if (cache.timestamp && (now - cache.timestamp) < CACHE_EXPIRATION_MS && cache.network === parsedChain) {
         console.log("Using cached data");
-        return NextResponse.json(cache);
+        return respond();
     }
 
     if (isFetching) {
         console.log("Fetch already in progress, returning last known data");
-        return NextResponse.json(cache);
+        return respond();
     }
 
     try {
@@ -84,7 +98,7 @@ export async function GET(request: NextRequest) {
         const newEthPrice = Math.round(parseFloat(priceData.result.ethusd) * 100) / 100;
 
         if (!newBlockNumber || !newGasPrice || !newEthPrice) {
-            return NextResponse.json(cache);
+            return respond();
         }
 
         cache = {
@@ -95,13 +109,13 @@ export async function GET(request: NextRequest) {
             network: parsedChain
         };
 
-        return NextResponse.json(cache);
+        return respond();
     } catch (error) {
         // Serve the last good values if we have them: they're at most a few
         // polls old, and the client discards non-200 responses anyway.
         if (hasCachedData()) {
             console.warn('Etherscan fetch failed, serving last known data:', (error as Error)?.message);
-            return NextResponse.json(cache);
+            return respond();
         }
         console.error('Error fetching Ethereum data:', error);
         return NextResponse.json({ error: 'Failed to fetch Ethereum data' }, { status: 500 });
