@@ -30,6 +30,21 @@ function isValidChain(c: string): c is OptionsLower {
     return c in ETHERSCAN_API_URLS
 }
 
+// Retries once on a network-level failure. Etherscan occasionally closes a
+// pooled keep-alive connection just as undici reuses it ("fetch failed" /
+// UND_ERR_SOCKET "other side closed"); a fresh attempt succeeds. These are
+// idempotent GETs, so retrying is safe.
+async function fetchJsonWithRetry(url: string): Promise<any> {
+    try {
+        return await (await fetch(url, { cache: "no-store" })).json();
+    } catch (error) {
+        if (!(error instanceof TypeError)) throw error; // network errors only
+        return await (await fetch(url, { cache: "no-store" })).json();
+    }
+}
+
+const hasCachedData = () => !!(cache.blockNumber && cache.gasPrice && cache.ethPrice);
+
 export async function GET(request: NextRequest) {
     const apiKey = process.env.ETHERSCAN_API_KEY || "";
     
@@ -56,15 +71,11 @@ export async function GET(request: NextRequest) {
         isFetching = true;
         console.log("Fetching new data from Etherscan");
 
-        const [blockResponse, gasResponse, priceResponse] = await Promise.all([
-            fetch(`${etherscanAddress}?chainid=1&module=proxy&action=eth_blockNumber&apikey=${apiKey}`, {cache: "no-store"}),
-            fetch(`${etherscanAddress}?chainid=1&module=proxy&action=eth_gasPrice&apikey=${apiKey}`, {cache: "no-store"}),
-            fetch(`${etherscanAddress}?chainid=1&module=stats&action=ethprice&apikey=${apiKey}`, {cache: "no-store"})
+        const [blockData, gasData, priceData] = await Promise.all([
+            fetchJsonWithRetry(`${etherscanAddress}?chainid=1&module=proxy&action=eth_blockNumber&apikey=${apiKey}`),
+            fetchJsonWithRetry(`${etherscanAddress}?chainid=1&module=proxy&action=eth_gasPrice&apikey=${apiKey}`),
+            fetchJsonWithRetry(`${etherscanAddress}?chainid=1&module=stats&action=ethprice&apikey=${apiKey}`)
         ]);
-
-        const blockData = await blockResponse.json();
-        const gasData = await gasResponse.json();
-        const priceData = await priceResponse.json();
 
         const parsedGasPrice = parseInt(gasData.result, 16) / 10**9
         const gasDecimals  = parsedGasPrice < 1 ? 10**4 : 10**2 // if gas price is less than 1 gwei, read 4 decimals; testnet edge case
@@ -86,8 +97,14 @@ export async function GET(request: NextRequest) {
 
         return NextResponse.json(cache);
     } catch (error) {
+        // Serve the last good values if we have them: they're at most a few
+        // polls old, and the client discards non-200 responses anyway.
+        if (hasCachedData()) {
+            console.warn('Etherscan fetch failed, serving last known data:', (error as Error)?.message);
+            return NextResponse.json(cache);
+        }
         console.error('Error fetching Ethereum data:', error);
-        return NextResponse.json(cache || { error: 'Failed to fetch Ethereum data' }, { status: 500 });
+        return NextResponse.json({ error: 'Failed to fetch Ethereum data' }, { status: 500 });
     } finally {
         isFetching = false;
     }
