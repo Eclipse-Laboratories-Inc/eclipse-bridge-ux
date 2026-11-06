@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { ethers } from "ethers";
 import { Arrow } from "@/app/components/icons";
 import { TransactionIcon, ActivityBoxIcon, Activity } from "../icons";
@@ -9,6 +9,7 @@ import { useTransaction } from "../TransactionPool";
 import { Tabs } from "./index";
 import "./activity.css";
 import { useWallets } from "@/app/hooks/useWallets";
+import { useNetwork } from "@/app/contexts/NetworkContext";
 import { WithdrawDetails } from "../WithdrawDetails";
 import { InstantTransactionDetails } from "./InstantTransactionDetails";
 import { useRequests, useRelayChains } from "@relayprotocol/relay-kit-hooks";
@@ -127,6 +128,7 @@ export const ActivityContent = ({
   const { transactions, deposits, withdrawals, withdrawTransactions } =
     useTransaction();
   const { evmWallet } = useWallets();
+  const { fraudWindowSeconds } = useNetwork();
 
   // /requests/v3 has a tight rate limit shared by every visitor (via our proxy
   // key), so skip it until a wallet is connected and don't refetch on focus.
@@ -142,18 +144,35 @@ export const ActivityContent = ({
   );
   const { chains } = useRelayChains(relayApiUrl());
 
+  // Activity needs a wallet; without one, go back to Deposit. In an effect,
+  // not during render: setting Deposit's state while rendering this component
+  // is what React warned about ("Cannot update a component while rendering a
+  // different component").
+  useEffect(() => {
+    if (!evmWallet) setActiveTab(Tabs.Deposit);
+  }, [evmWallet, setActiveTab]);
+
   if (!evmWallet) {
-    setActiveTab(Tabs.Deposit);
     return <></>;
   }
+
+  // Initiation time of a withdrawal: the Eclipse tx's blockTime once that
+  // lookup finishes, else start_time (when it becomes claimable) minus the
+  // fraud window. Without the fallback it sorts as 0 (the bottom) until the
+  // lookup finishes, and stays there forever if the lookup fails.
+  // The fallback runs late by the relay delay before the fraud window starts:
+  // seconds on testnet, ~10h seen on mainnet. It's the only source once the
+  // RPC has pruned the tx (it keeps ~6 days; the receipt account has no
+  // timestamp).
+  const withdrawalTimestamp = (w: any): number =>
+    withdrawTransactions.get(w[0].message.withdraw_id)?.transaction?.blockTime ||
+    parseInt(w[0].start_time, 16) - fraudWindowSeconds;
 
   const combinedTransactions = [
     ...(withdrawals || []).map((w) => ({
       type: "withdrawal",
       data: w,
-      timestamp:
-        withdrawTransactions.get(w[0].message.withdraw_id)?.transaction
-          ?.blockTime || 0,
+      timestamp: withdrawalTimestamp(w),
     })),
     ...(deposits || []).map((tx) => ({
       type: "deposit",
@@ -258,9 +277,6 @@ export const ActivityContent = ({
 
             if (activity.type === "withdrawal") {
               const withdraw_message = activity.data[0].message;
-              const withdraw_obj = withdrawTransactions.get(
-                withdraw_message.withdraw_id,
-              );
               const amount = ethers.utils.formatEther(
                 withdraw_message.amount_wei,
               );
@@ -278,10 +294,7 @@ export const ActivityContent = ({
                   transactionType="Withdraw"
                   fromChain="Eclipse"
                   toChain="Ethereum"
-                  transactionTime={
-                    withdraw_obj?.transaction &&
-                    timeAgo(Number(withdraw_obj?.transaction.blockTime))
-                  }
+                  transactionTime={timeAgo(activity.timestamp)}
                   transactionAmount={`${parseFloat(amount).toFixed(3)} ETH`}
                   transactionStatusPill={getWithdrawalActivityPill(
                     activity.data[1],
