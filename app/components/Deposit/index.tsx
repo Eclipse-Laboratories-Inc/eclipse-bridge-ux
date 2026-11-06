@@ -5,7 +5,7 @@ import React, { useEffect } from "react";
 import AirdropPopup from "./AirdropPopup";
 import "./styles.css";
 import { useState } from "react";
-import { useSearchParams, useRouter, usePathname } from "next/navigation";
+import { useSearchParams, usePathname } from "next/navigation";
 import classNames from "classnames";
 import { Activity, Loading, InstantIcon } from "../icons";
 import "./styles.css";
@@ -31,7 +31,6 @@ export interface DepositProps {
 }
 const Deposit: React.FC<DepositProps> = ({ amountEther, setAmountEther }) => {
   const urlParams = useSearchParams();
-  const router = useRouter();
   const pathname = usePathname();
   const [activeTab, setActiveTab] = useState<Tabs>(Tabs.Deposit);
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -48,9 +47,17 @@ const Deposit: React.FC<DepositProps> = ({ amountEther, setAmountEther }) => {
     }
   }, []);
 
+  // Reflect the tab in the URL without a router navigation. router.push
+  // refetched the page's RSC payload on every tab change (and on mount),
+  // which re-preloaded the page CSS and made Chrome warn "preloaded but not
+  // used". Replace, not push: the tab is only read from the URL on mount, so
+  // extra history entries made Back change the URL but not the tab.
   useEffect(() => {
-    router.push(pathname + `?target=${activeTab}`);
-  }, [activeTab]);
+    const url = `${pathname}?target=${activeTab}`;
+    if (window.location.pathname + window.location.search !== url) {
+      window.history.replaceState(window.history.state, "", url);
+    }
+  }, [activeTab, pathname]);
 
   return (
     <>
