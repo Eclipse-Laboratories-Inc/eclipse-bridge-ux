@@ -26,22 +26,39 @@ async function fetchTxlist(apiUrl: string): Promise<any> {
   return data;
 }
 
+const EVM_ADDRESS = /^0x[0-9a-fA-F]{40}$/;
+
 export async function GET(request: Request) {
   const { searchParams } = new URL(request.url);
   const address = searchParams.get('address');
   const chain = searchParams.get('chain');
-  console.log(chain, "chain")
-  if (!chain || !chains[chain]) {
+  // Own keys only: `chains["constructor"]` is truthy but not a chain.
+  if (!chain || !Object.prototype.hasOwnProperty.call(chains, chain)) {
     return NextResponse.json({ message: 'Invalid chain' }, { status: 400 });
   }
 
-  if (!address || typeof address !== 'string') {
-    return NextResponse.json({ message: 'Address is required' }, { status: 400 });
+  // Strict format check: `address` used to be interpolated raw into the
+  // Etherscan URL, so a value like "0x…&page=11" (sent as %26) overrode our
+  // query parameters ("Result window is too large" in production).
+  if (!address || !EVM_ADDRESS.test(address)) {
+    return NextResponse.json({ message: 'Invalid address' }, { status: 400 });
   }
   const [chainId, bridgeContracts, startBlock] = chains[chain];
 
   try {
-    const apiUrl = `${ETHERSCAN_API}?chainid=${chainId}&module=account&action=txlist&address=${address}&startblock=${startBlock}&endblock=99999999&page=1&offset=1000&sort=desc&apikey=${API_KEY}`;
+    // URLSearchParams encodes every value, so nothing can add parameters.
+    const apiUrl = `${ETHERSCAN_API}?${new URLSearchParams({
+      chainid: String(chainId),
+      module: 'account',
+      action: 'txlist',
+      address,
+      startblock: startBlock,
+      endblock: '99999999',
+      page: '1',
+      offset: '1000',
+      sort: 'desc',
+      apikey: API_KEY,
+    })}`;
     const data = await fetchTxlist(apiUrl);
 
     if (data.status === '0' && data.message === 'No transactions found') {
