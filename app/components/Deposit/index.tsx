@@ -10,6 +10,7 @@ import classNames from "classnames";
 import { Activity, Loading, InstantIcon } from "../icons";
 import "./styles.css";
 import { DepositContent } from "./DepositContent";
+import { ReclaimContent } from "./ReclaimContent";
 import { ActivityContent } from "./ActivityContent";
 import { RelaySwapWidget } from "@/app/components/Deposit/RelaySwapWidget";
 import { useTransaction } from "../TransactionPool";
@@ -20,6 +21,7 @@ import { useThirdpartyBridgeModalContext } from "../ThirdpartyBridgeModal/Thirdp
 export enum Tabs {
   Deposit = "deposit",
   Relay = "instant",
+  Reclaim = "reclaim",
   Activity = "activity",
 }
 
@@ -99,6 +101,15 @@ const Deposit: React.FC<DepositProps> = ({ amountEther, setAmountEther }) => {
               <InstantIcon className="" />
               Instant
             </div>
+            <div
+              className={classNames(
+                "header-tab w-full",
+                activeTab === Tabs.Reclaim ? "active" : "inactive",
+              )}
+              onClick={() => setActiveTab(Tabs.Reclaim)}
+            >
+              Reclaim
+            </div>
             {evmWallet && (
               <div
                 className={classNames(
@@ -125,6 +136,7 @@ const Deposit: React.FC<DepositProps> = ({ amountEther, setAmountEther }) => {
             />
           )}
           {activeTab === Tabs.Relay && <RelaySwapWidget />}
+          {activeTab === Tabs.Reclaim && <ReclaimContent />}
           {activeTab === Tabs.Activity && (
             <ActivityContent setActiveTab={setActiveTab} />
           )}

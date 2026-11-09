@@ -582,6 +582,9 @@ input::placeholder {
     padding: 4px;
     gap: 4px;
   }
+  .header-tabs div {
+    font-size: 14px;
+  }
   .network-section {
     margin-bottom: 6px;
   }
@@ -696,4 +699,74 @@ input::placeholder {
   text-shadow: 0px 2.961px 0px #303283;
   -webkit-text-stroke-width: 1.4803149700164795px;
   -webkit-text-stroke-color: #303283;
+}
+
+.reclaim {
+  text-align: left;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  color: white;
+}
+
+.reclaim-lead,
+.reclaim-note {
+  margin: 0;
+  color: rgba(255, 255, 255, 0.55);
+  font-size: 15px;
+  font-weight: 500;
+  line-height: 1.45;
+}
+
+.reclaim-summary {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 10px 16px;
+  margin: 0;
+  padding: 16px;
+  border-radius: 16px;
+  background: rgba(255, 255, 255, 0.03);
+}
+
+.reclaim-summary dt {
+  color: rgba(255, 255, 255, 0.45);
+  font-weight: 500;
+}
+
+.reclaim-summary dd {
+  margin: 0;
+  font-weight: 500;
+  text-align: right;
+}
+
+.reclaim-link {
+  color: #a3ffa5;
+}
+
+.reclaim-accounts {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.reclaim-accounts li {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  color: rgba(255, 255, 255, 0.72);
+  font-size: 14px;
+}
+
+.reclaim-status {
+  margin: 0;
+  font-size: 14px;
+  font-weight: 500;
+  color: #eb4d4d;
+}
+
+.reclaim-status.ok {
+  color: #a3ffa5;
 }
