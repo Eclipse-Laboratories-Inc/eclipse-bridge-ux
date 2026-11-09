@@ -26,7 +26,9 @@ export const ProfileAvatar: React.FC = () => {
     if (!solWallet || (!evmWallet && !ignoreEvmWallet)) {
       return (
         <DynamicConnectButton buttonClassName="connect-button-header">
-          {!solWallet && !evmWallet ? "Connect Wallets" : "Connect Wallet"}
+          {!ignoreEvmWallet && !solWallet && !evmWallet
+            ? "Connect Wallets"
+            : "Connect Wallet"}
         </DynamicConnectButton>
       );
     }

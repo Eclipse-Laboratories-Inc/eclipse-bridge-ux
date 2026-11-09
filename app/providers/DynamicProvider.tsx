@@ -10,6 +10,8 @@ import {
   mergeNetworks,
 } from "@dynamic-labs/sdk-react-core";
 import { RelayChain } from "@relayprotocol/relay-sdk";
+import { Locale } from "@dynamic-labs/locale";
+import { usePathname } from "next/navigation";
 import { ReactNode, useEffect, useState } from "react";
 
 const evmNetworks = [
@@ -121,6 +123,43 @@ export const DynamicProvider = (props: {
 }) => {
   const [isMobile, setIsMobile] = useState<boolean>(false);
   const { setWalletFilter } = useWalletFilter();
+  const eclipseWalletOnly = usePathname() === "/reclaim";
+
+  useEffect(() => {
+    const welcomeView = eclipseWalletOnly
+      ? {
+          button: "Continue",
+          description: "Connect your Eclipse wallet to reclaim rent.",
+          title: "Connect your Eclipse wallet",
+        }
+      : {
+          button: "Get started",
+          description:
+            "You’ll need to connect both your {{firstBlockchainName}} and {{secondBlockchainName}} wallets to get started",
+          title: "Connect to {{appName}}",
+        };
+    let attempts = 0;
+    const apply = () => {
+      try {
+        Locale.getInstance().addResourceBundle(
+          "en",
+          "translation",
+          { dyn_bridge: { welcome_view: welcomeView } },
+          true,
+          true,
+        );
+        return true;
+      } catch {
+        return false;
+      }
+    };
+    if (apply()) return;
+    const timer = window.setInterval(() => {
+      attempts += 1;
+      if (apply() || attempts > 20) window.clearInterval(timer);
+    }, 50);
+    return () => window.clearInterval(timer);
+  }, [eclipseWalletOnly]);
 
   useEffect(() => {
     const checkWindowSize = () => {
@@ -141,7 +180,12 @@ export const DynamicProvider = (props: {
         logLevel: "ERROR",
         walletsFilter: (wallets) =>
           wallets.filter((w) => {
-            if (w.walletConnector.supportedChains.includes("EVM")) return true;
+            if (
+              !eclipseWalletOnly &&
+              w.walletConnector.supportedChains.includes("EVM")
+            ) {
+              return true;
+            }
             return eclipseWallets.includes(w.key);
           }),
         events: {
@@ -190,6 +234,9 @@ export const DynamicProvider = (props: {
           },
         },
         environmentId: process.env.NEXT_PUBLIC_ENVIRONMENT_ID || "",
+        newToWeb3WalletChainMap: eclipseWalletOnly
+          ? { primary_chain: "solana", wallets: { solana: "backpacksol" } }
+          : undefined,
         walletConnectors: [
           EthereumWalletConnectors,
           SolanaWalletConnectors,
@@ -225,12 +272,16 @@ export const DynamicProvider = (props: {
           },
         },
         cssOverrides,
-        bridgeChains: [
-          ...((isMobile ? [] : [{ chain: "EVM" }, { chain: "SOL" }]) as [
-            { chain: "EVM" },
-            { chain: "SOL" },
-          ]),
-        ],
+        // Reclaim only needs the Eclipse wallet, so the connect flow does not
+        // ask for Ethereum as well.
+        bridgeChains: eclipseWalletOnly
+          ? [{ chain: "SOL" }]
+          : [
+              ...((isMobile ? [] : [{ chain: "EVM" }, { chain: "SOL" }]) as [
+                { chain: "EVM" },
+                { chain: "SOL" },
+              ]),
+            ],
       }}
     >
       {props.children}
