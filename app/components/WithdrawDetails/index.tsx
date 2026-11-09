@@ -242,7 +242,7 @@ export const WithdrawDetails: React.FC<TransactionDetailsProps> = ({
         )
       );
     } catch (error) {
-      console.log(`❌ Failed to claim from contract ${targetContractAddress}:`, error);
+      // console.log(`❌ Failed to claim from contract ${targetContractAddress}:`, error);
     }
     setIsClaimFlowOpen(false);
     setButtonText("Claim Now");
