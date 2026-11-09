@@ -19,7 +19,8 @@ export const ProfileAvatar: React.FC = () => {
   const openModalRef = useRef<HTMLDivElement>(null);
 
   const pathname = usePathname();
-  const ignoreEvmWallet = pathname === "/gas-station";
+  const ignoreEvmWallet =
+    pathname === "/gas-station" || pathname === "/reclaim";
 
   const content = useMemo(() => {
     if (!solWallet || (!evmWallet && !ignoreEvmWallet)) {
@@ -30,7 +31,7 @@ export const ProfileAvatar: React.FC = () => {
       );
     }
     return truncateWalletAddress(solWallet?.address || "");
-  }, [solWallet, evmWallet]);
+  }, [solWallet, evmWallet, ignoreEvmWallet]);
 
   const toggleModal = useCallback(
     (e?: React.MouseEvent) => {
@@ -39,7 +40,7 @@ export const ProfileAvatar: React.FC = () => {
         setIsModalOpen((prevState) => !prevState);
       }
     },
-    [evmWallet, isModalOpen, solWallet],
+    [evmWallet, ignoreEvmWallet, isModalOpen, solWallet],
   );
 
   const handleClickOutside = useCallback(

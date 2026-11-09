@@ -2,6 +2,7 @@ import "./sidebar.css";
 import Link from "next/link";
 import {
   BridgeIcon,
+  ReclaimIcon,
   TethIcon,
   ScanIcon,
   GasStationIcon,
@@ -133,6 +134,11 @@ export const Sidebar: React.FC<{
             isExtended={isExtended}
             name="Bridge"
             icon={<BridgeIcon />}
+          />
+          <SidebarItem
+            isExtended={isExtended}
+            name="Reclaim"
+            icon={<ReclaimIcon />}
           />
           <SidebarItem
             isExtended={isExtended}

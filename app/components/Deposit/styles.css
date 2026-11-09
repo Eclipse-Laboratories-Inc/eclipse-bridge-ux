@@ -582,9 +582,6 @@ input::placeholder {
     padding: 4px;
     gap: 4px;
   }
-  .header-tabs div {
-    font-size: 14px;
-  }
   .network-section {
     margin-bottom: 6px;
   }
