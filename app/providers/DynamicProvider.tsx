@@ -126,17 +126,30 @@ export const DynamicProvider = (props: {
   const eclipseWalletOnly = usePathname() === "/reclaim";
 
   useEffect(() => {
-    const welcomeView = eclipseWalletOnly
+    const dynBridge = eclipseWalletOnly
       ? {
-          button: "Continue",
-          description: "Connect your Eclipse wallet to reclaim rent.",
-          title: "Connect your Eclipse wallet",
+          summary_view: {
+            connection_succeed: "Your Eclipse wallet is connected.",
+            title: "Eclipse wallet connected",
+          },
+          welcome_view: {
+            button: "Continue",
+            description: "Connect your Eclipse wallet to reclaim rent.",
+            title: "Connect your Eclipse wallet",
+          },
         }
       : {
-          button: "Get started",
-          description:
-            "You’ll need to connect both your {{firstBlockchainName}} and {{secondBlockchainName}} wallets to get started",
-          title: "Connect to {{appName}}",
+          summary_view: {
+            connection_succeed:
+              "Congratulations on connecting both your {{firstBlockchainName}} and {{secondBlockchainName}} wallets",
+            title: "Welcome to {{appName}}",
+          },
+          welcome_view: {
+            button: "Get started",
+            description:
+              "You’ll need to connect both your {{firstBlockchainName}} and {{secondBlockchainName}} wallets to get started",
+            title: "Connect to {{appName}}",
+          },
         };
     let attempts = 0;
     const apply = () => {
@@ -144,7 +157,7 @@ export const DynamicProvider = (props: {
         Locale.getInstance().addResourceBundle(
           "en",
           "translation",
-          { dyn_bridge: { welcome_view: welcomeView } },
+          { dyn_bridge: dynBridge },
           true,
           true,
         );

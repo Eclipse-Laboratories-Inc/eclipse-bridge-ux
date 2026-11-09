@@ -1,8 +1,4 @@
-import {
-  createCloseAccountInstruction,
-  TOKEN_2022_PROGRAM_ID,
-  TOKEN_PROGRAM_ID,
-} from "@solana/spl-token";
+import { createCloseAccountInstruction } from "@solana/spl-token";
 import {
   Connection,
   PublicKey,
@@ -10,17 +6,13 @@ import {
   Transaction,
   TransactionInstruction,
 } from "@solana/web3.js";
+import { EmptyAccount, inspectProtocols, ProtocolReport } from "./protocols";
 
-const TOKEN_PROGRAMS = [TOKEN_PROGRAM_ID, TOKEN_2022_PROGRAM_ID];
 const MAX_TX_BYTES = 1100;
 const FALLBACK_NETWORK_FEE = 50;
 
-export type EmptyAccount = {
-  address: string;
-  mint: string;
-  programId: string;
-  lamports: number;
-};
+export type { EmptyAccount, ProtocolFinding, ProtocolReport, ProtocolStatus } from "./protocols";
+export { PROTOCOL_CATALOG, formatEclipseEth, protocolPlaceholders } from "./protocols";
 
 export type ReclaimScan = {
   owner: string;
@@ -28,36 +20,8 @@ export type ReclaimScan = {
   networkFee: number;
   empties: EmptyAccount[];
   tokenAccounts: number;
+  protocols: ProtocolReport[];
 };
-
-type ParsedTokenAccount = {
-  pubkey: PublicKey;
-  account: {
-    lamports: number;
-    data: {
-      parsed?: {
-        info?: {
-          mint?: string;
-          owner?: string;
-          state?: string;
-          tokenAmount?: { amount?: string };
-        };
-      };
-    };
-  };
-};
-
-export function formatEclipseEth(lamports: number): string {
-  if (!Number.isSafeInteger(lamports) || lamports < 0) {
-    throw new Error("Balance is outside the range this page can display.");
-  }
-  const whole = Math.floor(lamports / 1_000_000_000);
-  const fraction = (lamports % 1_000_000_000)
-    .toString()
-    .padStart(9, "0")
-    .replace(/0+$/, "");
-  return fraction ? `${whole}.${fraction}` : `${whole}`;
-}
 
 export function explainReclaimError(error: unknown): string {
   const message = error instanceof Error ? error.message : String(error);
@@ -84,17 +48,6 @@ function safeLamports(value: number): number {
   return value;
 }
 
-async function tokenAccounts(
-  connection: Connection,
-  owner: PublicKey,
-  programId: PublicKey,
-): Promise<ParsedTokenAccount[]> {
-  const response = await connection.getParsedTokenAccountsByOwner(owner, {
-    programId,
-  });
-  return response.value as ParsedTokenAccount[];
-}
-
 async function networkFee(
   connection: Connection,
   owner: PublicKey,
@@ -113,51 +66,14 @@ async function networkFee(
 export async function scanWallet(
   connection: Connection,
   ownerAddress: string,
+  onProtocol?: (report: ProtocolReport) => void,
 ): Promise<ReclaimScan> {
   const owner = new PublicKey(ownerAddress);
   const lamports = safeLamports(await connection.getBalance(owner, "confirmed"));
-  const listed = await Promise.all(
-    TOKEN_PROGRAMS.map(async (programId) => {
-      try {
-        return await tokenAccounts(connection, owner, programId);
-      } catch (error) {
-        return error instanceof Error ? error : new Error(String(error));
-      }
-    }),
-  );
-  if (listed.every((entry) => entry instanceof Error)) {
-    throw listed[0];
-  }
-
-  const empties: EmptyAccount[] = [];
-  let tokenAccountCount = 0;
-  for (let index = 0; index < listed.length; index += 1) {
-    const entry = listed[index];
-    if (entry instanceof Error) continue;
-    const programId = TOKEN_PROGRAMS[index].toBase58();
-    for (let accountIndex = 0; accountIndex < entry.length; accountIndex += 1) {
-      const account = entry[accountIndex];
-      tokenAccountCount += 1;
-      const info = account.account.data.parsed?.info;
-      const amount = BigInt(info?.tokenAmount?.amount ?? "0");
-      if (
-        amount !== BigInt(0) ||
-        info?.state === "frozen" ||
-        !info?.mint ||
-        info.owner !== owner.toBase58()
-      ) {
-        continue;
-      }
-      empties.push({
-        address: account.pubkey.toBase58(),
-        mint: info.mint,
-        programId,
-        lamports: safeLamports(account.account.lamports),
-      });
-    }
-  }
-
-  const sample = empties[0];
+  const inspected = await inspectProtocols(connection, owner, (report) => {
+    onProtocol?.(report);
+  });
+  const sample = inspected.empties[0];
   const fee = await networkFee(
     connection,
     owner,
@@ -176,8 +92,9 @@ export async function scanWallet(
     owner: owner.toBase58(),
     lamports,
     networkFee: fee,
-    empties,
-    tokenAccounts: tokenAccountCount,
+    empties: inspected.empties,
+    tokenAccounts: inspected.tokenAccounts,
+    protocols: inspected.protocols,
   };
 }
 
