@@ -2,6 +2,10 @@ import { TOKEN_2022_PROGRAM_ID, TOKEN_PROGRAM_ID } from "@solana/spl-token";
 import { AccountInfo, Connection, PublicKey } from "@solana/web3.js";
 
 const WHIRLPOOL_PROGRAM_ID = "whirLbMiicVdio4qvUfM5KAg6Ct8VwpYzGff3uctyCc";
+const SOLAR_PROGRAM_IDS = [
+  "CLK8pJyTV17Mwq3MrgbbojEiVXcmrMYC3J59JC9xhgNQ",
+  "CLsiWisG9Ek7dFgD8ENYtxLBbMEVxB64M3wD4f2XuZSn",
+];
 const INVARIANT_PROGRAM_ID = "iNvTyprs4TX8m6UeUEkeqDFjAL9zRCRWcexK9Sd4WEU";
 const SAVE_PROGRAM_ID = "So1endDq2YkqhipRh3WViPa8hdiSpxWy6z3Z6tMCpAo";
 const ALLDOMAINS_PROGRAM_ID = "ALTNSZ46uaAUU7XUV6awvdorLGqAsPwa9shm7h4uP2FK";
@@ -51,6 +55,7 @@ export const PROTOCOL_CATALOG: { id: string; name: string }[] = [
   { id: "spl-token", name: "SPL Token" },
   { id: "token-2022", name: "Token-2022" },
   { id: "orca", name: "Orca" },
+  { id: "solar", name: "Solar" },
   { id: "invariant", name: "Invariant" },
   { id: "save", name: "Save" },
   { id: "alldomains", name: "AllDomains" },
@@ -269,20 +274,139 @@ function tokenReport(
   };
 }
 
+function positionNfts(rows: TokenRow[]): TokenRow[] {
+  return rows.filter((row) => row.decimals === 0 && row.amount === BigInt(1));
+}
+
+function bundleSlots(bitmap: Uint8Array): number[] {
+  const slots: number[] = [];
+  for (let byte = 0; byte < bitmap.length; byte += 1) {
+    for (let bit = 0; bit < 8; bit += 1) {
+      if ((bitmap[byte] & (1 << bit)) !== 0) slots.push(byte * 8 + bit);
+    }
+  }
+  return slots;
+}
+
 async function scanOrca(
   connection: Connection,
   rows: TokenRow[],
 ): Promise<ProtocolReport> {
-  const nfts = rows.filter((row) => row.decimals === 0 && row.amount === BigInt(1));
+  const nfts = positionNfts(rows);
   if (nfts.length === 0) return checked("orca", "Orca", "Nothing open", [], false);
 
   const program = new PublicKey(WHIRLPOOL_PROGRAM_ID);
   const derived = nfts.map((nft) => {
+    const mint = new PublicKey(nft.mint);
     const [position] = PublicKey.findProgramAddressSync(
-      [new TextEncoder().encode("position"), new PublicKey(nft.mint).toBytes()],
+      [new TextEncoder().encode("position"), mint.toBytes()],
       program,
     );
-    return { nft, position };
+    const [bundle] = PublicKey.findProgramAddressSync(
+      [new TextEncoder().encode("position_bundle"), mint.toBytes()],
+      program,
+    );
+    return { nft, mint, position, bundle };
+  });
+  const accounts = await accountsAt(
+    connection,
+    derived.flatMap((item) => [item.position, item.bundle]),
+  );
+  const findings: ProtocolFinding[] = [];
+  let open = 0;
+  let empty = 0;
+  let bundles = 0;
+  const bundled: { mint: PublicKey; slots: number[] }[] = [];
+  for (let index = 0; index < derived.length; index += 1) {
+    const position = accounts[index * 2];
+    const bundle = accounts[index * 2 + 1];
+    if (position && position.owner.equals(program) && position.data.length >= 88) {
+      const mint = new PublicKey(position.data.subarray(40, 72)).toBase58();
+      if (mint === derived[index].nft.mint) {
+        const liquidity = u128(position.data, 72);
+        if (liquidity > BigInt(0)) open += 1;
+        else empty += 1;
+        findings.push({
+          label: derived[index].position.toBase58(),
+          detail: liquidity > BigInt(0) ? "Open position" : "No liquidity",
+          account: derived[index].position.toBase58(),
+        });
+        continue;
+      }
+    }
+    if (!bundle || !bundle.owner.equals(program) || bundle.data.length < 72) continue;
+    const mint = new PublicKey(bundle.data.subarray(8, 40)).toBase58();
+    if (mint !== derived[index].nft.mint) continue;
+    const slots = bundleSlots(bundle.data.subarray(40, 72));
+    bundles += 1;
+    findings.push({
+      label: derived[index].bundle.toBase58(),
+      detail: slots.length === 0 ? "Empty bundle" : countPhrase(slots.length, "bundled position"),
+      account: derived[index].bundle.toBase58(),
+    });
+    if (slots.length > 0 && slots.length <= 8) {
+      bundled.push({ mint: derived[index].mint, slots });
+    } else {
+      open += slots.length;
+    }
+  }
+
+  for (let index = 0; index < bundled.length; index += 1) {
+    const item = bundled[index];
+    const addresses = item.slots.map((slot) => {
+      const [position] = PublicKey.findProgramAddressSync(
+        [
+          new TextEncoder().encode("bundled_position"),
+          item.mint.toBytes(),
+          new TextEncoder().encode(String(slot)),
+        ],
+        program,
+      );
+      return position;
+    });
+    const positions = await accountsAt(connection, addresses);
+    for (let slot = 0; slot < positions.length; slot += 1) {
+      const position = positions[slot];
+      if (!position || !position.owner.equals(program) || position.data.length < 88) {
+        open += 1;
+        continue;
+      }
+      if (u128(position.data, 72) > BigInt(0)) open += 1;
+      else empty += 1;
+    }
+  }
+
+  if (open === 0 && empty === 0 && bundles === 0) {
+    return checked("orca", "Orca", "Nothing open", [], false);
+  }
+  const parts = [
+    open > 0 ? countPhrase(open, "open position") : "",
+    empty > 0 ? countPhrase(empty, "empty position") : "",
+    bundles > 0 ? countPhrase(bundles, "position bundle") : "",
+  ].filter(Boolean);
+  return checked("orca", "Orca", parts.join(", "), findings, true, {
+    href: "https://close-position.orca.so",
+    hrefLabel: "Close on Orca",
+  });
+}
+
+async function scanSolar(
+  connection: Connection,
+  rows: TokenRow[],
+): Promise<ProtocolReport> {
+  const nfts = positionNfts(rows);
+  if (nfts.length === 0) return checked("solar", "Solar", "Nothing open", [], false);
+
+  const programs = SOLAR_PROGRAM_IDS.map((id) => new PublicKey(id));
+  const derived = nfts.flatMap((nft) => {
+    const mint = new PublicKey(nft.mint);
+    return programs.map((program) => {
+      const [position] = PublicKey.findProgramAddressSync(
+        [new TextEncoder().encode("position"), mint.toBytes()],
+        program,
+      );
+      return { nft, position, program };
+    });
   });
   const accounts = await accountsAt(
     connection,
@@ -293,12 +417,11 @@ async function scanOrca(
   let empty = 0;
   for (let index = 0; index < accounts.length; index += 1) {
     const account = accounts[index];
-    if (!account || !account.owner.equals(program) || account.data.length < 88) {
-      continue;
-    }
-    const mint = new PublicKey(account.data.subarray(40, 72)).toBase58();
+    const program = derived[index].program;
+    if (!account || !account.owner.equals(program) || account.data.length < 97) continue;
+    const mint = new PublicKey(account.data.subarray(9, 41)).toBase58();
     if (mint !== derived[index].nft.mint) continue;
-    const liquidity = u128(account.data, 72);
+    const liquidity = u128(account.data, 81);
     if (liquidity > BigInt(0)) open += 1;
     else empty += 1;
     findings.push({
@@ -308,15 +431,15 @@ async function scanOrca(
     });
   }
   if (open === 0 && empty === 0) {
-    return checked("orca", "Orca", "Nothing open", [], false);
+    return checked("solar", "Solar", "Nothing open", [], false);
   }
   const parts = [
     open > 0 ? countPhrase(open, "open position") : "",
     empty > 0 ? countPhrase(empty, "empty position") : "",
   ].filter(Boolean);
-  return checked("orca", "Orca", parts.join(", "), findings, true, {
-    href: "https://close-position.orca.so",
-    hrefLabel: "Close on Orca",
+  return checked("solar", "Solar", parts.join(", "), findings, true, {
+    href: "https://eclipse.solarstudios.co/portfolio",
+    hrefLabel: "Open Solar",
   });
 }
 
@@ -374,7 +497,10 @@ async function scanInvariant(
     empty > 0 ? countPhrase(empty, "empty position") : "",
     head > limit ? `showing ${limit} of ${head}` : "",
   ].filter(Boolean);
-  return checked("invariant", "Invariant", parts.join(", "), findings, true);
+  return checked("invariant", "Invariant", parts.join(", "), findings, true, {
+    href: "https://eclipse.invariant.app",
+    hrefLabel: "Open Invariant",
+  });
 }
 
 async function scanAllDomains(
@@ -412,6 +538,10 @@ async function scanAllDomains(
     `${countPhrase(accounts.length, "name")}, ${formatEclipseEth(rent)} ETH`,
     findings,
     true,
+    {
+      href: "https://eclipse.alldomains.id",
+      hrefLabel: "Open AllDomains",
+    },
   );
 }
 
@@ -521,14 +651,21 @@ export async function inspectProtocols(
     for (let row = 0; row < entry.empties.length; row += 1) empties.push(entry.empties[row]);
   }
 
-  try {
-    if (listed.every((entry) => !entry.ok)) {
-      publish(unavailable("orca", "Orca", new Error("Token accounts did not respond.")));
-    } else {
-      publish(await withTimeout(scanOrca(connection, ownedRows), "Orca"));
-    }
-  } catch (error) {
-    publish(unavailable("orca", "Orca", error));
+  if (listed.every((entry) => !entry.ok)) {
+    publish(unavailable("orca", "Orca", new Error("Token accounts did not respond.")));
+    publish(unavailable("solar", "Solar", new Error("Token accounts did not respond.")));
+  } else {
+    const nftChecks = [
+      { id: "orca", name: "Orca", run: () => scanOrca(connection, ownedRows) },
+      { id: "solar", name: "Solar", run: () => scanSolar(connection, ownedRows) },
+    ].map(async (protocol) => {
+      try {
+        publish(await withTimeout(protocol.run(), protocol.name));
+      } catch (error) {
+        publish(unavailable(protocol.id, protocol.name, error));
+      }
+    });
+    await Promise.all(nftChecks);
   }
   await Promise.all(positionWork);
   const protocols = PROTOCOL_CATALOG.map(
