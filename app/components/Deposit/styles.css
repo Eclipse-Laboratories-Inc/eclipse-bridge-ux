@@ -697,3 +697,188 @@ input::placeholder {
   -webkit-text-stroke-width: 1.4803149700164795px;
   -webkit-text-stroke-color: #303283;
 }
+
+.reclaim {
+  text-align: left;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  color: white;
+}
+
+.reclaim-scroll {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  max-height: min(560px, calc(100vh - 280px));
+  overflow: auto;
+}
+
+.reclaim-title {
+  margin: 0;
+  font-size: 22px;
+  font-weight: 600;
+  line-height: 1.2;
+}
+
+.reclaim-kicker {
+  margin: 0 0 8px;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.4);
+}
+
+.reclaim-protocols > ul {
+  display: flex;
+  flex-direction: column;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  border-radius: 16px;
+  background: rgba(255, 255, 255, 0.03);
+}
+
+.reclaim-protocol {
+  display: grid;
+  grid-template-columns: 10px minmax(96px, 118px) 1fr;
+  gap: 6px 12px;
+  align-items: center;
+  padding: 12px 14px;
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.reclaim-protocols > ul > li:first-child {
+  border-top: 0;
+}
+
+.reclaim-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.28);
+}
+
+.reclaim-dot.checked {
+  background: #a3ffa5;
+}
+
+.reclaim-dot.attention,
+.reclaim-protocol-summary.attention {
+  background: #f3d48a;
+  color: #f3d48a;
+}
+
+.reclaim-dot.unavailable {
+  background: #eb4d4d;
+}
+
+.reclaim-protocol-name {
+  font-weight: 600;
+}
+
+.reclaim-protocol-summary {
+  color: rgba(255, 255, 255, 0.62);
+  font-size: 13px;
+  line-height: 1.4;
+  text-align: right;
+}
+
+.reclaim-protocol-summary.attention {
+  background: transparent;
+}
+
+.reclaim-findings {
+  grid-column: 2 / -1;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  background: transparent;
+}
+
+.reclaim-findings li {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 0;
+  border: 0;
+  color: rgba(255, 255, 255, 0.55);
+  font-size: 13px;
+}
+
+.reclaim-retry {
+  align-self: flex-start;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: #a3ffa5;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.reclaim-lead,
+.reclaim-note {
+  margin: 0;
+  color: rgba(255, 255, 255, 0.55);
+  font-size: 15px;
+  font-weight: 500;
+  line-height: 1.45;
+}
+
+.reclaim-summary {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 10px 16px;
+  margin: 0;
+  padding: 16px;
+  border-radius: 16px;
+  background: rgba(255, 255, 255, 0.03);
+}
+
+.reclaim-summary dt {
+  color: rgba(255, 255, 255, 0.45);
+  font-weight: 500;
+}
+
+.reclaim-summary dd {
+  margin: 0;
+  font-weight: 500;
+  text-align: right;
+}
+
+.reclaim-link {
+  color: #a3ffa5;
+}
+
+.reclaim-accounts {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.reclaim-accounts li {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  color: rgba(255, 255, 255, 0.72);
+  font-size: 14px;
+}
+
+.reclaim-status {
+  margin: 0;
+  font-size: 14px;
+  font-weight: 500;
+  color: #eb4d4d;
+}
+
+.reclaim-status.ok {
+  color: #a3ffa5;
+}

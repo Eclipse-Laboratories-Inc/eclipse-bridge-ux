@@ -21,6 +21,7 @@ export { default as ScanIcon } from "./sidebar-icons/scan";
 export { default as FaucetIcon } from "./sidebar-icons/faucet";
 export { default as EcosystemIcon } from "./sidebar-icons/ecosystem";
 export { default as GasStationIcon } from "./sidebar-icons/gas-station";
+export { default as ReclaimIcon } from "./sidebar-icons/reclaim";
 export { default as Ellipse } from "./sidebar-icons/ellipse";
 export { default as ThirdpartyBridgesIcon } from "./thirdparty-bridges-icon";
 export { default as SquareArrowTopRight } from "./square-arrow-top-right";
