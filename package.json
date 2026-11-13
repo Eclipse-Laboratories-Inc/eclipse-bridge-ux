@@ -65,7 +65,7 @@
     "react-toastify": "^10.0.6",
     "stream-browserify": "^3.0.0",
     "tailwind-merge": "^2.5.5",
-    "tailwindcss": "3.3.3",
+    "tailwindcss": "4.3.4",
     "typescript": "5.2.2",
     "viem": "2.55.2",
     "wagmi": "^2.15.6"
