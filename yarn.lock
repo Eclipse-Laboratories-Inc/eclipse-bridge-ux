@@ -15,6 +15,13 @@
     "@gql.tada/internal" "^1.2.1"
     graphql "^15.5.0 || ^16.0.0 || ^17.0.0"
 
+"@ably/msgpack-js@^0.4.0":
+  version "0.4.1"
+  resolved "https://registry.yarnpkg.com/@ably/msgpack-js/-/msgpack-js-0.4.1.tgz#81526bdea5362ca57c112356899a5e506a34b760"
+  integrity sha512-Sjxj6SOr17hExAVrsycN7u6oV4PhZcK7Z2S8dM71CH/butgO47cSo/TL6FJPCXUyDAzKkOWjMUpJGyZkEpyu4Q==
+  dependencies:
+    bops "^1.0.1"
+
 "@adraffy/ens-normalize@^1.10.1":
   version "1.11.0"
   resolved "https://registry.npmjs.org/@adraffy/ens-normalize/-/ens-normalize-1.11.0.tgz"
@@ -1142,6 +1149,14 @@
     viem "^2.31.7"
     zustand "5.0.3"
 
+"@bitcoinerlab/secp256k1@1.1.1":
+  version "1.1.1"
+  resolved "https://registry.yarnpkg.com/@bitcoinerlab/secp256k1/-/secp256k1-1.1.1.tgz#938305c30505b67b15f3de53627bc9d8b4cc7680"
+  integrity sha512-uhjW51WfVLpnHN7+G0saDcM/k9IqcyTbZ+bDgLF3AX8V/a3KXSE9vn7UPBrcdU72tp0J4YPR7BHp2m7MLAZ/1Q==
+  dependencies:
+    "@noble/hashes" "^1.1.5"
+    "@noble/secp256k1" "^1.7.1"
+
 "@btckit/types@0.0.19":
   version "0.0.19"
   resolved "https://registry.npmjs.org/@btckit/types/-/types-0.0.19.tgz"
@@ -1396,6 +1411,11 @@
   resolved "https://registry.yarnpkg.com/@dynamic-labs-sdk/assert-package-version/-/assert-package-version-0.1.0-alpha.23.tgz#9ff37ba93223f7f259201a00899b9a916a8bc553"
   integrity sha512-0KuiXqnplX0+jB/arO9NecjL7nJkmdc2eRW3L0wCyJFCi/wNlH4ceOLTNgY0p/VNlBcXYjUw5HiJ5zxvORcUTA==
 
+"@dynamic-labs-sdk/assert-package-version@1.47.0":
+  version "1.47.0"
+  resolved "https://registry.yarnpkg.com/@dynamic-labs-sdk/assert-package-version/-/assert-package-version-1.47.0.tgz#5650fb6c12c5d7733cc7396ac8cf0a0d9fb8944d"
+  integrity sha512-26RwgEEkhQx3WCpuemZR3gHZ5TF02n2u+7pS0IQQ+RGtnC05wb5Mby7ONSH62pfd6seZohrNsei8i58rMbb8dA==
+
 "@dynamic-labs-sdk/client@0.1.0-alpha.23":
   version "0.1.0-alpha.23"
   resolved "https://registry.yarnpkg.com/@dynamic-labs-sdk/client/-/client-0.1.0-alpha.23.tgz#4093131c4d333b96bdaccf4c62ec9f8676f7b4ec"
@@ -1405,6 +1425,21 @@
     "@dynamic-labs-wallet/browser-wallet-client" "0.0.187"
     "@dynamic-labs/sdk-api-core" "0.0.813"
     "@simplewebauthn/browser" "13.1.0"
+    buffer "6.0.3"
+    eventemitter3 "5.0.1"
+    zod "4.0.5"
+
+"@dynamic-labs-sdk/client@1.47.0":
+  version "1.47.0"
+  resolved "https://registry.yarnpkg.com/@dynamic-labs-sdk/client/-/client-1.47.0.tgz#9ee2f1aa88963e9f6727a4e70516e832939ce8f2"
+  integrity sha512-BxWfrfFU6QNU5Lxl2WBjOIi/F8FPlFqJ+udWxuVjlIH4QZ4kC4D1NUS/qOWcjg+P4P5nSWlsncy4BHKIh4N2LA==
+  dependencies:
+    "@dynamic-labs-sdk/assert-package-version" "1.47.0"
+    "@dynamic-labs-wallet/browser-wallet-client" "1.1.49"
+    "@dynamic-labs-wallet/forward-mpc-client" "2.0.2"
+    "@dynamic-labs/sdk-api-core" "0.136.0"
+    "@simplewebauthn/browser" "13.1.0"
+    ably "2.17.1"
     buffer "6.0.3"
     eventemitter3 "5.0.1"
     zod "4.0.5"
@@ -1428,6 +1463,15 @@
     "@dynamic-labs/logger" "^4.25.3"
     "@dynamic-labs/message-transport" "^4.25.3"
     uuid "11.1.0"
+
+"@dynamic-labs-wallet/browser-wallet-client@1.1.49":
+  version "1.1.49"
+  resolved "https://registry.yarnpkg.com/@dynamic-labs-wallet/browser-wallet-client/-/browser-wallet-client-1.1.49.tgz#a0dfb7b94689ac55a43bdd21f9dff551c9d509e3"
+  integrity sha512-gyVeHVSilJgmVECWNVP6NPyuy0AuzcH/VM2sfnoCvlelgnKvONiZ8V71QDLL0jwhgrKwS+vRJXotk8+XV4v/qA==
+  dependencies:
+    "@dynamic-labs-wallet/core" "1.1.49"
+    "@dynamic-labs/logger" "^5.9.4"
+    "@dynamic-labs/message-transport" "^5.9.1"
 
 "@dynamic-labs-wallet/browser@^0.0.167":
   version "0.0.167"
@@ -1473,6 +1517,16 @@
     axios "1.12.2"
     uuid "11.1.0"
 
+"@dynamic-labs-wallet/core@1.1.49":
+  version "1.1.49"
+  resolved "https://registry.yarnpkg.com/@dynamic-labs-wallet/core/-/core-1.1.49.tgz#e4ee40cde881001212398e137c2013f1e543d3e4"
+  integrity sha512-qSGkbtpcpU+DIx6PXW/i1DIPY8UztUHKfXjyCjqrGUAHGxp+mQvmHg+tUYpeuyEBQUprb10mDGy8xzM3V8SpuQ==
+  dependencies:
+    "@dynamic-labs-wallet/primitives" "1.1.49"
+    "@dynamic-labs/sdk-api-core" "0.50.0"
+    axios "1.20.0"
+    uuid "11.1.0"
+
 "@dynamic-labs-wallet/forward-mpc-client@0.1.0-alpha.8":
   version "0.1.0-alpha.8"
   resolved "https://registry.yarnpkg.com/@dynamic-labs-wallet/forward-mpc-client/-/forward-mpc-client-0.1.0-alpha.8.tgz#7b87d240167bf28691d148e602f942e4b21b96ce"
@@ -1501,6 +1555,32 @@
     fp-ts "^2.16.11"
     ws "^8.18.3"
 
+"@dynamic-labs-wallet/forward-mpc-client@1.0.2":
+  version "1.0.2"
+  resolved "https://registry.yarnpkg.com/@dynamic-labs-wallet/forward-mpc-client/-/forward-mpc-client-1.0.2.tgz#d60368672142b713af87154919d81d6dccc72fb2"
+  integrity sha512-Rv2B7yI3AbrZvFM6eZLzDV9T/47iWm5LTmjOvqaCZSW34IYAQRYv7HQp2e/DITBoBXDvmu9Qv1zNbthcSU4RuQ==
+  dependencies:
+    "@dynamic-labs-wallet/forward-mpc-shared" "0.7.2"
+    "@evervault/wasm-attestation-bindings" "^0.3.1"
+    "@noble/hashes" "^2.0.0"
+    eventemitter3 "^5.0.1"
+    fp-ts "^2.16.11"
+    isows "^1.0.7"
+    ws "^8.18.3"
+
+"@dynamic-labs-wallet/forward-mpc-client@2.0.2":
+  version "2.0.2"
+  resolved "https://registry.yarnpkg.com/@dynamic-labs-wallet/forward-mpc-client/-/forward-mpc-client-2.0.2.tgz#5d6f120407e8957637856a37af6294ac6af6f084"
+  integrity sha512-DUdwqhYTEGoz3wMW4PmOl4tyw5IkTGB3n3KAgLMM6UkDWPsYzH5C4hkjbb6ZQdsHqF99kmoU5gsMcylJ41bYLA==
+  dependencies:
+    "@dynamic-labs-wallet/forward-mpc-shared" "0.7.2"
+    "@evervault/wasm-attestation-bindings" "^0.3.1"
+    "@noble/hashes" "^2.0.0"
+    eventemitter3 "^5.0.1"
+    fp-ts "^2.16.11"
+    isows "^1.0.7"
+    ws "^8.18.3"
+
 "@dynamic-labs-wallet/forward-mpc-shared@0.1.0":
   version "0.1.0"
   resolved "https://registry.yarnpkg.com/@dynamic-labs-wallet/forward-mpc-shared/-/forward-mpc-shared-0.1.0.tgz#7d8e7a6d9cbd7455895b477242fa6cac9d169df4"
@@ -1527,6 +1607,22 @@
     fp-ts "^2.16.11"
     io-ts "^2.2.22"
 
+"@dynamic-labs-wallet/forward-mpc-shared@0.7.2":
+  version "0.7.2"
+  resolved "https://registry.yarnpkg.com/@dynamic-labs-wallet/forward-mpc-shared/-/forward-mpc-shared-0.7.2.tgz#98c5b4fca33dca031ddebaf28fabb50ce50c6ccf"
+  integrity sha512-C5ugG0QNL1FNoFNCo3A2Hz3h1boycoC6S5jh5GoQmVTz7/MNKAgsnYRyd/xC7a9UIiZtwr6vttXvTLxMnx/q4A==
+  dependencies:
+    "@noble/ciphers" "^0.4.1"
+    "@noble/hashes" "^2.0.0"
+    "@noble/post-quantum" "^0.5.1"
+    fp-ts "^2.16.11"
+    io-ts "^2.2.22"
+
+"@dynamic-labs-wallet/primitives@1.1.49":
+  version "1.1.49"
+  resolved "https://registry.yarnpkg.com/@dynamic-labs-wallet/primitives/-/primitives-1.1.49.tgz#8e315941bcade63acd138bff059204b03f1a29b6"
+  integrity sha512-soYgORbckUfQeVjxu61SpNwR7kpVt8MVmGRuz/gwE8s7dTv+y4C0vO+XqCrkFD/Ujyi78TjCQeqc2OHLCKQekQ==
+
 "@dynamic-labs/assert-package-version@4.104.0":
   version "4.104.0"
   resolved "https://registry.yarnpkg.com/@dynamic-labs/assert-package-version/-/assert-package-version-4.104.0.tgz#835b7067516f0b47d2b25f0ec198a0fb9e0151b8"
@@ -1541,24 +1637,38 @@
   dependencies:
     "@dynamic-labs/logger" "4.41.0"
 
-"@dynamic-labs/bitcoin@4.41.0":
-  version "4.41.0"
-  resolved "https://registry.yarnpkg.com/@dynamic-labs/bitcoin/-/bitcoin-4.41.0.tgz#7f98f28e7989f96d9ecd4879397a9207a2d90f66"
-  integrity sha512-8aCUXVikOBptONZ5Qqaj/0SaKZLcI5FL6c7QNN2fAx3sAP+Iek80ay2KkqVWnTzxSM08iJnnalFS535EEMArlg==
+"@dynamic-labs/assert-package-version@5.14.0":
+  version "5.14.0"
+  resolved "https://registry.yarnpkg.com/@dynamic-labs/assert-package-version/-/assert-package-version-5.14.0.tgz#88972508d99d32dd3eee34744c981bc81ce0c338"
+  integrity sha512-mnXcSctk1s8vg4rjEt4Yyqfj0qqO1pq58/hgNh9aXpRVUvp3IJ0OmBtaVhx147uVqBkcBTbo+XEIW4lEVVvxBw==
   dependencies:
+    "@dynamic-labs/logger" "5.14.0"
+
+"@dynamic-labs/bitcoin@5.14.0":
+  version "5.14.0"
+  resolved "https://registry.yarnpkg.com/@dynamic-labs/bitcoin/-/bitcoin-5.14.0.tgz#c3935f899586c0eed2a2ccf26881e1f62c120425"
+  integrity sha512-j3PQUVkWvJBu+yM5dNY9mPl9BY0rp69nUMrFVSiLXs1KNF1dTNVmdjZvCuj7RCv4tx0aRgor1sWBOjL43Sqpxw==
+  dependencies:
+    "@bitcoinerlab/secp256k1" "1.1.1"
     "@btckit/types" "0.0.19"
-    "@dynamic-labs/assert-package-version" "4.41.0"
-    "@dynamic-labs/sdk-api-core" "0.0.813"
-    "@dynamic-labs/types" "4.41.0"
-    "@dynamic-labs/utils" "4.41.0"
-    "@dynamic-labs/wallet-book" "4.41.0"
-    "@dynamic-labs/wallet-connector-core" "4.41.0"
+    "@dynamic-labs-wallet/browser-wallet-client" "1.1.49"
+    "@dynamic-labs-wallet/core" "1.1.49"
+    "@dynamic-labs-wallet/forward-mpc-client" "1.0.2"
+    "@dynamic-labs/assert-package-version" "5.14.0"
+    "@dynamic-labs/logger" "5.14.0"
+    "@dynamic-labs/sdk-api-core" "0.136.0"
+    "@dynamic-labs/types" "5.14.0"
+    "@dynamic-labs/utils" "5.14.0"
+    "@dynamic-labs/waas" "5.14.0"
+    "@dynamic-labs/wallet-book" "5.14.0"
+    "@dynamic-labs/wallet-connector-core" "5.14.0"
     "@wallet-standard/app" "1.0.1"
     "@wallet-standard/base" "1.0.1"
     bitcoinjs-lib "6.1.5"
+    ecpair "2.1.0"
     eventemitter3 "5.0.1"
     jsontokens "4.0.1"
-    sats-connect "4.2.0"
+    sats-connect "4.2.1"
 
 "@dynamic-labs/eclipse@4.41.0":
   version "4.41.0"
@@ -1649,6 +1759,20 @@
     "@dynamic-labs/wallet-book" "4.41.0"
     "@dynamic-labs/wallet-connector-core" "4.41.0"
 
+"@dynamic-labs/ethereum-core@5.14.0":
+  version "5.14.0"
+  resolved "https://registry.yarnpkg.com/@dynamic-labs/ethereum-core/-/ethereum-core-5.14.0.tgz#f7f83b228c11efa9b7871ab73fb45b16f42f3272"
+  integrity sha512-6w7eyxDTlWkXqUDUAITPsocBrwJaoZJ2Ozr6UZy2WtuYwvrVjOh5TOtb9fNXdFCu90yRMGC9cguQfM/ymYHydg==
+  dependencies:
+    "@dynamic-labs/assert-package-version" "5.14.0"
+    "@dynamic-labs/logger" "5.14.0"
+    "@dynamic-labs/rpc-providers" "5.14.0"
+    "@dynamic-labs/sdk-api-core" "0.136.0"
+    "@dynamic-labs/types" "5.14.0"
+    "@dynamic-labs/utils" "5.14.0"
+    "@dynamic-labs/wallet-book" "5.14.0"
+    "@dynamic-labs/wallet-connector-core" "5.14.0"
+
 "@dynamic-labs/ethereum@4.41.0":
   version "4.41.0"
   resolved "https://registry.yarnpkg.com/@dynamic-labs/ethereum/-/ethereum-4.41.0.tgz#6a78092aa5cd84682679e6cd8c2aa312851eab90"
@@ -1687,6 +1811,16 @@
     "@dynamic-labs/logger" "4.41.0"
     sharp "0.33.5"
 
+"@dynamic-labs/iconic@5.14.0":
+  version "5.14.0"
+  resolved "https://registry.yarnpkg.com/@dynamic-labs/iconic/-/iconic-5.14.0.tgz#3b93b6342b44b5ab3f48c49f93c1a0907683212e"
+  integrity sha512-JlQjtMXHB2STusKE2JpT/7PCTlpBgGIbRLVIj8FuJcq3oTbrT13rdhg2U127C6ZMIuwTXjsrsgvlkq0QXDUzCQ==
+  dependencies:
+    "@dynamic-labs/assert-package-version" "5.14.0"
+    "@dynamic-labs/logger" "5.14.0"
+    sharp "0.35.5"
+    url "0.11.0"
+
 "@dynamic-labs/locale@4.41.0":
   version "4.41.0"
   resolved "https://registry.yarnpkg.com/@dynamic-labs/locale/-/locale-4.41.0.tgz#033890f20765a46ed7ae6b515f4aa7975ca35452"
@@ -1710,6 +1844,14 @@
   dependencies:
     eventemitter3 "5.0.1"
 
+"@dynamic-labs/logger@5.14.0", "@dynamic-labs/logger@^5.9.4":
+  version "5.14.0"
+  resolved "https://registry.yarnpkg.com/@dynamic-labs/logger/-/logger-5.14.0.tgz#3070025766b9d3bfc865241d721b9f0cd4799604"
+  integrity sha512-mOlFvLSy2e2NQoFdxX79YHugYv/4A6o+ngYSr7evBrwx1JzM70D6acovDxfgrgo6ZWDg51QF5lOanes4Fm0SiA==
+  dependencies:
+    "@dynamic-labs/redaction" "1.1.0"
+    eventemitter3 "5.0.1"
+
 "@dynamic-labs/message-transport@^4.25.3":
   version "4.104.0"
   resolved "https://registry.yarnpkg.com/@dynamic-labs/message-transport/-/message-transport-4.104.0.tgz#1259312f7d2a0d4b92d97dff7c0e5ac0f7f9fb6d"
@@ -1718,6 +1860,17 @@
     "@dynamic-labs/assert-package-version" "4.104.0"
     "@dynamic-labs/logger" "4.104.0"
     "@dynamic-labs/utils" "4.104.0"
+    "@vue/reactivity" "^3.4.21"
+    eventemitter3 "5.0.1"
+
+"@dynamic-labs/message-transport@^5.9.1":
+  version "5.14.0"
+  resolved "https://registry.yarnpkg.com/@dynamic-labs/message-transport/-/message-transport-5.14.0.tgz#f557a105a96a62296b152ed9d0fc4e4efc931ebe"
+  integrity sha512-FOELfECcMIDdoyFtp7ry0ncc/+bCFhVwhnPJ0vhoey6Srisxd+ArKu4hs6ofkmrhR0RZ0z30kvAoQ1EgWDku+w==
+  dependencies:
+    "@dynamic-labs/assert-package-version" "5.14.0"
+    "@dynamic-labs/logger" "5.14.0"
+    "@dynamic-labs/utils" "5.14.0"
     "@vue/reactivity" "^3.4.21"
     eventemitter3 "5.0.1"
 
@@ -1735,6 +1888,11 @@
     "@dynamic-labs/wallet-connector-core" "4.41.0"
     tslib "2.4.1"
 
+"@dynamic-labs/redaction@1.1.0":
+  version "1.1.0"
+  resolved "https://registry.yarnpkg.com/@dynamic-labs/redaction/-/redaction-1.1.0.tgz#60929a73f1566e2f3ccc4ca750b201f0dc95ac5d"
+  integrity sha512-y3ixDtS4N+ZEgQC17k3d3oyxZ5BJ+sAGvQRklXCilwYkWOMwtMc6QEx/5uHz1PS/rxWYuZk+Egr1AC5NuzZLrg==
+
 "@dynamic-labs/rpc-providers@4.41.0":
   version "4.41.0"
   resolved "https://registry.yarnpkg.com/@dynamic-labs/rpc-providers/-/rpc-providers-4.41.0.tgz#40a9806c862305ea7a5f3b19abccdfa2aed9a7dd"
@@ -1742,6 +1900,14 @@
   dependencies:
     "@dynamic-labs/assert-package-version" "4.41.0"
     "@dynamic-labs/types" "4.41.0"
+
+"@dynamic-labs/rpc-providers@5.14.0":
+  version "5.14.0"
+  resolved "https://registry.yarnpkg.com/@dynamic-labs/rpc-providers/-/rpc-providers-5.14.0.tgz#8f40955a060b8c9354b1c997ef47cb5a108b9ec4"
+  integrity sha512-vwf6DXZjmkwUJj4a8c1C/dZLpBEyEvUDpxOlUyXXX8cyXy2fzRCbFikuW8WpMzTQjHX+pco50ZfheJ6vPOVxvg==
+  dependencies:
+    "@dynamic-labs/assert-package-version" "5.14.0"
+    "@dynamic-labs/types" "5.14.0"
 
 "@dynamic-labs/sdk-api-core@0.0.510":
   version "0.0.510"
@@ -1753,10 +1919,20 @@
   resolved "https://registry.yarnpkg.com/@dynamic-labs/sdk-api-core/-/sdk-api-core-0.0.813.tgz#74c781d184147ece91b00d58da53097edbe08ffe"
   integrity sha512-z2xkdw6zU6nj+F+diF4QFro7GZcF9wSfuBTU3rEI17pJCNuyv2Sx+fKOXjKlCUKr/rpczXVuMCO4bTycPZf9cQ==
 
+"@dynamic-labs/sdk-api-core@0.136.0":
+  version "0.136.0"
+  resolved "https://registry.yarnpkg.com/@dynamic-labs/sdk-api-core/-/sdk-api-core-0.136.0.tgz#61a4f5d264a66c4fe4b5a7984db5212eb765dafd"
+  integrity sha512-dQwmQQQeYGcPgk53lGfnghVC9QMK5BxOA5LPHVn5+HjebuDClq8QWTYoihY0dM3bX8xf68R2W4dgRvh4B3VcvA==
+
 "@dynamic-labs/sdk-api-core@0.142.0":
   version "0.142.0"
   resolved "https://registry.yarnpkg.com/@dynamic-labs/sdk-api-core/-/sdk-api-core-0.142.0.tgz#8c7296e411784b6164458159583daa08c01c1a54"
   integrity sha512-4FJqUYgpB6xD29oue7BrWbBeedd4BExVEVQqFInCZ09+2IIekYqKTEOnc+09WkFguEwF3M6a4uif/5S5iviXxA==
+
+"@dynamic-labs/sdk-api-core@0.50.0":
+  version "0.50.0"
+  resolved "https://registry.yarnpkg.com/@dynamic-labs/sdk-api-core/-/sdk-api-core-0.50.0.tgz#b5c8b3e8f0536311d5229da39c4c72a5e7b980bd"
+  integrity sha512-qdOdnBDB/q8zfe22jQr+4wBiKcawaLNxYJGNxMs5n+tF4jh2F98ZMv0JiJXPRc/W4jpnjgTNfEAfQErcpaxoOQ==
 
 "@dynamic-labs/sdk-api-core@^0.0.764":
   version "0.0.764"
@@ -1807,6 +1983,23 @@
     "@dynamic-labs/wallet-book" "4.41.0"
     "@dynamic-labs/wallet-connector-core" "4.41.0"
     "@solana/spl-token" "0.4.12"
+    "@solana/web3.js" "1.98.1"
+    eventemitter3 "5.0.1"
+
+"@dynamic-labs/solana-core@5.14.0":
+  version "5.14.0"
+  resolved "https://registry.yarnpkg.com/@dynamic-labs/solana-core/-/solana-core-5.14.0.tgz#ee3b68581fec983b5b07322bb4f0359eac29b1a7"
+  integrity sha512-mUS9x9j+BqfJz3avYpE3j6CPfzl7pB34BWO93/creV7V5huIuQFwTBx4blOqg7dn7JrgrpQzVRzfk+vwLOMx/A==
+  dependencies:
+    "@dynamic-labs-wallet/core" "1.1.49"
+    "@dynamic-labs/assert-package-version" "5.14.0"
+    "@dynamic-labs/rpc-providers" "5.14.0"
+    "@dynamic-labs/sdk-api-core" "0.136.0"
+    "@dynamic-labs/types" "5.14.0"
+    "@dynamic-labs/utils" "5.14.0"
+    "@dynamic-labs/wallet-book" "5.14.0"
+    "@dynamic-labs/wallet-connector-core" "5.14.0"
+    "@solana/spl-token" "0.4.14"
     "@solana/web3.js" "1.98.1"
     eventemitter3 "5.0.1"
 
@@ -1864,6 +2057,24 @@
     "@mysten/wallet-standard" "0.13.29"
     text-encoding "0.7.0"
 
+"@dynamic-labs/sui-core@5.14.0":
+  version "5.14.0"
+  resolved "https://registry.yarnpkg.com/@dynamic-labs/sui-core/-/sui-core-5.14.0.tgz#d86c7e6312237e889fb2522b203756b2791240e2"
+  integrity sha512-e9jmhHgTkTjlq74ynOZpcBjYZBh6d8OhXyoF7XR1WhOOBWuHoW3UP5bO48KZSyJNoKgmMR/NafxIGXzqmfD9Ew==
+  dependencies:
+    "@dynamic-labs-wallet/core" "1.1.49"
+    "@dynamic-labs/assert-package-version" "5.14.0"
+    "@dynamic-labs/logger" "5.14.0"
+    "@dynamic-labs/rpc-providers" "5.14.0"
+    "@dynamic-labs/sdk-api-core" "0.136.0"
+    "@dynamic-labs/types" "5.14.0"
+    "@dynamic-labs/utils" "5.14.0"
+    "@dynamic-labs/wallet-book" "5.14.0"
+    "@dynamic-labs/wallet-connector-core" "5.14.0"
+    "@mysten/sui" "2.8.0"
+    "@mysten/wallet-standard" "0.20.3"
+    text-encoding "0.7.0"
+
 "@dynamic-labs/types@4.104.0":
   version "4.104.0"
   resolved "https://registry.yarnpkg.com/@dynamic-labs/types/-/types-4.104.0.tgz#0305cf456b596de71c76932d315183e279e839a9"
@@ -1879,6 +2090,14 @@
   dependencies:
     "@dynamic-labs/assert-package-version" "4.41.0"
     "@dynamic-labs/sdk-api-core" "0.0.813"
+
+"@dynamic-labs/types@5.14.0":
+  version "5.14.0"
+  resolved "https://registry.yarnpkg.com/@dynamic-labs/types/-/types-5.14.0.tgz#b147f5dbbf837be96ef10eaa4719b7d5fad24d47"
+  integrity sha512-7yMiBiEBfkWtR3QgYXbWnyFvGt/hrpE6s6cFenmA537XNQd+IvO/I7IaKT+ya4Gpjtr4t695reRKNN/M4JJ0uw==
+  dependencies:
+    "@dynamic-labs/assert-package-version" "5.14.0"
+    "@dynamic-labs/sdk-api-core" "0.136.0"
 
 "@dynamic-labs/utils@4.104.0":
   version "4.104.0"
@@ -1902,6 +2121,19 @@
     "@dynamic-labs/logger" "4.41.0"
     "@dynamic-labs/sdk-api-core" "0.0.813"
     "@dynamic-labs/types" "4.41.0"
+    buffer "6.0.3"
+    eventemitter3 "5.0.1"
+    tldts "6.0.16"
+
+"@dynamic-labs/utils@5.14.0":
+  version "5.14.0"
+  resolved "https://registry.yarnpkg.com/@dynamic-labs/utils/-/utils-5.14.0.tgz#9c7f71740d58bc8bdcb4182f9b8feb85eec2bf7d"
+  integrity sha512-R85MD0AlRhCZo7Osq6AXGbHmlCqHHq9g779sscGyoALHBbzcvc+8oofXij6AVUP7Xwx57wqMyaNhFSn+cJA3cQ==
+  dependencies:
+    "@dynamic-labs/assert-package-version" "5.14.0"
+    "@dynamic-labs/logger" "5.14.0"
+    "@dynamic-labs/sdk-api-core" "0.136.0"
+    "@dynamic-labs/types" "5.14.0"
     buffer "6.0.3"
     eventemitter3 "5.0.1"
     tldts "6.0.16"
@@ -1953,6 +2185,26 @@
     "@dynamic-labs/utils" "4.41.0"
     "@dynamic-labs/wallet-book" "4.41.0"
 
+"@dynamic-labs/waas@5.14.0":
+  version "5.14.0"
+  resolved "https://registry.yarnpkg.com/@dynamic-labs/waas/-/waas-5.14.0.tgz#89a9f560e66618e986276b21c3b20d77724263fb"
+  integrity sha512-6bldQnJrC2aiHdHYwrgBhnE53z7qZLB1Yq5q/3s5Wbv3quuRj8jKslTprg+icZmTzR8k48NfsszN1jt6EHNEmQ==
+  dependencies:
+    "@dynamic-labs-sdk/client" "1.47.0"
+    "@dynamic-labs-wallet/browser-wallet-client" "1.1.49"
+    "@dynamic-labs-wallet/core" "1.1.49"
+    "@dynamic-labs-wallet/forward-mpc-client" "1.0.2"
+    "@dynamic-labs/assert-package-version" "5.14.0"
+    "@dynamic-labs/ethereum-core" "5.14.0"
+    "@dynamic-labs/logger" "5.14.0"
+    "@dynamic-labs/sdk-api-core" "0.136.0"
+    "@dynamic-labs/solana-core" "5.14.0"
+    "@dynamic-labs/sui-core" "5.14.0"
+    "@dynamic-labs/utils" "5.14.0"
+    "@dynamic-labs/wallet-book" "5.14.0"
+    "@dynamic-labs/wallet-connector-core" "5.14.0"
+    zod "4.6.6"
+
 "@dynamic-labs/wagmi-connector@4.41.0":
   version "4.41.0"
   resolved "https://registry.yarnpkg.com/@dynamic-labs/wagmi-connector/-/wagmi-connector-4.41.0.tgz#22ccd22e1f3be1e6c418dbcc5c5be506107d58ab"
@@ -1970,6 +2222,19 @@
     eventemitter3 "5.0.1"
     util "0.12.5"
     zod "4.0.5"
+
+"@dynamic-labs/wallet-book@5.14.0":
+  version "5.14.0"
+  resolved "https://registry.yarnpkg.com/@dynamic-labs/wallet-book/-/wallet-book-5.14.0.tgz#776532dce9ec86a9b0e512b03467d622408247a4"
+  integrity sha512-9kteFg9L2qJQfyrm5rgKxAwS7Q50xJCIctlwygr/mluIiGrD5ZqZjq0aEBkUbcR4J9kT01EX9nyeSwefSA+KeA==
+  dependencies:
+    "@dynamic-labs/assert-package-version" "5.14.0"
+    "@dynamic-labs/iconic" "5.14.0"
+    "@dynamic-labs/logger" "5.14.0"
+    "@dynamic-labs/utils" "5.14.0"
+    eventemitter3 "5.0.1"
+    util "0.12.5"
+    zod "4.6.6"
 
 "@dynamic-labs/wallet-connect@4.41.0":
   version "4.41.0"
@@ -2001,6 +2266,24 @@
     "@dynamic-labs/wallet-book" "4.41.0"
     eventemitter3 "5.0.1"
 
+"@dynamic-labs/wallet-connector-core@5.14.0":
+  version "5.14.0"
+  resolved "https://registry.yarnpkg.com/@dynamic-labs/wallet-connector-core/-/wallet-connector-core-5.14.0.tgz#985a3a32694b836f87453d887165cdb77330fc58"
+  integrity sha512-TPTqQmxmpSMp9LgTAHfjHC2IMVBAXDh6i/ip/QN+OP+LNi11Jr/mLeXiKf68yyobOe2f6d73W/D7z886UnbaNw==
+  dependencies:
+    "@dynamic-labs-sdk/client" "1.47.0"
+    "@dynamic-labs-wallet/browser-wallet-client" "1.1.49"
+    "@dynamic-labs-wallet/core" "1.1.49"
+    "@dynamic-labs-wallet/forward-mpc-client" "1.0.2"
+    "@dynamic-labs/assert-package-version" "5.14.0"
+    "@dynamic-labs/logger" "5.14.0"
+    "@dynamic-labs/rpc-providers" "5.14.0"
+    "@dynamic-labs/sdk-api-core" "0.136.0"
+    "@dynamic-labs/types" "5.14.0"
+    "@dynamic-labs/utils" "5.14.0"
+    "@dynamic-labs/wallet-book" "5.14.0"
+    eventemitter3 "5.0.1"
+
 "@dynamic-labs/webauthn@4.41.0":
   version "4.41.0"
   resolved "https://registry.yarnpkg.com/@dynamic-labs/webauthn/-/webauthn-4.41.0.tgz#92595274d2631d2317ccae9a45b2edacbf6398c9"
@@ -2015,6 +2298,13 @@
   version "0.2.2"
   resolved "https://registry.npmjs.org/@ecies/ciphers/-/ciphers-0.2.2.tgz"
   integrity sha512-ylfGR7PyTd+Rm2PqQowG08BCKA22QuX8NzrL+LxAAvazN10DMwdJ2fWwAzRj05FI/M8vNFGm3cv9Wq/GFWCBLg==
+
+"@emnapi/runtime@^1.11.3":
+  version "1.11.3"
+  resolved "https://registry.yarnpkg.com/@emnapi/runtime/-/runtime-1.11.3.tgz#84257ae3b0531eb2aec1ffa23d70700da007ba95"
+  integrity sha512-Xz4Tpyki7XyrpbUK1jR1AhdAdaXyhhY4lZ3neLodmhpuWfy2PAQN5B46sAiU4liOXGLkHypn/qU+jvfWSCYYLA==
+  dependencies:
+    tslib "^2.4.0"
 
 "@emnapi/runtime@^1.2.0":
   version "1.4.3"
@@ -2698,6 +2988,11 @@
   resolved "https://registry.yarnpkg.com/@img/colour/-/colour-1.0.0.tgz#d2fabb223455a793bf3bf9c70de3d28526aa8311"
   integrity sha512-A5P/LfWGFSl6nsckYtjw9da+19jB8hkJ6ACTGcDfEJ0aE+l2n2El7dsVM7UVHZQ9s2lmYMWlrS21YLy2IR1LUw==
 
+"@img/colour@^1.1.0":
+  version "1.1.0"
+  resolved "https://registry.yarnpkg.com/@img/colour/-/colour-1.1.0.tgz#b0c2c2fa661adf75effd6b4964497cd80010bb9d"
+  integrity sha512-Td76q7j57o/tLVdgS746cYARfSyxk8iEfRxewL9h4OMzYhbW4TAcppl0mT4eyqXddh6L/jwoM75mo7ixa/pCeQ==
+
 "@img/sharp-darwin-arm64@0.33.5":
   version "0.33.5"
   resolved "https://registry.yarnpkg.com/@img/sharp-darwin-arm64/-/sharp-darwin-arm64-0.33.5.tgz#ef5b5a07862805f1e8145a377c8ba6e98813ca08"
@@ -2711,6 +3006,13 @@
   integrity sha512-imtQ3WMJXbMY4fxb/Ndp6HBTNVtWCUI0WdobyheGf5+ad6xX8VIDO8u2xE4qc/fr08CKG/7dDseFtn6M6g/r3w==
   optionalDependencies:
     "@img/sharp-libvips-darwin-arm64" "1.2.4"
+
+"@img/sharp-darwin-arm64@0.35.5":
+  version "0.35.5"
+  resolved "https://registry.yarnpkg.com/@img/sharp-darwin-arm64/-/sharp-darwin-arm64-0.35.5.tgz#b1e0276d4e9bf26a7fde7b2adcbe076c71015fc2"
+  integrity sha512-QRUlFQ0WxvdWyqqG/WtI3iupfD5rBzmCHXSdPsY91sAtVtTo7Q4cb6zOccZ3gqEqkr0f1As1ehLqmEpDsRf+lg==
+  optionalDependencies:
+    "@img/sharp-libvips-darwin-arm64" "1.3.4"
 
 "@img/sharp-darwin-x64@0.33.5":
   version "0.33.5"
@@ -2726,6 +3028,20 @@
   optionalDependencies:
     "@img/sharp-libvips-darwin-x64" "1.2.4"
 
+"@img/sharp-darwin-x64@0.35.5":
+  version "0.35.5"
+  resolved "https://registry.yarnpkg.com/@img/sharp-darwin-x64/-/sharp-darwin-x64-0.35.5.tgz#bff811f9610ef322415e87f7551fd5d773122928"
+  integrity sha512-+BR255RhDlpygUpOc/Jdt1nT6DQ3XG/ERo5wbcdOf5Q320dKtPCKPLR1LJs9VGXRaMa8l1uUa0tkCNOXiAxZUw==
+  optionalDependencies:
+    "@img/sharp-libvips-darwin-x64" "1.3.4"
+
+"@img/sharp-freebsd-wasm32@0.35.5":
+  version "0.35.5"
+  resolved "https://registry.yarnpkg.com/@img/sharp-freebsd-wasm32/-/sharp-freebsd-wasm32-0.35.5.tgz#53b6041958608afa2f5f08323091101407e99086"
+  integrity sha512-Y/z91nEZ4uIBX5X3nfTovjU9lHNKFYbL2lpHCLVNmXQK03VIZvXBBt0KxbPGp2SdGSF+2mQU4e+hQaWOt86iAw==
+  dependencies:
+    "@img/sharp-wasm32" "0.35.5"
+
 "@img/sharp-libvips-darwin-arm64@1.0.4":
   version "1.0.4"
   resolved "https://registry.yarnpkg.com/@img/sharp-libvips-darwin-arm64/-/sharp-libvips-darwin-arm64-1.0.4.tgz#447c5026700c01a993c7804eb8af5f6e9868c07f"
@@ -2735,6 +3051,11 @@
   version "1.2.4"
   resolved "https://registry.yarnpkg.com/@img/sharp-libvips-darwin-arm64/-/sharp-libvips-darwin-arm64-1.2.4.tgz#2894c0cb87d42276c3889942e8e2db517a492c43"
   integrity sha512-zqjjo7RatFfFoP0MkQ51jfuFZBnVE2pRiaydKJ1G/rHZvnsrHAOcQALIi9sA5co5xenQdTugCvtb1cuf78Vf4g==
+
+"@img/sharp-libvips-darwin-arm64@1.3.4":
+  version "1.3.4"
+  resolved "https://registry.yarnpkg.com/@img/sharp-libvips-darwin-arm64/-/sharp-libvips-darwin-arm64-1.3.4.tgz#f29cbba302384f9a08bdb04d14c57b5cf71da4a4"
+  integrity sha512-5R89nBYiRdUlSWJxPhO+GVtaXzXSxKnRu/xqMn3KTA3L9EB9Oy/P+Nn2f2vlhPuUdy/Zusb2DarbyTpGCfEDuw==
 
 "@img/sharp-libvips-darwin-x64@1.0.4":
   version "1.0.4"
@@ -2746,6 +3067,11 @@
   resolved "https://registry.yarnpkg.com/@img/sharp-libvips-darwin-x64/-/sharp-libvips-darwin-x64-1.2.4.tgz#e63681f4539a94af9cd17246ed8881734386f8cc"
   integrity sha512-1IOd5xfVhlGwX+zXv2N93k0yMONvUlANylbJw1eTah8K/Jtpi15KC+WSiaX/nBmbm2HxRM1gZ0nSdjSsrZbGKg==
 
+"@img/sharp-libvips-darwin-x64@1.3.4":
+  version "1.3.4"
+  resolved "https://registry.yarnpkg.com/@img/sharp-libvips-darwin-x64/-/sharp-libvips-darwin-x64-1.3.4.tgz#527f52721a89dd75614663aef87162a781739bab"
+  integrity sha512-iR2OKH80yi0U+dUplyh3/xdpFvps6YkCwsXenIJxqxR1v9o+xtKTGbS9H7cps+2Vxjc8B1j96p75NmTGjIhtpQ==
+
 "@img/sharp-libvips-linux-arm64@1.0.4":
   version "1.0.4"
   resolved "https://registry.yarnpkg.com/@img/sharp-libvips-linux-arm64/-/sharp-libvips-linux-arm64-1.0.4.tgz#979b1c66c9a91f7ff2893556ef267f90ebe51704"
@@ -2755,6 +3081,11 @@
   version "1.2.4"
   resolved "https://registry.yarnpkg.com/@img/sharp-libvips-linux-arm64/-/sharp-libvips-linux-arm64-1.2.4.tgz#b1b288b36864b3bce545ad91fa6dadcf1a4ad318"
   integrity sha512-excjX8DfsIcJ10x1Kzr4RcWe1edC9PquDRRPx3YVCvQv+U5p7Yin2s32ftzikXojb1PIFc/9Mt28/y+iRklkrw==
+
+"@img/sharp-libvips-linux-arm64@1.3.4":
+  version "1.3.4"
+  resolved "https://registry.yarnpkg.com/@img/sharp-libvips-linux-arm64/-/sharp-libvips-linux-arm64-1.3.4.tgz#78c11c6b0a4b4045c72dacacdec3b10f3e521349"
+  integrity sha512-Y3dgX/6lE2QhQb+Gxy0WZxfg9MEm/JBjamZpS2IklP7xIQoKN4hzAm7KcMVGtaVDt3neE9OKBC7vAfonA/Lr1A==
 
 "@img/sharp-libvips-linux-arm@1.0.5":
   version "1.0.5"
@@ -2766,15 +3097,30 @@
   resolved "https://registry.yarnpkg.com/@img/sharp-libvips-linux-arm/-/sharp-libvips-linux-arm-1.2.4.tgz#b9260dd1ebe6f9e3bdbcbdcac9d2ac125f35852d"
   integrity sha512-bFI7xcKFELdiNCVov8e44Ia4u2byA+l3XtsAj+Q8tfCwO6BQ8iDojYdvoPMqsKDkuoOo+X6HZA0s0q11ANMQ8A==
 
+"@img/sharp-libvips-linux-arm@1.3.4":
+  version "1.3.4"
+  resolved "https://registry.yarnpkg.com/@img/sharp-libvips-linux-arm/-/sharp-libvips-linux-arm-1.3.4.tgz#f5ecd8ebb63690e580438e308ce73015b49516a8"
+  integrity sha512-LmRtTsOHuvM2+wlO2Db37dx5MiZhB0FvSunciw48YjdOkZz9KAiRbm8ujeMOA1INqmei5NapFxYEK1D1ZSidmw==
+
 "@img/sharp-libvips-linux-ppc64@1.2.4":
   version "1.2.4"
   resolved "https://registry.yarnpkg.com/@img/sharp-libvips-linux-ppc64/-/sharp-libvips-linux-ppc64-1.2.4.tgz#4b83ecf2a829057222b38848c7b022e7b4d07aa7"
   integrity sha512-FMuvGijLDYG6lW+b/UvyilUWu5Ayu+3r2d1S8notiGCIyYU/76eig1UfMmkZ7vwgOrzKzlQbFSuQfgm7GYUPpA==
 
+"@img/sharp-libvips-linux-ppc64@1.3.4":
+  version "1.3.4"
+  resolved "https://registry.yarnpkg.com/@img/sharp-libvips-linux-ppc64/-/sharp-libvips-linux-ppc64-1.3.4.tgz#b66a4d25bd042eff66c8076b1e4bd99c6d19246e"
+  integrity sha512-Le6boB8Tai0Nis+gIxIpKx68UDVVIqdR8Tin5Yf1z2LJJQLDJvCDRqRu+jC2qCoD+eIomonmOwB4smBRxfVpYQ==
+
 "@img/sharp-libvips-linux-riscv64@1.2.4":
   version "1.2.4"
   resolved "https://registry.yarnpkg.com/@img/sharp-libvips-linux-riscv64/-/sharp-libvips-linux-riscv64-1.2.4.tgz#880b4678009e5a2080af192332b00b0aaf8a48de"
   integrity sha512-oVDbcR4zUC0ce82teubSm+x6ETixtKZBh/qbREIOcI3cULzDyb18Sr/Wcyx7NRQeQzOiHTNbZFF1UwPS2scyGA==
+
+"@img/sharp-libvips-linux-riscv64@1.3.4":
+  version "1.3.4"
+  resolved "https://registry.yarnpkg.com/@img/sharp-libvips-linux-riscv64/-/sharp-libvips-linux-riscv64-1.3.4.tgz#9dee8b3fd801c0ff5d6083d6558d3c89b8dedc1b"
+  integrity sha512-aHkkIEHPRdQEegJN20MLmGtxYD9R2wQr3Cwpddnu5+YKMt6Uzax7S9h5gpZTo8wyrGuZSlfQ63OevL5mTyOC7Q==
 
 "@img/sharp-libvips-linux-s390x@1.0.4":
   version "1.0.4"
@@ -2786,6 +3132,11 @@
   resolved "https://registry.yarnpkg.com/@img/sharp-libvips-linux-s390x/-/sharp-libvips-linux-s390x-1.2.4.tgz#74f343c8e10fad821b38f75ced30488939dc59ec"
   integrity sha512-qmp9VrzgPgMoGZyPvrQHqk02uyjA0/QrTO26Tqk6l4ZV0MPWIW6LTkqOIov+J1yEu7MbFQaDpwdwJKhbJvuRxQ==
 
+"@img/sharp-libvips-linux-s390x@1.3.4":
+  version "1.3.4"
+  resolved "https://registry.yarnpkg.com/@img/sharp-libvips-linux-s390x/-/sharp-libvips-linux-s390x-1.3.4.tgz#55a80f118f9ffd7653d20cefde41fca6ba0241e2"
+  integrity sha512-ra/mB6MikESDUO7Yg+Mi95bFBb9GsObURuhnOv3OqknjGe9sZrG8tCe9q0xSIGrtLgvgw0gKnFWcK4blSgQOuQ==
+
 "@img/sharp-libvips-linux-x64@1.0.4":
   version "1.0.4"
   resolved "https://registry.yarnpkg.com/@img/sharp-libvips-linux-x64/-/sharp-libvips-linux-x64-1.0.4.tgz#d4c4619cdd157774906e15770ee119931c7ef5e0"
@@ -2795,6 +3146,11 @@
   version "1.2.4"
   resolved "https://registry.yarnpkg.com/@img/sharp-libvips-linux-x64/-/sharp-libvips-linux-x64-1.2.4.tgz#df4183e8bd8410f7d61b66859a35edeab0a531ce"
   integrity sha512-tJxiiLsmHc9Ax1bz3oaOYBURTXGIRDODBqhveVHonrHJ9/+k89qbLl0bcJns+e4t4rvaNBxaEZsFtSfAdquPrw==
+
+"@img/sharp-libvips-linux-x64@1.3.4":
+  version "1.3.4"
+  resolved "https://registry.yarnpkg.com/@img/sharp-libvips-linux-x64/-/sharp-libvips-linux-x64-1.3.4.tgz#a0de3840ae386476eb4045d6d2b056a8062c548b"
+  integrity sha512-GJ//SSXbnwSDes02umB3nDJLFcQzw8a18V8fyhqr6tV515tOEMdImjjxj1AoafMRz56F3PHgftnj1QEKSU1zkw==
 
 "@img/sharp-libvips-linuxmusl-arm64@1.0.4":
   version "1.0.4"
@@ -2806,6 +3162,11 @@
   resolved "https://registry.yarnpkg.com/@img/sharp-libvips-linuxmusl-arm64/-/sharp-libvips-linuxmusl-arm64-1.2.4.tgz#c8d6b48211df67137541007ee8d1b7b1f8ca8e06"
   integrity sha512-FVQHuwx1IIuNow9QAbYUzJ+En8KcVm9Lk5+uGUQJHaZmMECZmOlix9HnH7n1TRkXMS0pGxIJokIVB9SuqZGGXw==
 
+"@img/sharp-libvips-linuxmusl-arm64@1.3.4":
+  version "1.3.4"
+  resolved "https://registry.yarnpkg.com/@img/sharp-libvips-linuxmusl-arm64/-/sharp-libvips-linuxmusl-arm64-1.3.4.tgz#420f2418eaec33cef4346e43d96a7864bb3fcbb4"
+  integrity sha512-hvulFwtjUcagsis6BBxHwGFwWoNZjgYmULGVrZcyfNbjA8hKILbRxGg15/7w5HDyXHXUos/j6baAWqnCyQ2DWA==
+
 "@img/sharp-libvips-linuxmusl-x64@1.0.4":
   version "1.0.4"
   resolved "https://registry.yarnpkg.com/@img/sharp-libvips-linuxmusl-x64/-/sharp-libvips-linuxmusl-x64-1.0.4.tgz#93794e4d7720b077fcad3e02982f2f1c246751ff"
@@ -2815,6 +3176,11 @@
   version "1.2.4"
   resolved "https://registry.yarnpkg.com/@img/sharp-libvips-linuxmusl-x64/-/sharp-libvips-linuxmusl-x64-1.2.4.tgz#be11c75bee5b080cbee31a153a8779448f919f75"
   integrity sha512-+LpyBk7L44ZIXwz/VYfglaX/okxezESc6UxDSoyo2Ks6Jxc4Y7sGjpgU9s4PMgqgjj1gZCylTieNamqA1MF7Dg==
+
+"@img/sharp-libvips-linuxmusl-x64@1.3.4":
+  version "1.3.4"
+  resolved "https://registry.yarnpkg.com/@img/sharp-libvips-linuxmusl-x64/-/sharp-libvips-linuxmusl-x64-1.3.4.tgz#eb5696f7fa521f5f7f3d962fd9ade41deeba6a51"
+  integrity sha512-6zXKeE/p39I1AmA3cJG35eyBGNqNddLnUXjhwBnsGjFPWqf5VKkDBEqaEkPDoTEtkxwi2vv8Tcr2mDyP4So7Fg==
 
 "@img/sharp-linux-arm64@0.33.5":
   version "0.33.5"
@@ -2830,6 +3196,13 @@
   optionalDependencies:
     "@img/sharp-libvips-linux-arm64" "1.2.4"
 
+"@img/sharp-linux-arm64@0.35.5":
+  version "0.35.5"
+  resolved "https://registry.yarnpkg.com/@img/sharp-linux-arm64/-/sharp-linux-arm64-0.35.5.tgz#ffaea1b88310b5bc40de48859a7f8f01d07e5e99"
+  integrity sha512-LYVx5JTsOM2CBzmxreh+nl64/3H6Xb09iSLknqH47z2T2DFFxDeFLP5y4dJwe6H7uGQlHPyEEtIqyo3DYsRwdQ==
+  optionalDependencies:
+    "@img/sharp-libvips-linux-arm64" "1.3.4"
+
 "@img/sharp-linux-arm@0.33.5":
   version "0.33.5"
   resolved "https://registry.yarnpkg.com/@img/sharp-linux-arm/-/sharp-linux-arm-0.33.5.tgz#422c1a352e7b5832842577dc51602bcd5b6f5eff"
@@ -2844,6 +3217,13 @@
   optionalDependencies:
     "@img/sharp-libvips-linux-arm" "1.2.4"
 
+"@img/sharp-linux-arm@0.35.5":
+  version "0.35.5"
+  resolved "https://registry.yarnpkg.com/@img/sharp-linux-arm/-/sharp-linux-arm-0.35.5.tgz#950645b8695c200bfdb3c6eccf17c32c26968c23"
+  integrity sha512-LEaXK2WdXVK5ykcw0buWyPMsmLLL2vpHLD6yrNSW+JGEL3BZPA4tpKN6iaMc4AxTTAoaX/sU1rOL51lcIz48ZQ==
+  optionalDependencies:
+    "@img/sharp-libvips-linux-arm" "1.3.4"
+
 "@img/sharp-linux-ppc64@0.34.5":
   version "0.34.5"
   resolved "https://registry.yarnpkg.com/@img/sharp-linux-ppc64/-/sharp-linux-ppc64-0.34.5.tgz#9c213a81520a20caf66978f3d4c07456ff2e0813"
@@ -2851,12 +3231,26 @@
   optionalDependencies:
     "@img/sharp-libvips-linux-ppc64" "1.2.4"
 
+"@img/sharp-linux-ppc64@0.35.5":
+  version "0.35.5"
+  resolved "https://registry.yarnpkg.com/@img/sharp-linux-ppc64/-/sharp-linux-ppc64-0.35.5.tgz#af60c7db090411f7af2df2bc1aa764b93b6b8add"
+  integrity sha512-QVxAAq8evVRI9ia2vqgwrmWucn5Dfv+JdWzj75pD8omHLPSP7f8p20O8jxzjCcuCEQEOtYOZUmX1hkiZ0kdevA==
+  optionalDependencies:
+    "@img/sharp-libvips-linux-ppc64" "1.3.4"
+
 "@img/sharp-linux-riscv64@0.34.5":
   version "0.34.5"
   resolved "https://registry.yarnpkg.com/@img/sharp-linux-riscv64/-/sharp-linux-riscv64-0.34.5.tgz#cdd28182774eadbe04f62675a16aabbccb833f60"
   integrity sha512-51gJuLPTKa7piYPaVs8GmByo7/U7/7TZOq+cnXJIHZKavIRHAP77e3N2HEl3dgiqdD/w0yUfiJnII77PuDDFdw==
   optionalDependencies:
     "@img/sharp-libvips-linux-riscv64" "1.2.4"
+
+"@img/sharp-linux-riscv64@0.35.5":
+  version "0.35.5"
+  resolved "https://registry.yarnpkg.com/@img/sharp-linux-riscv64/-/sharp-linux-riscv64-0.35.5.tgz#afcd42ac0592330fbf4fff5904574e0e049ba0a4"
+  integrity sha512-LtdreXguaavKODPIfzJ4kffx7UNt1omwtK0rch4EBbbSTXPnxWmYSayXdLJw0fJzQ97kHt1gL/yh4tvU+nCyRQ==
+  optionalDependencies:
+    "@img/sharp-libvips-linux-riscv64" "1.3.4"
 
 "@img/sharp-linux-s390x@0.33.5":
   version "0.33.5"
@@ -2872,6 +3266,13 @@
   optionalDependencies:
     "@img/sharp-libvips-linux-s390x" "1.2.4"
 
+"@img/sharp-linux-s390x@0.35.5":
+  version "0.35.5"
+  resolved "https://registry.yarnpkg.com/@img/sharp-linux-s390x/-/sharp-linux-s390x-0.35.5.tgz#092e584a8f36f2f90ba98652d6f45432edea87cb"
+  integrity sha512-UZasTOFiYzotTsGOCu42BfUzP6Tu6Do/947iRm1RsLKvlllxwGcn4RN27LibGWceix4Y+Pmw3jsnTcCQIgWjqA==
+  optionalDependencies:
+    "@img/sharp-libvips-linux-s390x" "1.3.4"
+
 "@img/sharp-linux-x64@0.33.5":
   version "0.33.5"
   resolved "https://registry.yarnpkg.com/@img/sharp-linux-x64/-/sharp-linux-x64-0.33.5.tgz#d806e0afd71ae6775cc87f0da8f2d03a7c2209cb"
@@ -2885,6 +3286,13 @@
   integrity sha512-MEzd8HPKxVxVenwAa+JRPwEC7QFjoPWuS5NZnBt6B3pu7EG2Ge0id1oLHZpPJdn3OQK+BQDiw9zStiHBTJQQQQ==
   optionalDependencies:
     "@img/sharp-libvips-linux-x64" "1.2.4"
+
+"@img/sharp-linux-x64@0.35.5":
+  version "0.35.5"
+  resolved "https://registry.yarnpkg.com/@img/sharp-linux-x64/-/sharp-linux-x64-0.35.5.tgz#f624f6b98c6579084b9fb363d7cb83e2315de79c"
+  integrity sha512-SxFtLTeJInhAA9Q836kux2vZNeOBQEx658qvbboZScr0wIARym3IcGmW7KpVD5sbVg0Ojy+udFQdayYIZyoNog==
+  optionalDependencies:
+    "@img/sharp-libvips-linux-x64" "1.3.4"
 
 "@img/sharp-linuxmusl-arm64@0.33.5":
   version "0.33.5"
@@ -2900,6 +3308,13 @@
   optionalDependencies:
     "@img/sharp-libvips-linuxmusl-arm64" "1.2.4"
 
+"@img/sharp-linuxmusl-arm64@0.35.5":
+  version "0.35.5"
+  resolved "https://registry.yarnpkg.com/@img/sharp-linuxmusl-arm64/-/sharp-linuxmusl-arm64-0.35.5.tgz#92d0904211086d10bd3c929de715dd8a81fa7268"
+  integrity sha512-9HbMclmI1zlNkFRs3z9/eBtDjfD0sGlrX1z6b1qwmiFY5ElDLh4BC0LPBdVp7z1DXFiKlIcznf+ZlsuZzLxQqg==
+  optionalDependencies:
+    "@img/sharp-libvips-linuxmusl-arm64" "1.3.4"
+
 "@img/sharp-linuxmusl-x64@0.33.5":
   version "0.33.5"
   resolved "https://registry.yarnpkg.com/@img/sharp-linuxmusl-x64/-/sharp-linuxmusl-x64-0.33.5.tgz#3f4609ac5d8ef8ec7dadee80b560961a60fd4f48"
@@ -2913,6 +3328,13 @@
   integrity sha512-Jg8wNT1MUzIvhBFxViqrEhWDGzqymo3sV7z7ZsaWbZNDLXRJZoRGrjulp60YYtV4wfY8VIKcWidjojlLcWrd8Q==
   optionalDependencies:
     "@img/sharp-libvips-linuxmusl-x64" "1.2.4"
+
+"@img/sharp-linuxmusl-x64@0.35.5":
+  version "0.35.5"
+  resolved "https://registry.yarnpkg.com/@img/sharp-linuxmusl-x64/-/sharp-linuxmusl-x64-0.35.5.tgz#1d146eab6dfcdc6429f29b032b8bc3f0180b6d80"
+  integrity sha512-4KOphqB035HrVdqLZfCgMzzERrQkkzOwRhl4OAkRO1YCldbaFjySXMaK534Mo0V+LndnlJk+sbUyLeU0ULyD1A==
+  optionalDependencies:
+    "@img/sharp-libvips-linuxmusl-x64" "1.3.4"
 
 "@img/sharp-wasm32@0.33.5":
   version "0.33.5"
@@ -2928,10 +3350,29 @@
   dependencies:
     "@emnapi/runtime" "^1.7.0"
 
+"@img/sharp-wasm32@0.35.5":
+  version "0.35.5"
+  resolved "https://registry.yarnpkg.com/@img/sharp-wasm32/-/sharp-wasm32-0.35.5.tgz#5369559c3a4c32e08ce92b6ffba2434175a45a62"
+  integrity sha512-Ptsga1su4tQx+LLF1ECS9U6nz5kmrXKo6XVbtR48Ke3ZRxxgaWBu7IDtEe1quo8hiupwm6WFqxVlXaSf7IINGQ==
+  dependencies:
+    "@emnapi/runtime" "^1.11.3"
+
+"@img/sharp-webcontainers-wasm32@0.35.5":
+  version "0.35.5"
+  resolved "https://registry.yarnpkg.com/@img/sharp-webcontainers-wasm32/-/sharp-webcontainers-wasm32-0.35.5.tgz#3674eddf41eb85d0e92896d7da01ca00310256b9"
+  integrity sha512-hfhF/FmoQyTUkA0bIKFOtw536BQSeBMe6BF6QyWlrPxT754+TFLaZ7sKKTfvvM0yJgKgaYTwnFCIZ/GuDw5SUA==
+  dependencies:
+    "@img/sharp-wasm32" "0.35.5"
+
 "@img/sharp-win32-arm64@0.34.5":
   version "0.34.5"
   resolved "https://registry.yarnpkg.com/@img/sharp-win32-arm64/-/sharp-win32-arm64-0.34.5.tgz#3706e9e3ac35fddfc1c87f94e849f1b75307ce0a"
   integrity sha512-WQ3AgWCWYSb2yt+IG8mnC6Jdk9Whs7O0gxphblsLvdhSpSTtmu69ZG1Gkb6NuvxsNACwiPV6cNSZNzt0KPsw7g==
+
+"@img/sharp-win32-arm64@0.35.5":
+  version "0.35.5"
+  resolved "https://registry.yarnpkg.com/@img/sharp-win32-arm64/-/sharp-win32-arm64-0.35.5.tgz#e3c94326eb0a46ade843b84cf50a3917b79d323f"
+  integrity sha512-X4t7g+7ZA5DKblCBEXGjUqqemj4vczING/5viFwAL8h4N3qYeyjwdCvRLHi4EdOUI+2Z7UFlp1VM+p/AuEtm6Q==
 
 "@img/sharp-win32-ia32@0.33.5":
   version "0.33.5"
@@ -2943,6 +3384,11 @@
   resolved "https://registry.yarnpkg.com/@img/sharp-win32-ia32/-/sharp-win32-ia32-0.34.5.tgz#0b71166599b049e032f085fb9263e02f4e4788de"
   integrity sha512-FV9m/7NmeCmSHDD5j4+4pNI8Cp3aW+JvLoXcTUo0IqyjSfAZJ8dIUmijx1qaJsIiU+Hosw6xM5KijAWRJCSgNg==
 
+"@img/sharp-win32-ia32@0.35.5":
+  version "0.35.5"
+  resolved "https://registry.yarnpkg.com/@img/sharp-win32-ia32/-/sharp-win32-ia32-0.35.5.tgz#cc5dac453dc3500aac2e63f182b952af0d437bc1"
+  integrity sha512-5Zm82LoBc43nhwNybZlG7Y1KO//Zhsn306fQl29ZOuStHLGTo3BWL83q3cznX0poxSAMuYL1On/BHBxkBeKr6A==
+
 "@img/sharp-win32-x64@0.33.5":
   version "0.33.5"
   resolved "https://registry.yarnpkg.com/@img/sharp-win32-x64/-/sharp-win32-x64-0.33.5.tgz#56f00962ff0c4e0eb93d34a047d29fa995e3e342"
@@ -2952,6 +3398,11 @@
   version "0.34.5"
   resolved "https://registry.yarnpkg.com/@img/sharp-win32-x64/-/sharp-win32-x64-0.34.5.tgz#a81ffb00e69267cd0a1d626eaedb8a8430b2b2f8"
   integrity sha512-+29YMsqY2/9eFEiW93eqWnuLcWcufowXewwSNIT6UwZdUUCrM3oFjMWH/Z6/TMmb4hlFenmfAVbpWeup2jryCw==
+
+"@img/sharp-win32-x64@0.35.5":
+  version "0.35.5"
+  resolved "https://registry.yarnpkg.com/@img/sharp-win32-x64/-/sharp-win32-x64-0.35.5.tgz#1785356b8cb396e58430e03865281280acb818b1"
+  integrity sha512-x76eH0vEiHlcMQu8Y8IenntaACtddpT6W0wmXtWrnKcnKI7ME5DdgqhAD6SEWOEl1v2zDvkZDhFA9KnURwpfqg==
 
 "@isaacs/cliui@^8.0.2":
   version "8.0.2"
@@ -3327,6 +3778,14 @@
   dependencies:
     "@scure/base" "^1.2.4"
 
+"@mysten/bcs@^2.0.3":
+  version "2.1.3"
+  resolved "https://registry.yarnpkg.com/@mysten/bcs/-/bcs-2.1.3.tgz#7c9da6471d1b92be077db252fcabc1ad46467c50"
+  integrity sha512-sg3hstwDLQQmQTpiX8Vzs13bEEGTqnhp1gUzBLlVQ493xyTTCDwB/jXGzT0g2I/GXd2o1B3s7Bd67Ua3VZo+Jw==
+  dependencies:
+    "@mysten/utils" "^0.4.2"
+    "@scure/base" "^2.3.0"
+
 "@mysten/sui@1.24.0":
   version "1.24.0"
   resolved "https://registry.yarnpkg.com/@mysten/sui/-/sui-1.24.0.tgz#22b334e6f8f638d18e13e9b97d11ef2df647bc77"
@@ -3344,6 +3803,39 @@
     poseidon-lite "^0.2.0"
     valibot "^0.36.0"
 
+"@mysten/sui@2.8.0":
+  version "2.8.0"
+  resolved "https://registry.yarnpkg.com/@mysten/sui/-/sui-2.8.0.tgz#853ff6a8fa4f429b2f6e0459cef2309e1bcd0cbe"
+  integrity sha512-N9YvsAuVc6sCY6OJqYaNUmZ3VShq8C4AaZrEtvz75W59VpK84YNkox7+FuRDFKU3lXvv6DRzpbYySjLwawMpkQ==
+  dependencies:
+    "@graphql-typed-document-node/core" "^3.2.0"
+    "@mysten/bcs" "^2.0.3"
+    "@mysten/utils" "^0.3.1"
+    "@noble/curves" "^2.0.1"
+    "@noble/hashes" "^2.0.1"
+    "@protobuf-ts/grpcweb-transport" "^2.11.1"
+    "@protobuf-ts/runtime" "^2.11.1"
+    "@protobuf-ts/runtime-rpc" "^2.11.1"
+    "@scure/base" "^2.0.0"
+    "@scure/bip32" "^2.0.1"
+    "@scure/bip39" "^2.0.1"
+    gql.tada "^1.9.0"
+    graphql "^16.12.0"
+    poseidon-lite "0.2.1"
+    valibot "^1.2.0"
+
+"@mysten/utils@^0.3.1":
+  version "0.3.3"
+  resolved "https://registry.yarnpkg.com/@mysten/utils/-/utils-0.3.3.tgz#8eaf0c6e9316d6cf777744075446d12819f5d16f"
+  integrity sha512-gVHn5toh24eXXLEyBknwwM2F/tbDgqPX0yj77KtHjuoYUallcQ9vSwGfGsAy39IcTB259Yprt/ZOEwdup+zrpA==
+  dependencies:
+    "@scure/base" "^2.0.0"
+
+"@mysten/utils@^0.4.2":
+  version "0.4.2"
+  resolved "https://registry.yarnpkg.com/@mysten/utils/-/utils-0.4.2.tgz#c909264060a2b46097c7d9d5c0618075d6bec5b8"
+  integrity sha512-K/5eBuYKxUFCrYcic1lvYvWE9OVSH581cjVjwsSJGUqPit91nZq2acUwes+B4lo98VE/CILIUeBcyEIvuNxMhA==
+
 "@mysten/wallet-standard@0.13.29":
   version "0.13.29"
   resolved "https://registry.yarnpkg.com/@mysten/wallet-standard/-/wallet-standard-0.13.29.tgz#925162d059fc3592860fe4dd2fb6bedfe9c56018"
@@ -3351,6 +3843,13 @@
   dependencies:
     "@mysten/sui" "1.24.0"
     "@wallet-standard/core" "1.1.0"
+
+"@mysten/wallet-standard@0.20.3":
+  version "0.20.3"
+  resolved "https://registry.yarnpkg.com/@mysten/wallet-standard/-/wallet-standard-0.20.3.tgz#732036a0960a8ba974032251e3c1373dc8bf8ced"
+  integrity sha512-Kp1EpWaQAwANuMoTCJKVdZnEOaE9aJ5PPvIC7qg+J3u6Uf20VsVsQngZllyaS2OQHm+iLlJzcLXHff7ttvQJYw==
+  dependencies:
+    "@wallet-standard/core" "1.1.1"
 
 "@next/codemod@^16.1.1":
   version "16.1.1"
@@ -3485,6 +3984,13 @@
   dependencies:
     "@noble/hashes" "1.8.0"
 
+"@noble/curves@2.4.0", "@noble/curves@^2.0.1":
+  version "2.4.0"
+  resolved "https://registry.yarnpkg.com/@noble/curves/-/curves-2.4.0.tgz#367c869bfd790c3a2248152562f255b5f8898b74"
+  integrity sha512-P4/62zrgfH33CneE3Dn4WhJVA22YUU0eR51wKIan4NVRvwsA0YnPTwWGpNbpuacSujmSFLvyzpyuR30+fbq2Ew==
+  dependencies:
+    "@noble/hashes" "2.4.0"
+
 "@noble/curves@^1.3.0", "@noble/curves@^1.4.2", "@noble/curves@^1.6.0":
   version "1.7.0"
   resolved "https://registry.npmjs.org/@noble/curves/-/curves-1.7.0.tgz"
@@ -3531,7 +4037,7 @@
   resolved "https://registry.yarnpkg.com/@noble/hashes/-/hashes-1.7.2.tgz#d53c65a21658fb02f3303e7ee3ba89d6754c64b4"
   integrity sha512-biZ0NUSxyjLLqo6KxEJ1b+C2NAx0wtDoFvCaXHGgUkeHzf3Xc1xKumFKREuT7f7DARNZ/slvYUwFG6B0f2b6hQ==
 
-"@noble/hashes@1.8.0", "@noble/hashes@^1.8.0", "@noble/hashes@~1.8.0":
+"@noble/hashes@1.8.0", "@noble/hashes@^1.1.5", "@noble/hashes@^1.8.0", "@noble/hashes@~1.8.0":
   version "1.8.0"
   resolved "https://registry.yarnpkg.com/@noble/hashes/-/hashes-1.8.0.tgz#cee43d801fcef9644b11b8194857695acd5f815a"
   integrity sha512-jCs9ldd7NwzpgXDIf6P3+NrHh9/sD6CQdxHyjQI+h/6rDNo88ypBxxz45UDuZHz9r3tNz7N/VInSVoVdtXEI4A==
@@ -3541,7 +4047,7 @@
   resolved "https://registry.yarnpkg.com/@noble/hashes/-/hashes-2.0.1.tgz#fc1a928061d1232b0a52bb754393c37a5216c89e"
   integrity sha512-XlOlEbQcE9fmuXxrVTXCTlG2nlRXa9Rj3rr5Ue/+tX+nmkgbX720YHh0VR3hBF9xDvwnb8D2shVGOwNx+ulArw==
 
-"@noble/hashes@^2.0.0":
+"@noble/hashes@2.4.0", "@noble/hashes@^2.0.0", "@noble/hashes@^2.0.1":
   version "2.4.0"
   resolved "https://registry.yarnpkg.com/@noble/hashes/-/hashes-2.4.0.tgz#e6a3e98edbed3c8659b28bb8f9b18ca02ec8ea4b"
   integrity sha512-X5XaVWZIBCT7HHZGm5I7ZQXDwLG+bGXuSrMQAW+7Zvl87h1kmc1ZB1VSRJcpUfoUrGQp4Fkoxm5kZ+Ms+aW+eA==
@@ -3563,6 +4069,11 @@
   version "1.7.1"
   resolved "https://registry.npmjs.org/@noble/secp256k1/-/secp256k1-1.7.1.tgz"
   integrity sha512-hOUk6AyBFmqVrv7k5WAw/LpszxVbj9gGN4JRkIX52fdFAj1UA61KXmZDvqVEm+pOyec3+fIeZB02LYa/pWOArw==
+
+"@noble/secp256k1@^1.7.1":
+  version "1.7.2"
+  resolved "https://registry.yarnpkg.com/@noble/secp256k1/-/secp256k1-1.7.2.tgz#c2c3343e2dce80e15a914d7442147507f8a98e7f"
+  integrity sha512-/qzwYl5eFLH8OWIecQWM31qld2g1NfjgylK+TNhqtaUKP37Nm+Y+z30Fjhw0Ct8p9yCQEm2N3W/AckdIb3SMcQ==
 
 "@nodelib/fs.scandir@2.1.5":
   version "2.1.5"
@@ -4032,6 +4543,26 @@
     snake-case "^3.0.4"
     superstruct "^0.15.4"
     toml "^3.0.0"
+
+"@protobuf-ts/grpcweb-transport@^2.11.1":
+  version "2.11.1"
+  resolved "https://registry.yarnpkg.com/@protobuf-ts/grpcweb-transport/-/grpcweb-transport-2.11.1.tgz#63a8a0d6043851fec14de4b091121377d2549683"
+  integrity sha512-1W4utDdvOB+RHMFQ0soL4JdnxjXV+ddeGIUg08DvZrA8Ms6k5NN6GBFU2oHZdTOcJVpPrDJ02RJlqtaoCMNBtw==
+  dependencies:
+    "@protobuf-ts/runtime" "^2.11.1"
+    "@protobuf-ts/runtime-rpc" "^2.11.1"
+
+"@protobuf-ts/runtime-rpc@^2.11.1":
+  version "2.11.1"
+  resolved "https://registry.yarnpkg.com/@protobuf-ts/runtime-rpc/-/runtime-rpc-2.11.1.tgz#a6eb2f384bceae8d23a01d0b0e37faf0af36c179"
+  integrity sha512-4CqqUmNA+/uMz00+d3CYKgElXO9VrEbucjnBFEjqI4GuDrEQ32MaI3q+9qPBvIGOlL4PmHXrzM32vBPWRhQKWQ==
+  dependencies:
+    "@protobuf-ts/runtime" "^2.11.1"
+
+"@protobuf-ts/runtime@^2.11.1":
+  version "2.11.1"
+  resolved "https://registry.yarnpkg.com/@protobuf-ts/runtime/-/runtime-2.11.1.tgz#ee2bf2fac6e2d8deac0ca63471a77481548e5553"
+  integrity sha512-KuDaT1IfHkugM2pyz+FwiY80ejWrkH1pAtOBOZFuR6SXEFTsnb/jiQWQ1rCIrcKx2BtyxnxW6BWwsVSA/Ie+WQ==
 
 "@protobufjs/aspromise@^1.1.1", "@protobufjs/aspromise@^1.1.2":
   version "1.1.2"
@@ -4955,6 +5486,11 @@
   resolved "https://registry.yarnpkg.com/@scure/base/-/base-1.2.6.tgz#ca917184b8231394dd8847509c67a0be522e59f6"
   integrity sha512-g/nm5FgUa//MCj1gV09zTJTaM6KBAHqLN907YVQqf7zC49+DcO4B1so4ZX07Ef10Twr6nuqYEH9GEggFXA4Fmg==
 
+"@scure/base@2.4.0", "@scure/base@^2.0.0", "@scure/base@^2.3.0":
+  version "2.4.0"
+  resolved "https://registry.yarnpkg.com/@scure/base/-/base-2.4.0.tgz#61e4ed7d4447afc247f2bff9aeb8fca53267db86"
+  integrity sha512-thZ1TuJwFwBblOhgsjDKvvGirBxNp+wSvY/DR6tJBJOTDhdAAcHJ8Vbr2eFnqaxeca4+t0i9KBf+uHYGWwZORg==
+
 "@scure/base@^1.1.3", "@scure/base@~1.2.2", "@scure/base@~1.2.4":
   version "1.2.4"
   resolved "https://registry.npmjs.org/@scure/base/-/base-1.2.4.tgz"
@@ -4992,6 +5528,15 @@
     "@noble/hashes" "~1.8.0"
     "@scure/base" "~1.2.5"
 
+"@scure/bip32@^2.0.1":
+  version "2.4.0"
+  resolved "https://registry.yarnpkg.com/@scure/bip32/-/bip32-2.4.0.tgz#4b13d0e5f60f776f17cbf5528893ee03839acb6a"
+  integrity sha512-i3DS0CptAocyvqE4n3SUkpzeQK4vJMFwWLofTwRiiKo2aWojBOfyMCgfKw9HVpO6fSY5AK86sHS/Uzn8kK9Few==
+  dependencies:
+    "@noble/curves" "2.4.0"
+    "@noble/hashes" "2.4.0"
+    "@scure/base" "2.4.0"
+
 "@scure/bip39@1.3.0":
   version "1.3.0"
   resolved "https://registry.npmjs.org/@scure/bip39/-/bip39-1.3.0.tgz"
@@ -5015,6 +5560,13 @@
   dependencies:
     "@noble/hashes" "~1.8.0"
     "@scure/base" "~1.2.5"
+
+"@scure/bip39@^2.0.1":
+  version "2.4.0"
+  resolved "https://registry.yarnpkg.com/@scure/bip39/-/bip39-2.4.0.tgz#7b19a76d4dd2f4591c07b446a0f9695f9b1d9545"
+  integrity sha512-82dxFbZUYboyOf0AXiydsQrFQ5Q4h9mX+O2UkE91ROYmsc0BKMGZLwDmy96Jpa2+vrtoxomjUhy1RPIgH/r2nA==
+  dependencies:
+    "@noble/hashes" "2.4.0"
 
 "@sentry-internal/browser-utils@9.12.0":
   version "9.12.0"
@@ -6274,6 +6826,17 @@
     "@solana/spl-token-metadata" "^0.1.6"
     buffer "^6.0.3"
 
+"@solana/spl-token@0.4.14":
+  version "0.4.14"
+  resolved "https://registry.yarnpkg.com/@solana/spl-token/-/spl-token-0.4.14.tgz#b86bc8a17f50e9680137b585eca5f5eb9d55c025"
+  integrity sha512-u09zr96UBpX4U685MnvQsNzlvw9TiY005hk1vJmJr7gMJldoPG1eYU5/wNEyOA5lkMLiR/gOi9SFD4MefOYEsA==
+  dependencies:
+    "@solana/buffer-layout" "^4.0.0"
+    "@solana/buffer-layout-utils" "^0.2.0"
+    "@solana/spl-token-group" "^0.0.7"
+    "@solana/spl-token-metadata" "^0.1.6"
+    buffer "^6.0.3"
+
 "@solana/spl-token@^0.4.9":
   version "0.4.9"
   resolved "https://registry.npmjs.org/@solana/spl-token/-/spl-token-0.4.9.tgz"
@@ -6850,12 +7413,12 @@
   dependencies:
     "@wallet-standard/base" "^1.1.1"
 
-"@wallet-standard/base@1.0.1", "@wallet-standard/base@^1.0.1":
+"@wallet-standard/base@1.0.1":
   version "1.0.1"
   resolved "https://registry.npmjs.org/@wallet-standard/base/-/base-1.0.1.tgz"
   integrity sha512-1To3ekMfzhYxe0Yhkpri+Fedq0SYcfrOfJi3vbLjMwF2qiKPjTGLwZkf2C9ftdQmxES+hmxhBzTwF4KgcOwf8w==
 
-"@wallet-standard/base@^1.1.0", "@wallet-standard/base@^1.1.1":
+"@wallet-standard/base@^1.0.1", "@wallet-standard/base@^1.1.0", "@wallet-standard/base@^1.1.1":
   version "1.1.1"
   resolved "https://registry.yarnpkg.com/@wallet-standard/base/-/base-1.1.1.tgz#29ee1071bb96ddfe3f27d99f3be84b63f803f37d"
   integrity sha512-gggIHTtxicF9XFMQ12DkfS6NAG92Ak795JeSA7f2whAQ6Y3AkMWWuCMxSZXG2NIPN42kEaZSNVjqMsJRaJRxMQ==
@@ -6871,7 +7434,18 @@
     "@wallet-standard/features" "^1.1.0"
     "@wallet-standard/wallet" "^1.1.0"
 
-"@wallet-standard/errors@^0.1.0":
+"@wallet-standard/core@1.1.1":
+  version "1.1.1"
+  resolved "https://registry.yarnpkg.com/@wallet-standard/core/-/core-1.1.1.tgz#432e10420dc8892a63224d4863f8304fa01b4ea1"
+  integrity sha512-5Xmjc6+Oe0hcPfVc5n8F77NVLwx1JVAoCVgQpLyv/43/bhtIif+Gx3WUrDlaSDoM8i2kA2xd6YoFbHCxs+e0zA==
+  dependencies:
+    "@wallet-standard/app" "^1.1.0"
+    "@wallet-standard/base" "^1.1.0"
+    "@wallet-standard/errors" "^0.1.1"
+    "@wallet-standard/features" "^1.1.0"
+    "@wallet-standard/wallet" "^1.1.0"
+
+"@wallet-standard/errors@^0.1.0", "@wallet-standard/errors@^0.1.1":
   version "0.1.2"
   resolved "https://registry.yarnpkg.com/@wallet-standard/errors/-/errors-0.1.2.tgz#ed19669b02db0eda64e73be13b9c3a6a512e3e80"
   integrity sha512-oEzKUqJefKby6wcIvaJgrSEe/uNn/rnqkJ0P/85K+h0i5Tdo9E3L22VWq/j5K1e8hHMnZd6LgaIr8m/Wn7X/Ng==
@@ -7384,6 +7958,18 @@ abitype@^1.0.9, abitype@^1.2.3:
   resolved "https://registry.yarnpkg.com/abitype/-/abitype-1.3.0.tgz#39de89010dd7390ece44d5242a3aa80901cc193d"
   integrity sha512-fk6Te+bojIFrMvMZrnOO+SxCB+RUksTGOzq/60ZRvs1L+BVzvi2bqt9L3W/17ZLdZsyM1FuYf65P5nlmoiH1Bg==
 
+ably@2.17.1:
+  version "2.17.1"
+  resolved "https://registry.yarnpkg.com/ably/-/ably-2.17.1.tgz#7fe6877ba141ee70d8856523ec3a21d6716c1916"
+  integrity sha512-70yfXHoM7JtJD/8FCtPD1gkWW0f+AJqbJp0PsqDAqiyxFB8cPFY+FuKHgNTYb8eRHKXq8hT1xiDphUcY0+GHnA==
+  dependencies:
+    "@ably/msgpack-js" "^0.4.0"
+    dequal "^2.0.3"
+    fastestsmallesttextencoderdecoder "^1.0.22"
+    got "^11.8.5"
+    ulid "^2.3.0"
+    ws "^8.17.1"
+
 abort-controller@^3.0.0:
   version "3.0.0"
   resolved "https://registry.npmjs.org/abort-controller/-/abort-controller-3.0.0.tgz"
@@ -7755,6 +8341,16 @@ axios@1.12.2:
     form-data "^4.0.4"
     proxy-from-env "^1.1.0"
 
+axios@1.20.0:
+  version "1.20.0"
+  resolved "https://registry.yarnpkg.com/axios/-/axios-1.20.0.tgz#515513445aa60e71d04b6521ca6210829ccb4786"
+  integrity sha512-r8aOh8j9cGKpgQAqpzrUHnSIc6a59Y3Xf/cv8sy1DrHCkZHzQGEuoq1tARk6qSyDdtQGSDgpb9kFlruzPvrgwg==
+  dependencies:
+    follow-redirects "^1.16.0"
+    form-data "^4.0.6"
+    https-proxy-agent "^5.0.1"
+    proxy-from-env "^2.1.0"
+
 axios@1.9.0:
   version "1.9.0"
   resolved "https://registry.yarnpkg.com/axios/-/axios-1.9.0.tgz#25534e3b72b54540077d33046f77e3b8d7081901"
@@ -7814,6 +8410,11 @@ base58-js@^3.0.2:
   version "3.0.3"
   resolved "https://registry.yarnpkg.com/base58-js/-/base58-js-3.0.3.tgz#a753af5e0c484f1c73906e3883baa34805bf0e10"
   integrity sha512-3hf42BysHnUqmZO7mK6e5X/hs1AvyEJIhdVLbG/Mxn/fhFnhGxOO37mWbMHg1RT4TxqcPKXgqj9/bp1YG0GBXA==
+
+base64-js@1.0.2:
+  version "1.0.2"
+  resolved "https://registry.yarnpkg.com/base64-js/-/base64-js-1.0.2.tgz#474211c95e6cf2a547db461e4f6778b51d08fa65"
+  integrity sha512-ZXBDPMt/v/8fsIqn+Z5VwrhdR6jVka0bYobHdGia0Nxi7BJ9i/Uvml3AocHIBtIIBhZjBw5MR0aR4ROs/8+SNg==
 
 base64-js@^1.3.0, base64-js@^1.3.1, base64-js@^1.5.1:
   version "1.5.1"
@@ -7950,6 +8551,14 @@ boolbase@^1.0.0:
   resolved "https://registry.yarnpkg.com/boolbase/-/boolbase-1.0.0.tgz#68dff5fbe60c51eb37725ea9e3ed310dcc1e776e"
   integrity sha512-JZOSA7Mo9sNGB8+UjSgzdLtokWAky1zbztM3WRLCbZ70/3cTANmQmOdR7y2g+J0e2WXywy1yS468tY+IruqEww==
 
+bops@^1.0.1:
+  version "1.0.1"
+  resolved "https://registry.yarnpkg.com/bops/-/bops-1.0.1.tgz#502aaf00ee119db1dbae088e3df4bea2e241dbcc"
+  integrity sha512-qCMBuZKP36tELrrgXpAfM+gHzqa0nLsWZ+L37ncsb8txYlnAoxOPpVp+g7fK0sGkMXfA0wl8uQkESqw3v4HNag==
+  dependencies:
+    base64-js "1.0.2"
+    to-utf8 "0.0.1"
+
 borsh@^0.7.0:
   version "0.7.0"
   resolved "https://registry.npmjs.org/borsh/-/borsh-0.7.0.tgz"
@@ -8052,7 +8661,7 @@ bs58check@4.0.0, bs58check@^4.0.0:
     "@noble/hashes" "^1.2.0"
     bs58 "^6.0.0"
 
-bs58check@^2.1.2:
+bs58check@<3.0.0, bs58check@^2.1.2:
   version "2.1.2"
   resolved "https://registry.npmjs.org/bs58check/-/bs58check-2.1.2.tgz"
   integrity sha512-0TS1jicxdU09dwJMNZtVAfzPi6Q6QeN0pM1Fkzrjn+XYHvzMKPU3pHVpva+769iNVSfIYWf7LJ6WR+BuuMf8cA==
@@ -8888,6 +9497,11 @@ depd@2.0.0:
   resolved "https://registry.npmjs.org/depd/-/depd-2.0.0.tgz"
   integrity sha512-g7nH6P6dyDioJogAAGprGpCtVImJhpPk/roCzdb3fIh61/s/nPsfR6onyMwkCAR/OlC3yBC0lESvUoQEAssIrw==
 
+dequal@^2.0.3:
+  version "2.0.3"
+  resolved "https://registry.yarnpkg.com/dequal/-/dequal-2.0.3.tgz#2644214f1997d39ed0ee0ece72335490a7ac67be"
+  integrity sha512-0je+qPKHEMohvfRTCEo3CrPG6cAzAYgmzKyxRiYSSDkS6eGJdyVJm7WaYA5ECaAD9wLB2T4EEeymA5aFVcYXCA==
+
 derive-valtio@0.1.0:
   version "0.1.0"
   resolved "https://registry.yarnpkg.com/derive-valtio/-/derive-valtio-0.1.0.tgz#4b9fb393dfefccfef15fcbbddd745dd22d5d63d7"
@@ -9053,6 +9667,15 @@ eciesjs@^0.4.11:
     "@noble/ciphers" "^1.0.0"
     "@noble/curves" "^1.6.0"
     "@noble/hashes" "^1.5.0"
+
+ecpair@2.1.0:
+  version "2.1.0"
+  resolved "https://registry.yarnpkg.com/ecpair/-/ecpair-2.1.0.tgz#673f826b1d80d5eb091b8e2010c6b588e8d2cb45"
+  integrity sha512-cL/mh3MtJutFOvFc27GPZE2pWL3a3k4YvzUWEOvilnfZVlH3Jwgx/7d6tlD7/75tNk8TG2m+7Kgtz0SI1tWcqw==
+  dependencies:
+    randombytes "^2.1.0"
+    typeforce "^1.18.0"
+    wif "^2.0.6"
 
 ee-first@1.1.1:
   version "1.1.1"
@@ -9990,6 +10613,11 @@ fast-xml-parser@4.4.1:
   dependencies:
     strnum "^1.0.5"
 
+fastestsmallesttextencoderdecoder@^1.0.22:
+  version "1.0.22"
+  resolved "https://registry.yarnpkg.com/fastestsmallesttextencoderdecoder/-/fastestsmallesttextencoderdecoder-1.0.22.tgz#59b47e7b965f45258629cc6c127bf783281c5e93"
+  integrity sha512-Pb8d48e+oIuY4MaM64Cd7OW1gt4nxCHs7/ddPPZ/Ic3sg8yVGM7O9wDvZ7us6ScaUupzM+pfBolwtYhN1IxBIw==
+
 fastq@^1.6.0:
   version "1.17.1"
   resolved "https://registry.npmjs.org/fastq/-/fastq-1.17.1.tgz"
@@ -10529,7 +11157,7 @@ got@^11.8.5:
     p-cancelable "^2.0.0"
     responselike "^2.0.0"
 
-gql.tada@^1.8.2:
+gql.tada@^1.8.2, gql.tada@^1.9.0:
   version "1.11.4"
   resolved "https://registry.yarnpkg.com/gql.tada/-/gql.tada-1.11.4.tgz#000501c84ac41976349e70d861c574e5a97e4c66"
   integrity sha512-UQnhJUhSM0MV8cpcgjci/7ET8LnmHx9o9FtZqU4sH+ILiBVG5rnfXJzNdzTN+Y7MuCz6Pp3XE/VPEVqmO969jw==
@@ -10554,7 +11182,7 @@ graphemer@^1.4.0:
   resolved "https://registry.yarnpkg.com/graphql/-/graphql-17.1.0.tgz#8ae1d3ad214fd99d59cb7a67b9c96419701191c8"
   integrity sha512-JKCOa7rSQNrket/JFhuua86hljUO+IIpyUHfKxlKD6FEfbrLX8jc1FDrA0KPKI+s8OspBCF/5npYccAICHXPpQ==
 
-graphql@^16.9.0:
+graphql@^16.12.0, graphql@^16.9.0:
   version "16.15.0"
   resolved "https://registry.yarnpkg.com/graphql/-/graphql-16.15.0.tgz#9e87af2e3adb6808cf3bde1c4f0bbfa675b4bac1"
   integrity sha512-32kz9FecohDiC/tgcViwnRXM7HFBVTPiW7pHO+DikKOI5KjhU/jNULOReXsrFqt2WAYbE9xFXsTffJw6iTO8qw==
@@ -11244,7 +11872,7 @@ isows@1.0.6:
   resolved "https://registry.npmjs.org/isows/-/isows-1.0.6.tgz"
   integrity sha512-lPHCayd40oW98/I0uvgaHKWCSvkzY27LjWLbtzOm64yQ+G3Q5npjjbdppU65iZXkK1Zt+kH9pfegli0AYfwYYw==
 
-isows@1.0.7:
+isows@1.0.7, isows@^1.0.7:
   version "1.0.7"
   resolved "https://registry.yarnpkg.com/isows/-/isows-1.0.7.tgz#1c06400b7eed216fbba3bcbd68f12490fc342915"
   integrity sha512-I1fSfDCZL5P0v33sVqeTDSpcstAg/N+wF5HS033mogOVIp4B+oHC7oOCsA3axAbBSGTJ8QubbNmnIRN/h8U7hg==
@@ -12875,7 +13503,7 @@ porto@0.2.35:
     zod "^4.1.5"
     zustand "^5.0.1"
 
-poseidon-lite@^0.2.0:
+poseidon-lite@0.2.1, poseidon-lite@^0.2.0:
   version "0.2.1"
   resolved "https://registry.yarnpkg.com/poseidon-lite/-/poseidon-lite-0.2.1.tgz#7ad98e3a3aa5b91a1fd3a61a87460e9e46fd76d6"
   integrity sha512-xIr+G6HeYfOhCuswdqcFpSX47SPhm0EpisWJ6h7fHlWwaVIvH3dLnejpatrtw6Xc6HaLrpq05y7VRfvDmDGIog==
@@ -13094,6 +13722,11 @@ pump@^3.0.0:
     end-of-stream "^1.1.0"
     once "^1.3.1"
 
+punycode@1.3.2:
+  version "1.3.2"
+  resolved "https://registry.yarnpkg.com/punycode/-/punycode-1.3.2.tgz#9653a036fb7c1ee42342f2325cceefea3926c48d"
+  integrity sha512-RofWgt/7fL5wP1Y7fxE7/EmTLzQVnB0ycyibJ0OOHIlJqTNzglYFxVwETOcIoJqJmpDXJ9xImDv+Fq34F/d4Dw==
+
 punycode@2.1.0:
   version "2.1.0"
   resolved "https://registry.npmjs.org/punycode/-/punycode-2.1.0.tgz"
@@ -13159,6 +13792,11 @@ query-string@^5.0.1:
     decode-uri-component "^0.2.0"
     object-assign "^4.1.0"
     strict-uri-encode "^1.0.0"
+
+querystring@0.2.0:
+  version "0.2.0"
+  resolved "https://registry.yarnpkg.com/querystring/-/querystring-0.2.0.tgz#b209849203bb25df820da756e747005878521620"
+  integrity sha512-X/xY82scca2tau62i9mDyU9K+I+djTMUsvwf7xnUX5GLvVzgJybOJf4Y6o9Zx3oJK/LSXg5tTZBjwzqVPaPO2g==
 
 queue-microtask@^1.2.2:
   version "1.2.3"
@@ -13640,10 +14278,10 @@ safe-stable-stringify@^2.1.0, safe-stable-stringify@^2.3.1:
   resolved "https://registry.npmjs.org/safer-buffer/-/safer-buffer-2.1.2.tgz"
   integrity sha512-YZo3K82SD7Riyi0E1EQPojLz7kpepnSQI9IyPbHHg1XXXevb5dJI7tpyN2ADxGcQbHG7vcyRHk0cbwqcQriUtg==
 
-sats-connect@4.2.0:
-  version "4.2.0"
-  resolved "https://registry.yarnpkg.com/sats-connect/-/sats-connect-4.2.0.tgz#141049e66c34460c58425ca13071f0ff1e125ea2"
-  integrity sha512-jfjxCzUo+y7bVBf46+Mp7RBSqRH7jnl2IFZCJtRA0a5X9m25MTvOG9T4z0TSSATWXYlbc8PRfQhhcansWZHfwA==
+sats-connect@4.2.1:
+  version "4.2.1"
+  resolved "https://registry.yarnpkg.com/sats-connect/-/sats-connect-4.2.1.tgz#73b7d156abcd7be28d22f3ad661637c7123a8f4b"
+  integrity sha512-6PxLGmYIToxz/3DSb2owykcV3Qs2n+RhzE1gZp6a/6c70XYniUvImGA3Hmymf90NhyjR6J/t6OE/08Fiyjw9YA==
   dependencies:
     "@sats-connect/core" "0.10.0"
     "@sats-connect/make-default-provider-config" "0.0.10"
@@ -13698,6 +14336,11 @@ semver@^7.7.3:
   version "7.7.3"
   resolved "https://registry.yarnpkg.com/semver/-/semver-7.7.3.tgz#4b5f4143d007633a8dc671cd0a6ef9147b8bb946"
   integrity sha512-SdsKMrI9TdgjdweUSR9MweHA4EJ8YxHn8DFaDisvhVlUOe4BF1tLD7GAj0lIqWVl+dPb/rExr0Btby5loQm20Q==
+
+semver@^7.8.5:
+  version "7.8.6"
+  resolved "https://registry.yarnpkg.com/semver/-/semver-7.8.6.tgz#67c0cda133a3ceb6f70b803e67625bf969000424"
+  integrity sha512-9lpSSU4Mly3mrtruwLs1eLK6+gzbzqeBFwRNjIjE+9LuDpWdYctrQlQ3ej1Ilgi7gknpsTRnPoLP8DpCHqHIJw==
 
 send@0.19.0:
   version "0.19.0"
@@ -13829,6 +14472,41 @@ sharp@0.33.5:
     "@img/sharp-wasm32" "0.33.5"
     "@img/sharp-win32-ia32" "0.33.5"
     "@img/sharp-win32-x64" "0.33.5"
+
+sharp@0.35.5:
+  version "0.35.5"
+  resolved "https://registry.yarnpkg.com/sharp/-/sharp-0.35.5.tgz#43fb539872ec5f53cc7162eb850dbf6514692fbf"
+  integrity sha512-Ywn4OnzGukp7CDMrp08RQ50YKmuwG47brZgIVPTvBaaAfQlRlygrRqSrxdCiL9M+LlzLBiJ68IR1QqvzHyjC7g==
+  dependencies:
+    "@img/colour" "^1.1.0"
+    detect-libc "^2.1.2"
+    semver "^7.8.5"
+  optionalDependencies:
+    "@img/sharp-darwin-arm64" "0.35.5"
+    "@img/sharp-darwin-x64" "0.35.5"
+    "@img/sharp-freebsd-wasm32" "0.35.5"
+    "@img/sharp-libvips-darwin-arm64" "1.3.4"
+    "@img/sharp-libvips-darwin-x64" "1.3.4"
+    "@img/sharp-libvips-linux-arm" "1.3.4"
+    "@img/sharp-libvips-linux-arm64" "1.3.4"
+    "@img/sharp-libvips-linux-ppc64" "1.3.4"
+    "@img/sharp-libvips-linux-riscv64" "1.3.4"
+    "@img/sharp-libvips-linux-s390x" "1.3.4"
+    "@img/sharp-libvips-linux-x64" "1.3.4"
+    "@img/sharp-libvips-linuxmusl-arm64" "1.3.4"
+    "@img/sharp-libvips-linuxmusl-x64" "1.3.4"
+    "@img/sharp-linux-arm" "0.35.5"
+    "@img/sharp-linux-arm64" "0.35.5"
+    "@img/sharp-linux-ppc64" "0.35.5"
+    "@img/sharp-linux-riscv64" "0.35.5"
+    "@img/sharp-linux-s390x" "0.35.5"
+    "@img/sharp-linux-x64" "0.35.5"
+    "@img/sharp-linuxmusl-arm64" "0.35.5"
+    "@img/sharp-linuxmusl-x64" "0.35.5"
+    "@img/sharp-webcontainers-wasm32" "0.35.5"
+    "@img/sharp-win32-arm64" "0.35.5"
+    "@img/sharp-win32-ia32" "0.35.5"
+    "@img/sharp-win32-x64" "0.35.5"
 
 sharp@^0.34.4:
   version "0.34.5"
@@ -14481,6 +15159,11 @@ to-regex-range@^5.0.1:
   dependencies:
     is-number "^7.0.0"
 
+to-utf8@0.0.1:
+  version "0.0.1"
+  resolved "https://registry.yarnpkg.com/to-utf8/-/to-utf8-0.0.1.tgz#d17aea72ff2fba39b9e43601be7b3ff72e089852"
+  integrity sha512-zks18/TWT1iHO3v0vFp5qLKOG27m67ycq/Y7a7cTiRuUNlc4gf3HGnkRgMv0NyhnfTamtkYBJl+YeD1/j07gBQ==
+
 toidentifier@1.0.1:
   version "1.0.1"
   resolved "https://registry.npmjs.org/toidentifier/-/toidentifier-1.0.1.tgz"
@@ -14652,7 +15335,7 @@ typedarray-to-buffer@^3.1.5:
   dependencies:
     is-typedarray "^1.0.0"
 
-typeforce@^1.11.3:
+typeforce@^1.11.3, typeforce@^1.18.0:
   version "1.18.0"
   resolved "https://registry.npmjs.org/typeforce/-/typeforce-1.18.0.tgz"
   integrity sha512-7uc1O8h1M1g0rArakJdf0uLRSSgFcYexrVoKo+bzJd32gd4gDy2L/Z+8/FjPnU9ydY3pEnVPtr9FyscYY60K1g==
@@ -14680,6 +15363,11 @@ uint8arrays@3.1.1, uint8arrays@^3.0.0:
   integrity sha512-+QJa8QRnbdXVpHYjLoTpJIdCTiw9Ir62nocClWuXIq2JIh4Uta0cQsTSpFL678p2CN8B+XSApwcU+pQEqVpKWg==
   dependencies:
     multiformats "^9.4.2"
+
+ulid@^2.3.0:
+  version "2.4.0"
+  resolved "https://registry.yarnpkg.com/ulid/-/ulid-2.4.0.tgz#9d9ee22e63f4390ee1bcd9ad09fca39d8ae0afed"
+  integrity sha512-fIRiVTJNcSRmXKPZtGzFQv9WRrZ3M9eoptl/teFJvjOzmpU+/K/JH6HZ8deBfb5vMEpicJcLn7JmvdknlMq7Zg==
 
 ultron@~1.1.0:
   version "1.1.1"
@@ -14802,6 +15490,14 @@ url-set-query@^1.0.0:
   resolved "https://registry.npmjs.org/url-set-query/-/url-set-query-1.0.0.tgz"
   integrity sha512-3AChu4NiXquPfeckE5R5cGdiHCMWJx1dwCWOmWIL4KHAziJNOFIYJlpGFeKDvwLPHovZRCxK3cYlwzqI9Vp+Gg==
 
+url@0.11.0:
+  version "0.11.0"
+  resolved "https://registry.yarnpkg.com/url/-/url-0.11.0.tgz#3838e97cfc60521eb73c525a8e55bfdd9e2e28f1"
+  integrity sha512-kbailJa29QrtXnxgq+DdCEGlbTeYM2eJUxsz6vjZavrCYPMIFHMKQmSKYAIuUK2i7hgPm28a8piX5NTUtM/LKQ==
+  dependencies:
+    punycode "1.3.2"
+    querystring "0.2.0"
+
 use-callback-ref@^1.3.0:
   version "1.3.2"
   resolved "https://registry.npmjs.org/use-callback-ref/-/use-callback-ref-1.3.2.tgz"
@@ -14911,6 +15607,11 @@ valibot@^0.36.0:
   version "0.36.0"
   resolved "https://registry.yarnpkg.com/valibot/-/valibot-0.36.0.tgz#74e746694b1abcc1879e4393db551d4ce1e10578"
   integrity sha512-CjF1XN4sUce8sBK9TixrDqFM7RwNkuXdJu174/AwmQUB62QbCQADg5lLe8ldBalFgtj1uKj+pKwDJiNo4Mn+eQ==
+
+valibot@^1.2.0:
+  version "1.5.0"
+  resolved "https://registry.yarnpkg.com/valibot/-/valibot-1.5.0.tgz#c05adda6b2823807bb0248e2952c35e1a50046fd"
+  integrity sha512-nil6AkP2TChWL43Z5uJ6GTxX01CUA+g8LWUM+N/rB9NBbkUMaUsi9PUNzlUPgoKASgmx9f7eGOYpJ04/fSa6FQ==
 
 valtio@1.13.2:
   version "1.13.2"
@@ -15384,6 +16085,13 @@ which@^2.0.1, which@^2.0.2:
   dependencies:
     isexe "^2.0.0"
 
+wif@^2.0.6:
+  version "2.0.6"
+  resolved "https://registry.yarnpkg.com/wif/-/wif-2.0.6.tgz#08d3f52056c66679299726fade0d432ae74b4704"
+  integrity sha512-HIanZn1zmduSF+BQhkE+YXIbEiH0xPr1012QbFEGB0xsKqJii0/SqJjyn8dFv6y36kOznMgMB+LGcbZTJ1xACQ==
+  dependencies:
+    bs58check "<3.0.0"
+
 word-wrap@^1.2.5:
   version "1.2.5"
   resolved "https://registry.npmjs.org/word-wrap/-/word-wrap-1.2.5.tgz"
@@ -15468,7 +16176,7 @@ ws@^7.5.1, ws@^7.5.10:
   resolved "https://registry.npmjs.org/ws/-/ws-7.5.10.tgz"
   integrity sha512-+dbF1tHwZpXcbOJdVOkzLDxZP1ailvSxM6ZweXTegylPny803bFhA+vqBYw4s31NSAk4S2Qz+AKXK9a4wkdjcQ==
 
-ws@^8.18.3, ws@^8.19.0:
+ws@^8.17.1, ws@^8.18.3, ws@^8.19.0:
   version "8.22.1"
   resolved "https://registry.yarnpkg.com/ws/-/ws-8.22.1.tgz#60d427870e8272ddb10c7fc5cdf00a70eaec369e"
   integrity sha512-oyL6OPYme/CmiFvNuGzeoxCJ4nOrZE2O1FwM9MWM1AsGri6nLXB2pg+lNA8aLeXMSav0J6eIVS1j6vUPzUtK9g==
@@ -15613,6 +16321,11 @@ zod@4.0.5:
   version "4.0.5"
   resolved "https://registry.yarnpkg.com/zod/-/zod-4.0.5.tgz#b47825f318e7884d94bcd6f5385a1de805ccfb1c"
   integrity sha512-/5UuuRPStvHXu7RS+gmvRf4NXrNxpSllGwDnCBcJZtQsKrviYXm54yDGV2KYNLT5kq0lHGcl7lqWJLgSaG+tgA==
+
+zod@4.6.6:
+  version "4.6.6"
+  resolved "https://registry.yarnpkg.com/zod/-/zod-4.6.6.tgz#0bb0cf57b87011a71ec28ed2e1b51f6455563f9a"
+  integrity sha512-4UmzQUF5fxvfcYHlbjBmejU+w+hbDnWFx4aS8kBx7nPBHcO2SqPbpAG8snbdg+Xse4pRefR98hgjFgIMCI/UhA==
 
 zod@^3.25.76:
   version "3.25.76"
